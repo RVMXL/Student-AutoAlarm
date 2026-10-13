@@ -49,6 +49,15 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
     /** Защита от двойного тапа по «Готово». */
     private var completing = false
 
+    init {
+        // Повторный запуск мастера (кнопка «Сменить» в настройках): подтягиваем прежнее
+        // смещение подъёма, чтобы «Готово» не сбрасывало его на дефолт.
+        viewModelScope.launch {
+            val saved = container.settings.current().wakeOffsetMinutes
+            offsetMinutes.value = saved.coerceIn(MIN_OFFSET_MINUTES, MAX_OFFSET_MINUTES)
+        }
+    }
+
     /**
      * Загрузить справочник для [role] (вызов перезаписывает this.role).
      * Повторный вызов при уже загруженном/грузящемся списке — no-op,
