@@ -12,6 +12,13 @@
     <!-- Кнопка «отключить оптимизацию батареи» в настройках -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
+    <!-- Android 11+ (package visibility): чтобы resolveActivity() видел стоковые часы для ACTION_SET_ALARM -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SET_ALARM" />
+        </intent>
+    </queries>
+
     <application
         android:name=".AutoAlarmApp"
         android:allowBackup="true"
