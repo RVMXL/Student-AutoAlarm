@@ -97,7 +97,7 @@ jobs:
           test -f "$APK" || { echo "✗ APK не собран"; exit 1; }
           APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -1)
           echo "apksigner: $APKSIGNER"
-          "$APKSIGNER" verify "$APK" --print-certs | tee /tmp/certs.txt
+          "$APKSIGNER" verify --print-certs "$APK" | tee /tmp/certs.txt
           CERT_SHA=$(sed -n 's/^.*certificate SHA-256 digest: //p' /tmp/certs.txt | head -1)
           echo "Сертификат подписи (SHA-256): $CERT_SHA"
           echo "CERT_SHA=$CERT_SHA" >> "$GITHUB_ENV"
