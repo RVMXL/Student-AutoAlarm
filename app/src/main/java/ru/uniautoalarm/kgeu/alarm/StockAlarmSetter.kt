@@ -100,6 +100,31 @@ class StockAlarmSetter(
         return count
     }
 
+    /**
+     * Тестовый будильник через [minutesFromNow] минут (кнопка «Проверить будильник» в настройках).
+     * Ставится напрямую, без планировщика, с меткой «Тест».
+     * @return true, если будильник передан часам.
+     */
+    fun setTestAlarm(minutesFromNow: Int = 2): Boolean {
+        if (!canSet()) return false
+        val at = LocalDateTime.now().plusMinutes(minutesFromNow.toLong())
+        val intent = Intent(AlarmClock.ACTION_SET_ALARM).apply {
+            putExtra(AlarmClock.EXTRA_SKIP_UI, true)
+            putExtra(AlarmClock.EXTRA_HOUR, at.hour)
+            putExtra(AlarmClock.EXTRA_MINUTES, at.minute)
+            putExtra(AlarmClock.EXTRA_MESSAGE, "Тест: Автобудильник работает!")
+            putExtra(AlarmClock.EXTRA_VIBRATE, true)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        return try {
+            context.startActivity(intent)
+            true
+        } catch (e: Exception) {
+            Log.w(TAG, "Тестовый будильник не принят часами: ${e.message}")
+            false
+        }
+    }
+
     private fun alarmIntent(): Intent = Intent(AlarmClock.ACTION_SET_ALARM)
 
     companion object {
