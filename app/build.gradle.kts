@@ -28,6 +28,15 @@ android {
             )
         }
     }
+
+    // ── Подпись релиза: один стабильный ключ из Secrets CI ──────────────────────
+    // Обновления поверх старых установок возможны ТОЛЬКО при неизменном ключе
+    // подписи. Поэтому ключ не живёт в git и НЕ генерируется сборкой:
+    // если env-переменных нет, release-сборка падает ЯВНО (см. guard ниже),
+    // а не молча выезжает неподписанной или с новым ключом.
+    signingConfigs {
+        create("release")
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -37,6 +46,37 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+}
+
+// Заполнение release-подписи из окружения (в CI — из Secrets GitHub Actions).
+val releaseSigning = android.signingConfigs.getByName("release")
+System.getenv("KEYSTORE_FILE")?.let { ksPath ->
+    releaseSigning.storeFile = rootProject.file(ksPath)
+    releaseSigning.storePassword = System.getenv("KEYSTORE_PASSWORD")
+        ?: throw GradleException("KEYSTORE_FILE задан, но KEYSTORE_PASSWORD нет — подпись неполная")
+    releaseSigning.keyAlias = System.getenv("KEY_ALIAS")
+        ?: throw GradleException("KEYSTORE_FILE задан, но KEY_ALIAS нет — подпись неполная")
+    releaseSigning.keyPassword = System.getenv("KEY_PASSWORD")
+        ?: throw GradleException("KEYSTORE_FILE задан, но KEY_PASSWORD нет — подпись неполная")
+}
+
+// Guard: release-сборка без стабильного ключа запрещена (явное падение вместо
+// молчаливой неподписанной APK или автогенерации нового ключа).
+gradle.taskGraph.whenReady {
+    val buildsRelease = allTasks.any {
+        it.path.endsWith(":assembleRelease") || it.path.endsWith(":bundleRelease")
+    }
+    if (buildsRelease) {
+        if (System.getenv("KEYSTORE_FILE") == null) {
+            throw GradleException(
+                "Сборка release без ключа подписи запрещена: KEYSTORE_FILE не задан. " +
+                    "Ключ подписи один и хранится в Secrets CI (.github/workflows/release.yml). " +
+                    "Локально передайте KEYSTORE_FILE/KEYSTORE_PASSWORD/KEY_ALIAS/KEY_PASSWORD. " +
+                    "Автогенерация нового ключа запрещена: она ломает обновления поверх старых установок."
+            )
+        }
+        android.buildTypes.getByName("release").signingConfig = releaseSigning
     }
 }
 

@@ -1,9 +1,9 @@
-# UniAutoAlarm-KGEU
+# Student-AutoAlarm
 
-UniAutoAlarm-KGEU: Android-приложение (Kotlin, Jetpack Compose), которое по расписанию
+Student-AutoAlarm: Android-приложение (Kotlin, Jetpack Compose), которое по расписанию
 КГЭУ автоматически ставит будильник в **стоковое приложение часов** перед первой парой.
-Суффикс `-KGEU` — Казанский государственный энергетический университет: сейчас расписание
-берётся из официального публичного API личного кабинета [`kabinet.kgeu.ru`](https://kabinet.kgeu.ru/WebApp/#/Rasp/List)
+Сейчас расписание берётся из официального публичного API личного кабинета
+[`kabinet.kgeu.ru`](https://kabinet.kgeu.ru/WebApp/#/Rasp/List)
 (архитектура допускает добавление других вузов — слой провайдера расписания изолирован).
 
 Приложение каждый ночью перепроверяет расписание, вычисляет время первой пары **завтрашнего**
@@ -39,7 +39,7 @@ UniAutoAlarm-KGEU: Android-приложение (Kotlin, Jetpack Compose), ко�
 
 ### Android (ARM64 / ARM32 / x86_64)
 
-1. Скачайте APK из раздела [Releases](https://github.com/rvmxl/UniAutoAlarm-KGEU/releases) (на момент v0.1.0 релизов ещё нет — соберите из исходников, см. ниже).
+1. Скачайте APK из раздела [Releases](https://github.com/rvmxl/Student-AutoAlarm/releases).
 2. Откройте файл и разрешите установку из неизвестных источников для вашего проводника/браузера.
 3. Запустите «Автобудильник КГЭУ» и пройдите мастер настройки (5 шагов, ~1 минута).
 
@@ -48,7 +48,12 @@ UniAutoAlarm-KGEU: Android-приложение (Kotlin, Jetpack Compose), ко�
 
 ### Обновление
 
-- Установите новый APK поверх старого — настройки, исключения и кэш расписания сохраняются (DataStore/Room).
+- Установите новый APK **поверх старого** — настройки, исключения и кэш расписания сохраняются (DataStore/Room).
+- Обновления поверх работают потому, что все релизы подписываются **одним и тем же стабильным ключом**
+  (хранится в Secrets CI, в git не попадает; SHA-256 ключа зафиксирован пином в workflow —
+  подмена секрета ломает сборку, а не молча подписывает APK чужим ключом).
+- SHA-256 сертификата подписи (сверяйте после обновлений):
+  `FD:29:47:48:43:08:64:89:7F:87:30:57:A7:2F:19:C1:E7:B2:D3:CB:B7:F4:CB:CF:2D:D4:95:F5:C5:95:F5:A0`
 - После обновления в 00:05 приложение само продолжит работу; перенастройка не требуется.
 
 ### Первый запуск — чек-лист выживания
@@ -89,8 +94,8 @@ UniAutoAlarm-KGEU: Android-приложение (Kotlin, Jetpack Compose), ко�
 
 ```bash
 # 1. JDK 17+, Android SDK (platform 35, build-tools 35)
-git clone https://github.com/rvmxl/UniAutoAlarm-KGEU.git
-cd UniAutoAlarm-KGEU
+git clone https://github.com/rvmxl/Student-AutoAlarm.git
+cd Student-AutoAlarm
 
 # 2. local.properties со путём к SDK (или переменная ANDROID_HOME)
 echo "sdk.dir=/path/to/Android/Sdk" > local.properties
@@ -99,7 +104,11 @@ echo "sdk.dir=/path/to/Android/Sdk" > local.properties
 ./gradlew :app:assembleDebug
 # результат: app/build/outputs/apk/debug/app-debug.apk
 
-# 4. Релизная сборка (без подписи; подписывайте своим ключом)
+# 4. Релизная сборка — ТОЛЬКО со стабильным ключом подписи (обновления поверх):
+#    env-переменные KEYSTORE_FILE, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD.
+#    Ключа нет → сборка упадёт ЯВНО (автогенерация нового ключа запрещена:
+#    чужой/новый ключ ломает установку обновлений поверх старых версий).
+#    В CI ключ берётся из Secrets (см. .github/workflows/release.yml).
 ./gradlew :app:assembleRelease
 ```
 
