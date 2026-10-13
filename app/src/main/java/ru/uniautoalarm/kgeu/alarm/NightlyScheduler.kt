@@ -21,7 +21,7 @@ object NightlyScheduler {
     const val NIGHT_MINUTE = 5
 
     private const val REQUEST_CODE_NIGHTLY = 42
-    private const val WINDOW_MS = TimeUnit.MINUTES.toMillis(10) // запас для не-точного режима
+    private val WINDOW_MS = TimeUnit.MINUTES.toMillis(10) // запас для не-точного режима (не const: вызов функции)
 
     /** Поставить/перепоставить ночной тик и гарантировать периодический sync. Идемпотентно. */
     fun scheduleNext(context: Context) {

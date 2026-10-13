@@ -65,7 +65,7 @@ class NightlyAlarmReceiver : BroadcastReceiver() {
 
                 // 4) фоновая досинхронизация: сегодня, неделя+7, полный семестр по графику
                 val syncRequest = OneTimeWorkRequestBuilder<SyncWorker>()
-                    .setExpedited(OutOfQuotaPolicy.RUN_AS_EXPEDITED_WORK_REQUEST)
+                    .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
                     .setConstraints(
                         Constraints.Builder()
                             .setRequiredNetworkType(NetworkType.CONNECTED)

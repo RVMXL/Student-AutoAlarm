@@ -15,8 +15,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ChevronLeft
-import androidx.compose.material.icons.automirrored.rounded.ChevronRight
+import androidx.compose.material.icons.rounded.ChevronLeft
+import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.EventBusy
 import androidx.compose.material.icons.rounded.NotificationsActive
 import androidx.compose.material.icons.rounded.NotificationsOff
@@ -115,7 +115,7 @@ fun ScheduleScreen() {
             ) {
                 IconButton(onClick = { vm.prevWeek() }) {
                     Icon(
-                        Icons.AutoMirrored.Rounded.ChevronLeft,
+                        Icons.Rounded.ChevronLeft,
                         contentDescription = "Предыдущая неделя"
                     )
                 }
@@ -129,7 +129,7 @@ fun ScheduleScreen() {
                 )
                 IconButton(onClick = { vm.nextWeek() }) {
                     Icon(
-                        Icons.AutoMirrored.Rounded.ChevronRight,
+                        Icons.Rounded.ChevronRight,
                         contentDescription = "Следующая неделя"
                     )
                 }

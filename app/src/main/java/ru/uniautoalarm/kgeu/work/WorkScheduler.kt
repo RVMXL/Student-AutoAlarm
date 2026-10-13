@@ -17,7 +17,7 @@ object WorkScheduler {
     /** Разовая expedited-синхронизация: тянем свежие данные сразу (предыдущую заменяем). */
     fun enqueueSyncNow(context: Context) {
         val request = OneTimeWorkRequestBuilder<SyncWorker>()
-            .setExpedited(OutOfQuotaPolicy.RUN_AS_EXPEDITED_WORK_REQUEST)
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .setConstraints(
                 Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)

@@ -21,7 +21,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -137,7 +136,7 @@ private fun MainScaffold(settings: Settings) {
         containerColor = if (backgroundPath != null) {
             Color.Transparent
         } else {
-            ScaffoldDefaults.containerColor
+            MaterialTheme.colorScheme.background
         },
         bottomBar = {
             NavigationBar {
