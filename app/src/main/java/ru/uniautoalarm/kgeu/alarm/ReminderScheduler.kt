@@ -24,18 +24,25 @@ object ReminderScheduler {
     /** Поставить/перепоставить ближайший тик напоминания. Идемпотентно, чует настройки. */
     fun scheduleNext(context: Context) {
         val appContext = context.applicationContext
-        val am = appContext.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+        val container = (appContext as AutoAlarmApp).container
+        // current() — suspend (DataStore): читаем настройки в корутине app scope,
+        // сама постановка будильника — лёгкая системная операция внутри launch
+        container.appScope.launch { scheduleNextSync(appContext, container) }
+    }
+
+    private suspend fun scheduleNextSync(context: Context, container: AppContainer) {
+        val am = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
         if (am != null) {
-            val settings = (appContext as AutoAlarmApp).container.settings.current()
+            val settings = container.settings.current()
             if (settings.setupComplete && settings.reminderEnabled) {
                 val now = LocalDateTime.now()
                 var next = now.toLocalDate().atTime(settings.reminderTime)
                 if (!now.isBefore(next)) next = next.plusDays(1) // время уже прошло — на завтра
 
                 val pending = PendingIntent.getBroadcast(
-                    appContext,
+                    context,
                     REQUEST_CODE_REMINDER,
-                    Intent(appContext, ReminderReceiver::class.java),
+                    Intent(context, ReminderReceiver::class.java),
                     PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                 )
                 val triggerAtMs = next.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()

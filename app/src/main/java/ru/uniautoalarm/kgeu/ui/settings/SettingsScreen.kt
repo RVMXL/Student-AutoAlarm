@@ -521,6 +521,7 @@ private fun OffsetDialog(
 
 // --- Напоминание о будильнике ---
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
     var showTimePicker by remember { mutableStateOf(false) }
