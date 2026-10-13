@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Будильник: корпус, стрелки, «колокола» сверху -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- корпус часов -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,58 m-21,0 a21,21 0 1,1 42,0 a21,21 0 1,1 -42,0"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="6" />
+
+    <!-- минутная стрелка -->
+    <path
+        android:pathData="M54,58 L54,44"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="5.5" />
+
+    <!-- часовая стрелка -->
+    <path
+        android:pathData="M54,58 L64,63"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="5.5" />
+
+    <!-- левое «ухо»-колокол -->
+    <path
+        android:pathData="M34,36 L43,27"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="6" />
+
+    <!-- правое «ухо»-колокол -->
+    <path
+        android:pathData="M74,36 L65,27"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="6" />
+
+    <!-- ножка слева -->
+    <path
+        android:pathData="M38,76 L33,82"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="5" />
+
+    <!-- ножка справа -->
+    <path
+        android:pathData="M70,76 L75,82"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="5" />
+</vector>

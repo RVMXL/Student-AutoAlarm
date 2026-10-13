@@ -1,0 +1,31 @@
+UniAutoAlarm-KGEU
+Copyright 2026 RVMXL
+
+Это Android-приложение (Kotlin, Jetpack Compose) автоматически ставит будильник
+в стоковое приложение часов по расписанию занятий Казанского государственного
+энергетического университета (КГЭУ) перед первой парой.
+
+Продукт: https://github.com/rvmxl/UniAutoAlarm-KGEU
+
+ПРАВОВОЕ УВЕДОМЛЕНИЕ
+
+Расписание занятий, списки групп и преподавателей принадлежат КГЭУ и получаются
+приложением напрямую из официального публичного API личного кабинета университета
+(kabinet.kgeu.ru). Это приложение не является продуктом КГЭУ и не аффилировано
+с университетом; за корректность данных отвечает источник расписания.
+
+Сторонние компоненты (Apache License 2.0, если не указано иное):
+
+  - Kotlin, kotlinx.coroutines, kotlinx.serialization
+    (JetBrains, https://github.com/JetBrains/kotlin)
+  - Jetpack Compose, AndroidX (Activity, Lifecycle, Navigation, Room, DataStore,
+    WorkManager) — Google, https://developer.android.com/jetpack
+  - OkHttp — Square, https://github.com/square/okhttp
+  - Coil — Coil, https://github.com/coil-kt/coil (Apache License 2.0)
+
+Android является товарным знаком Google LLC. Все прочие товарные знаки
+принадлежат их владельцам.
+
+Использование ПО — на собственный риск; автор не гарантирует срабатывание
+будильника на всех устройствах (агрессивные планировщики ОС могут завершать
+фоновые процессы — см. настройки «Батарея и автозапуск»).

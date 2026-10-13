@@ -1,0 +1,34 @@
+# gradle
+.gradle/
+build/
+app/build/
+local.properties
+
+# IDE / kotlin
+.idea/
+*.iml
+captures/
+.kotlin/
+.externalNativeBuild/
+.cxx/
+
+# release artifacts & signing material (never commit)
+*.apk
+*.aab
+*.keystore
+*.jks
+*.idsig
+keystore.properties
+download/
+
+# sandbox / agent work artifacts — never publish
+worklog.md
+postcss.config.json
+
+# misc
+.DS_Store
+*.log
+*.pem
+
+# env files
+.env*
