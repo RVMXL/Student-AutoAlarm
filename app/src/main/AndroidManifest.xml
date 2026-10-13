@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Сеть: API расписания kabinet.kgeu.ru -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,6 +12,10 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <!-- Кнопка «отключить оптимизацию батареи» в настройках -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- FGS-fallback expedited-работ WorkManager на Android 9–11 (dataSync) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- Тип dataSync обязателен с API 34 (на старых API игнорируется) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <!-- Android 11+ (package visibility): чтобы resolveActivity() видел стоковые часы для ACTION_SET_ALARM -->
     <queries>
@@ -53,6 +58,16 @@
         <receiver
             android:name=".alarm.NightlyAlarmReceiver"
             android:exported="false" />
+
+        <!--
+            WorkManager: expedited-работы на Android < 12 исполняются как foreground-сервис.
+            Указываем тип dataSync для SystemForegroundService (требование lint
+            SpecifyForegroundServiceType); на Android 12+ работает обычный expedited Job.
+        -->
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            tools:node="merge" />
     </application>
 
 </manifest>
