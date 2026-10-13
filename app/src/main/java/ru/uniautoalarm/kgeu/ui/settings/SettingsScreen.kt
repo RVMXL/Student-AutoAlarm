@@ -202,15 +202,24 @@ fun SettingsScreen() {
                 }
             }
 
-            // --- 3. Исключения ---
+            // --- 3. Напоминание о будильнике ---
+            item { SectionTitle("Напоминание о будильнике") }
+            item {
+                val s = settings
+                if (s != null) {
+                    ReminderCard(settings = s, vm = vm)
+                }
+            }
+
+            // --- 4. Исключения ---
             item { SectionTitle("Исключения") }
             item { ExceptionsCard(exceptions = exceptions, vm = vm) }
 
-            // --- 4. Свои занятия ---
+            // --- 5. Свои занятия ---
             item { SectionTitle("Свои занятия") }
             item { CustomEventsCard(events = customEvents, vm = vm) }
 
-            // --- 5. Оформление ---
+            // --- 6. Оформление ---
             item { SectionTitle("Оформление") }
             item {
                 val s = settings
@@ -219,7 +228,7 @@ fun SettingsScreen() {
                 }
             }
 
-            // --- 6. Система ---
+            // --- 7. Система ---
             item { SectionTitle("Система") }
             item {
                 SystemCard(
@@ -232,7 +241,7 @@ fun SettingsScreen() {
                 )
             }
 
-            // --- 7. О приложении ---
+            // --- 8. О приложении ---
             item { SectionTitle("О приложении") }
             item { AboutCard(versionName = versionName, context = context) }
         }
@@ -510,11 +519,111 @@ private fun OffsetDialog(
     )
 }
 
-// --- 3. Исключения ---
+// --- Напоминание о будильнике ---
+
+@Composable
+private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
+    var showTimePicker by remember { mutableStateOf(false) }
+
+    Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .toggleable(
+                        value = settings.reminderEnabled,
+                        role = Role.Switch,
+                        onValueChange = { vm.setReminderEnabled(it) }
+                    ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Rounded.Schedule,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.width(12.dp))
+                Column(Modifier.weight(1f)) {
+                    Text("Напоминание о будильнике", style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        "Своё уведомление: «завтра пара во столько — не забудьте поставить будильник»",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Switch(checked = settings.reminderEnabled, onCheckedChange = null)
+            }
+            Text(
+                "Фолбэк, когда стоковые часы не принимают команды приложения — встречается " +
+                    "на Realme, Huawei, Xiaomi (особенно китайские прошивки). Напоминание приходит " +
+                    "каждый день в выбранное время, если на завтра есть пара.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            if (settings.reminderEnabled) {
+                OutlinedButton(onClick = { showTimePicker = true }) {
+                    Icon(Icons.Rounded.Schedule, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        "Время напоминания: %02d:%02d"
+                            .format(settings.reminderTime.hour, settings.reminderTime.minute)
+                    )
+                }
+            }
+        }
+    }
+
+    if (showTimePicker) {
+        val timeState = rememberTimePickerState(
+            initialHour = settings.reminderTime.hour,
+            initialMinute = settings.reminderTime.minute,
+            is24Hour = true
+        )
+        AlertDialog(
+            onDismissRequest = { showTimePicker = false },
+            title = { Text("Время напоминания") },
+            text = {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    TimePicker(state = timeState)
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    vm.setReminderTime(LocalTime.of(timeState.hour, timeState.minute))
+                    showTimePicker = false
+                }) {
+                    Text("ОК")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showTimePicker = false }) { Text("Отмена") }
+            }
+        )
+    }
+}
+
+// --- 4. Исключения ---
 
 @Composable
 private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewModel) {
     var newText by remember { mutableStateOf("") }
+
+    // Автодополнение по дисциплинам из кэша расписания: ввёл «ма» — подсказывает
+    // «материаловедение». Живёт только пока текст не совпадает с подсказкой.
+    val subjects by vm.subjects.collectAsStateWithLifecycle()
+    val query = newText.trim()
+    val suggestions = if (query.isEmpty()) {
+        emptyList()
+    } else {
+        subjects
+            .filter { it.contains(query, ignoreCase = true) && !it.equals(query, ignoreCase = true) }
+            .take(5)
+    }
 
     Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
         Column(
@@ -579,11 +688,34 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                     Icon(Icons.Rounded.Add, contentDescription = "Добавить исключение")
                 }
             }
+            if (suggestions.isNotEmpty()) {
+                Text(
+                    "Найдено в расписании:",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                suggestions.forEach { subject ->
+                    TextButton(
+                        onClick = {
+                            vm.addException(subject)
+                            newText = ""
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            subject,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Start
+                        )
+                    }
+                }
+            }
         }
     }
 }
 
-// --- 4. Свои занятия ---
+// --- 5. Свои занятия ---
 
 @Composable
 private fun CustomEventsCard(events: List<CustomEvent>, vm: SettingsViewModel) {
@@ -824,7 +956,7 @@ private fun AddEventDialog(
     }
 }
 
-// --- 5. Оформление ---
+// --- 6. Оформление ---
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -832,6 +964,9 @@ private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: C
     val scope = rememberCoroutineScope()
     var opacity by remember(settings.backgroundOpacity) {
         mutableFloatStateOf(settings.backgroundOpacity)
+    }
+    var glassIntensity by remember(settings.glassIntensity) {
+        mutableFloatStateOf(settings.glassIntensity)
     }
 
     val imagePicker = rememberLauncherForActivityResult(
@@ -970,6 +1105,57 @@ private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: C
                 onValueChangeFinished = { vm.setBackgroundOpacity(opacity) },
                 valueRange = 0f..1f
             )
+
+            HorizontalDivider()
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .toggleable(
+                        value = settings.glassEnabled,
+                        role = Role.Switch,
+                        onValueChange = { vm.setGlassEnabled(it) }
+                    ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Rounded.Wallpaper,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.width(12.dp))
+                Column(Modifier.weight(1f)) {
+                    Text("Эффект стекла", style = MaterialTheme.typography.bodyLarge)
+                    Text(
+                        "Карточки полупрозрачные, как матовое стекло; фоновая картинка размывается",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Switch(checked = settings.glassEnabled, onCheckedChange = null)
+            }
+            if (settings.glassEnabled) {
+                Text(
+                    "Интенсивность стекла",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Slider(
+                    value = glassIntensity,
+                    onValueChange = { glassIntensity = it },
+                    onValueChangeFinished = { vm.setGlassIntensity(glassIntensity) },
+                    valueRange = 0.05f..0.9f
+                )
+                Text(
+                    if (settings.backgroundImagePath == null) {
+                        "Совет: стекло лучше всего смотрится с фоновой картинкой (выше)"
+                    } else {
+                        "Стекло активно"
+                    },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
@@ -1010,7 +1196,7 @@ private fun AccentDot(
     }
 }
 
-// --- 6. Система ---
+// --- 7. Система ---
 
 @Composable
 private fun SystemCard(
@@ -1196,7 +1382,7 @@ private fun AutostartDialog(onDismiss: () -> Unit) {
     )
 }
 
-// --- 7. О приложении ---
+// --- 8. О приложении ---
 
 @Composable
 private fun AboutCard(versionName: String?, context: Context) {

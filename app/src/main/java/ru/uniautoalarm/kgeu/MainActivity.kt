@@ -17,6 +17,7 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -27,6 +28,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -74,15 +76,19 @@ class MainActivity : ComponentActivity() {
 /** Корневой роутер: снимок настроек ещё не пришёл → загрузка; онбординг не пройден → мастер. */
 @Composable
 private fun Root(settings: Settings?) {
-    when {
-        settings == null -> BootingScreen()
+    // Явный contentColor: корень без Surface оставлял LocalContentColor = чёрный —
+    // заголовки мастера были чёрными на тёмном фоне (скрин с Realme GT Neo 5 SE).
+    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+        when {
+            settings == null -> BootingScreen()
 
-        !settings.setupComplete -> SetupScreen(
-            // Данные настроек обновятся из DataStore — recomposition произойдёт сам
-            onFinished = { }
-        )
+            !settings.setupComplete -> SetupScreen(
+                // Данные настроек обновятся из DataStore — recomposition произойдёт сам
+                onFinished = { }
+            )
 
-        else -> MainScaffold(settings)
+            else -> MainScaffold(settings)
+        }
     }
 }
 
@@ -175,7 +181,17 @@ private fun MainScaffold(settings: Settings) {
                     model = File(backgroundPath),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.matchParentSize(),
+                    modifier = Modifier
+                        .matchParentSize()
+                        // Эффект стекла: фоновая картинка размыта по ползунку (API 31+,
+                        // на старых Android блюр молча не применяется — остаётся прозрачность)
+                        .then(
+                            if (settings.glassEnabled) {
+                                Modifier.blur((settings.glassIntensity * 20).dp)
+                            } else {
+                                Modifier
+                            }
+                        ),
                     alpha = settings.backgroundOpacity
                 )
             }

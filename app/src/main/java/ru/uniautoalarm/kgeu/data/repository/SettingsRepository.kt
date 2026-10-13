@@ -14,6 +14,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import java.io.IOException
 import java.time.LocalDate
+import java.time.LocalTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
@@ -53,6 +54,10 @@ class SettingsRepository(private val context: Context) {
         val BACKGROUND_IMAGE_PATH = stringPreferencesKey("background_image_path")
         val BACKGROUND_OPACITY = floatPreferencesKey("background_opacity")
         val WEEK_ALARMS_SET_UNTIL = longPreferencesKey("week_alarms_set_until_epoch_day")
+        val REMINDER_ENABLED = booleanPreferencesKey("reminder_enabled")
+        val REMINDER_TIME = stringPreferencesKey("reminder_time")
+        val GLASS_ENABLED = booleanPreferencesKey("glass_enabled")
+        val GLASS_INTENSITY = floatPreferencesKey("glass_intensity")
     }
 
     /** Поток настроек: перевыпускается при каждом изменении; сбой чтения → значения по умолчанию. */
@@ -98,7 +103,11 @@ class SettingsRepository(private val context: Context) {
         calendarStyle = parseEnum(this[Keys.CALENDAR_STYLE], CalendarStyle.STANDARD),
         backgroundImagePath = this[Keys.BACKGROUND_IMAGE_PATH],
         backgroundOpacity = this[Keys.BACKGROUND_OPACITY] ?: 0.35f,
-        weekAlarmsSetUntilEpochDay = this[Keys.WEEK_ALARMS_SET_UNTIL] ?: -1L
+        weekAlarmsSetUntilEpochDay = this[Keys.WEEK_ALARMS_SET_UNTIL] ?: -1L,
+        reminderEnabled = this[Keys.REMINDER_ENABLED] ?: false,
+        reminderTime = this[Keys.REMINDER_TIME]?.let { parseTime(it) } ?: LocalTime.of(21, 0),
+        glassEnabled = this[Keys.GLASS_ENABLED] ?: false,
+        glassIntensity = this[Keys.GLASS_INTENSITY] ?: 0.5f
     )
 
     // --- Запись: setXxx для каждого поля Settings ---
@@ -133,6 +142,11 @@ class SettingsRepository(private val context: Context) {
         if (path != null) this[Keys.BACKGROUND_IMAGE_PATH] = path else remove(Keys.BACKGROUND_IMAGE_PATH)
         this[Keys.BACKGROUND_OPACITY] = s.backgroundOpacity
         this[Keys.WEEK_ALARMS_SET_UNTIL] = s.weekAlarmsSetUntilEpochDay
+
+        this[Keys.REMINDER_ENABLED] = s.reminderEnabled
+        this[Keys.REMINDER_TIME] = s.reminderTime.toString()
+        this[Keys.GLASS_ENABLED] = s.glassEnabled
+        this[Keys.GLASS_INTENSITY] = s.glassIntensity
     }
 
     // --- Утилиты парсинга (битые значения молча заменяются дефолтом) ---
@@ -145,4 +159,6 @@ class SettingsRepository(private val context: Context) {
         else runCatching { enumValueOf<T>(name) }.getOrDefault(default)
 
     private fun parseDate(iso: String): LocalDate? = runCatching { LocalDate.parse(iso) }.getOrNull()
+
+    private fun parseTime(iso: String): LocalTime? = runCatching { LocalTime.parse(iso) }.getOrNull()
 }

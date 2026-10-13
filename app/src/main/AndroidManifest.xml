@@ -59,6 +59,11 @@
             android:name=".alarm.NightlyAlarmReceiver"
             android:exported="false" />
 
+        <!-- Ежедневное напоминание о будильнике (время из настроек; фолбэк для Realme/Huawei) -->
+        <receiver
+            android:name=".alarm.ReminderReceiver"
+            android:exported="false" />
+
         <!--
             WorkManager: expedited-работы на Android < 12 исполняются как foreground-сервис.
             Указываем тип dataSync для SystemForegroundService (требование lint

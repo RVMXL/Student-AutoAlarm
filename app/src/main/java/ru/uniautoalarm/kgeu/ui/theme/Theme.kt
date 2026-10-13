@@ -34,7 +34,7 @@ fun AutoAlarmTheme(settings: Settings?, content: @Composable () -> Unit) {
     }
 
     val context = LocalContext.current
-    val colorScheme = when {
+    var colorScheme = when {
         settings != null && settings.dynamicColor && Build.VERSION.SDK_INT >= 31 ->
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
 
@@ -45,6 +45,25 @@ fun AutoAlarmTheme(settings: Settings?, content: @Composable () -> Unit) {
             val palette = ACCENT_PALETTES[settings.accentIndex.coerceIn(0, ACCENT_PALETTES.lastIndex)]
             if (darkTheme) palette.toDarkScheme() else palette.toLightScheme()
         }
+    }
+
+    // Эффект стекла: все поверхности/карточки становятся полупрозрачными, под ними
+    // просвечивает фон (окно или пользовательская картинка). Интенсивность — ползунок
+    // в настройках (0..1): чем больше, тем прозрачнее. Минимум 0.15 — текст читается.
+    if (settings?.glassEnabled == true) {
+        val glassAlpha = (1f - settings.glassIntensity * 0.85f).coerceIn(0.15f, 1f)
+        colorScheme = colorScheme.copy(
+            background = colorScheme.background.copy(alpha = glassAlpha),
+            surface = colorScheme.surface.copy(alpha = glassAlpha),
+            surfaceVariant = colorScheme.surfaceVariant.copy(alpha = glassAlpha),
+            surfaceContainerLowest = colorScheme.surfaceContainerLowest.copy(alpha = glassAlpha),
+            surfaceContainerLow = colorScheme.surfaceContainerLow.copy(alpha = glassAlpha),
+            surfaceContainer = colorScheme.surfaceContainer.copy(alpha = glassAlpha),
+            surfaceContainerHigh = colorScheme.surfaceContainerHigh.copy(alpha = glassAlpha),
+            surfaceContainerHighest = colorScheme.surfaceContainerHighest.copy(alpha = glassAlpha),
+            surfaceDim = colorScheme.surfaceDim.copy(alpha = glassAlpha),
+            surfaceBright = colorScheme.surfaceBright.copy(alpha = glassAlpha)
+        )
     }
 
     MaterialTheme(

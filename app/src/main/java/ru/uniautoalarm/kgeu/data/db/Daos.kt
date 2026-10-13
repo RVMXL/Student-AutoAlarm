@@ -40,6 +40,10 @@ interface LessonDao {
 
     @Query("SELECT COUNT(*) FROM lessons WHERE targetKey = :targetKey")
     suspend fun countFor(targetKey: String): Int
+
+    /** Уникальные названия дисциплин в кэше — для автодополнения исключений. */
+    @Query("SELECT DISTINCT subject FROM lessons ORDER BY subject ASC")
+    fun distinctSubjects(): Flow<List<String>>
 }
 
 @Dao

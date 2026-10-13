@@ -31,6 +31,7 @@ object Notifications {
     private const val NOTIF_SET_ID = 1001
     private const val NOTIF_SKIPPED_ID = 1002
     private const val NOTIF_WEEK_ID = 1003
+    private const val NOTIF_REMINDER_ID = 1004
 
     private val RU_DATE = DateTimeFormatter.ofPattern("EEEE dd MMMM", Locale.forLanguageTag("ru-RU"))
     private val RU_DATE_SHORT = DateTimeFormatter.ofPattern("dd MMMM", Locale.forLanguageTag("ru-RU"))
@@ -90,6 +91,30 @@ object Notifications {
             .setAutoCancel(true)
             .build()
         post(context, NOTIF_WEEK_ID, notification)
+    }
+
+    /**
+     * Напоминание о будильнике (фолбэк для оболочек, где стоковые часы не принимают
+     * SET_ALARM — Realme/Huawei и др.): «завтра такая-то пара во столько —
+     * не забудьте поставить будильник».
+     */
+    fun reminder(context: Context, plan: AlarmPlan) {
+        val time = String.format(Locale.getDefault(), "%02d:%02d", plan.wakeAt.hour, plan.wakeAt.minute)
+        val details = when {
+            plan.lesson != null -> lessonDetails(plan.lesson.subject, plan.lesson.room)
+            plan.customEvent != null -> plan.customEvent.name
+            else -> plan.label
+        }
+        val text = "Завтра, ${plan.date.format(RU_DATE)}: пара в $time — $details. " +
+            "Не забудьте поставить будильник."
+        val notification = baseBuilder(context)
+            .setContentTitle("Не забудьте поставить будильник")
+            .setContentText(text)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+            .setContentIntent(mainActivityIntent(context))
+            .setAutoCancel(true)
+            .build()
+        post(context, NOTIF_REMINDER_ID, notification)
     }
 
     /**

@@ -44,6 +44,9 @@ class ScheduleRepository(
     /** Состояние синхронизации для UI: занятость, время, ошибка, число записей за неделю. */
     val syncState: StateFlow<SyncInfo> = _syncState.asStateFlow()
 
+    /** Уникальные названия дисциплин в кэше — автодополнение исключений в настройках. */
+    val subjects: Flow<List<String>> = db.lessonDao().distinctSubjects()
+
     /** Ключ цели в БД: «g:<id>» для группы/студента, «t:<id>» для преподавателя. */
     suspend fun targetKey(t: Target): String = when (t.type) {
         TargetType.STUDENT -> "g:${t.id}"

@@ -14,6 +14,9 @@ import ru.uniautoalarm.kgeu.domain.AlarmPlanner
 /** Ручной DI: один контейнер зависимостей на процесс, живёт в AutoAlarmApp. */
 class AppContainer(context: Context) {
 
+    /** Application-контекст: для планировщиков/репозиториев вне экранов. */
+    val appContext: Context = context.applicationContext
+
     /** Глобальный scope движка: переживает экраны, ошибка одного ребёнка не роняет остальных. */
     val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 

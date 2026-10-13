@@ -43,15 +43,14 @@ class StockAlarmSetter(
     /**
      * Поставить будильник на [date] по плану планировщика.
      * @return план, если будильник реально передан часам;
-     *         null — пар нет / часы не найдены / сбой запуска.
+     *         null — пар нет / часы не приняли команду / сбой запуска.
      */
     suspend fun setForDate(date: LocalDate, notify: Boolean = true): AlarmPlan? =
         withContext(Dispatchers.Default) {
+            // resolveActivity ненадёжен на части оболочек (package visibility, кастомные часы
+            // на Realme/Xiaomi): отрицательный ответ — НЕ повод отказываться, пробуем ставить.
             if (!canSet()) {
-                // По контракту — просто логируем и выходим. Примечание: на Android 11+
-                // без <queries> в манифесте resolveActivity может «не увидеть» часы.
-                Log.w(TAG, "ACTION_SET_ALARM не обработан — будильник на $date не поставлен")
-                return@withContext null
+                Log.w(TAG, "resolveActivity не нашёл обработчик SET_ALARM — пробуем поставить всё равно")
             }
 
             val plan = planner.planFor(date)
@@ -72,6 +71,12 @@ class StockAlarmSetter(
                 context.startActivity(intent)
             } catch (e: Exception) {
                 Log.w(TAG, "Часы не приняли SET_ALARM: ${e.message}")
+                if (notify) {
+                    Notifications.alarmSkipped(
+                        context, date,
+                        "часы телефона не приняли команду — включите «Напоминание о будильнике» в настройках"
+                    )
+                }
                 return@withContext null
             }
             if (notify) Notifications.alarmSet(context, plan)
@@ -106,7 +111,6 @@ class StockAlarmSetter(
      * @return true, если будильник передан часам.
      */
     fun setTestAlarm(minutesFromNow: Int = 2): Boolean {
-        if (!canSet()) return false
         val at = LocalDateTime.now().plusMinutes(minutesFromNow.toLong())
         val intent = Intent(AlarmClock.ACTION_SET_ALARM).apply {
             putExtra(AlarmClock.EXTRA_SKIP_UI, true)

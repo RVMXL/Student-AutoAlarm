@@ -28,8 +28,9 @@ class BootReceiver : BroadcastReceiver() {
             try {
                 val appContext = context.applicationContext
 
-                // 1) восстановить ночной тик и разовую синхронизацию
+                // 1) восстановить ночной тик, напоминание и разовую синхронизацию
                 NightlyScheduler.scheduleNext(appContext)
+                ReminderScheduler.scheduleNext(appContext)
                 WorkScheduler.enqueueSyncNow(appContext)
 
                 // 2) страховка режима «на неделю вперёд»:

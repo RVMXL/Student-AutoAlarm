@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.uniautoalarm.kgeu.alarm.ReminderScheduler
 import ru.uniautoalarm.kgeu.data.db.CustomEventEntity
 import ru.uniautoalarm.kgeu.data.db.ExceptionEntity
 import ru.uniautoalarm.kgeu.data.model.AlarmMode
@@ -45,6 +46,10 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     /** Свои занятия (реактивно из Room). */
     val customEvents: StateFlow<List<CustomEvent>> = container.database.customEventDao().all()
         .map { list -> list.map { it.toModel() } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    /** Уникальные дисциплины из кэша расписания — подсказки для исключений. */
+    val subjects: StateFlow<List<String>> = container.scheduleRepository.subjects
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     // --- Настройки-«примитивы» ---
@@ -112,6 +117,36 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     fun setBackgroundOpacity(value: Float) {
         viewModelScope.launch {
             container.settings.update { it.copy(backgroundOpacity = value.coerceIn(0f, 1f)) }
+        }
+    }
+
+    // --- Напоминание о будильнике (фолбэк для Realme/Huawei и др.) ---
+
+    fun setReminderEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            container.settings.update { it.copy(reminderEnabled = enabled) }
+            ReminderScheduler.rescheduleAfterSettingsChange(container)
+        }
+    }
+
+    fun setReminderTime(time: LocalTime) {
+        viewModelScope.launch {
+            container.settings.update { it.copy(reminderTime = time) }
+            ReminderScheduler.rescheduleAfterSettingsChange(container)
+        }
+    }
+
+    // --- Эффект стекла ---
+
+    fun setGlassEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            container.settings.update { it.copy(glassEnabled = enabled) }
+        }
+    }
+
+    fun setGlassIntensity(value: Float) {
+        viewModelScope.launch {
+            container.settings.update { it.copy(glassIntensity = value.coerceIn(0.05f, 0.9f)) }
         }
     }
 

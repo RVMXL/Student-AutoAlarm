@@ -46,7 +46,11 @@ data class Settings(val setupComplete: Boolean = false,
     val themeMode: ThemeMode = ThemeMode.SYSTEM, val dynamicColor: Boolean = true,
     val accentIndex: Int = 0, val calendarStyle: CalendarStyle = CalendarStyle.STANDARD,
     val backgroundImagePath: String? = null, val backgroundOpacity: Float = 0.35f,
-    val weekAlarmsSetUntilEpochDay: Long = -1)
+    val weekAlarmsSetUntilEpochDay: Long = -1,
+    /** Напоминание о будильнике: своё уведомление — фолбэк, когда стоковые часы не принимают SET_ALARM. */
+    val reminderEnabled: Boolean = false, val reminderTime: LocalTime = LocalTime.of(21, 0),
+    /** Эффект стекла: полупрозрачные карточки + размытие фоновой картинки. */
+    val glassEnabled: Boolean = false, val glassIntensity: Float = 0.5f)
 
 /** План пробуждения на дату: победивший кандидат (пара или своё событие). */
 data class AlarmPlan(val date: LocalDate, val wakeAt: LocalDateTime,
