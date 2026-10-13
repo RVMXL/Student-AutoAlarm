@@ -50,33 +50,32 @@ android {
 }
 
 // Заполнение release-подписи из окружения (в CI — из Secrets GitHub Actions).
+// ВАЖНО: signingConfig назначается строго на фазе КОНФИГУРАЦИИ — packageRelease
+// захватывает подпись при конфигурировании, назначение в taskGraph.whenReady
+// опаздывает и даёт неподписанный app-release-unsigned.apk.
 val releaseSigning = android.signingConfigs.getByName("release")
-System.getenv("KEYSTORE_FILE")?.let { ksPath ->
-    releaseSigning.storeFile = rootProject.file(ksPath)
+val ksPathEnv = System.getenv("KEYSTORE_FILE")
+if (ksPathEnv != null) {
+    releaseSigning.storeFile = rootProject.file(ksPathEnv)
     releaseSigning.storePassword = System.getenv("KEYSTORE_PASSWORD")
         ?: throw GradleException("KEYSTORE_FILE задан, но KEYSTORE_PASSWORD нет — подпись неполная")
     releaseSigning.keyAlias = System.getenv("KEY_ALIAS")
         ?: throw GradleException("KEYSTORE_FILE задан, но KEY_ALIAS нет — подпись неполная")
     releaseSigning.keyPassword = System.getenv("KEY_PASSWORD")
         ?: throw GradleException("KEYSTORE_FILE задан, но KEY_PASSWORD нет — подпись неполная")
-}
-
-// Guard: release-сборка без стабильного ключа запрещена (явное падение вместо
-// молчаливой неподписанной APK или автогенерации нового ключа).
-gradle.taskGraph.whenReady {
-    val buildsRelease = allTasks.any {
-        it.path.endsWith(":assembleRelease") || it.path.endsWith(":bundleRelease")
-    }
-    if (buildsRelease) {
-        if (System.getenv("KEYSTORE_FILE") == null) {
-            throw GradleException(
-                "Сборка release без ключа подписи запрещена: KEYSTORE_FILE не задан. " +
-                    "Ключ подписи один и хранится в Secrets CI (.github/workflows/release.yml). " +
-                    "Локально передайте KEYSTORE_FILE/KEYSTORE_PASSWORD/KEY_ALIAS/KEY_PASSWORD. " +
-                    "Автогенерация нового ключа запрещена: она ломает обновления поверх старых установок."
-            )
-        }
-        android.buildTypes.getByName("release").signingConfig = releaseSigning
+    android.buildTypes.getByName("release").signingConfig = releaseSigning
+} else {
+    // Ключа нет: релизная сборка запрещена ЯВНО (автогенерация нового ключа
+    // сломала бы обновления поверх старых установок).
+    val requested = gradle.startParameter.taskNames.joinToString(" ")
+    val releaseRequested = requested.contains("Release") || Regex("(^|[ :])build$").containsMatchIn(requested)
+    if (releaseRequested) {
+        throw GradleException(
+            "Сборка release без ключа подписи запрещена: KEYSTORE_FILE не задан. " +
+                "Ключ подписи один и хранится в Secrets CI (.github/workflows/release.yml). " +
+                "Локально передайте KEYSTORE_FILE/KEYSTORE_PASSWORD/KEY_ALIAS/KEY_PASSWORD. " +
+                "Автогенерация нового ключа запрещена: она ломает обновления поверх старых установок."
+        )
     }
 }
 
