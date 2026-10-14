@@ -47,6 +47,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -62,9 +63,11 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 import java.util.Locale
 import kotlinx.coroutines.launch
+import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.model.CalendarStyle
 import ru.uniautoalarm.kgeu.data.model.Lesson
 import ru.uniautoalarm.kgeu.ui.common.LocalAppContainer
+import ru.uniautoalarm.kgeu.ui.common.dayShortName
 import ru.uniautoalarm.kgeu.ui.theme.PaperColors
 
 private val CardShape = RoundedCornerShape(20.dp)
@@ -72,7 +75,7 @@ private val ChipShape = RoundedCornerShape(8.dp)
 
 private val TIME: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 private val RU_MONTH_DAY: DateTimeFormatter =
-    DateTimeFormatter.ofPattern("d MMMM", Locale("ru", "RU"))
+    DateTimeFormatter.ofPattern("d MMMM", Locale.getDefault())
 
 /** Бумажная палитра как Color (константы PaperColors — Long). */
 private val PaperBackground = Color(PaperColors.paperBackground)
@@ -113,7 +116,7 @@ fun ScheduleScreen() {
     val accent = if (paper) PaperAccent else MaterialTheme.colorScheme.primary
     val monthTitle = remember(weekMonday) {
         val month = weekMonday.month
-            .getDisplayName(java.time.format.TextStyle.FULL, Locale("ru", "RU"))
+            .getDisplayName(java.time.format.TextStyle.FULL, Locale.getDefault())
             .replaceFirstChar { it.uppercase() }
         "$month · ${weekMonday.year}"
     }
@@ -160,7 +163,7 @@ fun ScheduleScreen() {
                 IconButton(onClick = { vm.prevWeek() }) {
                     Icon(
                         Icons.Rounded.ChevronLeft,
-                        contentDescription = "Предыдущая неделя"
+                        contentDescription = stringResource(R.string.cd_prev_week)
                     )
                 }
                 Column(
@@ -178,7 +181,7 @@ fun ScheduleScreen() {
                     )
                     if (isCurrentWeek) {
                         SmallBadge(
-                            text = "эта неделя",
+                            text = stringResource(R.string.badge_this_week),
                             container = accent,
                             content = PaperOnAccent
                         )
@@ -191,13 +194,13 @@ fun ScheduleScreen() {
                 }) {
                     Icon(
                         Icons.Rounded.ChevronRight,
-                        contentDescription = "Следующая неделя"
+                        contentDescription = stringResource(R.string.cd_next_week)
                     )
                 }
                 IconButton(onClick = { vm.goToToday() }) {
                     Icon(
                         Icons.Rounded.Today,
-                        contentDescription = "Перейти к текущей неделе и сегодняшнему дню",
+                        contentDescription = stringResource(R.string.cd_go_today),
                         // подсвечена, пока пользователь «уехал» с текущей недели
                         tint = if (!isCurrentWeek) accent
                             else if (paper) PaperInkSoft else MaterialTheme.colorScheme.onSurfaceVariant
@@ -208,7 +211,10 @@ fun ScheduleScreen() {
                         scope.launch { snackbarHostState.showSnackbar(msg) }
                     }
                 }) {
-                    Icon(Icons.Rounded.Refresh, contentDescription = "Обновить неделю")
+                    Icon(
+                        Icons.Rounded.Refresh,
+                        contentDescription = stringResource(R.string.cd_refresh_week)
+                    )
                 }
             }
 
@@ -252,6 +258,11 @@ fun ScheduleScreen() {
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(dayLessons) { lesson ->
+                        // строки снекбара вынесены в композицию: внутри scope.launch
+                        // composable-функции (stringResource) вызывать нельзя
+                        val msgExcludedOn =
+                            stringResource(R.string.snackbar_excluded_on, lesson.subject)
+                        val msgExcludedOff = stringResource(R.string.snackbar_excluded_off)
                         LessonCard(
                             lesson = lesson,
                             paper = paper,
@@ -262,11 +273,7 @@ fun ScheduleScreen() {
                                 vm.toggleException(lesson.subject)
                                 scope.launch {
                                     snackbarHostState.showSnackbar(
-                                        if (willExclude) {
-                                            "Перед „${lesson.subject}“ будильник не ставится"
-                                        } else {
-                                            "Исключение снято"
-                                        }
+                                        if (willExclude) msgExcludedOn else msgExcludedOff
                                     )
                                 }
                             }
@@ -329,7 +336,7 @@ private fun DayChip(
     onClick: () -> Unit
 ) {
     val accent = if (paper) PaperAccent else MaterialTheme.colorScheme.primary
-    val label = "${ruShortDay(date.dayOfWeek)} ${date.dayOfMonth}"
+    val label = "${dayShortName(date.dayOfWeek)} ${date.dayOfMonth}"
     // сегодняшний день: жирный + точка-акцент под числом (как в настенных календарях)
     @Composable
     fun todayLabel() {
@@ -434,7 +441,7 @@ private fun LessonCard(
                         }
                         if (lesson.isReplacement) {
                             SmallBadge(
-                                text = "замена",
+                                text = stringResource(R.string.badge_replacement),
                                 container = MaterialTheme.colorScheme.tertiaryContainer,
                                 content = MaterialTheme.colorScheme.onTertiaryContainer
                             )
@@ -442,7 +449,9 @@ private fun LessonCard(
                     }
                 }
                 val details = buildList {
-                    if (lesson.room.isNotBlank()) add("ауд. ${lesson.room}")
+                    if (lesson.room.isNotBlank()) {
+                        add(stringResource(R.string.room_prefix, lesson.room))
+                    }
                     if (lesson.teacher.isNotBlank()) add(lesson.teacher)
                 }.joinToString(" · ")
                 if (details.isNotEmpty()) {
@@ -459,9 +468,9 @@ private fun LessonCard(
                     if (excluded) Icons.Rounded.NotificationsOff
                     else Icons.Rounded.NotificationsActive,
                     contentDescription = if (excluded) {
-                        "Включить будильник перед этой парой"
+                        stringResource(R.string.cd_enable_alarm)
                     } else {
-                        "Не ставить будильник перед этой парой"
+                        stringResource(R.string.cd_disable_alarm)
                     },
                     tint = if (excluded) accentColor else softColor
                 )
@@ -507,25 +516,15 @@ private fun EmptyDayCard(paper: Boolean, modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Icon(Icons.Rounded.EventBusy, contentDescription = null)
-            Text("Занятий нет", style = MaterialTheme.typography.titleMedium)
             Text(
-                "В этот день будильник не понадобится",
+                stringResource(R.string.empty_no_lessons),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                stringResource(R.string.empty_no_alarm_needed),
                 style = MaterialTheme.typography.bodySmall,
                 color = softColor
             )
         }
     }
-}
-
-// --- Утилиты ---
-
-/** Короткое русское имя дня недели: Пн, Вт, … Вс. */
-private fun ruShortDay(day: DayOfWeek): String = when (day) {
-    DayOfWeek.MONDAY -> "Пн"
-    DayOfWeek.TUESDAY -> "Вт"
-    DayOfWeek.WEDNESDAY -> "Ср"
-    DayOfWeek.THURSDAY -> "Чт"
-    DayOfWeek.FRIDAY -> "Пт"
-    DayOfWeek.SATURDAY -> "Сб"
-    DayOfWeek.SUNDAY -> "Вс"
 }

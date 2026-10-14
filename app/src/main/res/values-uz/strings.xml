@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== General ==== -->
+    <string name="app_name">KGEU avtobudilnigi</string>
+    <string name="action_cancel">Bekor qilish</string>
+    <string name="action_ok">OK</string>
+    <string name="action_save">Saqlash</string>
+    <string name="action_done">Tayyor</string>
+    <string name="action_edit">Tahrirlash</string>
+    <string name="action_reset">Tozalash</string>
+    <string name="action_retry">Qayta urinish</string>
+    <string name="action_allow">Ruxsat berish</string>
+    <string name="action_fix">Tuzatish</string>
+    <string name="action_refresh">Yangilash</string>
+    <string name="action_change">Almashtirish</string>
+    <string name="action_next">Keyingi</string>
+    <string name="action_back">Orqaga</string>
+    <string name="action_start">Boshlash</string>
+    <string name="action_add">Qoʻshish</string>
+    <string name="action_load">Yuklash</string>
+    <string name="action_understood">Tushunarli</string>
+
+    <!-- ==== Bottom navigation ==== -->
+    <string name="nav_home">Asosiy</string>
+    <string name="nav_schedule">Dars jadvali</string>
+    <string name="nav_settings">Sozlamalar</string>
+
+    <!-- ==== Units and formatting ==== -->
+    <string name="fmt_offset_m">%1$d daq</string>
+    <string name="fmt_offset_h">%1$d soat</string>
+    <string name="fmt_offset_hm">%1$d soat %2$d daq</string>
+    <string name="fmt_days_short">%1$d kun</string>
+    <string name="fmt_time_alarm_will_ring">Budilnik jiringaydi:</string>
+
+    <!-- ==== Days of week (short, calendar chips) ==== -->
+    <string name="day_short_1">Du</string>
+    <string name="day_short_2">Se</string>
+    <string name="day_short_3">Ch</string>
+    <string name="day_short_4">Pa</string>
+    <string name="day_short_5">Ju</string>
+    <string name="day_short_6">Sh</string>
+    <string name="day_short_7">Ya</string>
+
+    <!-- ==== Language ==== -->
+    <string name="lang_title">Til</string>
+    <string name="lang_subtitle">Interfeys tilini tanla — keyinchalik sozlamalarda oʻzgartirish mumkin</string>
+    <string name="lang_system">Tizim tili</string>
+    <string name="set_language">Til</string>
+    <string name="set_language_desc">Ilova interfeysi tili</string>
+
+    <!-- ==== Setup wizard ==== -->
+    <string name="setup_step_of">Qadam %1$d/%2$d</string>
+    <string name="setup_welcome_subtitle">Universitet dars jadvali boʻyicha birinchi paradan oldin telefonning standart soat ilovasiga budilnik qoʻyadi. Bir daqiqada sozlab olamiz.</string>
+    <string name="setup_university">Qozon davlat energetika universiteti (KGEU)</string>
+    <string name="setup_official_api">kabinet.kgeu.ru rasmiy APIsi</string>
+    <string name="setup_who_are_you">Kimsan?</string>
+    <string name="role_student">Talaba</string>
+    <string name="role_student_subtitle">Budilnik — guruhim dars jadvali boʻyicha</string>
+    <string name="role_teacher">Oʻqituvchi</string>
+    <string name="role_teacher_subtitle">Budilnik — paralarim jadvali boʻyicha</string>
+    <string name="setup_search_hint">Yozishni boshla: А-1-23 …</string>
+    <string name="setup_found">Topildi: %1$d</string>
+    <string name="setup_found_capped">Topildi: %1$d (birinchi %2$d tasi koʻrsatiladi)</string>
+    <string name="setup_load_failed">Roʻyxatni yuklab boʻlmadi</string>
+    <string name="setup_check_internet">Internetni tekshirib, yana urinib koʻr</string>
+    <string name="setup_nothing_found">Hech narsa topilmadi</string>
+    <string name="setup_pick_role_first">Avval kimligingni tanla</string>
+    <string name="setup_course">%1$d-kurs</string>
+    <string name="setup_wake_question">Birinchi paradan odatda qancha vaqt oldin uygʻonasan?</string>
+    <string name="setup_example">Birinchi para 08:30 da → budilnik %1$s da</string>
+    <string name="setup_done_all">Hammasi tayyor!</string>
+    <string name="setup_finish_mode_note">«Standart» rejimi: har kechasi budilnik ertangi kunga qoʻyiladi. Keyinchalik sozlamalarda oʻzgartirsa boʻladi.</string>
+    <string name="setup_no_target">Maqsad tanlanmagan — orqaga qaytib guruh yoki oʻqituvchini tanla</string>
+    <string name="summary_group">Guruh</string>
+    <string name="summary_teacher">Oʻqituvchi</string>
+    <string name="summary_wake_offset">Birinchi paradan oldingi uygʻonish</string>
+    <string name="profile_no_target">Maqsad tanlanmagan</string>
+
+    <!-- ==== Home screen ==== -->
+    <string name="home_title">Avtobudilnik</string>
+    <string name="cd_refresh_schedule">Dars jadvalini yangilash</string>
+    <string name="mode_week_chip">%1$d kunga</string>
+    <string name="mode_standard_chip">Standart</string>
+    <string name="loading_settings">Sozlamalar yuklanmoqda…</string>
+    <string name="alarm_off_title">Budilnik oʻchirilgan</string>
+    <string name="alarm_off_subtitle">Pastdagi tugma orqali yoqib qoʻy</string>
+    <string name="refreshing">Dars jadvali yangilanmoqda…</string>
+    <string name="not_loaded_title">Dars jadvali hali yuklanmagan</string>
+    <string name="not_loaded_hint">kabinet.kgeu.ru saytidan paralarni tortib ol — bu yerda uygʻonish vaqti koʻrinadi</string>
+    <string name="tomorrow_free_title">Ertaga paralar yoʻq</string>
+    <string name="tomorrow_free_sub">budilnik qoʻyilmaydi</string>
+    <string name="tomorrow_label">Ertaga · %1$s</string>
+    <string name="today_label">Bugun</string>
+    <string name="tomorrow_label_short">Ertaga</string>
+    <string name="badge_replacement">zamena</string>
+    <string name="room_prefix">xona %1$s</string>
+    <string name="lesson_at">para %1$s da</string>
+    <string name="own_event_at">oʻz mashgʻuloting %1$s da</string>
+    <string name="home_auto_title">Avto-budilnik</string>
+    <string name="home_auto_subtitle">Birinchi paradan oldin standart soat ilovasiga budilnik qoʻyadi</string>
+    <string name="home_week_title">Bir necha kunga</string>
+    <string name="home_week_desc">Hafta kunlari boʻyicha takrorlanadigan budilniklar — tizim ilovani oʻchirib yuborsa, ehtiyot chorasi</string>
+    <string name="btn_set_for_days">%1$d kunga qoʻyish</string>
+    <string name="chip_weekly_repeat">Har hafta takrorlanadi</string>
+    <string name="home_week_note">Budilniklar har hafta takrorlanadi; ortiqchalari standart soat ilovasida oʻchiriladi («Budilniklar roʻyxati» — ilova sozlamalarida)</string>
+    <string name="home_upcoming_title">Yaqin mashgʻulotlar</string>
+    <string name="home_no_pairs">Paralar yoʻq</string>
+
+    <!-- ==== Alarm batch results (home + settings) ==== -->
+    <string name="week_result_delivered">Qoʻyilgan takrorlanuvchi budilniklar: %1$d</string>
+    <string name="week_result_delivered_note">Qoʻyilgan takrorlanuvchi budilniklar: %1$d (hafta kunlari boʻyicha)</string>
+    <string name="week_result_uptodate">Budilniklar allaqachon qoʻyilgan — jadval oʻzgarmagan</string>
+    <string name="week_result_empty">Kutilayotgan paralar topilmadi</string>
+
+    <!-- ==== Diagnostics on home ==== -->
+    <string name="dialog_exact_alarms_title">Aniq budilniklar taqiqlangan</string>
+    <string name="dialog_exact_alarms_desc">Ruxsatsiz tizim budilnikni hisoblangan vaqtda aniq qoʻyishga yoʻl qoʻymaydi.</string>
+    <string name="dialog_battery_title">Batareya optimizatsiyasi xalaqit berishi mumkin</string>
+    <string name="dialog_battery_desc">Agressiv quvvat tejash rejimi tungi jadvalni qayta tekshirishni bekor qilishi mumkin.</string>
+    <string name="dialog_stale_title">Dars jadvali 3 kundan ortiq yangilanmagan</string>
+    <string name="dialog_stale_desc">Universitet jadvalini tez-tez oʻzgartirishadi — yangi maʼlumotlarni tortib ol.</string>
+
+    <!-- ==== Refresh snackbars ==== -->
+    <string name="err_no_target">Avval sozlamalarda guruh yoki oʻqituvchini tanla</string>
+    <string name="msg_refreshed">Dars jadvali yangilandi</string>
+    <string name="refresh_empty_week">Yangilandi: bu haftada paralar yoʻq</string>
+    <string name="refresh_ok_count">Dars jadvali yangilandi — haftadagi paralar: %1$d</string>
+    <string name="refresh_no_connection">kabinet.kgeu.ru bilan aloqa yoʻq — saqlangan kesh koʻrsatilgan</string>
+    <string name="refresh_network">Tarmoq mavjud emas — saqlangan kesh koʻrsatilgan</string>
+    <string name="refresh_error">Yangilashda xatolik: %1$s</string>
+    <string name="err_unknown_cause">nomaʼlum sabab</string>
+
+    <!-- ==== Schedule screen ==== -->
+    <string name="cd_prev_week">Oldingi hafta</string>
+    <string name="cd_next_week">Keyingi hafta</string>
+    <string name="cd_go_today">Joriy hafta va bugunga oʻtish</string>
+    <string name="cd_refresh_week">Haftani yangilash</string>
+    <string name="badge_this_week">bu hafta</string>
+    <string name="snackbar_excluded_on">«%1$s»dan oldin budilnik qoʻyilmaydi</string>
+    <string name="snackbar_excluded_off">Istisno olib tashlandi</string>
+    <string name="cd_enable_alarm">Bu paradan oldin budilnikni yoqish</string>
+    <string name="cd_disable_alarm">Bu paradan oldin budilnik qoʻymaslik</string>
+    <string name="empty_no_lessons">Mashgʻulotlar yoʻq</string>
+    <string name="empty_no_alarm_needed">Bu kunda budilnik kerak boʻlmaydi</string>
+
+    <!-- ==== Notifications ==== -->
+    <string name="notif_channel_name">Avto-budilnik holati</string>
+    <string name="notif_channel_desc">Qoʻyilgan va oʻtkazib yuborilgan budilniklar haqida xabarlar</string>
+    <string name="notif_alarm_set">Budilnik %1$s ga qoʻyildi</string>
+    <string name="notif_skipped_title">Budilnik qoʻyilmadi</string>
+    <string name="notif_week_one">1 ta takrorlanuvchi budilnik qoʻyildi</string>
+    <string name="notif_week_many">Qoʻyilgan takrorlanuvchi budilniklar: %1$d</string>
+    <string name="notif_week_text">parali hafta kunlari boʻyicha (%1$s – %2$s), har hafta takrorlanadi</string>
+    <string name="notif_week_already_title">Haftalik budilniklar allaqachon qoʻyilgan</string>
+    <string name="notif_week_already_text">Jadval uygʻonish vaqtlarini oʻzgartirmagan — qayta oʻrnatish shart emas</string>
+    <string name="notif_reminder_title">Budilnik qoʻyishni unutma</string>
+    <string name="notif_reminder_text">Ertaga, %1$s: para %2$s da — %3$s. Budilnik qoʻyishni unutma.</string>
+    <string name="notif_sync_title">Dars jadvalini sinxronlash</string>
+    <string name="notif_sync_text">KGEU dars jadvalini yangilaymiz</string>
+    <string name="notif_details_room">%1$s, xona %2$s</string>
+
+    <!-- ==== Alarm skip reasons (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">paralar yoʻq</string>
+    <string name="skip_no_upcoming">kutilayotgan paralar topilmadi</string>
+    <string name="skip_clock_refused">Telefon soati buyruqni qabul qilmadi — sozlamalarda «Budilnik eslatmasi» funksiyasini yoqib qoʻy</string>
+    <string name="test_alarm_label">Test: Avtobudilnik ishlayapti!</string>
+    <string name="test_alarm_ok">2 minutga budilnik qoʻyildi — soatni tekshir</string>
+    <string name="test_alarm_fail">Sinov budilnigini qoʻyib boʻlmadi — soat javob bermayapti</string>
+
+    <!-- ==== Settings: sections ==== -->
+    <string name="sec_profile">Profil</string>
+    <string name="sec_alarm">Budilnik</string>
+    <string name="sec_reminder">Budilnik eslatmasi</string>
+    <string name="sec_exceptions">Istisnolar</string>
+    <string name="sec_custom_events">Shaxsiy mashgʻulotlar</string>
+    <string name="sec_appearance">Koʻrinish</string>
+    <string name="sec_system">Tizim</string>
+    <string name="sec_about">Ilova haqida</string>
+
+    <!-- ==== Settings: profile ==== -->
+    <string name="profile_change_note">Maqsadni almashtirishda uygʻonish vaqti va sozlamalar saqlanib qoladi</string>
+
+    <!-- ==== Settings: alarm ==== -->
+    <string name="set_auto_title">Avto-budilnik</string>
+    <string name="set_show_clock">Qoʻyishda soatni koʻrsatish</string>
+    <string name="set_show_clock_desc">Budilniklar oʻzi qoʻyilmasa, yoqib qoʻy (Realme, Oppo, Huawei): soat tayyor budilnik bilan ochiladi — «Saqlash» tugmasi bilan tasdiqla.</string>
+    <string name="set_wake_offset">Birinchi paradan %1$s oldin uygʻonish</string>
+    <string name="set_offset_example">Birinchi para 08:30 da → budilnik %1$s da</string>
+    <string name="set_per_pair">Har bir paraga alohida uygʻonish</string>
+    <string name="set_per_pair_desc">Har bir birinchi para uchun alohida tayyorgarlik vaqti: ertalabki paradan oldin — kamroq, kechroq paradan oldin — koʻproq, nonushtaga ulgurish uchun. Oʻz qiymati belgilanmagan paralar yuqoridagi umumiy uygʻonishdan foydalanadi.</string>
+    <string name="set_pairs_after_sync">Dars jadvali sinxronlangandan keyin para vaqtlari paydo boʻladi</string>
+    <string name="pair_at">Para %1$s da</string>
+    <string name="pair_custom_offset">%1$s oldin uygʻonish → budilnik %2$s da</string>
+    <string name="pair_common_offset">Umumiy uygʻonish: %1$s oldin</string>
+    <string name="set_mode">Rejim</string>
+    <string name="mode_standard_title">Standart — ertaga</string>
+    <string name="mode_standard_desc">Har kechasi budilnik ertangi kunga qayta qoʻyiladi</string>
+    <string name="mode_week_title">Bir necha kunga</string>
+    <string name="mode_week_desc">Haftaning har oʻquv kuni uchun takrorlanuvchi budilnik — jarayonlar oʻldirilishiga qarshi himoya; amaldagi jadval boʻyicha har hafta takrorlanadi, pastdagi tugma orqali oʻchirish mumkin</string>
+    <string name="mode_week_window">Paralarni qidirish oraligʻi: %1$s — parali barcha hafta kunlariga budilnik qoʻyiladi</string>
+    <string name="btn_set_now">Hozir qoʻyish</string>
+    <string name="btn_disable_app_alarms">Ilova budilniklarini oʻchirish</string>
+    <string name="disable_alarms_desc">Tugma soatga «Авто: Пн»…«Авто: Вс» aniq yorliqlari boʻyicha oʻchirish buyrugʻini yuboradi. Agar telefon qobigʻi buyruqni qabul qilmasa (Realme UI/ColorOS ning bir qismi — tizim cheklovi), ilova budilniklar roʻyxatini oʻzi ochadi — «Авто:» yorliqlarini qoʻlda olib tashla.</string>
+    <string name="btn_test_alarm">Budilnikni sinash</string>
+    <string name="btn_alarm_list">Budilniklar roʻyxati</string>
+    <string name="alarms_list_open_failed">Soat budilniklar roʻyxatini ochmadi</string>
+    <string name="dismiss_alarms_sent">Soatga oʻchirish buyrugʻi yuborildi (%2$d tadan %1$d tasi). «Авто: …» budilniklar qolgan boʻlsa — ularni budilniklar roʻyxatida oʻchirib qoʻy</string>
+    <string name="dismiss_unsupported_opened">Soat buyruq orqali oʻchirishni qoʻllab-quvvatlamaydi (qobiq cheklovi) — budilniklar roʻyxati ochildi: «Авто:» yorlikli budilniklarni qoʻlda olib tashla</string>
+    <string name="dismiss_unsupported_manual">Soat buyruq orqali oʻchirishni qoʻllab-quvvatlamaydi (qobiq cheklovi) — soat ilovasida budilniklarni ochib, «Авто:» yorliqlarini qoʻlda olib tashla</string>
+
+    <!-- ==== Settings dialogs: wake offset ==== -->
+    <string name="dialog_offset_title">Paradan oldingi uygʻonish</string>
+    <string name="dialog_offset_example">Birinchi para 08:30 da → budilnik %1$s da jiringaydi</string>
+    <string name="dialog_pair_title">Para %1$s da</string>
+    <string name="dialog_pair_example">Para %1$s da → budilnik %2$s da jiringaydi</string>
+
+    <!-- ==== Settings: reminder ==== -->
+    <string name="set_reminder_desc">Alohida bildirishnoma: «ertaga para shu vaqtda — budilnik qoʻyishni unutma»</string>
+    <string name="set_reminder_fallback">Zaxira variant: standart soat ilova buyruqlarini qabul qilmasa ishlaydi — Realme, Huawei, Xiaomi (ayniqsa xitoy proshivkalarida) uchraydi. Ertaga para boʻlsa, eslatma har kuni tanlangan vaqtda keladi.</string>
+    <string name="reminder_time">Eslatma vaqti: %1$s</string>
+    <string name="dialog_reminder_title">Eslatma vaqti</string>
+
+    <!-- ==== Settings: exceptions ==== -->
+    <string name="exceptions_title_desc">Bu fanlardan oldin budilnik qoʻyilmaydi</string>
+    <string name="exceptions_empty">Hozircha boʻsh — oldindan uygʻotish shart boʻlmagan fanlarni qoʻsh</string>
+    <string name="cd_delete_named">«%1$s» fanini oʻchirish</string>
+    <string name="hint_subject_name">Fan nomi</string>
+    <string name="cd_add_exception">Istisno qoʻshish</string>
+    <string name="exceptions_found">Dars jadvalida topildi:</string>
+
+    <!-- ==== Settings: custom events ==== -->
+    <string name="custom_events_desc">Alohida budilnik vaqti bilan shaxsiy tadbirlar — toʻgaraklar, repetitsiyalar, bir martalik ishlar</string>
+    <string name="custom_empty">Hozircha hech narsa qoʻshilmagan</string>
+    <string name="dialog_event_title">Shaxsiy mashgʻulot</string>
+    <string name="hint_name">Nomi</string>
+    <string name="event_days_mode">Hafta kunlari boʻyicha</string>
+    <string name="event_date_mode">Bitta sana</string>
+    <string name="btn_pick_date">Sanani tanlash</string>
+    <string name="event_time">Vaqt: %1$s</string>
+    <string name="event_offset_suffix">· %1$s oldin</string>
+    <string name="event_wake_before">Tadbirdan %1$s oldin uygʻotish</string>
+    <string name="dialog_event_time_title">Tadbir vaqti</string>
+
+    <!-- ==== Settings: appearance ==== -->
+    <string name="set_theme">Mavzu</string>
+    <string name="theme_system">Tizim boʻyicha</string>
+    <string name="theme_light">Yorugʻ</string>
+    <string name="theme_dark">Tungi</string>
+    <string name="dynamic_color">Material You (tizim rangi)</string>
+    <string name="set_accent">Aksent</string>
+    <string name="accent_amber">Kahrabo</string>
+    <string name="accent_orange">Toʻq sariq</string>
+    <string name="accent_red">Qizil</string>
+    <string name="accent_green">Yashil</string>
+    <string name="accent_pink">Pushti</string>
+    <string name="accent_purple">Binafsha</string>
+    <string name="schedule_style">Dars jadvali uslubi</string>
+    <string name="style_standard">Standart</string>
+    <string name="style_paper">Qogʻoz taqvim</string>
+    <string name="set_background">Fon</string>
+    <string name="btn_pick_image">Rasm tanlash</string>
+    <string name="btn_remove">Olib tashlash</string>
+    <string name="bg_opacity">Fon qatlamining shaffofligi</string>
+    <string name="set_glass">Shisha effekti</string>
+    <string name="set_glass_desc">Kartalar yarim shaffof, mat shisha kabi; fon rasmi xiralashtiriladi</string>
+    <string name="glass_intensity">Shisha effekti kuchi</string>
+    <string name="glass_tip">Maslahat: shisha effekti fon rasmi bilan (yuqorida) eng chiroyli koʻrinadi</string>
+    <string name="glass_active">Shisha effekti yoqilgan</string>
+
+    <!-- ==== Settings: system ==== -->
+    <string name="status_exact_allowed">Aniq budilniklarga ruxsat berilgan</string>
+    <string name="dialog_exact_off_title">Aniq budilniklar tizim tomonidan oʻchirilgan</string>
+    <string name="dialog_exact_off_desc">Tungi rejalashtiruvchi budilnikni faqat ±10 daqiqa xatolik bilan qoʻya oladi.</string>
+    <string name="dialog_battery2_title">Batareya optimizatsiyasi xalaqit berishi mumkin</string>
+    <string name="dialog_battery2_desc">Tungi jadvalni qayta tekshirish buzilmasligi uchun ilovani optimizatsiyadan chiqarib qoʻy.</string>
+    <string name="action_disable_optimization">Optimizatsiyani oʻchirish</string>
+    <string name="autostart_title">Avtostart va agressiv qobiqlar</string>
+    <string name="autostart_desc">MIUI, HarmonyOS va boshqa qobiqlar fonda ishlaydigan ilovalarni oʻchirib tashlaydi</string>
+    <string name="btn_instructions">Qoʻllanma</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nXavfsizlik → Ilovalar → Avtostart: Avtobudilnikni yoq; ilovaning batareya sozlamalarida «Cheklovsiz» variantini tanla.</string>
+    <string name="autostart_huawei">Huawei / Honor:\nSozlamalar → Batareya → Ilovalarni ishga tushirish → Avtobudilnik → Qoʻlda boshqarish: barcha tugmachalarni yoq.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nSozlamalar → Batareya → Boshqa sozlamalar → Quvvat sarfi optimizatsiyasi → ilova uchun optimizatsiyani taqiqla; Ilovalar menejeri → Avtostart.</string>
+    <string name="autostart_samsung">Samsung:\nSozlamalar → Batareya → Fonda cheklovlar → Uxlamaydigan ilovalar → Avtobudilnikni qoʻsh.</string>
+    <string name="autostart_other">Boshqa qobiq:\nIlovani avtostartga qoʻsh va tizim sozlamalarida batareya optimizatsiyalarini olib tashla.</string>
+    <string name="autostart_standard_note">«Standart» rejimi budilnikni har kechasi qayta qoʻyadi — ilovaga 00:05 da fonda ishga tushish kerak.</string>
+
+    <!-- ==== Settings: about ==== -->
+    <string name="about_version">KGEU avtobudilnigi · v%1$s</string>
+    <string name="about_data">Dars jadvali maʼlumotlari: kabinet.kgeu.ru rasmiy APIsi. Ilova KGEU bilan bogʻliq emas.</string>
+    <string name="btn_github">GitHub repozitoriysi</string>
+</resources>

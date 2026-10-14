@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== General ==== -->
+    <string name="app_name">KGEU Auto-Alarm</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_ok">OK</string>
+    <string name="action_save">Save</string>
+    <string name="action_done">Done</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_reset">Reset</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_allow">Allow</string>
+    <string name="action_fix">Fix</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_change">Change</string>
+    <string name="action_next">Next</string>
+    <string name="action_back">Back</string>
+    <string name="action_start">Get started</string>
+    <string name="action_add">Add</string>
+    <string name="action_load">Load</string>
+    <string name="action_understood">Got it</string>
+
+    <!-- ==== Bottom navigation ==== -->
+    <string name="nav_home">Home</string>
+    <string name="nav_schedule">Schedule</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- ==== Units and formatting ==== -->
+    <string name="fmt_offset_m">%1$d min</string>
+    <string name="fmt_offset_h">%1$d h</string>
+    <string name="fmt_offset_hm">%1$d h %2$d min</string>
+    <string name="fmt_days_short">%1$d days</string>
+    <string name="fmt_time_alarm_will_ring">alarm will ring at</string>
+
+    <!-- ==== Days of the week (short, calendar chips) ==== -->
+    <string name="day_short_1">Mon</string>
+    <string name="day_short_2">Tue</string>
+    <string name="day_short_3">Wed</string>
+    <string name="day_short_4">Thu</string>
+    <string name="day_short_5">Fri</string>
+    <string name="day_short_6">Sat</string>
+    <string name="day_short_7">Sun</string>
+
+    <!-- ==== Language ==== -->
+    <string name="lang_title">Language</string>
+    <string name="lang_subtitle">Choose the app language — you can change it later in Settings</string>
+    <string name="lang_system">System language</string>
+    <string name="set_language">Language</string>
+    <string name="set_language_desc">The app\'s interface language</string>
+
+    <!-- ==== Setup wizard ==== -->
+    <string name="setup_step_of">Step %1$d of %2$d</string>
+    <string name="setup_welcome_subtitle">Sets an alarm in the built-in Clock app before your first class — based on your university schedule. Setup takes a minute.</string>
+    <string name="setup_university">Kazan State Power Engineering University (KGEU)</string>
+    <string name="setup_official_api">official kabinet.kgeu.ru API</string>
+    <string name="setup_who_are_you">Who are you?</string>
+    <string name="role_student">Student</string>
+    <string name="role_student_subtitle">Alarm based on my group\'s schedule</string>
+    <string name="role_teacher">Teacher</string>
+    <string name="role_teacher_subtitle">Alarm based on my class schedule</string>
+    <string name="setup_search_hint">Start typing: А-1-23 …</string>
+    <string name="setup_found">Found: %1$d</string>
+    <string name="setup_found_capped">Found: %1$d (showing the first %2$d)</string>
+    <string name="setup_load_failed">Couldn\'t load the list</string>
+    <string name="setup_check_internet">Check your internet connection and try again</string>
+    <string name="setup_nothing_found">Nothing found</string>
+    <string name="setup_pick_role_first">First choose who you are</string>
+    <string name="setup_course">year %1$d</string>
+    <string name="setup_wake_question">How long before your first class do you usually get up?</string>
+    <string name="setup_example">First class at 08:30 → alarm at %1$s</string>
+    <string name="setup_done_all">All set!</string>
+    <string name="setup_finish_mode_note">Standard mode: every night the alarm is set for tomorrow. You can change this later in Settings.</string>
+    <string name="setup_no_target">No target selected — go back and choose a group or a teacher</string>
+    <string name="summary_group">Group</string>
+    <string name="summary_teacher">Teacher</string>
+    <string name="summary_wake_offset">Wake-up before your first class</string>
+    <string name="profile_no_target">No target selected</string>
+
+    <!-- ==== Home screen ==== -->
+    <string name="home_title">Auto-Alarm</string>
+    <string name="cd_refresh_schedule">Refresh the schedule</string>
+    <string name="mode_week_chip">For %1$d days</string>
+    <string name="mode_standard_chip">Standard</string>
+    <string name="loading_settings">Loading settings…</string>
+    <string name="alarm_off_title">Alarm is off</string>
+    <string name="alarm_off_subtitle">Turn it on with the toggle below</string>
+    <string name="refreshing">Refreshing the schedule…</string>
+    <string name="not_loaded_title">Schedule not loaded yet</string>
+    <string name="not_loaded_hint">Pull your classes from kabinet.kgeu.ru — your wake-up time will appear here</string>
+    <string name="tomorrow_free_title">No classes tomorrow</string>
+    <string name="tomorrow_free_sub">no alarm will be set</string>
+    <string name="tomorrow_label">Tomorrow · %1$s</string>
+    <string name="today_label">Today</string>
+    <string name="tomorrow_label_short">Tomorrow</string>
+    <string name="badge_replacement">replacement</string>
+    <string name="room_prefix">room %1$s</string>
+    <string name="lesson_at">class at %1$s</string>
+    <string name="own_event_at">your own event at %1$s</string>
+    <string name="home_auto_title">Auto-Alarm</string>
+    <string name="home_auto_subtitle">Sets an alarm in the built-in Clock app before your first class</string>
+    <string name="home_week_title">Several days ahead</string>
+    <string name="home_week_desc">Repeating alarms for each day of the week — a safety net in case the system kills the app</string>
+    <string name="btn_set_for_days">Set for %1$d days</string>
+    <string name="chip_weekly_repeat">Repeat weekly</string>
+    <string name="home_week_note">Alarms repeat weekly; turn off the extra ones in the built-in Clock app (\"Alarm list\" — in the app\'s settings)</string>
+    <string name="home_upcoming_title">Upcoming classes</string>
+    <string name="home_no_pairs">No classes</string>
+
+    <!-- ==== Batch results (home + settings) ==== -->
+    <string name="week_result_delivered">Repeating alarms set: %1$d</string>
+    <string name="week_result_delivered_note">Repeating alarms set: %1$d (one per day of the week)</string>
+    <string name="week_result_uptodate">The alarms are already set — the schedule hasn\'t changed</string>
+    <string name="week_result_empty">No upcoming classes found</string>
+
+    <!-- ==== Diagnostics on the home screen ==== -->
+    <string name="dialog_exact_alarms_title">Exact alarms are not allowed</string>
+    <string name="dialog_exact_alarms_desc">Without permission, the system won\'t let the app set the alarm at the exact calculated time.</string>
+    <string name="dialog_battery_title">Battery optimization may interfere</string>
+    <string name="dialog_battery_desc">Aggressive power saving may cancel the overnight schedule re-check.</string>
+    <string name="dialog_stale_title">The schedule hasn\'t been updated in over 3 days</string>
+    <string name="dialog_stale_desc">University schedules change often — pull fresh data.</string>
+
+    <!-- ==== Refresh snackbars ==== -->
+    <string name="err_no_target">First choose a group or a teacher in Settings</string>
+    <string name="msg_refreshed">Schedule updated</string>
+    <string name="refresh_empty_week">Updated: no classes this week</string>
+    <string name="refresh_ok_count">Schedule updated — classes this week: %1$d</string>
+    <string name="refresh_no_connection">Can\'t reach kabinet.kgeu.ru — showing the saved cache</string>
+    <string name="refresh_network">Network unavailable — showing the saved cache</string>
+    <string name="refresh_error">Update error: %1$s</string>
+    <string name="err_unknown_cause">unknown reason</string>
+
+    <!-- ==== Schedule screen ==== -->
+    <string name="cd_prev_week">Previous week</string>
+    <string name="cd_next_week">Next week</string>
+    <string name="cd_go_today">Go to the current week and today</string>
+    <string name="cd_refresh_week">Refresh this week</string>
+    <string name="badge_this_week">this week</string>
+    <string name="snackbar_excluded_on">No alarm before \"%1$s\"</string>
+    <string name="snackbar_excluded_off">Exception removed</string>
+    <string name="cd_enable_alarm">Enable the alarm before this class</string>
+    <string name="cd_disable_alarm">Don\'t set an alarm before this class</string>
+    <string name="empty_no_lessons">No classes</string>
+    <string name="empty_no_alarm_needed">No alarm will be needed on this day</string>
+
+    <!-- ==== Notifications ==== -->
+    <string name="notif_channel_name">Auto-Alarm status</string>
+    <string name="notif_channel_desc">Messages about alarms set and alarms skipped</string>
+    <string name="notif_alarm_set">Alarm set for %1$s</string>
+    <string name="notif_skipped_title">Alarm not set</string>
+    <string name="notif_week_one">1 repeating alarm set</string>
+    <string name="notif_week_many">Repeating alarms set: %1$d</string>
+    <string name="notif_week_text">on the days with classes (%1$s – %2$s), repeats weekly</string>
+    <string name="notif_week_already_title">Alarms for the week are already set</string>
+    <string name="notif_week_already_text">The schedule didn\'t change any wake-up times — no need to set them again</string>
+    <string name="notif_reminder_title">Don\'t forget to set an alarm</string>
+    <string name="notif_reminder_text">Tomorrow, %1$s: class at %2$s — %3$s. Don\'t forget to set an alarm.</string>
+    <string name="notif_sync_title">Schedule sync</string>
+    <string name="notif_sync_text">Updating the KGEU schedule</string>
+    <string name="notif_details_room">%1$s, room %2$s</string>
+
+    <!-- ==== Alarm skip reasons (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">no classes</string>
+    <string name="skip_no_upcoming">no upcoming classes found</string>
+    <string name="skip_clock_refused">the Clock app didn\'t accept the command — turn on \"Alarm reminder\" in the app\'s settings</string>
+    <string name="test_alarm_label">Test: Auto-Alarm is working!</string>
+    <string name="test_alarm_ok">Alarm set for 2 minutes from now — check the Clock app</string>
+    <string name="test_alarm_fail">Couldn\'t set the test alarm — the Clock app isn\'t responding</string>
+
+    <!-- ==== Settings: sections ==== -->
+    <string name="sec_profile">Profile</string>
+    <string name="sec_alarm">Alarm</string>
+    <string name="sec_reminder">Alarm reminder</string>
+    <string name="sec_exceptions">Exceptions</string>
+    <string name="sec_custom_events">Custom events</string>
+    <string name="sec_appearance">Appearance</string>
+    <string name="sec_system">System</string>
+    <string name="sec_about">About the app</string>
+
+    <!-- ==== Settings: profile ==== -->
+    <string name="profile_change_note">Changing the target won\'t reset your wake-up offset or other settings</string>
+
+    <!-- ==== Settings: alarm ==== -->
+    <string name="set_auto_title">Auto-Alarm</string>
+    <string name="set_show_clock">Show the Clock app when setting alarms</string>
+    <string name="set_show_clock_desc">Turn on if alarms aren\'t set on their own (Realme, Oppo, Huawei): the Clock app will open with the alarm ready — confirm it with \"Save\".</string>
+    <string name="set_wake_offset">Wake up %1$s before your first class</string>
+    <string name="set_offset_example">First class at 08:30 → alarm at %1$s</string>
+    <string name="set_per_pair">Wake-up for each class</string>
+    <string name="set_per_pair_desc">Your own getting-ready time for each day\'s first class: a bit less before early ones, a bit more before later ones, so you have time for breakfast. Classes without their own value use the common wake-up offset above.</string>
+    <string name="set_pairs_after_sync">Class times will appear after you sync the schedule</string>
+    <string name="pair_at">Class at %1$s</string>
+    <string name="pair_custom_offset">Wake-up %1$s before → alarm at %2$s</string>
+    <string name="pair_common_offset">Common wake-up: %1$s before</string>
+    <string name="set_mode">Mode</string>
+    <string name="mode_standard_title">Standard — for tomorrow</string>
+    <string name="mode_standard_desc">Every night the alarm is rescheduled for tomorrow</string>
+    <string name="mode_week_title">Several days ahead</string>
+    <string name="mode_week_desc">A repeating alarm for every class day of the week — a safety net in case the system kills the app; the alarms repeat weekly based on the current schedule, and you can turn them off with the button below</string>
+    <string name="mode_week_window">Class search window: %1$s — alarms on every day of the week that has classes</string>
+    <string name="btn_set_now">Set now</string>
+    <string name="btn_disable_app_alarms">Turn off the app\'s alarms</string>
+    <string name="disable_alarms_desc">The button sends a dismiss command to the Clock app using the exact labels \"Авто: Пн\"…\"Авто: Вс\". If the system shell doesn\'t accept the command (some Realme UI/ColorOS versions — a system limitation), the app will open the alarm list itself — remove the \"Авто:\" alarms manually.</string>
+    <string name="btn_test_alarm">Test the alarm</string>
+    <string name="btn_alarm_list">Alarm list</string>
+    <string name="alarms_list_open_failed">The Clock app didn\'t open the alarm list</string>
+    <string name="dismiss_alarms_sent">Dismiss command sent to the Clock app (%1$d of %2$d). If any \"Авто: …\" alarms are left, turn them off in the alarm list</string>
+    <string name="dismiss_unsupported_opened">The Clock app doesn\'t support dismiss commands (system shell limitation) — the alarm list is open: turn off the \"Авто:\" alarms manually</string>
+    <string name="dismiss_unsupported_manual">The Clock app doesn\'t support dismiss commands (system shell limitation) — open the alarms in the Clock app and remove the \"Авто:\" labels manually</string>
+
+    <!-- ==== Settings dialogs: wake-up offset ==== -->
+    <string name="dialog_offset_title">Wake-up before class</string>
+    <string name="dialog_offset_example">First class at 08:30 → the alarm will ring at %1$s</string>
+    <string name="dialog_pair_title">Class at %1$s</string>
+    <string name="dialog_pair_example">Class at %1$s → the alarm will ring at %2$s</string>
+
+    <!-- ==== Settings: reminder ==== -->
+    <string name="set_reminder_desc">Your own notification: \"class tomorrow at such-and-such a time — don\'t forget to set an alarm\"</string>
+    <string name="set_reminder_fallback">A fallback for when the built-in Clock app doesn\'t accept the app\'s commands — found on Realme, Huawei, Xiaomi (especially Chinese firmware). The reminder arrives every day at the chosen time if there\'s a class tomorrow.</string>
+    <string name="reminder_time">Reminder time: %1$s</string>
+    <string name="dialog_reminder_title">Reminder time</string>
+
+    <!-- ==== Settings: exceptions ==== -->
+    <string name="exceptions_title_desc">No alarm is set before these subjects</string>
+    <string name="exceptions_empty">Empty for now — add subjects you don\'t want to be woken up for</string>
+    <string name="cd_delete_named">Delete \"%1$s\"</string>
+    <string name="hint_subject_name">Subject name</string>
+    <string name="cd_add_exception">Add exception</string>
+    <string name="exceptions_found">Found in the schedule:</string>
+
+    <!-- ==== Settings: custom events ==== -->
+    <string name="custom_events_desc">Your own events with a separate alarm time — club sessions, rehearsals, one-off things</string>
+    <string name="custom_empty">Nothing added yet</string>
+    <string name="dialog_event_title">Custom event</string>
+    <string name="hint_name">Name</string>
+    <string name="event_days_mode">Days of the week</string>
+    <string name="event_date_mode">Single date</string>
+    <string name="btn_pick_date">Pick a date</string>
+    <string name="event_time">Time: %1$s</string>
+    <string name="event_offset_suffix">· %1$s before</string>
+    <string name="event_wake_before">Wake up %1$s before the event</string>
+    <string name="dialog_event_time_title">Event time</string>
+
+    <!-- ==== Settings: appearance ==== -->
+    <string name="set_theme">Theme</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="dynamic_color">Material You (system colors)</string>
+    <string name="set_accent">Accent</string>
+    <string name="accent_amber">Amber</string>
+    <string name="accent_orange">Orange</string>
+    <string name="accent_red">Red</string>
+    <string name="accent_green">Green</string>
+    <string name="accent_pink">Pink</string>
+    <string name="accent_purple">Purple</string>
+    <string name="schedule_style">Schedule style</string>
+    <string name="style_standard">Standard</string>
+    <string name="style_paper">Paper calendar</string>
+    <string name="set_background">Background</string>
+    <string name="btn_pick_image">Pick an image</string>
+    <string name="btn_remove">Remove</string>
+    <string name="bg_opacity">Overlay opacity</string>
+    <string name="set_glass">Glass effect</string>
+    <string name="set_glass_desc">Cards are semi-transparent like frosted glass; the background image is blurred</string>
+    <string name="glass_intensity">Glass intensity</string>
+    <string name="glass_tip">Tip: glass looks best with a background image (above)</string>
+    <string name="glass_active">Glass is on</string>
+
+    <!-- ==== Settings: system ==== -->
+    <string name="status_exact_allowed">Exact alarms are allowed</string>
+    <string name="dialog_exact_off_title">Exact alarms are disabled by the system</string>
+    <string name="dialog_exact_off_desc">The overnight scheduler will only be able to set the alarm with a ±10 minute deviation.</string>
+    <string name="dialog_battery2_title">Battery optimization may interfere</string>
+    <string name="dialog_battery2_desc">Exclude the app from battery optimization so the overnight schedule re-check doesn\'t fail.</string>
+    <string name="action_disable_optimization">Disable optimization</string>
+    <string name="autostart_title">Autostart and aggressive system shells</string>
+    <string name="autostart_desc">MIUI, HarmonyOS and other shells kill background apps</string>
+    <string name="btn_instructions">Instructions</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nSecurity → Apps → Autostart: enable Auto-Alarm; in the app\'s battery settings choose \"No restrictions\".</string>
+    <string name="autostart_huawei">Huawei / Honor:\nSettings → Battery → App launch → Auto-Alarm → Manage manually: turn on all the toggles.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nSettings → Battery → More settings → Power consumption optimization → turn off optimization for the app; App manager → Autostart.</string>
+    <string name="autostart_samsung">Samsung:\nSettings → Battery → Background usage limits → Never sleeping apps → add Auto-Alarm.</string>
+    <string name="autostart_other">Other shell:\nAdd the app to autostart and remove its battery optimizations in the system settings.</string>
+    <string name="autostart_standard_note">Standard mode reschedules the alarm every night — the app needs to run in the background at 00:05.</string>
+
+    <!-- ==== Settings: about ==== -->
+    <string name="about_version">KGEU Auto-Alarm · v%1$s</string>
+    <string name="about_data">Schedule data: official kabinet.kgeu.ru API. The app is not affiliated with KGEU.</string>
+    <string name="btn_github">GitHub repository</string>
+</resources>

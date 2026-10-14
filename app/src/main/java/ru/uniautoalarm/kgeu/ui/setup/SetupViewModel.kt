@@ -8,12 +8,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.alarm.NightlyScheduler
 import ru.uniautoalarm.kgeu.data.model.Target
 import ru.uniautoalarm.kgeu.data.model.TargetType
 import ru.uniautoalarm.kgeu.data.remote.KgeuGroup
 import ru.uniautoalarm.kgeu.data.remote.KgeuTeacher
 import ru.uniautoalarm.kgeu.di.AppContainer
+import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 
 /**
  * ViewModel мастера первичной настройки: роль → загрузка справочников КГЭУ →
@@ -85,7 +87,9 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                error.value = "Не удалось загрузить список. Проверь интернет и попробуйте ещё раз."
+                error.value =
+                    LocaleHelper.string(container.appContext, R.string.setup_load_failed) + " " +
+                    LocaleHelper.string(container.appContext, R.string.setup_check_internet)
             } finally {
                 loading.value = false
             }

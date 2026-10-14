@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== Общее ==== -->
+    <string name="app_name">المنبّه التلقائي لجامعة قازان للطاقة</string>
+    <string name="action_cancel">إلغاء</string>
+    <string name="action_ok">موافق</string>
+    <string name="action_save">حفظ</string>
+    <string name="action_done">تم</string>
+    <string name="action_edit">تعديل</string>
+    <string name="action_reset">إعادة تعيين</string>
+    <string name="action_retry">إعادة المحاولة</string>
+    <string name="action_allow">السماح</string>
+    <string name="action_fix">إصلاح</string>
+    <string name="action_refresh">تحديث</string>
+    <string name="action_change">تغيير</string>
+    <string name="action_next">التالي</string>
+    <string name="action_back">رجوع</string>
+    <string name="action_start">ابدأ</string>
+    <string name="action_add">إضافة</string>
+    <string name="action_load">تحميل</string>
+    <string name="action_understood">فهمت</string>
+
+    <!-- ==== Нижняя навигация ==== -->
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_schedule">الجدول الدراسي</string>
+    <string name="nav_settings">الإعدادات</string>
+
+    <!-- ==== Единицы и форматирования ==== -->
+    <string name="fmt_offset_m">%1$d د</string>
+    <string name="fmt_offset_h">%1$d س</string>
+    <string name="fmt_offset_hm">%1$d س %2$d د</string>
+    <string name="fmt_days_short">%1$d أيام</string>
+    <string name="fmt_time_alarm_will_ring">سيبدأ المنبّه بالرنين في</string>
+
+    <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
+    <string name="day_short_1">إث</string>
+    <string name="day_short_2">ثل</string>
+    <string name="day_short_3">أر</string>
+    <string name="day_short_4">خم</string>
+    <string name="day_short_5">جم</string>
+    <string name="day_short_6">سب</string>
+    <string name="day_short_7">أح</string>
+
+    <!-- ==== Язык ==== -->
+    <string name="lang_title">اللغة</string>
+    <string name="lang_subtitle">اختر لغة التطبيق — يمكنك تغييرها لاحقًا من الإعدادات</string>
+    <string name="lang_system">لغة النظام</string>
+    <string name="set_language">اللغة</string>
+    <string name="set_language_desc">لغة واجهة التطبيق</string>
+
+    <!-- ==== Мастер настройки ==== -->
+    <string name="setup_step_of">الخطوة %1$d من %2$d</string>
+    <string name="setup_welcome_subtitle">يضبط المنبّه في تطبيق الساعة المدمج قبل الحصة الأولى — وفق الجدول الدراسي للجامعة. سنُتمّ الإعداد خلال دقيقة.</string>
+    <string name="setup_university">جامعة قازان الحكومية للطاقة (KGEU)</string>
+    <string name="setup_official_api">واجهة برمجة التطبيقات الرسمية لـ kabinet.kgeu.ru</string>
+    <string name="setup_who_are_you">من أنت؟</string>
+    <string name="role_student">طالب</string>
+    <string name="role_student_subtitle">المنبّه وفق جدول مجموعتي</string>
+    <string name="role_teacher">أستاذ</string>
+    <string name="role_teacher_subtitle">المنبّه وفق جدول حصصي</string>
+    <string name="setup_search_hint">ابدأ بالكتابة: А-1-23 …</string>
+    <string name="setup_found">تم العثور على: %1$d</string>
+    <string name="setup_found_capped">تم العثور على: %1$d (تُعرض أول %2$d)</string>
+    <string name="setup_load_failed">تعذّر تحميل القائمة</string>
+    <string name="setup_check_internet">تحقق من الاتصال بالإنترنت وحاول مجددًا</string>
+    <string name="setup_nothing_found">لا توجد نتائج</string>
+    <string name="setup_pick_role_first">حدّد أولًا من أنت</string>
+    <string name="setup_course">المستوى %1$d</string>
+    <string name="setup_wake_question">قبل الحصة الأولى بكم تستيقظ عادةً؟</string>
+    <string name="setup_example">الحصة الأولى في 08:30 → المنبّه في %1$s</string>
+    <string name="setup_done_all">كل شيء جاهز!</string>
+    <string name="setup_finish_mode_note">وضع «قياسي»: كل ليلة يُضبط المنبّه على الغد. يمكنك تغييره لاحقًا من الإعدادات.</string>
+    <string name="setup_no_target">لم يتم اختيار الهدف — عُد للخلف واختر مجموعة أو أستاذًا</string>
+    <string name="summary_group">المجموعة</string>
+    <string name="summary_teacher">الأستاذ</string>
+    <string name="summary_wake_offset">الاستيقاظ قبل الحصة الأولى</string>
+    <string name="profile_no_target">لم يتم اختيار الهدف</string>
+
+    <!-- ==== Главный экран ==== -->
+    <string name="home_title">المنبّه التلقائي</string>
+    <string name="cd_refresh_schedule">تحديث الجدول الدراسي</string>
+    <string name="mode_week_chip">لمدة %1$d أيام</string>
+    <string name="mode_standard_chip">قياسي</string>
+    <string name="loading_settings">جارٍ تحميل الإعدادات…</string>
+    <string name="alarm_off_title">المنبّه مُعطَّل</string>
+    <string name="alarm_off_subtitle">فعّله باستخدام المفتاح أدناه</string>
+    <string name="refreshing">جارٍ تحديث الجدول الدراسي…</string>
+    <string name="not_loaded_title">لم يُحمَّل الجدول الدراسي بعد</string>
+    <string name="not_loaded_hint">اجلب حصصك من kabinet.kgeu.ru — وسيظهر هنا وقت الاستيقاظ</string>
+    <string name="tomorrow_free_title">لا حصص غدًا</string>
+    <string name="tomorrow_free_sub">لن يُضبط المنبّه</string>
+    <string name="tomorrow_label">غدًا · %1$s</string>
+    <string name="today_label">اليوم</string>
+    <string name="tomorrow_label_short">غدًا</string>
+    <string name="badge_replacement">بديل</string>
+    <string name="room_prefix">قاعة %1$s</string>
+    <string name="lesson_at">الحصة في %1$s</string>
+    <string name="own_event_at">نشاطك الخاص في %1$s</string>
+    <string name="home_auto_title">المنبّه التلقائي</string>
+    <string name="home_auto_subtitle">يضبط المنبّه في تطبيق الساعة المدمج قبل الحصة الأولى</string>
+    <string name="home_week_title">لعدة أيام مقدمًا</string>
+    <string name="home_week_desc">منبّهات متكررة بحسب أيام الأسبوع — كضمان إذا أنهى النظام التطبيق</string>
+    <string name="btn_set_for_days">ضبط لمدة %1$d أيام</string>
+    <string name="chip_weekly_repeat">تتكرر أسبوعيًا</string>
+    <string name="home_week_note">تتكرر المنبّهات أسبوعيًا؛ وتُعطَّل الزائدة منها في تطبيق الساعة المدمج («قائمة المنبّهات» — في إعدادات التطبيق)</string>
+    <string name="home_upcoming_title">الحصص القادمة</string>
+    <string name="home_no_pairs">لا توجد حصص</string>
+
+    <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
+    <string name="week_result_delivered">تم ضبط المنبّهات المتكررة: %1$d</string>
+    <string name="week_result_delivered_note">تم ضبط المنبّهات المتكررة: %1$d (بحسب أيام الأسبوع)</string>
+    <string name="week_result_uptodate">المنبّهات مضبوطة بالفعل — لم يتغيّر الجدول الدراسي</string>
+    <string name="week_result_empty">لم يُعثر على حصص قادمة</string>
+
+    <!-- ==== Диагностика на главном ==== -->
+    <string name="dialog_exact_alarms_title">المنبّهات الدقيقة محظورة</string>
+    <string name="dialog_exact_alarms_desc">بدون الإذن لن يسمح النظام بضبط المنبّه في الوقت المحسوب بدقة.</string>
+    <string name="dialog_battery_title">قد يعترض تحسين البطارية</string>
+    <string name="dialog_battery_desc">قد يُلغي وضع توفير الطاقة العدواني إعادة التحقق الليلية من الجدول الدراسي.</string>
+    <string name="dialog_stale_title">لم يُحدَّث الجدول الدراسي منذ أكثر من 3 أيام</string>
+    <string name="dialog_stale_desc">يُعدَّل جدول الجامعة كثيرًا — اجلب أحدث البيانات.</string>
+
+    <!-- ==== Снекбары обновления ==== -->
+    <string name="err_no_target">اختر أولًا مجموعة أو أستاذًا في الإعدادات</string>
+    <string name="msg_refreshed">تم تحديث الجدول الدراسي</string>
+    <string name="refresh_empty_week">تم التحديث: لا حصص هذا الأسبوع</string>
+    <string name="refresh_ok_count">تم تحديث الجدول الدراسي — الحصص هذا الأسبوع: %1$d</string>
+    <string name="refresh_no_connection">لا اتصال بـ kabinet.kgeu.ru — يُعرض النسخة المحفوظة مؤقتًا</string>
+    <string name="refresh_network">الشبكة غير متاحة — يُعرض النسخة المحفوظة مؤقتًا</string>
+    <string name="refresh_error">خطأ في التحديث: %1$s</string>
+    <string name="err_unknown_cause">سبب غير معروف</string>
+
+    <!-- ==== Экран расписания ==== -->
+    <string name="cd_prev_week">الأسبوع السابق</string>
+    <string name="cd_next_week">الأسبوع التالي</string>
+    <string name="cd_go_today">الانتقال إلى الأسبوع الحالي واليوم الحالي</string>
+    <string name="cd_refresh_week">تحديث الأسبوع</string>
+    <string name="badge_this_week">هذا الأسبوع</string>
+    <string name="snackbar_excluded_on">قبل «%1$s» لا يُضبط المنبّه</string>
+    <string name="snackbar_excluded_off">أُلغي الاستثناء</string>
+    <string name="cd_enable_alarm">تفعيل المنبّه قبل هذه الحصة</string>
+    <string name="cd_disable_alarm">عدم ضبط المنبّه قبل هذه الحصة</string>
+    <string name="empty_no_lessons">لا توجد دروس</string>
+    <string name="empty_no_alarm_needed">في هذا اليوم لن تحتاج إلى منبّه</string>
+
+    <!-- ==== Уведомления ==== -->
+    <string name="notif_channel_name">حالة المنبّه التلقائي</string>
+    <string name="notif_channel_desc">إشعارات عن المنبّهات المضبوطة والمتخطّاة</string>
+    <string name="notif_alarm_set">تم ضبط المنبّه على %1$s</string>
+    <string name="notif_skipped_title">لم يُضبط المنبّه</string>
+    <string name="notif_week_one">تم ضبط منبّه متكرر واحد</string>
+    <string name="notif_week_many">تم ضبط المنبّهات المتكررة: %1$d</string>
+    <string name="notif_week_text">في أيام الأسبوع التي فيها حصص (%1$s – %2$s)، والتكرار أسبوعي</string>
+    <string name="notif_week_already_title">منبّهات الأسبوع مضبوطة بالفعل</string>
+    <string name="notif_week_already_text">لم يُغيّر الجدول الدراسي أوقات الاستيقاظ — لا حاجة لإعادة الضبط</string>
+    <string name="notif_reminder_title">لا تنسَ ضبط المنبّه</string>
+    <string name="notif_reminder_text">غدًا، %1$s: حصة في %2$s — %3$s. لا تنسَ ضبط المنبّه.</string>
+    <string name="notif_sync_title">مزامنة الجدول الدراسي</string>
+    <string name="notif_sync_text">جارٍ تحديث جدول جامعة قازان للطاقة</string>
+    <string name="notif_details_room">%1$s، قاعة %2$s</string>
+
+    <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">لا توجد حصص</string>
+    <string name="skip_no_upcoming">لم يُعثر على حصص قادمة</string>
+    <string name="skip_clock_refused">تطبيق الساعة المدمج لم يقبل الأمر — فعّل «التذكير بالمنبّه» في الإعدادات</string>
+    <string name="test_alarm_label">اختبار: المنبّه التلقائي يعمل!</string>
+    <string name="test_alarm_ok">تم ضبط منبّه بعد دقيقتين — تحقق من تطبيق الساعة</string>
+    <string name="test_alarm_fail">تعذّر ضبط المنبّه التجريبي — تطبيق الساعة لا يستجيب</string>
+
+    <!-- ==== Настройки: секции ==== -->
+    <string name="sec_profile">الملف الشخصي</string>
+    <string name="sec_alarm">المنبّه</string>
+    <string name="sec_reminder">التذكير بالمنبّه</string>
+    <string name="sec_exceptions">الاستثناءات</string>
+    <string name="sec_custom_events">الأنشطة الخاصة</string>
+    <string name="sec_appearance">المظهر</string>
+    <string name="sec_system">النظام</string>
+    <string name="sec_about">حول التطبيق</string>
+
+    <!-- ==== Настройки: профиль ==== -->
+    <string name="profile_change_note">تغيير الهدف لن يُعيد ضبط وقت الاستيقاظ المسبق ولا الإعدادات</string>
+
+    <!-- ==== Настройки: будильник ==== -->
+    <string name="set_auto_title">المنبّه التلقائي</string>
+    <string name="set_show_clock">إظهار الساعة عند الضبط</string>
+    <string name="set_show_clock_desc">فعّله إذا كانت المنبّهات لا تُضبط تلقائيًا (Realme وOppo وHuawei): سيُفتح تطبيق الساعة ومنبّه جاهز — أكِّد بزر «حفظ».</string>
+    <string name="set_wake_offset">الاستيقاظ قبل الحصة الأولى بـ %1$s</string>
+    <string name="set_offset_example">الحصة الأولى في 08:30 → المنبّه في %1$s</string>
+    <string name="set_per_pair">استيقاظ مخصص لكل حصة</string>
+    <string name="set_per_pair_desc">هامش زمني خاص للتحضير قبل كل حصة أولى: قبل الحصة المبكرة أقل، وقبل المتأخرة أكثر حتى تلحق على الفطور. الحصص التي ليس لها قيمة خاصة تعتمد الاستيقاظ العام أعلاه.</string>
+    <string name="set_pairs_after_sync">ستظهر أوقات الحصص بعد مزامنة الجدول الدراسي</string>
+    <string name="pair_at">حصة في %1$s</string>
+    <string name="pair_custom_offset">الاستيقاظ قبل بـ %1$s → المنبّه في %2$s</string>
+    <string name="pair_common_offset">الاستيقاظ العام: قبل بـ %1$s</string>
+    <string name="set_mode">الوضع</string>
+    <string name="mode_standard_title">قياسي — على الغد</string>
+    <string name="mode_standard_desc">كل ليلة يُعاد ضبط المنبّه على الغد</string>
+    <string name="mode_week_title">لعدة أيام مقدمًا</string>
+    <string name="mode_week_desc">منبّه متكرر لكل يوم دراسي في الأسبوع — حماية من إنهاء النظام للعمليات؛ تتكرر أسبوعيًا وفق الجدول الحالي، ويمكن تعطيلها بالزر أدناه</string>
+    <string name="mode_week_window">نطاق البحث عن الحصص: %1$s — منبّهات لكل أيام الأسبوع التي فيها حصص</string>
+    <string name="btn_set_now">ضبط الآن</string>
+    <string name="btn_disable_app_alarms">تعطيل منبّهات التطبيق</string>
+    <string name="disable_alarms_desc">يرسل الزر إلى الساعة أمر تعطيل وفق التسميات الدقيقة «Авто: Пн»…«Авто: Вс». إذا كانت الواجهة لا تقبل الأمر (جزء من Realme UI/ColorOS — قيد من النظام)، فسيفتح التطبيق قائمة المنبّهات بنفسه — أزل تسميات «Авто:» يدويًا.</string>
+    <string name="btn_test_alarm">اختبار المنبّه</string>
+    <string name="btn_alarm_list">قائمة المنبّهات</string>
+    <string name="alarms_list_open_failed">لم يفتح تطبيق الساعة قائمة المنبّهات</string>
+    <string name="dismiss_alarms_sent">أُرسل أمر التعطيل إلى الساعة (%1$d من %2$d). إذا بقيت منبّهات «Авто: …» — عطّلها من قائمة المنبّهات</string>
+    <string name="dismiss_unsupported_opened">لا تدعم الساعة التعطيل بالأمر (قيد من الواجهة) — فتح التطبيق قائمة المنبّهات: أزل المنبّهات ذات تسمية «Авто:» يدويًا</string>
+    <string name="dismiss_unsupported_manual">لا تدعم الساعة التعطيل بالأمر (قيد من الواجهة) — افتح المنبّهات في تطبيق الساعة وأزل تسميات «Авто:» يدويًا</string>
+
+    <!-- ==== Диалоги настроек: смещение подъёма ==== -->
+    <string name="dialog_offset_title">الاستيقاظ قبل الحصة</string>
+    <string name="dialog_offset_example">الحصة الأولى في 08:30 → سيبدأ المنبّه بالرنين في %1$s</string>
+    <string name="dialog_pair_title">حصة في %1$s</string>
+    <string name="dialog_pair_example">حصة في %1$s → سيبدأ المنبّه بالرنين في %2$s</string>
+
+    <!-- ==== Настройки: напоминание ==== -->
+    <string name="set_reminder_desc">إشعار خاص: «غدًا حصة في الساعة كذا — لا تنسَ ضبط المنبّه»</string>
+    <string name="set_reminder_fallback">حل بديل عندما لا يقبل تطبيق الساعة المدمج أوامر التطبيق — يحدث على Realme وHuawei وXiaomi (خاصة البرامج الثابتة الصينية). يصل التذكير كل يوم في الوقت المحدد إذا كانت هناك حصة غدًا.</string>
+    <string name="reminder_time">وقت التذكير: %1$s</string>
+    <string name="dialog_reminder_title">وقت التذكير</string>
+
+    <!-- ==== Настройки: исключения ==== -->
+    <string name="exceptions_title_desc">لا يُضبط المنبّه قبل هذه المواد</string>
+    <string name="exceptions_empty">لا شيء بعد — أضف المواد التي لا تريد الاستيقاظ قبلها</string>
+    <string name="cd_delete_named">حذف «%1$s»</string>
+    <string name="hint_subject_name">اسم المادة</string>
+    <string name="cd_add_exception">إضافة استثناء</string>
+    <string name="exceptions_found">موجود في الجدول الدراسي:</string>
+
+    <!-- ==== Настройки: свои занятия ==== -->
+    <string name="custom_events_desc">أحداثك الخاصة بوقت منبّه مستقل — أنشطة، تمارين، مهام لمرة واحدة</string>
+    <string name="custom_empty">لم يُضف شيء بعد</string>
+    <string name="dialog_event_title">نشاط خاص</string>
+    <string name="hint_name">الاسم</string>
+    <string name="event_days_mode">بحسب أيام الأسبوع</string>
+    <string name="event_date_mode">تاريخ واحد</string>
+    <string name="btn_pick_date">اختيار التاريخ</string>
+    <string name="event_time">الوقت: %1$s</string>
+    <string name="event_offset_suffix">· قبل بـ %1$s</string>
+    <string name="event_wake_before">الإيقاظ قبل الحدث بـ %1$s</string>
+    <string name="dialog_event_time_title">وقت الحدث</string>
+
+    <!-- ==== Настройки: оформление ==== -->
+    <string name="set_theme">السمة</string>
+    <string name="theme_system">حسب النظام</string>
+    <string name="theme_light">فاتح</string>
+    <string name="theme_dark">داكن</string>
+    <string name="dynamic_color">Material You (لون النظام)</string>
+    <string name="set_accent">اللون المميز</string>
+    <string name="accent_amber">كهرماني</string>
+    <string name="accent_orange">برتقالي</string>
+    <string name="accent_red">أحمر</string>
+    <string name="accent_green">أخضر</string>
+    <string name="accent_pink">وردي</string>
+    <string name="accent_purple">بنفسجي</string>
+    <string name="schedule_style">نمط الجدول</string>
+    <string name="style_standard">قياسي</string>
+    <string name="style_paper">تقويم ورقي</string>
+    <string name="set_background">الخلفية</string>
+    <string name="btn_pick_image">اختيار صورة</string>
+    <string name="btn_remove">إزالة</string>
+    <string name="bg_opacity">شفافية الطبقة الخلفية</string>
+    <string name="set_glass">تأثير الزجاج</string>
+    <string name="set_glass_desc">البطاقات شبه شفافة كالزجاج المصنفر؛ وتُموَّه صورة الخلفية</string>
+    <string name="glass_intensity">شدة تأثير الزجاج</string>
+    <string name="glass_tip">نصيحة: يبدو تأثير الزجاج في أفضل حالاته مع صورة خلفية (أعلاه)</string>
+    <string name="glass_active">تأثير الزجاج مفعّل</string>
+
+    <!-- ==== Настройки: система ==== -->
+    <string name="status_exact_allowed">المنبّهات الدقيقة مسموح بها</string>
+    <string name="dialog_exact_off_title">عطّل النظام المنبّهات الدقيقة</string>
+    <string name="dialog_exact_off_desc">سيتمكن مجدول الليل من ضبط المنبّه فقط بانحراف يصل إلى ±10 دقائق.</string>
+    <string name="dialog_battery2_title">قد يعترض تحسين البطارية</string>
+    <string name="dialog_battery2_desc">استثنِ التطبيق من التحسين حتى لا تتعطل إعادة التحقق الليلية من الجدول الدراسي.</string>
+    <string name="action_disable_optimization">تعطيل التحسين</string>
+    <string name="autostart_title">التشغيل التلقائي والواجهات العدوانية</string>
+    <string name="autostart_desc">MIUI وHarmonyOS وغيرها من الواجهات تُنهي التطبيقات العاملة في الخلفية</string>
+    <string name="btn_instructions">التعليمات</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nالأمان → التطبيقات → التشغيل التلقائي: فعّل «المنبّه التلقائي»؛ وفي إعدادات بطارية التطبيق اختر «بلا قيود».</string>
+    <string name="autostart_huawei">Huawei / Honor:\nالإعدادات → البطارية → تشغيل التطبيقات → «المنبّه التلقائي» → الإدارة اليدوية: فعّل جميع المفاتيح.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nالإعدادات → البطارية → المزيد من الإعدادات → تحسين الاستهلاك → امنع تحسين التطبيق؛ مدير التطبيقات → التشغيل التلقائي.</string>
+    <string name="autostart_samsung">Samsung:\nالإعدادات → البطارية → قيود الخلفية → التطبيقات غير النائمة → أضف «المنبّه التلقائي».</string>
+    <string name="autostart_other">واجهة أخرى:\nأضف التطبيق إلى التشغيل التلقائي وأزل تحسينات البطارية من إعدادات النظام.</string>
+    <string name="autostart_standard_note">وضع «قياسي» يعيد ضبط المنبّه كل ليلة — يحتاج التطبيق إلى التشغيل في الخلفية عند الساعة 00:05.</string>
+
+    <!-- ==== Настройки: о приложении ==== -->
+    <string name="about_version">المنبّه التلقائي لجامعة قازان للطاقة · v%1$s</string>
+    <string name="about_data">بيانات الجدول الدراسي: واجهة برمجة التطبيقات الرسمية لـ kabinet.kgeu.ru. التطبيق غير تابع لجامعة قازان للطاقة.</string>
+    <string name="btn_github">المستودع على GitHub</string>
+</resources>

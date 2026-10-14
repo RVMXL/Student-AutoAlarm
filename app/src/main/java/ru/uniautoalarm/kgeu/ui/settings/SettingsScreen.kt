@@ -1,5 +1,6 @@
 package ru.uniautoalarm.kgeu.ui.settings
 
+import android.app.Activity
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
@@ -44,6 +45,7 @@ import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Event
 import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Schedule
 import androidx.compose.material.icons.rounded.TouchApp
@@ -91,6 +93,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -108,7 +111,9 @@ import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.alarm.StockAlarmSetter
+import ru.uniautoalarm.kgeu.data.local.LocaleStore
 import ru.uniautoalarm.kgeu.data.model.AlarmMode
 import ru.uniautoalarm.kgeu.data.model.CalendarStyle
 import ru.uniautoalarm.kgeu.data.model.CustomEvent
@@ -116,13 +121,21 @@ import ru.uniautoalarm.kgeu.data.model.ExceptionRule
 import ru.uniautoalarm.kgeu.data.model.Settings
 import ru.uniautoalarm.kgeu.data.model.TargetType
 import ru.uniautoalarm.kgeu.data.model.ThemeMode
+import ru.uniautoalarm.kgeu.ui.common.LanguagePicker
 import ru.uniautoalarm.kgeu.ui.common.LocalAppContainer
+import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
+import ru.uniautoalarm.kgeu.ui.common.SUPPORTED_LANGUAGES
+import ru.uniautoalarm.kgeu.ui.common.TIME
+import ru.uniautoalarm.kgeu.ui.common.dayShortName
+import ru.uniautoalarm.kgeu.ui.common.displayName
+import ru.uniautoalarm.kgeu.ui.common.exampleWakeTime
+import ru.uniautoalarm.kgeu.ui.common.formatOffset
+import ru.uniautoalarm.kgeu.ui.common.hhmm
 import ru.uniautoalarm.kgeu.ui.theme.ACCENT_PALETTES
 
 /** Скругление карточек секций (по ТЗ — 20.dp). */
 private val CardShape = RoundedCornerShape(20.dp)
 
-private val TIME: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 private val DATE: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM")
 
 private val WEEK_DAYS: List<DayOfWeek> = listOf(
@@ -185,7 +198,7 @@ fun SettingsScreen() {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // --- 1. Профиль ---
-            item { SectionTitle("Профиль") }
+            item { SectionTitle(stringResource(R.string.sec_profile)) }
             item {
                 val s = settings
                 if (s != null) {
@@ -194,7 +207,7 @@ fun SettingsScreen() {
             }
 
             // --- 2. Будильник ---
-            item { SectionTitle("Будильник") }
+            item { SectionTitle(stringResource(R.string.sec_alarm)) }
             item {
                 val s = settings
                 if (s != null) {
@@ -209,7 +222,7 @@ fun SettingsScreen() {
             }
 
             // --- 3. Напоминание о будильнике ---
-            item { SectionTitle("Напоминание о будильнике") }
+            item { SectionTitle(stringResource(R.string.sec_reminder)) }
             item {
                 val s = settings
                 if (s != null) {
@@ -218,15 +231,15 @@ fun SettingsScreen() {
             }
 
             // --- 4. Исключения ---
-            item { SectionTitle("Исключения") }
+            item { SectionTitle(stringResource(R.string.sec_exceptions)) }
             item { ExceptionsCard(exceptions = exceptions, vm = vm) }
 
             // --- 5. Свои занятия ---
-            item { SectionTitle("Свои занятия") }
+            item { SectionTitle(stringResource(R.string.sec_custom_events)) }
             item { CustomEventsCard(events = customEvents, vm = vm) }
 
             // --- 6. Оформление ---
-            item { SectionTitle("Оформление") }
+            item { SectionTitle(stringResource(R.string.sec_appearance)) }
             item {
                 val s = settings
                 if (s != null) {
@@ -235,7 +248,7 @@ fun SettingsScreen() {
             }
 
             // --- 7. Система ---
-            item { SectionTitle("Система") }
+            item { SectionTitle(stringResource(R.string.sec_system)) }
             item {
                 SystemCard(
                     exactRelevant = exactRelevant,
@@ -248,7 +261,7 @@ fun SettingsScreen() {
             }
 
             // --- 8. О приложении ---
-            item { SectionTitle("О приложении") }
+            item { SectionTitle(stringResource(R.string.sec_about)) }
             item { AboutCard(versionName = versionName, context = context) }
         }
     }
@@ -290,12 +303,12 @@ private fun ProfileCard(settings: Settings, onChangeTarget: () -> Unit) {
             Column(Modifier.weight(1f)) {
                 Text(profileLine(settings), style = MaterialTheme.typography.bodyLarge)
                 Text(
-                    "Смена цели не сбросит смещение подъёма и настройки",
+                    stringResource(R.string.profile_change_note),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            TextButton(onClick = onChangeTarget) { Text("Сменить") }
+            TextButton(onClick = onChangeTarget) { Text(stringResource(R.string.action_change)) }
         }
     }
 }
@@ -340,7 +353,7 @@ private fun AlarmSettingsCard(
                 )
                 Spacer(Modifier.width(12.dp))
                 Text(
-                    "Авто-будильник",
+                    stringResource(R.string.set_auto_title),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )
@@ -366,12 +379,11 @@ private fun AlarmSettingsCard(
                 Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
                     Text(
-                        "Показывать часы при постановке",
+                        stringResource(R.string.set_show_clock),
                         style = MaterialTheme.typography.titleMedium
                     )
                     Text(
-                        "Включите, если будильники не ставятся сами (Realme, Oppo, Huawei): " +
-                            "часы откроются с готовым будильником — подтвердите кнопкой «Сохранить».",
+                        stringResource(R.string.set_show_clock_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -389,32 +401,39 @@ private fun AlarmSettingsCard(
                 Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
                     Text(
-                        "Подъём за ${formatOffset(settings.wakeOffsetMinutes)} до первой пары",
+                        stringResource(
+                            R.string.set_wake_offset, formatOffset(settings.wakeOffsetMinutes)
+                        ),
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
-                        "Первая пара в 08:30 → будильник в " +
-                            exampleWake(settings.wakeOffsetMinutes),
+                        stringResource(
+                            R.string.set_offset_example,
+                            exampleWakeTime(settings.wakeOffsetMinutes).hhmm()
+                        ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                TextButton(onClick = { showOffsetDialog = true }) { Text("Изменить") }
+                TextButton(onClick = { showOffsetDialog = true }) {
+                    Text(stringResource(R.string.action_edit))
+                }
             }
             HorizontalDivider()
 
             // --- Подъём под каждую пару: свой запас на сборы для каждого времени первой пары ---
-            Text("Подъём под каждую пару", style = MaterialTheme.typography.bodyLarge)
             Text(
-                "Свой запас на сборы для каждой первой пары: перед ранней — поменьше, " +
-                    "а перед поздней — побольше, чтобы успеть позавтракать. Пары без своего " +
-                    "значения используют общий подъём выше.",
+                stringResource(R.string.set_per_pair),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                stringResource(R.string.set_per_pair_desc),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             if (pairStartTimes.isEmpty()) {
                 Text(
-                    "Времена пар появятся после синхронизации расписания",
+                    stringResource(R.string.set_pairs_after_sync),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -428,15 +447,21 @@ private fun AlarmSettingsCard(
                     ) {
                         Column(Modifier.weight(1f)) {
                             Text(
-                                "Пара в ${pairStart.format(TIME)}",
+                                stringResource(R.string.pair_at, pairStart.format(TIME)),
                                 style = MaterialTheme.typography.bodyLarge
                             )
                             Text(
                                 if (custom != null) {
-                                    "Подъём за ${formatOffset(custom)} → будильник в " +
-                                        wakeExample(pairStart, custom)
+                                    stringResource(
+                                        R.string.pair_custom_offset,
+                                        formatOffset(custom),
+                                        pairStart.minusMinutes(custom.toLong()).hhmm()
+                                    )
                                 } else {
-                                    "Общий подъём: за ${formatOffset(settings.wakeOffsetMinutes)}"
+                                    stringResource(
+                                        R.string.pair_common_offset,
+                                        formatOffset(settings.wakeOffsetMinutes)
+                                    )
                                 },
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -444,18 +469,18 @@ private fun AlarmSettingsCard(
                         }
                         if (custom != null) {
                             TextButton(onClick = { vm.setPairOffset(startMinutes, null) }) {
-                                Text("Сбросить")
+                                Text(stringResource(R.string.action_reset))
                             }
                         }
                         TextButton(onClick = { editPairStart = startMinutes }) {
-                            Text("Изменить")
+                            Text(stringResource(R.string.action_edit))
                         }
                     }
                 }
             }
             HorizontalDivider()
 
-            Text("Режим", style = MaterialTheme.typography.bodyLarge)
+            Text(stringResource(R.string.set_mode), style = MaterialTheme.typography.bodyLarge)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -472,9 +497,12 @@ private fun AlarmSettingsCard(
                 )
                 Spacer(Modifier.width(8.dp))
                 Column(Modifier.weight(1f)) {
-                    Text("Стандарт — на завтра", style = MaterialTheme.typography.bodyLarge)
                     Text(
-                        "Каждую ночь будильник переставляется на завтра",
+                        stringResource(R.string.mode_standard_title),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        stringResource(R.string.mode_standard_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -497,13 +525,11 @@ private fun AlarmSettingsCard(
                 Spacer(Modifier.width(8.dp))
                 Column(Modifier.weight(1f)) {
                     Text(
-                        "На несколько дней вперёд",
+                        stringResource(R.string.mode_week_title),
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
-                        "Повторяющийся будильник на каждый учебный день недели — страховка " +
-                            "от убийства процессов; повторяются еженедельно по актуальному " +
-                            "расписанию, отключить можно кнопкой ниже",
+                        stringResource(R.string.mode_week_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -521,7 +547,10 @@ private fun AlarmSettingsCard(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
-                        "Окно поиска пар: $days ${daysWord(days)} — будильники на все дни недели с парами",
+                        stringResource(
+                            R.string.mode_week_window,
+                            stringResource(R.string.fmt_days_short, days)
+                        ),
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Slider(
@@ -532,28 +561,31 @@ private fun AlarmSettingsCard(
                         steps = 10
                     )
                     Button(onClick = {
+                        // stringResource нельзя звать в колбэках кнопок — берём строки
+                        // через LocaleHelper (контекст Activity уже обёрнут в язык)
                         vm.setWeekAhead(days) { res ->
                             onSnackbar(
                                 when {
-                                    res.delivered > 0 ->
-                                        "Поставлено повторяющихся будильников: ${res.delivered} (по дням недели)"
-                                    res.alreadyUpToDate -> "Будильники уже стоят — расписание не менялось"
-                                    else -> "Предстоящих пар не нашлось"
+                                    res.delivered > 0 -> LocaleHelper.string(
+                                        context, R.string.week_result_delivered_note, res.delivered
+                                    )
+                                    res.alreadyUpToDate ->
+                                        LocaleHelper.string(context, R.string.week_result_uptodate)
+                                    else ->
+                                        LocaleHelper.string(context, R.string.week_result_empty)
                                 }
                             )
                         }
                     }) {
-                        Text("Поставить сейчас")
+                        Text(stringResource(R.string.btn_set_now))
                     }
                     OutlinedButton(onClick = {
                         dismissAppAlarms(context, clockPackage) { onSnackbar(it) }
                     }) {
-                        Text("Отключить будильники приложения")
+                        Text(stringResource(R.string.btn_disable_app_alarms))
                     }
                     Text(
-                        "Кнопка отправляет в часы команду отключения по точным меткам «Авто: Пн»…«Авто: Вс». " +
-                            "Если оболочка команду не принимает (часть Realme UI/ColorOS — ограничение системы), " +
-                            "приложение само откроет список будильников — снимите метки «Авто:» вручную.",
+                        stringResource(R.string.disable_alarms_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -566,20 +598,22 @@ private fun AlarmSettingsCard(
                     onClick = {
                         vm.setTestAlarm { ok ->
                             onSnackbar(
-                                if (ok) "Будильник на 2 минуты поставлен — проверь часы"
-                                else "Не удалось поставить тестовый будильник — часы не отвечают"
+                                LocaleHelper.string(
+                                    context,
+                                    if (ok) R.string.test_alarm_ok else R.string.test_alarm_fail
+                                )
                             )
                         }
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Проверить будильник")
+                    Text(stringResource(R.string.btn_test_alarm))
                 }
                 OutlinedButton(
                     onClick = { openStockAlarms(context) { onSnackbar(it) } },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Список будильников")
+                    Text(stringResource(R.string.btn_alarm_list))
                 }
             }
         }
@@ -625,7 +659,7 @@ private fun OffsetDialog(
     var value by remember { mutableIntStateOf(initialMinutes) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Подъём до пары") },
+        title = { Text(stringResource(R.string.dialog_offset_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
@@ -651,17 +685,19 @@ private fun OffsetDialog(
                     }
                 }
                 Text(
-                    "Первая пара в 08:30 → будильник прозвонит в ${exampleWake(value)}",
+                    stringResource(R.string.dialog_offset_example, exampleWakeTime(value).hhmm()),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         },
         confirmButton = {
-            TextButton(onClick = { onConfirm(value) }) { Text("Готово") }
+            TextButton(onClick = { onConfirm(value) }) {
+                Text(stringResource(R.string.action_done))
+            }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Отмена") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         }
     )
 }
@@ -683,7 +719,7 @@ private fun PairOffsetDialog(
     var value by remember { mutableIntStateOf(initialMinutes) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Пара в ${pairStart.format(TIME)}") },
+        title = { Text(stringResource(R.string.dialog_pair_title, pairStart.format(TIME))) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
@@ -709,22 +745,31 @@ private fun PairOffsetDialog(
                     }
                 }
                 Text(
-                    "Пара в ${pairStart.format(TIME)} → будильник прозвонит в " +
-                        wakeExample(pairStart, value),
+                    stringResource(
+                        R.string.dialog_pair_example,
+                        pairStart.format(TIME),
+                        pairStart.minusMinutes(value.toLong()).hhmm()
+                    ),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         },
         confirmButton = {
-            TextButton(onClick = { onSave(value) }) { Text("Сохранить") }
+            TextButton(onClick = { onSave(value) }) {
+                Text(stringResource(R.string.action_save))
+            }
         },
         dismissButton = {
             Row {
                 if (isCustom) {
-                    TextButton(onClick = onReset) { Text("Сбросить") }
+                    TextButton(onClick = onReset) {
+                        Text(stringResource(R.string.action_reset))
+                    }
                 }
-                TextButton(onClick = onDismiss) { Text("Отмена") }
+                TextButton(onClick = onDismiss) {
+                    Text(stringResource(R.string.action_cancel))
+                }
             }
         }
     )
@@ -761,9 +806,12 @@ private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
                 )
                 Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
-                    Text("Напоминание о будильнике", style = MaterialTheme.typography.bodyLarge)
                     Text(
-                        "Своё уведомление: «завтра пара во столько — не забудьте поставить будильник»",
+                        stringResource(R.string.sec_reminder),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        stringResource(R.string.set_reminder_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -771,9 +819,7 @@ private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
                 Switch(checked = settings.reminderEnabled, onCheckedChange = null)
             }
             Text(
-                "Фолбэк, когда стоковые часы не принимают команды приложения — встречается " +
-                    "на Realme, Huawei, Xiaomi (особенно китайские прошивки). Напоминание приходит " +
-                    "каждый день в выбранное время, если на завтра есть пара.",
+                stringResource(R.string.set_reminder_fallback),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -782,8 +828,12 @@ private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
                     Icon(Icons.Rounded.Schedule, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        "Время напоминания: %02d:%02d"
-                            .format(settings.reminderTime.hour, settings.reminderTime.minute)
+                        stringResource(
+                            R.string.reminder_time,
+                            "%02d:%02d".format(
+                                settings.reminderTime.hour, settings.reminderTime.minute
+                            )
+                        )
                     )
                 }
             }
@@ -798,7 +848,7 @@ private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
         )
         AlertDialog(
             onDismissRequest = { showTimePicker = false },
-            title = { Text("Время напоминания") },
+            title = { Text(stringResource(R.string.dialog_reminder_title)) },
             text = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     TimePicker(state = timeState)
@@ -809,11 +859,13 @@ private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
                     vm.setReminderTime(LocalTime.of(timeState.hour, timeState.minute))
                     showTimePicker = false
                 }) {
-                    Text("ОК")
+                    Text(stringResource(R.string.action_ok))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showTimePicker = false }) { Text("Отмена") }
+                TextButton(onClick = { showTimePicker = false }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
             }
         )
     }
@@ -845,13 +897,13 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                "Будильник не ставится перед этими дисциплинами",
+                stringResource(R.string.exceptions_title_desc),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             if (exceptions.isEmpty()) {
                 Text(
-                    "Пока пусто — добавьте предметы, перед которыми будить не нужно",
+                    stringResource(R.string.exceptions_empty),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -873,7 +925,7 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                     IconButton(onClick = { vm.deleteException(rule.id) }) {
                         Icon(
                             Icons.Rounded.Delete,
-                            contentDescription = "Удалить «${rule.subject}»"
+                            contentDescription = stringResource(R.string.cd_delete_named, rule.subject)
                         )
                     }
                 }
@@ -886,7 +938,7 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                 OutlinedTextField(
                     value = newText,
                     onValueChange = { newText = it },
-                    label = { Text("Название дисциплины") },
+                    label = { Text(stringResource(R.string.hint_subject_name)) },
                     singleLine = true,
                     modifier = Modifier.weight(1f)
                 )
@@ -897,12 +949,15 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                     },
                     enabled = newText.isNotBlank()
                 ) {
-                    Icon(Icons.Rounded.Add, contentDescription = "Добавить исключение")
+                    Icon(
+                        Icons.Rounded.Add,
+                        contentDescription = stringResource(R.string.cd_add_exception)
+                    )
                 }
             }
             if (suggestions.isNotEmpty()) {
                 Text(
-                    "Найдено в расписании:",
+                    stringResource(R.string.exceptions_found),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -941,13 +996,13 @@ private fun CustomEventsCard(events: List<CustomEvent>, vm: SettingsViewModel) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                "Свои события с отдельным временем будильника — секции, репетиции, разовые дела",
+                stringResource(R.string.custom_events_desc),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             if (events.isEmpty()) {
                 Text(
-                    "Пока ничего не добавлено",
+                    stringResource(R.string.custom_empty),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -972,7 +1027,7 @@ private fun CustomEventsCard(events: List<CustomEvent>, vm: SettingsViewModel) {
                     IconButton(onClick = { vm.deleteCustomEvent(event.id) }) {
                         Icon(
                             Icons.Rounded.Delete,
-                            contentDescription = "Удалить «${event.name}»"
+                            contentDescription = stringResource(R.string.cd_delete_named, event.name)
                         )
                     }
                 }
@@ -980,7 +1035,7 @@ private fun CustomEventsCard(events: List<CustomEvent>, vm: SettingsViewModel) {
             OutlinedButton(onClick = { showAddDialog = true }) {
                 Icon(Icons.Rounded.Add, contentDescription = null)
                 Spacer(Modifier.width(6.dp))
-                Text("Добавить")
+                Text(stringResource(R.string.action_add))
             }
         }
     }
@@ -1018,7 +1073,7 @@ private fun AddEventDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Своё занятие") },
+        title = { Text(stringResource(R.string.dialog_event_title)) },
         text = {
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
@@ -1027,7 +1082,7 @@ private fun AddEventDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Название") },
+                    label = { Text(stringResource(R.string.hint_name)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -1037,14 +1092,14 @@ private fun AddEventDialog(
                         onClick = { weekly = true },
                         shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
                     ) {
-                        Text("По дням недели")
+                        Text(stringResource(R.string.event_days_mode))
                     }
                     SegmentedButton(
                         selected = !weekly,
                         onClick = { weekly = false },
                         shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
                     ) {
-                        Text("Одна дата")
+                        Text(stringResource(R.string.event_date_mode))
                     }
                 }
                 if (weekly) {
@@ -1057,7 +1112,7 @@ private fun AddEventDialog(
                                 onClick = {
                                     days = if (day in days) days - day else days + day
                                 },
-                                label = { Text(ruShortDay(day)) }
+                                label = { Text(dayShortName(day)) }
                             )
                         }
                     }
@@ -1068,7 +1123,7 @@ private fun AddEventDialog(
                     ) {
                         Icon(Icons.Rounded.Event, contentDescription = null)
                         Spacer(Modifier.width(6.dp))
-                        Text(date?.format(DATE) ?: "Выбрать дату")
+                        Text(date?.format(DATE) ?: stringResource(R.string.btn_pick_date))
                     }
                 }
                 OutlinedButton(
@@ -1077,11 +1132,11 @@ private fun AddEventDialog(
                 ) {
                     Icon(Icons.Rounded.Schedule, contentDescription = null)
                     Spacer(Modifier.width(6.dp))
-                    Text("Время: ${time.format(TIME)}")
+                    Text(stringResource(R.string.event_time, time.format(TIME)))
                 }
                 Column {
                     Text(
-                        "Будить за $offset мин до события",
+                        stringResource(R.string.event_wake_before, formatOffset(offset)),
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Slider(
@@ -1109,11 +1164,11 @@ private fun AddEventDialog(
                     }
                 }
             ) {
-                Text("Сохранить")
+                Text(stringResource(R.string.action_save))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Отмена") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         }
     )
 
@@ -1128,11 +1183,13 @@ private fun AddEventDialog(
                     datePickerState.selectedDateMillis?.let { date = millisToLocalDate(it) }
                     showDatePicker = false
                 }) {
-                    Text("ОК")
+                    Text(stringResource(R.string.action_ok))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) { Text("Отмена") }
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
             }
         ) {
             DatePicker(state = datePickerState)
@@ -1147,7 +1204,7 @@ private fun AddEventDialog(
         )
         AlertDialog(
             onDismissRequest = { showTimePicker = false },
-            title = { Text("Время события") },
+            title = { Text(stringResource(R.string.dialog_event_time_title)) },
             text = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     TimePicker(state = timeState)
@@ -1158,11 +1215,13 @@ private fun AddEventDialog(
                     time = LocalTime.of(timeState.hour, timeState.minute)
                     showTimePicker = false
                 }) {
-                    Text("ОК")
+                    Text(stringResource(R.string.action_ok))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showTimePicker = false }) { Text("Отмена") }
+                TextButton(onClick = { showTimePicker = false }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
             }
         )
     }
@@ -1174,6 +1233,11 @@ private fun AddEventDialog(
 @Composable
 private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: Context) {
     val scope = rememberCoroutineScope()
+    // --- Язык интерфейса (новое в 0.5.0): первая строка секции «Оформление» ---
+    var showLanguageDialog by remember { mutableStateOf(false) }
+    // язык читаем один раз: выбор применяется через recreate() Activity
+    val currentLanguageTag = remember { LocaleStore.language(context) }
+    val currentLanguage = SUPPORTED_LANGUAGES.firstOrNull { it.tag == currentLanguageTag }
     var opacity by remember(settings.backgroundOpacity) {
         mutableFloatStateOf(settings.backgroundOpacity)
     }
@@ -1206,28 +1270,56 @@ private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: C
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text("Тема", style = MaterialTheme.typography.bodyLarge)
+            // --- Язык интерфейса ---
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showLanguageDialog = true },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Rounded.Language,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.width(12.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        stringResource(R.string.set_language),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        if (currentLanguage != null) currentLanguage.displayName()
+                        else stringResource(R.string.lang_system),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+            HorizontalDivider()
+
+            Text(stringResource(R.string.set_theme), style = MaterialTheme.typography.bodyLarge)
             SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
                 SegmentedButton(
                     selected = settings.themeMode == ThemeMode.SYSTEM,
                     onClick = { vm.setThemeMode(ThemeMode.SYSTEM) },
                     shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3)
                 ) {
-                    Text("Системная")
+                    Text(stringResource(R.string.theme_system))
                 }
                 SegmentedButton(
                     selected = settings.themeMode == ThemeMode.LIGHT,
                     onClick = { vm.setThemeMode(ThemeMode.LIGHT) },
                     shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3)
                 ) {
-                    Text("Светлая")
+                    Text(stringResource(R.string.theme_light))
                 }
                 SegmentedButton(
                     selected = settings.themeMode == ThemeMode.DARK,
                     onClick = { vm.setThemeMode(ThemeMode.DARK) },
                     shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3)
                 ) {
-                    Text("Тёмная")
+                    Text(stringResource(R.string.theme_dark))
                 }
             }
             Row(
@@ -1241,14 +1333,14 @@ private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: C
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "Material You (цвет системы)",
+                    stringResource(R.string.dynamic_color),
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
                 Switch(checked = settings.dynamicColor, onCheckedChange = null)
             }
 
-            Text("Акцент", style = MaterialTheme.typography.bodyLarge)
+            Text(stringResource(R.string.set_accent), style = MaterialTheme.typography.bodyLarge)
             Row(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -1262,26 +1354,29 @@ private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: C
                         borderColor = MaterialTheme.colorScheme.primary,
                         outlineColor = MaterialTheme.colorScheme.outlineVariant,
                         onSelect = { vm.setAccent(index) },
-                        description = palette.name
+                        description = accentName(palette.id)
                     )
                 }
             }
 
-            Text("Стиль расписания", style = MaterialTheme.typography.bodyLarge)
+            Text(
+                stringResource(R.string.schedule_style),
+                style = MaterialTheme.typography.bodyLarge
+            )
             SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
                 SegmentedButton(
                     selected = settings.calendarStyle == CalendarStyle.STANDARD,
                     onClick = { vm.setCalendarStyle(CalendarStyle.STANDARD) },
                     shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
                 ) {
-                    Text("Стандарт")
+                    Text(stringResource(R.string.style_standard))
                 }
                 SegmentedButton(
                     selected = settings.calendarStyle == CalendarStyle.PAPER,
                     onClick = { vm.setCalendarStyle(CalendarStyle.PAPER) },
                     shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
                 ) {
-                    Text("Бумажный календарь")
+                    Text(stringResource(R.string.style_paper))
                 }
             }
             HorizontalDivider()
@@ -1293,21 +1388,21 @@ private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: C
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(Modifier.width(12.dp))
-                Text("Фон", style = MaterialTheme.typography.bodyLarge)
+                Text(stringResource(R.string.set_background), style = MaterialTheme.typography.bodyLarge)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedButton(onClick = { imagePicker.launch(arrayOf("image/*")) }) {
-                    Text("Выбрать картинку")
+                    Text(stringResource(R.string.btn_pick_image))
                 }
                 TextButton(
                     onClick = { vm.setBackground(null) },
                     enabled = settings.backgroundImagePath != null
                 ) {
-                    Text("Убрать")
+                    Text(stringResource(R.string.btn_remove))
                 }
             }
             Text(
-                "Прозрачность подложки",
+                stringResource(R.string.bg_opacity),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -1337,9 +1432,12 @@ private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: C
                 )
                 Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
-                    Text("Эффект стекла", style = MaterialTheme.typography.bodyLarge)
                     Text(
-                        "Карточки полупрозрачные, как матовое стекло; фоновая картинка размывается",
+                        stringResource(R.string.set_glass),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        stringResource(R.string.set_glass_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -1348,7 +1446,7 @@ private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: C
             }
             if (settings.glassEnabled) {
                 Text(
-                    "Интенсивность стекла",
+                    stringResource(R.string.glass_intensity),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -1360,15 +1458,38 @@ private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: C
                 )
                 Text(
                     if (settings.backgroundImagePath == null) {
-                        "Совет: стекло лучше всего смотрится с фоновой картинкой (выше)"
+                        stringResource(R.string.glass_tip)
                     } else {
-                        "Стекло активно"
+                        stringResource(R.string.glass_active)
                     },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
+    }
+
+    if (showLanguageDialog) {
+        AlertDialog(
+            onDismissRequest = { showLanguageDialog = false },
+            title = { Text(stringResource(R.string.set_language)) },
+            text = {
+                LanguagePicker(
+                    selected = currentLanguageTag,
+                    onSelect = { tag ->
+                        showLanguageDialog = false
+                        LocaleStore.setLanguage(context, tag)
+                        // пересоздание Activity применяет язык немедленно
+                        (context as? Activity)?.recreate()
+                    }
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { showLanguageDialog = false }) {
+                    Text(stringResource(R.string.action_done))
+                }
+            }
+        )
     }
 }
 
@@ -1408,6 +1529,19 @@ private fun AccentDot(
     }
 }
 
+/** Локализованное имя палитры акцента (метка клика для скринридеров). */
+@Composable
+private fun accentName(id: Int): String = stringResource(
+    when (id) {
+        0 -> R.string.accent_amber
+        1 -> R.string.accent_orange
+        2 -> R.string.accent_red
+        3 -> R.string.accent_green
+        4 -> R.string.accent_pink
+        else -> R.string.accent_purple
+    }
+)
+
 // --- 7. Система ---
 
 @Composable
@@ -1438,16 +1572,15 @@ private fun SystemCard(
                             tint = MaterialTheme.colorScheme.primary
                         )
                         Text(
-                            "Точные будильники разрешены",
+                            stringResource(R.string.status_exact_allowed),
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
                 } else {
                     WarningBlock(
-                        title = "Точные будильники отключены системой",
-                        description = "Ночной планировщик сможет ставить будильник только " +
-                            "с погрешностью ±10 минут.",
-                        actionLabel = "Разрешить",
+                        title = stringResource(R.string.dialog_exact_off_title),
+                        description = stringResource(R.string.dialog_exact_off_desc),
+                        actionLabel = stringResource(R.string.action_allow),
                         isError = true,
                         onAction = onFixExact
                     )
@@ -1455,10 +1588,9 @@ private fun SystemCard(
             }
             if (!ignoringBattery) {
                 WarningBlock(
-                    title = "Оптимизация батареи может мешать",
-                    description = "Исключите приложение из оптимизации, чтобы ночная " +
-                        "перепроверка расписания не срывалась.",
-                    actionLabel = "Отключить оптимизацию",
+                    title = stringResource(R.string.dialog_battery2_title),
+                    description = stringResource(R.string.dialog_battery2_desc),
+                    actionLabel = stringResource(R.string.action_disable_optimization),
                     isError = false,
                     onAction = onFixBattery
                 )
@@ -1473,16 +1605,18 @@ private fun SystemCard(
                 Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
                     Text(
-                        "Автозапуск и агрессивные оболочки",
+                        stringResource(R.string.autostart_title),
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
-                        "MIUI, HarmonyOS и другие оболочки убивают фоновые приложения",
+                        stringResource(R.string.autostart_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                TextButton(onClick = onAutostart) { Text("Инструкция") }
+                TextButton(onClick = onAutostart) {
+                    Text(stringResource(R.string.btn_instructions))
+                }
             }
         }
     }
@@ -1546,50 +1680,43 @@ private fun WarningBlock(
 @Composable
 private fun AutostartDialog(onDismiss: () -> Unit) {
     val manufacturer = remember { Build.MANUFACTURER.lowercase() }
-    val instructions = remember {
-        when {
-            manufacturer.contains("xiaomi") ||
-                manufacturer.contains("redmi") ||
-                manufacturer.contains("poco") ->
-                "Xiaomi / Redmi / POCO:\nБезопасность → Приложения → Автозапуск: включи " +
-                    "Автобудильник; в настройках батареи приложения выбери «нет ограничений»."
+    // ресурс инструкции выбираем по производителю, строку достаём stringResource'ом
+    // (stringResource нельзя звать внутри remember{} — там нет composable-контекста)
+    val instructionsRes = when {
+        manufacturer.contains("xiaomi") ||
+            manufacturer.contains("redmi") ||
+            manufacturer.contains("poco") ->
+            R.string.autostart_xiaomi
 
-            manufacturer.contains("huawei") || manufacturer.contains("honor") ->
-                "Huawei / Honor:\nНастройки → Батарея → Запуск приложений → Автобудильник → " +
-                    "Управлять вручную: включи все переключатели."
+        manufacturer.contains("huawei") || manufacturer.contains("honor") ->
+            R.string.autostart_huawei
 
-            manufacturer.contains("oppo") ||
-                manufacturer.contains("realme") ||
-                manufacturer.contains("oneplus") ->
-                "OPPO / Realme / OnePlus:\nНастройки → Батарея → Ещё настройки → Оптимизация " +
-                    "потребления → запрети оптимизацию для приложения; Менеджер приложений → " +
-                    "Автозапуск."
+        manufacturer.contains("oppo") ||
+            manufacturer.contains("realme") ||
+            manufacturer.contains("oneplus") ->
+            R.string.autostart_oppo
 
-            manufacturer.contains("samsung") ->
-                "Samsung:\nНастройки → Батарея → Ограничения в фоне → Не спящие приложения → " +
-                    "добавь Автобудильник."
+        manufacturer.contains("samsung") ->
+            R.string.autostart_samsung
 
-            else ->
-                "Другая оболочка:\nДобавь приложение в автозапуск и сними оптимизации батареи " +
-                    "в настройках системы."
-        }
+        else -> R.string.autostart_other
     }
+    val instructions = stringResource(instructionsRes)
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Автозапуск и агрессивные оболочки") },
+        title = { Text(stringResource(R.string.autostart_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(instructions, style = MaterialTheme.typography.bodyMedium)
                 Text(
-                    "Режим «Стандарт» переставляет будильник каждую ночь — приложению нужен " +
-                        "запуск в фоне в 00:05.",
+                    stringResource(R.string.autostart_standard_note),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         },
         confirmButton = {
-            TextButton(onClick = onDismiss) { Text("Понятно") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_understood)) }
         }
     )
 }
@@ -1606,8 +1733,8 @@ private fun AboutCard(versionName: String?, context: Context) {
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Text(
-                if (versionName != null) "Автобудильник КГЭУ · v$versionName"
-                else "Автобудильник КГЭУ",
+                if (versionName != null) stringResource(R.string.about_version, versionName)
+                else stringResource(R.string.app_name),
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
@@ -1616,8 +1743,7 @@ private fun AboutCard(versionName: String?, context: Context) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                "Данные расписания: официальный API kabinet.kgeu.ru. " +
-                    "Приложение не аффилировано с КГЭУ.",
+                stringResource(R.string.about_data),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -1639,7 +1765,7 @@ private fun AboutCard(versionName: String?, context: Context) {
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(Modifier.width(6.dp))
-                Text("Репозиторий на GitHub")
+                Text(stringResource(R.string.btn_github))
             }
         }
     }
@@ -1647,54 +1773,31 @@ private fun AboutCard(versionName: String?, context: Context) {
 
 // --- Утилиты ---
 
-/** «90 мин» / «1 ч» / «1 ч 30 мин». */
-private fun formatOffset(minutes: Int): String = when {
-    minutes < 60 -> "$minutes мин"
-    minutes % 60 == 0 -> "${minutes / 60} ч"
-    else -> "${minutes / 60} ч ${minutes % 60} мин"
-}
-
-/** Русское слово «дня/дней» для чисел 3..14. */
-private fun daysWord(n: Int): String =
-    if (n % 10 in 2..4 && n % 100 !in 12..14) "дня" else "дней"
-
-/** Пример: будильник при первой паре в 08:30 и смещении [offsetMinutes]. */
-private fun exampleWake(offsetMinutes: Int): String =
-    LocalTime.of(8, 30).minusMinutes(offsetMinutes.toLong()).format(TIME)
-
-/** Будильник при паре в [pairStart] и запасе на сборы [offsetMinutes]. */
-private fun wakeExample(pairStart: LocalTime, offsetMinutes: Int): String =
-    pairStart.minusMinutes(offsetMinutes.toLong()).format(TIME)
+// Локальные formatOffset / daysWord / exampleWake / wakeExample удалены:
+// строки смещений собираются через ui.common.formatOffset, времена — через
+// exampleWakeTime(...).hhmm() и LocalTime.hhmm() из ui.common.Formats.
 
 /** «Студент · А-1-22» / «Преподаватель · Иванов И.И.» */
+@Composable
 private fun profileLine(settings: Settings): String {
     val role = when (settings.targetType) {
-        TargetType.STUDENT -> "Студент"
-        TargetType.TEACHER -> "Преподаватель"
-        null -> "Цель не выбрана"
+        TargetType.STUDENT -> stringResource(R.string.role_student)
+        TargetType.TEACHER -> stringResource(R.string.role_teacher)
+        null -> stringResource(R.string.profile_no_target)
     }
     return if (settings.targetName.isBlank()) role else "$role · ${settings.targetName}"
 }
 
 /** Подпись своего события: «Пн 07:30 · за 45 мин» или «14.10 09:00 · за 30 мин». */
+@Composable
 private fun describeCustomEvent(event: CustomEvent): String {
     val moment = if (event.dayOfWeek != null) {
-        ruShortDay(event.dayOfWeek)
+        dayShortName(event.dayOfWeek)
     } else {
         event.date?.format(DATE) ?: ""
     }
-    return "$moment ${event.time.format(TIME)} · за ${event.offsetMinutes} мин"
-}
-
-/** Короткое русское имя дня недели: Пн, Вт, … Вс. */
-private fun ruShortDay(day: DayOfWeek): String = when (day) {
-    DayOfWeek.MONDAY -> "Пн"
-    DayOfWeek.TUESDAY -> "Вт"
-    DayOfWeek.WEDNESDAY -> "Ср"
-    DayOfWeek.THURSDAY -> "Чт"
-    DayOfWeek.FRIDAY -> "Пт"
-    DayOfWeek.SATURDAY -> "Сб"
-    DayOfWeek.SUNDAY -> "Вс"
+    return "$moment ${event.time.format(TIME)} " +
+        stringResource(R.string.event_offset_suffix, formatOffset(event.offsetMinutes))
 }
 
 /** DatePicker отдаёт millis в UTC → LocalDate без сдвига суток. */
@@ -1743,7 +1846,7 @@ private fun openStockAlarms(context: Context, onError: (String) -> Unit) {
             Intent(AlarmClock.ACTION_SHOW_ALARMS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         )
     } catch (_: Exception) {
-        onError("Часы не открыли список будильников")
+        onError(LocaleHelper.string(context, R.string.alarms_list_open_failed))
     }
 }
 
@@ -1785,8 +1888,10 @@ private fun dismissAppAlarms(
     }
     if (sent > 0) {
         onResult(
-            "Команда отключения отправлена в часы ($sent из ${StockAlarmSetter.WEEK_AHEAD_LABELS.size}). " +
-                "Если будильники «Авто: …» остались — отключите их в списке будильников"
+            LocaleHelper.string(
+                context, R.string.dismiss_alarms_sent,
+                sent, StockAlarmSetter.WEEK_AHEAD_LABELS.size
+            )
         )
         return
     }
@@ -1806,9 +1911,10 @@ private fun dismissAppAlarms(
         }
     }
     onResult(
-        if (opened) "Часы не поддерживают отключение командой (ограничение оболочки) — " +
-            "открыл список будильников: снимите будильники с меткой «Авто:» вручную"
-        else "Часы не поддерживают отключение командой (ограничение оболочки) — " +
-            "откройте будильники в приложении часов и снимите метки «Авто:» вручную"
+        if (opened) {
+            LocaleHelper.string(context, R.string.dismiss_unsupported_opened)
+        } else {
+            LocaleHelper.string(context, R.string.dismiss_unsupported_manual)
+        }
     )
 }

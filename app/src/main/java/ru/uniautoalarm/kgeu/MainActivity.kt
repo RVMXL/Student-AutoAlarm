@@ -1,9 +1,11 @@
 package ru.uniautoalarm.kgeu
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +35,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -43,19 +47,27 @@ import coil.compose.AsyncImage
 import java.io.File
 import ru.uniautoalarm.kgeu.data.model.Settings
 import ru.uniautoalarm.kgeu.ui.common.LocalAppContainer
+import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 import ru.uniautoalarm.kgeu.ui.home.HomeScreen
 import ru.uniautoalarm.kgeu.ui.navigation.Routes
 import ru.uniautoalarm.kgeu.ui.schedule.ScheduleScreen
 import ru.uniautoalarm.kgeu.ui.settings.SettingsScreen
 import ru.uniautoalarm.kgeu.ui.setup.SetupScreen
 import ru.uniautoalarm.kgeu.ui.theme.AutoAlarmTheme
+import ru.uniautoalarm.kgeu.ui.theme.resolveDarkTheme
 
 /**
- * Единственная активность приложения: edge-to-edge, тема из настроек (DataStore),
+ * Единственная активность приложения: edge-to-edge, язык из LocaleStore
+ * (attachBaseContext — до первого кадра), тема из настроек (DataStore),
  * провайдинг DI-контейнера через CompositionLocal и корневая маршрутизация:
  * загрузка → мастер настройки → главный каркас с нижней навигацией.
  */
 class MainActivity : ComponentActivity() {
+
+    /** Язык интерфейса приложения — обёртыванием контекста (работает на всех API). */
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(LocaleHelper.wrap(base))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +77,16 @@ class MainActivity : ComponentActivity() {
             val container = app.container
             val settings by container.settings.settings
                 .collectAsStateWithLifecycle(initialValue = null)
+            // Окно — в цвет ТЕМЫ ПРИЛОЖЕНИЯ (не системы): под стеклом/прозрачными
+            // поверхностями виден именно windowBackground. Раньше окно оставалось
+            // тёмным (values-night) при светлой теме приложения — серая каша.
+            val darkTheme = resolveDarkTheme(settings)
+            SideEffect {
+                window.setBackgroundDrawableResource(
+                    if (darkTheme) R.color.window_background_dark
+                    else R.color.window_background_light
+                )
+            }
             AutoAlarmTheme(settings) {
                 CompositionLocalProvider(LocalAppContainer provides container) {
                     Root(settings)
@@ -106,20 +128,24 @@ private fun BootingScreen() {
     }
 }
 
-/** Пункт нижней навигации: маршрут + пара иконок (выбранная/невыбранная). */
+/** Пункт нижней навигации: маршрут + ресурс подписи + пара иконок (выбранная/невыбранная). */
 private data class TopDestination(
     val route: String,
-    val label: String,
+    @StringRes val labelRes: Int,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector
 )
 
 private val TOP_DESTINATIONS = listOf(
-    TopDestination(Routes.HOME, "Главная", Icons.Rounded.Home, Icons.Outlined.Home),
+    TopDestination(Routes.HOME, R.string.nav_home, Icons.Rounded.Home, Icons.Outlined.Home),
     TopDestination(
-        Routes.SCHEDULE, "Расписание", Icons.Rounded.CalendarMonth, Icons.Outlined.CalendarMonth
+        Routes.SCHEDULE, R.string.nav_schedule,
+        Icons.Rounded.CalendarMonth, Icons.Outlined.CalendarMonth
     ),
-    TopDestination(Routes.SETTINGS, "Настройки", Icons.Rounded.Settings, Icons.Outlined.Settings)
+    TopDestination(
+        Routes.SETTINGS, R.string.nav_settings,
+        Icons.Rounded.Settings, Icons.Outlined.Settings
+    )
 )
 
 /**
@@ -161,16 +187,17 @@ private fun MainScaffold(settings: Settings) {
                             }
                         },
                         icon = {
+                            val label = stringResource(destination.labelRes)
                             Icon(
                                 imageVector = if (selected) {
                                     destination.selectedIcon
                                 } else {
                                     destination.unselectedIcon
                                 },
-                                contentDescription = destination.label
+                                contentDescription = label
                             )
                         },
-                        label = { Text(destination.label) }
+                        label = { Text(stringResource(destination.labelRes)) }
                     )
                 }
             }

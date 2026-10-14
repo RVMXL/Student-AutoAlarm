@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== Общее ==== -->
+    <string name="app_name">Автобудильник КГЭУ</string>
+    <string name="action_cancel">Бекор кардан</string>
+    <string name="action_ok">ОК</string>
+    <string name="action_save">Нигоҳ доштан</string>
+    <string name="action_done">Тайёр</string>
+    <string name="action_edit">Тағйир додан</string>
+    <string name="action_reset">Аз нав танзим кардан</string>
+    <string name="action_retry">Такрор кардан</string>
+    <string name="action_allow">Иҷозат додан</string>
+    <string name="action_fix">Ислоҳ кардан</string>
+    <string name="action_refresh">Навсозӣ</string>
+    <string name="action_change">Иваз кардан</string>
+    <string name="action_next">Баъдӣ</string>
+    <string name="action_back">Бозгашт</string>
+    <string name="action_start">Оғоз кардан</string>
+    <string name="action_add">Илова кардан</string>
+    <string name="action_load">Бор кардан</string>
+    <string name="action_understood">Фаҳмидам</string>
+
+    <!-- ==== Нижняя навигация ==== -->
+    <string name="nav_home">Асосӣ</string>
+    <string name="nav_schedule">Ҷадвали дарсҳо</string>
+    <string name="nav_settings">Танзимот</string>
+
+    <!-- ==== Единицы и форматирования ==== -->
+    <string name="fmt_offset_m">%1$d дақ</string>
+    <string name="fmt_offset_h">%1$d соат</string>
+    <string name="fmt_offset_hm">%1$d соат %2$d дақ</string>
+    <string name="fmt_days_short">%1$d рӯз</string>
+    <string name="fmt_time_alarm_will_ring">будильник зан мезанад дар</string>
+
+    <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
+    <string name="day_short_1">Дш</string>
+    <string name="day_short_2">Сш</string>
+    <string name="day_short_3">Чш</string>
+    <string name="day_short_4">Пш</string>
+    <string name="day_short_5">Ҷм</string>
+    <string name="day_short_6">Шб</string>
+    <string name="day_short_7">Як</string>
+
+    <!-- ==== Язык ==== -->
+    <string name="lang_title">Забон</string>
+    <string name="lang_subtitle">Забони интерфейсро интихоб кун — баъдтар дар танзимот иваз карда метавонӣ</string>
+    <string name="lang_system">Забони система</string>
+    <string name="set_language">Забон</string>
+    <string name="set_language_desc">Забони интерфейси барнома</string>
+
+    <!-- ==== Мастер настройки ==== -->
+    <string name="setup_step_of">Қадами %1$d аз %2$d</string>
+    <string name="setup_welcome_subtitle">Пеш аз параи якум дар соати худи телефон будильник мегузорад — мувофиқи ҷадвали донишгоҳ. Дар як дақиқа танзим мекунем.</string>
+    <string name="setup_university">Донишгоҳи давлатии энергетикии Қазон (КГЭУ)</string>
+    <string name="setup_official_api">API-и расмии kabinet.kgeu.ru</string>
+    <string name="setup_who_are_you">Кӣ ҳастӣ?</string>
+    <string name="role_student">Донишҷӯ</string>
+    <string name="role_student_subtitle">Будильник мувофиқи ҷадвали гурӯҳи ман</string>
+    <string name="role_teacher">Устод</string>
+    <string name="role_teacher_subtitle">Будильник мувофиқи ҷадвали параҳои ман</string>
+    <string name="setup_search_hint">Нависан оғоз кун: А-1-23 …</string>
+    <string name="setup_found">Ёфт шуд: %1$d</string>
+    <string name="setup_found_capped">Ёфт шуд: %1$d (аввалин %2$d нишон дода шудаанд)</string>
+    <string name="setup_load_failed">Рӯйхат бор нашуд</string>
+    <string name="setup_check_internet">Интернетро санҷ ва боз кӯшиш кун</string>
+    <string name="setup_nothing_found">Ҳеҷ чиз ёфт нашуд</string>
+    <string name="setup_pick_role_first">Аввал интихоб кун, ки кистӣ</string>
+    <string name="setup_course">курси %1$d</string>
+    <string name="setup_wake_question">Одатан чанде пеш аз параи якум бедор мешавӣ?</string>
+    <string name="setup_example">Параи якум соати 08:30 → будильник соати %1$s</string>
+    <string name="setup_done_all">Ҳама тайёр!</string>
+    <string name="setup_finish_mode_note">Реҷаи „Стандарт“: ҳар шаб будильник барои фардо гузошта мешавад. Баъдтар дар танзимот иваз карда метавонӣ.</string>
+    <string name="setup_no_target">Мақсад интихоб нашудааст — ба ақиб баргард ва гурӯҳ ё устодро интихоб кун</string>
+    <string name="summary_group">Гурӯҳ</string>
+    <string name="summary_teacher">Устод</string>
+    <string name="summary_wake_offset">Бедор шудан пеш аз параи якум</string>
+    <string name="profile_no_target">Мақсад интихоб нашудааст</string>
+
+    <!-- ==== Главный экран ==== -->
+    <string name="home_title">Автобудильник</string>
+    <string name="cd_refresh_schedule">Навсозии ҷадвали дарсҳо</string>
+    <string name="mode_week_chip">Ба %1$d рӯз</string>
+    <string name="mode_standard_chip">Стандарт</string>
+    <string name="loading_settings">Танзимот бор мешаванд…</string>
+    <string name="alarm_off_title">Будильник хомӯш аст</string>
+    <string name="alarm_off_subtitle">Бо калидаки дар поён фаъол кун</string>
+    <string name="refreshing">Ҷадвали дарсҳо навсозӣ мешавад…</string>
+    <string name="not_loaded_title">Ҷадвали дарсҳо ҳанӯз бор нашудааст</string>
+    <string name="not_loaded_hint">Параҳоро аз kabinet.kgeu.ru кашида биёр — дар ин ҷо вақти бедор шудан пайдо мешавад</string>
+    <string name="tomorrow_free_title">Фардо пара нест</string>
+    <string name="tomorrow_free_sub">будильник гузошта намешавад</string>
+    <string name="tomorrow_label">Фардо · %1$s</string>
+    <string name="today_label">Имрӯз</string>
+    <string name="tomorrow_label_short">Фардо</string>
+    <string name="badge_replacement">иваз</string>
+    <string name="room_prefix">ауд. %1$s</string>
+    <string name="lesson_at">пара соати %1$s</string>
+    <string name="own_event_at">машғулияти худ соати %1$s</string>
+    <string name="home_auto_title">Авто-будильник</string>
+    <string name="home_auto_subtitle">Пеш аз параи якум дар соати худи телефон будильник мегузорад</string>
+    <string name="home_week_title">Ба чанд рӯз пеш</string>
+    <string name="home_week_desc">Будильникҳои такроршаванда аз рӯи рӯзҳои ҳафта — кафолат барои ҳолате, ки система барномаро кушад</string>
+    <string name="btn_set_for_days">Ба %1$d рӯз гузоштан</string>
+    <string name="chip_weekly_repeat">Ҳар ҳафта такрор мешаванд</string>
+    <string name="home_week_note">Будильникҳо ҳар ҳафта такрор мешаванд; будильникҳои изофӣ дар соати худи телефон хомӯш карда мешаванд («Рӯйхати будильникҳо» — дар танзимоти барнома)</string>
+    <string name="home_upcoming_title">Машғулиятҳои наздик</string>
+    <string name="home_no_pairs">Пара нест</string>
+
+    <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
+    <string name="week_result_delivered">Будильникҳои такроршаванда гузошта шуданд: %1$d</string>
+    <string name="week_result_delivered_note">Будильникҳои такроршаванда гузошта шуданд: %1$d (аз рӯи рӯзҳои ҳафта)</string>
+    <string name="week_result_uptodate">Будильникҳо аллакай гузошта шудаанд — ҷадвали дарсҳо тағйир наёфтааст</string>
+    <string name="week_result_empty">Параҳои оянда ёфт нашуданд</string>
+
+    <!-- ==== Диагностика на главном ==== -->
+    <string name="dialog_exact_alarms_title">Будильникҳои дақиқ манъ карда шудаанд</string>
+    <string name="dialog_exact_alarms_desc">Бидуни иҷозат система имкон намедиҳад, ки будильник дақиқ дар вақти ҳисобшуда гузошта шавад.</string>
+    <string name="dialog_battery_title">Оптимизацияи батарея метавонад халал расонад</string>
+    <string name="dialog_battery_desc">Реҷаи сахти сарфаи энергия метавонад санҷиши шабонаи ҷадвали дарсҳоро бекор кунад.</string>
+    <string name="dialog_stale_title">Ҷадвали дарсҳо зиёда аз 3 рӯз навсозӣ нашудааст</string>
+    <string name="dialog_stale_desc">Ҷадвали донишгоҳро аксар вақт тағйир медиҳанд — иттилооти нав кашида биёр.</string>
+
+    <!-- ==== Снекбары обновления ==== -->
+    <string name="err_no_target">Аввал дар танзимот гурӯҳ ё устодро интихоб кун</string>
+    <string name="msg_refreshed">Ҷадвали дарсҳо навсозӣ шуд</string>
+    <string name="refresh_empty_week">Навсозӣ шуд: дар ин ҳафта пара нест</string>
+    <string name="refresh_ok_count">Ҷадвали дарсҳо навсозӣ шуд — параҳо дар ҳафта: %1$d</string>
+    <string name="refresh_no_connection">Бо kabinet.kgeu.ru алоқа нест — кэши нигоҳдоришуда нишон дода мешавад</string>
+    <string name="refresh_network">Шабака дастрас нест — кэши нигоҳдоришуда нишон дода мешавад</string>
+    <string name="refresh_error">Хатогии навсозӣ: %1$s</string>
+    <string name="err_unknown_cause">сабаби номаълум</string>
+
+    <!-- ==== Экран расписания ==== -->
+    <string name="cd_prev_week">Ҳафтаи гузашта</string>
+    <string name="cd_next_week">Ҳафтаи оянда</string>
+    <string name="cd_go_today">Ба ҳафтаи ҳозира ва рӯзи имрӯз гузаштан</string>
+    <string name="cd_refresh_week">Навсозии ҳафта</string>
+    <string name="badge_this_week">ҳамин ҳафта</string>
+    <string name="snackbar_excluded_on">Пеш аз „%1$s“ будильник гузошта намешавад</string>
+    <string name="snackbar_excluded_off">Истисно бардошта шуд</string>
+    <string name="cd_enable_alarm">Пеш аз ин пара будильникро фаъол кардан</string>
+    <string name="cd_disable_alarm">Пеш аз ин пара будильник нагузоштан</string>
+    <string name="empty_no_lessons">Машғулият нест</string>
+    <string name="empty_no_alarm_needed">Дар ин рӯз будильник лозим намеояд</string>
+
+    <!-- ==== Уведомления ==== -->
+    <string name="notif_channel_name">Ҳолати авто-будильник</string>
+    <string name="notif_channel_desc">Огоҳиномаҳо оид ба будильникҳои гузошташуда ва аз даст рафта</string>
+    <string name="notif_alarm_set">Будильник ба соати %1$s гузошта шуд</string>
+    <string name="notif_skipped_title">Будильник гузошта нашуд</string>
+    <string name="notif_week_one">1 будильники такроршаванда гузошта шуд</string>
+    <string name="notif_week_many">Будильникҳои такроршаванда гузошта шуданд: %1$d</string>
+    <string name="notif_week_text">рӯзҳои ҳафтае, ки пара доранд (%1$s – %2$s), такрор ҳар ҳафта</string>
+    <string name="notif_week_already_title">Будильникҳо барои ҳафта аллакай гузошта шудаанд</string>
+    <string name="notif_week_already_text">Ҷадвали дарсҳо вақтҳои бедор шуданро тағйир надодааст — азнав гузоштан лозим нест</string>
+    <string name="notif_reminder_title">Будильник гузоштанро фаромӯш накун</string>
+    <string name="notif_reminder_text">Фардо, %1$s: пара соати %2$s — %3$s. Будильник гузоштанро фаромӯш накун.</string>
+    <string name="notif_sync_title">Ҳамоҳангсозии ҷадвали дарсҳо</string>
+    <string name="notif_sync_text">Ҷадвали дарсҳои КГЭУ навсозӣ мешавад</string>
+    <string name="notif_details_room">%1$s, ауд. %2$s</string>
+
+    <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">пара нест</string>
+    <string name="skip_no_upcoming">параҳои оянда ёфт нашуданд</string>
+    <string name="skip_clock_refused">Соати телефон фармонро қабул накард — дар танзимот «Ёдоварии будильник»-ро фаъол кун</string>
+    <string name="test_alarm_label">Санҷиш: Автобудильник кор мекунад!</string>
+    <string name="test_alarm_ok">Будильник ба 2 дақиқа дигар гузошта шуд — соатро санҷ</string>
+    <string name="test_alarm_fail">Будильники санҷишӣ гузошта нашуд — соат ҷавоб намедиҳад</string>
+
+    <!-- ==== Настройки: секции ==== -->
+    <string name="sec_profile">Профил</string>
+    <string name="sec_alarm">Будильник</string>
+    <string name="sec_reminder">Ёдоварии будильник</string>
+    <string name="sec_exceptions">Истисноҳо</string>
+    <string name="sec_custom_events">Машғулиятҳои худ</string>
+    <string name="sec_appearance">Намуд</string>
+    <string name="sec_system">Система</string>
+    <string name="sec_about">Дар бораи барнома</string>
+
+    <!-- ==== Настройки: профиль ==== -->
+    <string name="profile_change_note">Ивази мақсад фосилаи бедор шудан ва танзимотро бекор намекунад</string>
+
+    <!-- ==== Настройки: будильник ==== -->
+    <string name="set_auto_title">Авто-будильник</string>
+    <string name="set_show_clock">Ҳангоми гузоштан нишон додани соат</string>
+    <string name="set_show_clock_desc">Фаъол кун, агар будильникҳо худашон гузошта нашаванд (Realme, Oppo, Huawei): соат бо будильники омода кушода мешавад — бо тугмаи «Нигоҳ доштан» тасдиқ кун.</string>
+    <string name="set_wake_offset">Бедор шудан %1$s пеш аз параи якум</string>
+    <string name="set_offset_example">Параи якум соати 08:30 → будильник соати %1$s</string>
+    <string name="set_per_pair">Бедор шудан пеш аз ҳар пара</string>
+    <string name="set_per_pair_desc">Барои ҳар параи якум захираи алоҳида барои тайёр шудан: пеш аз параи барвақт — камтар, пеш аз параи дер — бештар, то барои хӯрдани наҳорат вақт ёбӣ. Параҳое, ки арзиши алоҳида надоранд, аз бедор шудани умумӣ (дар боло) истифода мебаранд.</string>
+    <string name="set_pairs_after_sync">Вақтҳои параҳо пас аз ҳамоҳангсозии ҷадвали дарсҳо пайдо мешаванд</string>
+    <string name="pair_at">Пара соати %1$s</string>
+    <string name="pair_custom_offset">Бедор шудан %1$s пеш → будильник соати %2$s</string>
+    <string name="pair_common_offset">Бедор шудани умумӣ: %1$s пеш</string>
+    <string name="set_mode">Реҷа</string>
+    <string name="mode_standard_title">Стандарт — барои фардо</string>
+    <string name="mode_standard_desc">Ҳар шаб будильник барои фардо азнав гузошта мешавад</string>
+    <string name="mode_week_title">Ба чанд рӯз пеш</string>
+    <string name="mode_week_desc">Будильники такроршаванда барои ҳар рӯзи дарсии ҳафта — кафолат алайҳи куштани равандҳо; мувофиқи ҷадвали амалкунанда ҳар ҳафта такрор мешаванд, бо тугмаи дар поён хомӯш кардан мумкин аст</string>
+    <string name="mode_week_window">Диапазони ҷустуҷӯи параҳо: %1$s — будильникҳо барои ҳамаи рӯзҳои ҳафтае, ки пара доранд</string>
+    <string name="btn_set_now">Ҳозир гузоштан</string>
+    <string name="btn_disable_app_alarms">Хомӯш кардани будильникҳои барнома</string>
+    <string name="disable_alarms_desc">Тугма ба соат фармони хомӯш кардан мефиристад — тибқи аломатҳои дақиқи «Авто: Пн»…«Авто: Вс». Агар интерфейс фармонро қабул накунад (баъзе Realme UI/ColorOS — маҳдудияти система), барнома худаш рӯйхати будильникҳоро мекушояд — будильникҳои бо аломати «Авто:»-ро бо даст хомӯш кун.</string>
+    <string name="btn_test_alarm">Санҷиши будильник</string>
+    <string name="btn_alarm_list">Рӯйхати будильникҳо</string>
+    <string name="alarms_list_open_failed">Соат рӯйхати будильникҳоро накушод</string>
+    <string name="dismiss_alarms_sent">Фармони хомӯш кардан ба соат фиристода шуд (%1$d аз %2$d). Агар будильникҳои «Авто: …» ҳанӯз мавҷуд бошанд — онҳоро дар рӯйхати будильникҳо хомӯш кун</string>
+    <string name="dismiss_unsupported_opened">Соат хомӯшкуниро бо фармон дастгирӣ намекунад (маҳдудияти интерфейс) — рӯйхати будильникҳоро кушодам: будильникҳои бо аломати «Авто:»-ро бо даст хомӯш кун</string>
+    <string name="dismiss_unsupported_manual">Соат хомӯшкуниро бо фармон дастгирӣ намекунад (маҳдудияти интерфейс) — будильникҳоро дар барномаи соат кушода, онҳои бо аломати «Авто:»-ро бо даст хомӯш кун</string>
+
+    <!-- ==== Диалоги настроек: смещение подъёма ==== -->
+    <string name="dialog_offset_title">Бедор шудан пеш аз пара</string>
+    <string name="dialog_offset_example">Параи якум соати 08:30 → будильник соати %1$s зан мезанад</string>
+    <string name="dialog_pair_title">Пара соати %1$s</string>
+    <string name="dialog_pair_example">Пара соати %1$s → будильник соати %2$s зан мезанад</string>
+
+    <!-- ==== Настройки: напоминание ==== -->
+    <string name="set_reminder_desc">Огоҳиномаи худ: «фардо пара соати ҳамин — будильник гузоштанро фаромӯш накун»</string>
+    <string name="set_reminder_fallback">Фолбак барои ҳолате, ки соати худи телефон фармонҳои барномаро қабул намекунад — дар Realme, Huawei, Xiaomi вомехӯрад (махсусан дар прошивкаҳои чинӣ). Ёдоварӣ ҳар рӯз дар вақти интихобшуда меояд, агар фардо пара бошад.</string>
+    <string name="reminder_time">Вақти ёдоварӣ: %1$s</string>
+    <string name="dialog_reminder_title">Вақти ёдоварӣ</string>
+
+    <!-- ==== Настройки: исключения ==== -->
+    <string name="exceptions_title_desc">Пеш аз ин фанҳо будильник гузошта намешавад</string>
+    <string name="exceptions_empty">Ҳоло холист — фанҳое илова кун, ки пеш аз онҳо бедор кардан лозим нест</string>
+    <string name="cd_delete_named">Нест кардани «%1$s»</string>
+    <string name="hint_subject_name">Номи фан</string>
+    <string name="cd_add_exception">Илова кардани истисно</string>
+    <string name="exceptions_found">Дар ҷадвал ёфт шуд:</string>
+
+    <!-- ==== Настройки: свои занятия ==== -->
+    <string name="custom_events_desc">Машғулиятҳои худат бо вақти алоҳидаи будильник — секцияҳо, репетицияҳо, корҳои яккарона</string>
+    <string name="custom_empty">Ҳоло ҳеҷ чиз илова нашудааст</string>
+    <string name="dialog_event_title">Машғулияти худ</string>
+    <string name="hint_name">Ном</string>
+    <string name="event_days_mode">Аз рӯи рӯзҳои ҳафта</string>
+    <string name="event_date_mode">Як сана</string>
+    <string name="btn_pick_date">Интихоби сана</string>
+    <string name="event_time">Вақт: %1$s</string>
+    <string name="event_offset_suffix">· %1$s пеш</string>
+    <string name="event_wake_before">%1$s пеш аз ҳодиса бедор кардан</string>
+    <string name="dialog_event_time_title">Вақти ҳодиса</string>
+
+    <!-- ==== Настройки: оформление ==== -->
+    <string name="set_theme">Мавзӯъ</string>
+    <string name="theme_system">Системавӣ</string>
+    <string name="theme_light">Рӯшан</string>
+    <string name="theme_dark">Торик</string>
+    <string name="dynamic_color">Material You (ранги система)</string>
+    <string name="set_accent">Акцент</string>
+    <string name="accent_amber">Каҳрабоӣ</string>
+    <string name="accent_orange">Норинҷӣ</string>
+    <string name="accent_red">Сурх</string>
+    <string name="accent_green">Сабз</string>
+    <string name="accent_pink">Гулобӣ</string>
+    <string name="accent_purple">Бунафш</string>
+    <string name="schedule_style">Услуби ҷадвали дарсҳо</string>
+    <string name="style_standard">Стандарт</string>
+    <string name="style_paper">Тақвими коғазӣ</string>
+    <string name="set_background">Замина</string>
+    <string name="btn_pick_image">Интихоби сурат</string>
+    <string name="btn_remove">Бардоштан</string>
+    <string name="bg_opacity">Шаффофии замина</string>
+    <string name="set_glass">Эффекти шиша</string>
+    <string name="set_glass_desc">Кортҳо нимшаффофанд, монанди шишаи махмалӣ; сурати замина мухмал мешавад</string>
+    <string name="glass_intensity">Дараҷаи эффекти шиша</string>
+    <string name="glass_tip">Маслиҳат: шиша бо сурати замина (дар боло) аз ҳама беҳтар намоён мешавад</string>
+    <string name="glass_active">Шиша фаъол аст</string>
+
+    <!-- ==== Настройки: система ==== -->
+    <string name="status_exact_allowed">Будильникҳои дақиқ иҷозат дода шудаанд</string>
+    <string name="dialog_exact_off_title">Будильникҳои дақиқро система хомӯш кардааст</string>
+    <string name="dialog_exact_off_desc">Вақтбанди шабона будильникро танҳо бо хатогии ±10 дақиқа гузошта метавонад.</string>
+    <string name="dialog_battery2_title">Оптимизацияи батарея метавонад халал расонад</string>
+    <string name="dialog_battery2_desc">Барномаро аз оптимизация истисно кун, то санҷиши дубораи шабонаи ҷадвали дарсҳо халал наёбад.</string>
+    <string name="action_disable_optimization">Хомӯш кардани оптимизация</string>
+    <string name="autostart_title">Автозапуск ва интерфейсҳои агрессив</string>
+    <string name="autostart_desc">MIUI, HarmonyOS ва интерфейсҳои дигар барномаҳои фоновиро мекушанд</string>
+    <string name="btn_instructions">Дастурамал</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nБехатарӣ → Барномаҳо → Автозапуск: Автобудильникро фаъол кун; дар танзимоти батареяи барнома «бе маҳдудият»-ро интихоб кун.</string>
+    <string name="autostart_huawei">Huawei / Honor:\nТанзимот → Батарея → Оғози барномаҳо → Автобудильник → Идораи дастӣ: ҳамаи калидакҳоро фаъол кун.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nТанзимот → Батарея → Танзимоти иловагӣ → Оптимизацияи сарфаи энергия → барои барнома оптимизацияро манъ кун; Менеҷери барномаҳо → Автозапуск.</string>
+    <string name="autostart_samsung">Samsung:\nТанзимот → Батарея → Маҳдудиятҳо дар фон → Барномаҳои бедорхоб → Автобудильникро илова кун.</string>
+    <string name="autostart_other">Интерфейси дигар:\nБарномаро ба автозапуск илова кун ва дар танзимоти система оптимизацияи батареяро бардор.</string>
+    <string name="autostart_standard_note">Реҷаи «Стандарт» ҳар шаб будильникро азнав мегузорад — барнома бояд дар соати 00:05 дар фон оғоз шавад.</string>
+
+    <!-- ==== Настройки: о приложении ==== -->
+    <string name="about_version">Автобудильник КГЭУ · v%1$s</string>
+    <string name="about_data">Иттилооти ҷадвали дарсҳо: API-и расмии kabinet.kgeu.ru. Барнома бо КГЭУ алоқаи расмӣ надорад.</string>
+    <string name="btn_github">Репозиторий дар GitHub</string>
+</resources>

@@ -18,6 +18,7 @@ import java.util.Locale
 import ru.uniautoalarm.kgeu.MainActivity
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
+import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 
 /**
  * Статусные уведомления движка: «будильник поставлен / не поставлен / партия на неделю».
@@ -33,17 +34,22 @@ object Notifications {
     private const val NOTIF_WEEK_ID = 1003
     private const val NOTIF_REMINDER_ID = 1004
 
-    private val RU_DATE = DateTimeFormatter.ofPattern("EEEE dd MMMM", Locale.forLanguageTag("ru-RU"))
-    private val RU_DATE_SHORT = DateTimeFormatter.ofPattern("dd MMMM", Locale.forLanguageTag("ru-RU"))
+    // форматтеры — функции, а не val: даты уведомлений должны следовать
+    // языку приложения, выбранному в момент отправки
+    private fun ruDate(): DateTimeFormatter =
+        DateTimeFormatter.ofPattern("EEEE dd MMMM", Locale.getDefault())
+
+    private fun ruDateShort(): DateTimeFormatter =
+        DateTimeFormatter.ofPattern("dd MMMM", Locale.getDefault())
 
     /** Канал создаётся идемпотентно перед любой отправкой (minSdk 26 — API доступен всегда). */
     fun ensureChannel(context: Context) {
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "Статус авто-будильника",
+            LocaleHelper.string(context, R.string.notif_channel_name),
             NotificationManager.IMPORTANCE_DEFAULT
         ).apply {
-            description = "Сообщения о поставленных и пропущенных будильниках"
+            description = LocaleHelper.string(context, R.string.notif_channel_desc)
         }
         notificationManager(context).createNotificationChannel(channel)
     }
@@ -52,13 +58,13 @@ object Notifications {
     fun alarmSet(context: Context, plan: AlarmPlan) {
         val time = String.format(Locale.getDefault(), "%02d:%02d", plan.wakeAt.hour, plan.wakeAt.minute)
         val details = when {
-            plan.lesson != null -> lessonDetails(plan.lesson.subject, plan.lesson.room)
+            plan.lesson != null -> lessonDetails(context, plan.lesson.subject, plan.lesson.room)
             plan.customEvent != null -> plan.customEvent.name
             else -> plan.label
         }
-        val text = "${plan.date.format(RU_DATE)}: $details"
+        val text = "${plan.date.format(ruDate())}: $details"
         val notification = baseBuilder(context)
-            .setContentTitle("Будильник поставлен на $time")
+            .setContentTitle(LocaleHelper.string(context, R.string.notif_alarm_set, time))
             .setContentText(text)
             .setStyle(NotificationCompat.BigTextStyle().bigText(text))
             .setContentIntent(mainActivityIntent(context))
@@ -69,9 +75,9 @@ object Notifications {
 
     /** Будильник не поставлен: пар нет, цель не выбрана и т.п. */
     fun alarmSkipped(context: Context, date: LocalDate, reason: String) {
-        val text = "${date.format(RU_DATE)}: $reason"
+        val text = "${date.format(ruDate())}: $reason"
         val notification = baseBuilder(context)
-            .setContentTitle("Будильник не поставлен")
+            .setContentTitle(LocaleHelper.string(context, R.string.notif_skipped_title))
             .setContentText(text)
             .setStyle(NotificationCompat.BigTextStyle().bigText(text))
             .setContentIntent(mainActivityIntent(context))
@@ -82,8 +88,17 @@ object Notifications {
 
     /** Партия повторяющихся будильников «на несколько дней вперёд» поставлена. */
     fun weekSet(context: Context, count: Int, from: LocalDate, to: LocalDate) {
-        val title = if (count == 1) "Поставлен 1 повторяющийся будильник" else "Поставлено повторяющихся будильников: $count"
-        val text = "по дням недели с парами (${from.format(RU_DATE_SHORT)} – ${to.format(RU_DATE_SHORT)}), повтор еженедельно"
+        val title = if (count == 1) {
+            LocaleHelper.string(context, R.string.notif_week_one)
+        } else {
+            LocaleHelper.string(context, R.string.notif_week_many, count)
+        }
+        val text = LocaleHelper.string(
+            context,
+            R.string.notif_week_text,
+            from.format(ruDateShort()),
+            to.format(ruDateShort())
+        )
         val notification = baseBuilder(context)
             .setContentTitle(title)
             .setContentText(text)
@@ -97,8 +112,8 @@ object Notifications {
     /** Партия «на несколько дней вперёд» уже стоит и актуальна — перестановка не нужна. */
     fun weekAlreadySet(context: Context) {
         val notification = baseBuilder(context)
-            .setContentTitle("Будильники на неделю уже стоят")
-            .setContentText("Расписание не меняло времена подъёма — переставлять не нужно")
+            .setContentTitle(LocaleHelper.string(context, R.string.notif_week_already_title))
+            .setContentText(LocaleHelper.string(context, R.string.notif_week_already_text))
             .setContentIntent(mainActivityIntent(context))
             .setAutoCancel(true)
             .build()
@@ -113,14 +128,19 @@ object Notifications {
     fun reminder(context: Context, plan: AlarmPlan) {
         val time = String.format(Locale.getDefault(), "%02d:%02d", plan.wakeAt.hour, plan.wakeAt.minute)
         val details = when {
-            plan.lesson != null -> lessonDetails(plan.lesson.subject, plan.lesson.room)
+            plan.lesson != null -> lessonDetails(context, plan.lesson.subject, plan.lesson.room)
             plan.customEvent != null -> plan.customEvent.name
             else -> plan.label
         }
-        val text = "Завтра, ${plan.date.format(RU_DATE)}: пара в $time — $details. " +
-            "Не забудьте поставить будильник."
+        val text = LocaleHelper.string(
+            context,
+            R.string.notif_reminder_text,
+            plan.date.format(ruDate()),
+            time,
+            details
+        )
         val notification = baseBuilder(context)
-            .setContentTitle("Не забудьте поставить будильник")
+            .setContentTitle(LocaleHelper.string(context, R.string.notif_reminder_title))
             .setContentText(text)
             .setStyle(NotificationCompat.BigTextStyle().bigText(text))
             .setContentIntent(mainActivityIntent(context))
@@ -135,15 +155,16 @@ object Notifications {
      */
     fun syncForeground(context: Context): Notification =
         baseBuilder(context)
-            .setContentTitle("Синхронизация расписания")
-            .setContentText("Обновляем расписание КГЭУ")
+            .setContentTitle(LocaleHelper.string(context, R.string.notif_sync_title))
+            .setContentText(LocaleHelper.string(context, R.string.notif_sync_text))
             .setOngoing(true)
             .build()
 
     // --- Внутреннее ---
 
-    private fun lessonDetails(subject: String, room: String): String =
-        if (room.isBlank()) subject else "$subject, ауд. $room"
+    private fun lessonDetails(context: Context, subject: String, room: String): String =
+        if (room.isBlank()) subject
+        else LocaleHelper.string(context, R.string.notif_details_room, subject, room)
 
     private fun baseBuilder(context: Context): NotificationCompat.Builder =
         NotificationCompat.Builder(context, CHANNEL_ID)

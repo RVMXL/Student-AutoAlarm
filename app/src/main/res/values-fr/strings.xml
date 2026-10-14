@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== Общее ==== -->
+    <string name="app_name">Auto-réveil KGEU</string>
+    <string name="action_cancel">Annuler</string>
+    <string name="action_ok">OK</string>
+    <string name="action_save">Enregistrer</string>
+    <string name="action_done">Terminé</string>
+    <string name="action_edit">Modifier</string>
+    <string name="action_reset">Réinitialiser</string>
+    <string name="action_retry">Réessayer</string>
+    <string name="action_allow">Autoriser</string>
+    <string name="action_fix">Corriger</string>
+    <string name="action_refresh">Actualiser</string>
+    <string name="action_change">Changer</string>
+    <string name="action_next">Suivant</string>
+    <string name="action_back">Retour</string>
+    <string name="action_start">Commencer</string>
+    <string name="action_add">Ajouter</string>
+    <string name="action_load">Charger</string>
+    <string name="action_understood">Compris</string>
+
+    <!-- ==== Нижняя навигация ==== -->
+    <string name="nav_home">Accueil</string>
+    <string name="nav_schedule">Emploi du temps</string>
+    <string name="nav_settings">Paramètres</string>
+
+    <!-- ==== Единицы и форматирования ==== -->
+    <string name="fmt_offset_m">%1$d min</string>
+    <string name="fmt_offset_h">%1$d h</string>
+    <string name="fmt_offset_hm">%1$d h %2$d min</string>
+    <string name="fmt_days_short">%1$d j</string>
+    <string name="fmt_time_alarm_will_ring">le réveil sonnera à</string>
+
+    <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
+    <string name="day_short_1">Lu</string>
+    <string name="day_short_2">Ma</string>
+    <string name="day_short_3">Me</string>
+    <string name="day_short_4">Je</string>
+    <string name="day_short_5">Ve</string>
+    <string name="day_short_6">Sa</string>
+    <string name="day_short_7">Di</string>
+
+    <!-- ==== Язык ==== -->
+    <string name="lang_title">Langue</string>
+    <string name="lang_subtitle">Choisis la langue de l\'appli — tu pourras la changer plus tard dans les paramètres</string>
+    <string name="lang_system">Langue du système</string>
+    <string name="set_language">Langue</string>
+    <string name="set_language_desc">Langue de l\'interface de l\'appli</string>
+
+    <!-- ==== Мастер настройки ==== -->
+    <string name="setup_step_of">Étape %1$d sur %2$d</string>
+    <string name="setup_welcome_subtitle">Il programme le réveil dans l\'horloge du téléphone avant le premier cours — selon l\'emploi du temps de l\'université. On configure tout en une minute.</string>
+    <string name="setup_university">Université d\'État d\'énergie de Kazan (KGEU)</string>
+    <string name="setup_official_api">API officielle de kabinet.kgeu.ru</string>
+    <string name="setup_who_are_you">Qui es-tu ?</string>
+    <string name="role_student">Étudiant</string>
+    <string name="role_student_subtitle">Le réveil selon l\'emploi du temps de mon groupe</string>
+    <string name="role_teacher">Enseignant</string>
+    <string name="role_teacher_subtitle">Le réveil selon l\'emploi du temps de mes cours</string>
+    <string name="setup_search_hint">Commence à taper : А-1-23 …</string>
+    <string name="setup_found">Trouvé : %1$d</string>
+    <string name="setup_found_capped">Trouvé : %1$d (%2$d premiers affichés)</string>
+    <string name="setup_load_failed">Impossible de charger la liste</string>
+    <string name="setup_check_internet">Vérifie ta connexion Internet et réessaie</string>
+    <string name="setup_nothing_found">Aucun résultat</string>
+    <string name="setup_pick_role_first">Choisis d\'abord qui tu es</string>
+    <string name="setup_course">année %1$d</string>
+    <string name="setup_wake_question">Tu te lèves habituellement combien de temps avant le premier cours ?</string>
+    <string name="setup_example">Premier cours à 08:30 → réveil à %1$s</string>
+    <string name="setup_done_all">Tout est prêt !</string>
+    <string name="setup_finish_mode_note">Mode « Standard » : chaque nuit, le réveil est programmé pour le lendemain. Tu pourras le changer plus tard dans les paramètres.</string>
+    <string name="setup_no_target">Aucune cible choisie — reviens en arrière et choisis un groupe ou un enseignant</string>
+    <string name="summary_group">Groupe</string>
+    <string name="summary_teacher">Enseignant</string>
+    <string name="summary_wake_offset">Lever avant le premier cours</string>
+    <string name="profile_no_target">Aucune cible choisie</string>
+
+    <!-- ==== Главный экран ==== -->
+    <string name="home_title">Auto-réveil</string>
+    <string name="cd_refresh_schedule">Actualiser l\'emploi du temps</string>
+    <string name="mode_week_chip">Pour %1$d jours</string>
+    <string name="mode_standard_chip">Standard</string>
+    <string name="loading_settings">Chargement des paramètres…</string>
+    <string name="alarm_off_title">Le réveil est désactivé</string>
+    <string name="alarm_off_subtitle">Active-le avec l\'interrupteur ci-dessous</string>
+    <string name="refreshing">Actualisation de l\'emploi du temps…</string>
+    <string name="not_loaded_title">L\'emploi du temps n\'est pas encore chargé</string>
+    <string name="not_loaded_hint">Importe tes cours depuis kabinet.kgeu.ru — l\'heure du lever apparaîtra ici</string>
+    <string name="tomorrow_free_title">Pas de cours demain</string>
+    <string name="tomorrow_free_sub">pas de réveil programmé</string>
+    <string name="tomorrow_label">Demain · %1$s</string>
+    <string name="today_label">Aujourd\'hui</string>
+    <string name="tomorrow_label_short">Demain</string>
+    <string name="badge_replacement">remplacement</string>
+    <string name="room_prefix">salle %1$s</string>
+    <string name="lesson_at">cours à %1$s</string>
+    <string name="own_event_at">ton activité à %1$s</string>
+    <string name="home_auto_title">Auto-réveil</string>
+    <string name="home_auto_subtitle">Programme le réveil dans l\'horloge du téléphone avant le premier cours</string>
+    <string name="home_week_title">Sur plusieurs jours</string>
+    <string name="home_week_desc">Des réveils répétés par jour de la semaine — une sécurité si le système tue l\'appli</string>
+    <string name="btn_set_for_days">Programmer pour %1$d jours</string>
+    <string name="chip_weekly_repeat">Répétition hebdomadaire</string>
+    <string name="home_week_note">Les réveils se répètent chaque semaine ; les excédentaires se désactivent dans l\'horloge du téléphone (« Liste des réveils » — dans les paramètres de l\'appli)</string>
+    <string name="home_upcoming_title">Prochains cours</string>
+    <string name="home_no_pairs">Aucun cours</string>
+
+    <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
+    <string name="week_result_delivered">Réveils répétés programmés : %1$d</string>
+    <string name="week_result_delivered_note">Réveils répétés programmés : %1$d (par jour de la semaine)</string>
+    <string name="week_result_uptodate">Les réveils sont déjà programmés — l\'emploi du temps n\'a pas changé</string>
+    <string name="week_result_empty">Aucun cours à venir trouvé</string>
+
+    <!-- ==== Диагностика на главном ==== -->
+    <string name="dialog_exact_alarms_title">Alarmes exactes interdites</string>
+    <string name="dialog_exact_alarms_desc">Sans cette autorisation, le système ne permettra pas de programmer le réveil précisément à l\'heure calculée.</string>
+    <string name="dialog_battery_title">L\'optimisation de la batterie peut gêner</string>
+    <string name="dialog_battery_desc">Le mode d\'économie d\'énergie agressif peut supprimer la revérification nocturne de l\'emploi du temps.</string>
+    <string name="dialog_stale_title">L\'emploi du temps n\'a pas été actualisé depuis plus de 3 jours</string>
+    <string name="dialog_stale_desc">L\'emploi du temps de l\'université change souvent — importe des données à jour.</string>
+
+    <!-- ==== Снекбары обновления ==== -->
+    <string name="err_no_target">Choisis d\'abord un groupe ou un enseignant dans les paramètres</string>
+    <string name="msg_refreshed">Emploi du temps actualisé</string>
+    <string name="refresh_empty_week">Actualisé : aucun cours cette semaine</string>
+    <string name="refresh_ok_count">Emploi du temps actualisé — cours cette semaine : %1$d</string>
+    <string name="refresh_no_connection">Pas de connexion à kabinet.kgeu.ru — affichage du cache enregistré</string>
+    <string name="refresh_network">Réseau indisponible — affichage du cache enregistré</string>
+    <string name="refresh_error">Erreur d\'actualisation : %1$s</string>
+    <string name="err_unknown_cause">cause inconnue</string>
+
+    <!-- ==== Экран расписания ==== -->
+    <string name="cd_prev_week">Semaine précédente</string>
+    <string name="cd_next_week">Semaine suivante</string>
+    <string name="cd_go_today">Revenir à la semaine actuelle et à aujourd\'hui</string>
+    <string name="cd_refresh_week">Actualiser la semaine</string>
+    <string name="badge_this_week">cette semaine</string>
+    <string name="snackbar_excluded_on">Avant « %1$s », pas de réveil programmé</string>
+    <string name="snackbar_excluded_off">Exception retirée</string>
+    <string name="cd_enable_alarm">Activer le réveil avant ce cours</string>
+    <string name="cd_disable_alarm">Ne pas programmer de réveil avant ce cours</string>
+    <string name="empty_no_lessons">Aucun cours</string>
+    <string name="empty_no_alarm_needed">Ce jour-là, pas besoin de réveil</string>
+
+    <!-- ==== Уведомления ==== -->
+    <string name="notif_channel_name">Statut de l\'auto-réveil</string>
+    <string name="notif_channel_desc">Notifications des réveils programmés et ignorés</string>
+    <string name="notif_alarm_set">Réveil programmé à %1$s</string>
+    <string name="notif_skipped_title">Réveil non programmé</string>
+    <string name="notif_week_one">1 réveil répété programmé</string>
+    <string name="notif_week_many">Réveils répétés programmés : %1$d</string>
+    <string name="notif_week_text">pour les jours de la semaine avec cours (%1$s – %2$s), répétition hebdomadaire</string>
+    <string name="notif_week_already_title">Les réveils de la semaine sont déjà programmés</string>
+    <string name="notif_week_already_text">L\'emploi du temps n\'a pas modifié les heures de lever — inutile de reprogrammer</string>
+    <string name="notif_reminder_title">N\'oublie pas de programmer le réveil</string>
+    <string name="notif_reminder_text">Demain, %1$s : cours à %2$s — %3$s. N\'oublie pas de programmer le réveil.</string>
+    <string name="notif_sync_title">Synchronisation de l\'emploi du temps</string>
+    <string name="notif_sync_text">Actualisation de l\'emploi du temps KGEU</string>
+    <string name="notif_details_room">%1$s, salle %2$s</string>
+
+    <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">pas de cours</string>
+    <string name="skip_no_upcoming">aucun cours à venir trouvé</string>
+    <string name="skip_clock_refused">l\'horloge du téléphone n\'a pas accepté la commande — active le « Rappel du réveil » dans les paramètres</string>
+    <string name="test_alarm_label">Test : l\'Auto-réveil fonctionne !</string>
+    <string name="test_alarm_ok">Réveil programmé dans 2 minutes — vérifie l\'horloge</string>
+    <string name="test_alarm_fail">Impossible de programmer le réveil de test — l\'horloge ne répond pas</string>
+
+    <!-- ==== Настройки: секции ==== -->
+    <string name="sec_profile">Profil</string>
+    <string name="sec_alarm">Réveil</string>
+    <string name="sec_reminder">Rappel du réveil</string>
+    <string name="sec_exceptions">Exceptions</string>
+    <string name="sec_custom_events">Activités perso</string>
+    <string name="sec_appearance">Apparence</string>
+    <string name="sec_system">Système</string>
+    <string name="sec_about">À propos de l\'appli</string>
+
+    <!-- ==== Настройки: профиль ==== -->
+    <string name="profile_change_note">Changer de cible ne réinitialisera ni l\'heure de lever ni les paramètres</string>
+
+    <!-- ==== Настройки: будильник ==== -->
+    <string name="set_auto_title">Auto-réveil</string>
+    <string name="set_show_clock">Afficher l\'horloge lors de la programmation</string>
+    <string name="set_show_clock_desc">Active-le si les réveils ne se programment pas tout seuls (Realme, Oppo, Huawei) : l\'horloge s\'ouvrira avec le réveil prêt — confirme avec « Enregistrer ».</string>
+    <string name="set_wake_offset">Lever %1$s avant le premier cours</string>
+    <string name="set_offset_example">Premier cours à 08:30 → réveil à %1$s</string>
+    <string name="set_per_pair">Lever pour chaque cours</string>
+    <string name="set_per_pair_desc">Ta propre marge de préparation pour chaque premier cours : plus courte avant un cours matinal, plus longue avant un cours tardif, pour avoir le temps de prendre ton petit-déjeuner. Les cours sans valeur propre utilisent le lever général ci-dessus.</string>
+    <string name="set_pairs_after_sync">Les horaires des cours apparaîtront après la synchronisation de l\'emploi du temps</string>
+    <string name="pair_at">Cours à %1$s</string>
+    <string name="pair_custom_offset">Lever %1$s avant → réveil à %2$s</string>
+    <string name="pair_common_offset">Lever général : %1$s avant</string>
+    <string name="set_mode">Mode</string>
+    <string name="mode_standard_title">Standard — pour demain</string>
+    <string name="mode_standard_desc">Chaque nuit, le réveil est reprogrammé pour le lendemain</string>
+    <string name="mode_week_title">Sur plusieurs jours</string>
+    <string name="mode_week_desc">Un réveil répété pour chaque jour de cours de la semaine — une protection contre la fermeture des processus ; ils se répètent chaque semaine selon l\'emploi du temps à jour, et tu peux les désactiver avec le bouton ci-dessous</string>
+    <string name="mode_week_window">Fenêtre de recherche des cours : %1$s — des réveils pour tous les jours de la semaine avec cours</string>
+    <string name="btn_set_now">Programmer maintenant</string>
+    <string name="btn_disable_app_alarms">Désactiver les réveils de l\'appli</string>
+    <string name="disable_alarms_desc">Le bouton envoie à l\'horloge une commande de désactivation par les libellés exacts «Авто: Пн»…«Авто: Вс». Si la surcouche n\'accepte pas la commande (une partie de Realme UI/ColorOS — limitation du système), l\'appli ouvrira elle-même la liste des réveils — supprime les libellés «Авто:» manuellement.</string>
+    <string name="btn_test_alarm">Tester le réveil</string>
+    <string name="btn_alarm_list">Liste des réveils</string>
+    <string name="alarms_list_open_failed">L\'horloge n\'a pas ouvert la liste des réveils</string>
+    <string name="dismiss_alarms_sent">Commande de désactivation envoyée à l\'horloge (%1$d sur %2$d). S\'il reste des réveils «Авто: …», désactive-les dans la liste des réveils</string>
+    <string name="dismiss_unsupported_opened">L\'horloge ne prend pas en charge la désactivation par commande (limitation de la surcouche) — l\'appli a ouvert la liste des réveils : supprime manuellement les réveils libellés «Авто:»</string>
+    <string name="dismiss_unsupported_manual">L\'horloge ne prend pas en charge la désactivation par commande (limitation de la surcouche) — ouvre les réveils dans l\'appli Horloge et supprime les libellés «Авто:» manuellement</string>
+
+    <!-- ==== Диалоги настроек: смещение подъёма ==== -->
+    <string name="dialog_offset_title">Lever avant le cours</string>
+    <string name="dialog_offset_example">Premier cours à 08:30 → le réveil sonnera à %1$s</string>
+    <string name="dialog_pair_title">Cours à %1$s</string>
+    <string name="dialog_pair_example">Cours à %1$s → le réveil sonnera à %2$s</string>
+
+    <!-- ==== Настройки: напоминание ==== -->
+    <string name="set_reminder_desc">Ta propre notification : « demain, cours à telle heure — n\'oublie pas de programmer le réveil »</string>
+    <string name="set_reminder_fallback">Un repli quand l\'horloge du téléphone n\'accepte pas les commandes de l\'appli — c\'est le cas sur Realme, Huawei, Xiaomi (surtout les firmwares chinois). Le rappel arrive chaque jour à l\'heure choisie s\'il y a un cours demain.</string>
+    <string name="reminder_time">Heure du rappel : %1$s</string>
+    <string name="dialog_reminder_title">Heure du rappel</string>
+
+    <!-- ==== Настройки: исключения ==== -->
+    <string name="exceptions_title_desc">Pas de réveil programmé avant ces matières</string>
+    <string name="exceptions_empty">Vide pour l\'instant — ajoute les matières avant lesquelles il ne faut pas te réveiller</string>
+    <string name="cd_delete_named">Supprimer « %1$s »</string>
+    <string name="hint_subject_name">Nom de la matière</string>
+    <string name="cd_add_exception">Ajouter une exception</string>
+    <string name="exceptions_found">Trouvé dans l\'emploi du temps :</string>
+
+    <!-- ==== Настройки: свои занятия ==== -->
+    <string name="custom_events_desc">Tes propres événements avec une heure de réveil séparée — clubs, répétitions, tâches ponctuelles</string>
+    <string name="custom_empty">Rien d\'ajouté pour l\'instant</string>
+    <string name="dialog_event_title">Activité perso</string>
+    <string name="hint_name">Nom</string>
+    <string name="event_days_mode">Par jours de la semaine</string>
+    <string name="event_date_mode">Une seule date</string>
+    <string name="btn_pick_date">Choisir une date</string>
+    <string name="event_time">Heure : %1$s</string>
+    <string name="event_offset_suffix">· %1$s avant</string>
+    <string name="event_wake_before">Te réveiller %1$s avant l\'événement</string>
+    <string name="dialog_event_time_title">Heure de l\'événement</string>
+
+    <!-- ==== Настройки: оформление ==== -->
+    <string name="set_theme">Thème</string>
+    <string name="theme_system">Système</string>
+    <string name="theme_light">Clair</string>
+    <string name="theme_dark">Sombre</string>
+    <string name="dynamic_color">Material You (couleur du système)</string>
+    <string name="set_accent">Accent</string>
+    <string name="accent_amber">Ambre</string>
+    <string name="accent_orange">Orange</string>
+    <string name="accent_red">Rouge</string>
+    <string name="accent_green">Vert</string>
+    <string name="accent_pink">Rose</string>
+    <string name="accent_purple">Violet</string>
+    <string name="schedule_style">Style de l\'emploi du temps</string>
+    <string name="style_standard">Standard</string>
+    <string name="style_paper">Calendrier papier</string>
+    <string name="set_background">Fond</string>
+    <string name="btn_pick_image">Choisir une image</string>
+    <string name="btn_remove">Retirer</string>
+    <string name="bg_opacity">Opacité du calque de fond</string>
+    <string name="set_glass">Effet verre</string>
+    <string name="set_glass_desc">Les cartes sont semi-transparentes, comme du verre dépoli ; l\'image de fond est floutée</string>
+    <string name="glass_intensity">Intensité de l\'effet verre</string>
+    <string name="glass_tip">Astuce : l\'effet verre rend le mieux avec une image de fond (ci-dessus)</string>
+    <string name="glass_active">Effet verre activé</string>
+
+    <!-- ==== Настройки: система ==== -->
+    <string name="status_exact_allowed">Alarmes exactes autorisées</string>
+    <string name="dialog_exact_off_title">Alarmes exactes désactivées par le système</string>
+    <string name="dialog_exact_off_desc">Le planificateur nocturne ne pourra programmer le réveil qu\'avec une imprécision de ±10 minutes.</string>
+    <string name="dialog_battery2_title">L\'optimisation de la batterie peut gêner</string>
+    <string name="dialog_battery2_desc">Exclus l\'appli de l\'optimisation pour que la revérification nocturne de l\'emploi du temps ne soit pas annulée.</string>
+    <string name="action_disable_optimization">Désactiver l\'optimisation</string>
+    <string name="autostart_title">Démarrage auto et surcouches agressives</string>
+    <string name="autostart_desc">MIUI, HarmonyOS et d\'autres surcouches tuent les applis en arrière-plan</string>
+    <string name="btn_instructions">Instructions</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO :\nSécurité → Applis → Démarrage auto : active Auto-réveil ; dans les paramètres de batterie de l\'appli, choisis « aucune restriction ».</string>
+    <string name="autostart_huawei">Huawei / Honor :\nParamètres → Batterie → Lancement des applis → Auto-réveil → Gérer manuellement : active tous les interrupteurs.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus :\nParamètres → Batterie → Autres réglages → Optimisation de la consommation → empêche l\'optimisation pour l\'appli ; Gestionnaire d\'applis → Démarrage auto.</string>
+    <string name="autostart_samsung">Samsung :\nParamètres → Batterie → Restrictions en arrière-plan → Applis non en veille → ajoute Auto-réveil.</string>
+    <string name="autostart_other">Autre surcouche :\nAjoute l\'appli au démarrage auto et retire les optimisations de batterie dans les paramètres du système.</string>
+    <string name="autostart_standard_note">Le mode « Standard » reprogramme le réveil chaque nuit — l\'appli doit pouvoir se lancer en arrière-plan à 00:05.</string>
+
+    <!-- ==== Настройки: о приложении ==== -->
+    <string name="about_version">Auto-réveil KGEU · v%1$s</string>
+    <string name="about_data">Données d\'emploi du temps : API officielle de kabinet.kgeu.ru. L\'appli n\'est pas affiliée au KGEU.</string>
+    <string name="btn_github">Dépôt GitHub</string>
+</resources>

@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.db.ExceptionEntity
 import ru.uniautoalarm.kgeu.data.model.ExceptionRule
 import ru.uniautoalarm.kgeu.data.model.Lesson
@@ -23,6 +24,7 @@ import ru.uniautoalarm.kgeu.data.model.SyncInfo
 import ru.uniautoalarm.kgeu.data.model.Target
 import ru.uniautoalarm.kgeu.data.repository.ScheduleRepository
 import ru.uniautoalarm.kgeu.di.AppContainer
+import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 import ru.uniautoalarm.kgeu.ui.common.refreshErrorMessage
 import ru.uniautoalarm.kgeu.ui.common.refreshMessage
 
@@ -106,7 +108,7 @@ class ScheduleViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             val target = container.settings.current().toTarget() ?: return@launch
             container.scheduleRepository.refreshWeek(target, newMonday)
-                .onFailure { e -> onError(refreshErrorMessage(e)) }
+                .onFailure { e -> onError(refreshErrorMessage(container.appContext, e)) }
         }
     }
 
@@ -115,10 +117,15 @@ class ScheduleViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             val target = container.settings.current().toTarget()
             if (target == null) {
-                onResult("Сначала выберите группу или преподавателя в настройках")
+                onResult(LocaleHelper.string(container.appContext, R.string.err_no_target))
                 return@launch
             }
-            onResult(refreshMessage(container.scheduleRepository.refreshWeek(target, _weekMonday.value)))
+            onResult(
+                refreshMessage(
+                    container.appContext,
+                    container.scheduleRepository.refreshWeek(target, _weekMonday.value)
+                )
+            )
         }
     }
 

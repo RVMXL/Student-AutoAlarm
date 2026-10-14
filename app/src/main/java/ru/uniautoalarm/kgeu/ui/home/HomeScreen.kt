@@ -60,6 +60,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -71,20 +72,23 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlinx.coroutines.launch
+import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.model.AlarmMode
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
 import ru.uniautoalarm.kgeu.data.model.Lesson
 import ru.uniautoalarm.kgeu.data.model.Settings
 import ru.uniautoalarm.kgeu.data.model.SyncInfo
 import ru.uniautoalarm.kgeu.ui.common.LocalAppContainer
+import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
+import ru.uniautoalarm.kgeu.ui.common.TIME
 
 /** Скругления карточек (по ТЗ — 20.dp, статус-карточка крупнее). */
 private val CardShape = RoundedCornerShape(20.dp)
 private val StatusCardShape = RoundedCornerShape(24.dp)
 
+/** Локализованная «длинная» дата (день недели, число, месяц) — по языку приложения. */
 private val RU_LONG_DATE: DateTimeFormatter =
-    DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale("ru", "RU"))
-private val TIME: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+    DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale.getDefault())
 
 /**
  * Главный экран: статус завтрашнего будильника, тумблер, партия «на неделю вперёд»,
@@ -188,17 +192,17 @@ fun HomeScreen() {
                         active = vm.weekAlarmsActive(s),
                         onSet = {
                             vm.setWeekAhead { res ->
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        when {
-                                            res.delivered > 0 ->
-                                                "Поставлено повторяющихся будильников: ${res.delivered}"
-                                            res.alreadyUpToDate ->
-                                                "Будильники уже стоят — расписание не менялось"
-                                            else -> "Предстоящих пар не нашлось"
-                                        }
+                                // колбэк вне композиции — строки через LocaleHelper
+                                val message = when {
+                                    res.delivered > 0 -> LocaleHelper.string(
+                                        context, R.string.week_result_delivered, res.delivered
                                     )
+                                    res.alreadyUpToDate ->
+                                        LocaleHelper.string(context, R.string.week_result_uptodate)
+                                    else ->
+                                        LocaleHelper.string(context, R.string.week_result_empty)
                                 }
+                                scope.launch { snackbarHostState.showSnackbar(message) }
                             }
                         }
                     )
@@ -210,10 +214,9 @@ fun HomeScreen() {
             if (needsExactAlarmPermission) {
                 item {
                     WarningCard(
-                        title = "Точные будильники запрещены",
-                        description = "Без разрешения система не позволит ставить будильник " +
-                            "точно в рассчитанное время.",
-                        actionLabel = "Разрешить",
+                        title = stringResource(R.string.dialog_exact_alarms_title),
+                        description = stringResource(R.string.dialog_exact_alarms_desc),
+                        actionLabel = stringResource(R.string.action_allow),
                         isError = true,
                         onAction = { openExactAlarmSettings(context) }
                     )
@@ -222,10 +225,9 @@ fun HomeScreen() {
             if (!ignoringBattery) {
                 item {
                     WarningCard(
-                        title = "Оптимизация батареи может мешать",
-                        description = "Агрессивный энергосберегающий режим может снимать " +
-                            "ночную перепроверку расписания.",
-                        actionLabel = "Исправить",
+                        title = stringResource(R.string.dialog_battery_title),
+                        description = stringResource(R.string.dialog_battery_desc),
+                        actionLabel = stringResource(R.string.action_fix),
                         isError = false,
                         onAction = { openBatteryOptimizationSettings(context) }
                     )
@@ -235,9 +237,9 @@ fun HomeScreen() {
                 val s = settings
                 if (s != null && vm.dataStale(s)) {
                     WarningCard(
-                        title = "Расписание не обновлялось более 3 дней",
-                        description = "Расписание вуза часто меняют — подтяните свежие данные.",
-                        actionLabel = "Обновить",
+                        title = stringResource(R.string.dialog_stale_title),
+                        description = stringResource(R.string.dialog_stale_desc),
+                        actionLabel = stringResource(R.string.action_refresh),
                         isError = false,
                         onAction = {
                             vm.refresh { msg ->
@@ -257,7 +259,7 @@ fun HomeScreen() {
 private fun HeaderRow(settings: Settings?, busy: Boolean, onRefresh: () -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
-            "Автобудильник",
+            stringResource(R.string.home_title),
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.SemiBold),
             modifier = Modifier.weight(1f)
         )
@@ -265,7 +267,7 @@ private fun HeaderRow(settings: Settings?, busy: Boolean, onRefresh: () -> Unit)
             if (busy) {
                 CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
             } else {
-                Icon(Icons.Rounded.Refresh, contentDescription = "Обновить расписание")
+                Icon(Icons.Rounded.Refresh, contentDescription = stringResource(R.string.cd_refresh_schedule))
             }
         }
         AssistChip(
@@ -274,9 +276,9 @@ private fun HeaderRow(settings: Settings?, busy: Boolean, onRefresh: () -> Unit)
                 val s = settings
                 Text(
                     if (s?.mode == AlarmMode.WEEK_AHEAD) {
-                        "На ${s.weekAheadDays} дней"
+                        stringResource(R.string.mode_week_chip, s.weekAheadDays)
                     } else {
-                        "Стандарт"
+                        stringResource(R.string.mode_standard_chip)
                     }
                 )
             },
@@ -317,16 +319,16 @@ private fun StatusCard(
         ) {
             when {
                 settings == null -> {
-                    Text("Загрузка настроек…", style = MaterialTheme.typography.titleMedium)
+                    Text(stringResource(R.string.loading_settings), style = MaterialTheme.typography.titleMedium)
                 }
 
                 !settings.autoAlarmEnabled -> {
                     Text(
-                        "Будильник выключен",
+                        stringResource(R.string.alarm_off_title),
                         style = MaterialTheme.typography.headlineSmall
                     )
                     Text(
-                        "Включите тумблером ниже",
+                        stringResource(R.string.alarm_off_subtitle),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
                     )
@@ -343,28 +345,28 @@ private fun StatusCard(
                             modifier = Modifier.size(20.dp),
                             strokeWidth = 2.dp
                         )
-                        Text("Обновляем расписание…", style = MaterialTheme.typography.titleMedium)
+                        Text(stringResource(R.string.refreshing), style = MaterialTheme.typography.titleMedium)
                     }
                 }
 
                 tomorrowLessons.isEmpty() && sync.lastSyncEpochMs == 0L -> {
                     Text(
-                        "Расписание ещё не загружено",
+                        stringResource(R.string.not_loaded_title),
                         style = MaterialTheme.typography.headlineSmall
                     )
                     Text(
-                        "Подтяните пары из kabinet.kgeu.ru — здесь появится время подъёма",
+                        stringResource(R.string.not_loaded_hint),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
                     )
                     Spacer(Modifier.height(4.dp))
-                    Button(onClick = onLoad) { Text("Загрузить") }
+                    Button(onClick = onLoad) { Text(stringResource(R.string.action_load)) }
                 }
 
                 else -> {
-                    Text("Завтра пар нет", style = MaterialTheme.typography.headlineSmall)
+                    Text(stringResource(R.string.tomorrow_free_title), style = MaterialTheme.typography.headlineSmall)
                     Text(
-                        "будильник не ставится",
+                        stringResource(R.string.tomorrow_free_sub),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
                     )
@@ -377,11 +379,11 @@ private fun StatusCard(
 @Composable
 private fun PlanContent(plan: AlarmPlan) {
     Text(
-        "Завтра · ${plan.date.format(RU_LONG_DATE)}",
+        stringResource(R.string.tomorrow_label, plan.date.format(RU_LONG_DATE)),
         style = MaterialTheme.typography.titleMedium
     )
     Text(
-        "будильник прозвонит в",
+        stringResource(R.string.fmt_time_alarm_will_ring),
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
     )
@@ -406,14 +408,14 @@ private fun PlanContent(plan: AlarmPlan) {
                 if (lesson.isReplacement) {
                     Spacer(Modifier.width(8.dp))
                     SmallBadge(
-                        text = "замена",
+                        text = stringResource(R.string.badge_replacement),
                         container = MaterialTheme.colorScheme.tertiaryContainer,
                         content = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                 }
             }
             val details = buildList {
-                if (lesson.room.isNotBlank()) add("ауд. ${lesson.room}")
+                if (lesson.room.isNotBlank()) add(stringResource(R.string.room_prefix, lesson.room))
                 if (lesson.teacher.isNotBlank()) add(lesson.teacher)
             }.joinToString(" · ")
             if (details.isNotEmpty()) {
@@ -424,7 +426,7 @@ private fun PlanContent(plan: AlarmPlan) {
                 )
             }
             Text(
-                "пара в ${lesson.start.format(TIME)}",
+                stringResource(R.string.lesson_at, lesson.start.format(TIME)),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
             )
@@ -433,7 +435,7 @@ private fun PlanContent(plan: AlarmPlan) {
         event != null -> {
             Text(event.name, style = MaterialTheme.typography.titleMedium)
             Text(
-                "своё занятие в ${event.time.format(TIME)}",
+                stringResource(R.string.own_event_at, event.time.format(TIME)),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
             )
@@ -473,7 +475,7 @@ private fun ToggleCard(enabled: Boolean, onToggle: (Boolean) -> Unit) {
                 )
                 Spacer(Modifier.width(12.dp))
                 Text(
-                    "Авто-будильник",
+                    stringResource(R.string.home_auto_title),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.weight(1f)
@@ -481,7 +483,7 @@ private fun ToggleCard(enabled: Boolean, onToggle: (Boolean) -> Unit) {
                 Switch(checked = enabled, onCheckedChange = null)
             }
             Text(
-                "Ставит будильник в стоковые часы перед первой парой",
+                stringResource(R.string.home_auto_subtitle),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(start = 36.dp, bottom = 8.dp)
             )
@@ -507,11 +509,10 @@ private fun WeekAheadCard(settings: Settings, active: Boolean, onSet: () -> Unit
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(Modifier.width(12.dp))
-                Text("На несколько дней вперёд", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.home_week_title), style = MaterialTheme.typography.titleMedium)
             }
             Text(
-                "Повторяющиеся будильники по дням недели — страховка, " +
-                    "если система убивает приложение",
+                stringResource(R.string.home_week_desc),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -520,12 +521,12 @@ private fun WeekAheadCard(settings: Settings, active: Boolean, onSet: () -> Unit
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Button(onClick = onSet) {
-                    Text("Поставить на ${settings.weekAheadDays} дней")
+                    Text(stringResource(R.string.btn_set_for_days, settings.weekAheadDays))
                 }
                 if (active) {
                     AssistChip(
                         onClick = { },
-                        label = { Text("Повторяются еженедельно") },
+                        label = { Text(stringResource(R.string.chip_weekly_repeat)) },
                         leadingIcon = {
                             Icon(
                                 Icons.Rounded.Check,
@@ -537,8 +538,7 @@ private fun WeekAheadCard(settings: Settings, active: Boolean, onSet: () -> Unit
                 }
             }
             Text(
-                "Будильники повторяются еженедельно; лишние отключаются в стоковых часах " +
-                    "(«Список будильников» — в настройках приложения)",
+                stringResource(R.string.home_week_note),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
             )
@@ -560,17 +560,17 @@ private fun UpcomingCard(todayLessons: List<Lesson>, tomorrowLessons: List<Lesso
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text("Ближайшие занятия", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.home_upcoming_title), style = MaterialTheme.typography.titleMedium)
             if (todayUpcoming.isEmpty() && tomorrowLessons.isEmpty()) {
                 Text(
-                    "Пар нет",
+                    stringResource(R.string.home_no_pairs),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             } else {
                 if (todayUpcoming.isNotEmpty()) {
                     Text(
-                        "Сегодня",
+                        stringResource(R.string.today_label),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -578,7 +578,7 @@ private fun UpcomingCard(todayLessons: List<Lesson>, tomorrowLessons: List<Lesso
                 }
                 if (tomorrowLessons.isNotEmpty()) {
                     Text(
-                        "Завтра",
+                        stringResource(R.string.tomorrow_label_short),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -601,7 +601,7 @@ private fun UpcomingRow(lesson: Lesson) {
         Column(Modifier.weight(1f)) {
             Text(lesson.subject, style = MaterialTheme.typography.bodyLarge)
             val details = buildList {
-                if (lesson.room.isNotBlank()) add("ауд. ${lesson.room}")
+                if (lesson.room.isNotBlank()) add(stringResource(R.string.room_prefix, lesson.room))
                 if (lesson.teacher.isNotBlank()) add(lesson.teacher)
             }.joinToString(" · ")
             if (details.isNotEmpty()) {

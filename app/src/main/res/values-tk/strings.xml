@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== Umumy ==== -->
+    <string name="app_name">KGEU awtomatik ýatgyjy</string>
+    <string name="action_cancel">Ýatyr</string>
+    <string name="action_ok">OK</string>
+    <string name="action_save">Sakla</string>
+    <string name="action_done">Taýýar</string>
+    <string name="action_edit">Üýtget</string>
+    <string name="action_reset">Arassala</string>
+    <string name="action_retry">Gaýtdan synanyş</string>
+    <string name="action_allow">Rugyt ber</string>
+    <string name="action_fix">Düzet</string>
+    <string name="action_refresh">Täzele</string>
+    <string name="action_change">Çalyş</string>
+    <string name="action_next">Indiki</string>
+    <string name="action_back">Yza</string>
+    <string name="action_start">Başla</string>
+    <string name="action_add">Goş</string>
+    <string name="action_load">Ýükle</string>
+    <string name="action_understood">Düşündim</string>
+
+    <!-- ==== Aşaky nawigasiýa ==== -->
+    <string name="nav_home">Baş sahypa</string>
+    <string name="nav_schedule">Sabak çeredecesi</string>
+    <string name="nav_settings">Sazlamalar</string>
+
+    <!-- ==== Birlikler we formatlar ==== -->
+    <string name="fmt_offset_m">%1$d min</string>
+    <string name="fmt_offset_h">%1$d sag</string>
+    <string name="fmt_offset_hm">%1$d sag %2$d min</string>
+    <string name="fmt_days_short">%1$d gün</string>
+    <string name="fmt_time_alarm_will_ring">ýatgyjy çalar</string>
+
+    <!-- ==== Hepdäniň günleri (gysga, çipler) ==== -->
+    <string name="day_short_1">Du</string>
+    <string name="day_short_2">Si</string>
+    <string name="day_short_3">Ça</string>
+    <string name="day_short_4">Pe</string>
+    <string name="day_short_5">Ju</string>
+    <string name="day_short_6">Şe</string>
+    <string name="day_short_7">Ýa</string>
+
+    <!-- ==== Dil ==== -->
+    <string name="lang_title">Dil</string>
+    <string name="lang_subtitle">Programmanyň dilini saýla — soňra sazlamalarda üýtgedip bilersiň</string>
+    <string name="lang_system">Ulgam dili</string>
+    <string name="set_language">Dil</string>
+    <string name="set_language_desc">Programmanyň interfeýs dili</string>
+
+    <!-- ==== Sazlama uskunasy ==== -->
+    <string name="setup_step_of">Ädim %1$d / %2$d</string>
+    <string name="setup_welcome_subtitle">Uniwersitetiň sapak çeredecesine görä, birinji sapakdan öň deslapky sagada ýatgyjy goýýar. Bir minutda sazlaýarys.</string>
+    <string name="setup_university">Kazan döwlet energetika uniwersiteti (KGEU)</string>
+    <string name="setup_official_api">kabinet.kgeu.ru-nyň resmi API-sy</string>
+    <string name="setup_who_are_you">Sen kim?</string>
+    <string name="role_student">Talyp</string>
+    <string name="role_student_subtitle">Toparymyň sapak çeredecesine görä ýatgyjy</string>
+    <string name="role_teacher">Mugallym</string>
+    <string name="role_teacher_subtitle">Sapaklarymyň çeredecesine görä ýatgyjy</string>
+    <string name="setup_search_hint">Girizmäge başla: A-1-23 …</string>
+    <string name="setup_found">Tapylan: %1$d</string>
+    <string name="setup_found_capped">Tapylan: %1$d (ilkinji %2$d görkezilýär)</string>
+    <string name="setup_load_failed">Sanawy ýüklemek başartmady</string>
+    <string name="setup_check_internet">Interneti barla we ýene bir synanyş</string>
+    <string name="setup_nothing_found">Hiç zat tapylmady</string>
+    <string name="setup_pick_role_first">Ilki özüňiň kimdigini saýla</string>
+    <string name="setup_course">%1$d-nji kurs</string>
+    <string name="setup_wake_question">Birinji sapakdan öň adatça näçe wagt oýanaýarsyň?</string>
+    <string name="setup_example">Birinji sapak 08:30-da → ýatgyjy %1$s</string>
+    <string name="setup_done_all">Ählisi taýýar!</string>
+    <string name="setup_finish_mode_note">«Standart» rejimi: her gije ertire ýatgyjy goýylýar. Soňra sazlamalardan üýtgedip bilersiň.</string>
+    <string name="setup_no_target">Maksat saýlanmady — yza gaýdyp topar ýa-da mugallym saýla</string>
+    <string name="summary_group">Topar</string>
+    <string name="summary_teacher">Mugallym</string>
+    <string name="summary_wake_offset">Birinji sapakdan öň oýanmak</string>
+    <string name="profile_no_target">Maksat saýlanmady</string>
+
+    <!-- ==== Baş ekran ==== -->
+    <string name="home_title">Awtomatik ýatgyjy</string>
+    <string name="cd_refresh_schedule">Sabak çeredecesini täzele</string>
+    <string name="mode_week_chip">%1$d günlük</string>
+    <string name="mode_standard_chip">Standart</string>
+    <string name="loading_settings">Sazlamalar ýüklenýär…</string>
+    <string name="alarm_off_title">Ýatgyjy öçük</string>
+    <string name="alarm_off_subtitle">Aşakdaky düwme bilen ýak</string>
+    <string name="refreshing">Sabak çeredecesi täzelenýär…</string>
+    <string name="not_loaded_title">Sabak çeredecesi entek ýüklenmedi</string>
+    <string name="not_loaded_hint">kabinet.kgeu.ru saýtyndan sapaklary çek — bu ýerde oýanmak wagty göruner</string>
+    <string name="tomorrow_free_title">Ertir sapak ýok</string>
+    <string name="tomorrow_free_sub">ýatgyjy goýulmaýar</string>
+    <string name="tomorrow_label">Ertir · %1$s</string>
+    <string name="today_label">Şu gün</string>
+    <string name="tomorrow_label_short">Ertir</string>
+    <string name="badge_replacement">çalyşma</string>
+    <string name="room_prefix">aud. %1$s</string>
+    <string name="lesson_at">sapak %1$s</string>
+    <string name="own_event_at">şahsy waka %1$s</string>
+    <string name="home_auto_title">Awtomatik ýatgyjy</string>
+    <string name="home_auto_subtitle">Birinji sapakdan öň deslapky sagada ýatgyjy goýýar</string>
+    <string name="home_week_title">Birnäçe gün öňüne</string>
+    <string name="home_week_desc">Hepdäniň günleri boýunça gaýtalanylýan ýatgyjylar — ulgam programmany öldürse, isygorta hökmünde</string>
+    <string name="btn_set_for_days">%1$d günlük goý</string>
+    <string name="chip_weekly_repeat">Hepdelik gaýtalanylýar</string>
+    <string name="home_week_note">Ýatgyjylar hepdelik gaýtalanylýar; artyklary deslapky sagatda öçürilýär («Ýatgyjylaryň sanawy» — programmanyň sazlamalarynda)</string>
+    <string name="home_upcoming_title">Ýakyn sapaklar</string>
+    <string name="home_no_pairs">Sapak ýok</string>
+
+    <!-- ==== Topar goýmak netijeleri (baş + sazlamalar) ==== -->
+    <string name="week_result_delivered">Goýlan gaýtalanylýan ýatgyjylar: %1$d</string>
+    <string name="week_result_delivered_note">Goýlan gaýtalanylýan ýatgyjylar: %1$d (hepdäniň sapakly günleri boýunça)</string>
+    <string name="week_result_uptodate">Ýatgyjylar eýýäm goýlan — sabak çeredecesi üýtge medi</string>
+    <string name="week_result_empty">Geljekki sapak tapylmady</string>
+
+    <!-- ==== Baş ekranda diagnostika ==== -->
+    <string name="dialog_exact_alarms_title">Anyk ýatgyjylar gadagandy</string>
+    <string name="dialog_exact_alarms_desc">Rugsat bolmasa, ulgam ýatgyjy hasaplanan anyk wagtyna goýmaga ýol bermez.</string>
+    <string name="dialog_battery_title">Batareýa optimizasiýasy büzgün edip bilýär</string>
+    <string name="dialog_battery_desc">Agyr energiýa tygşytlaýjy tertip gije sabak çeredecesiniň gaýtadan barlamasyny ýatyr edip bilýär.</string>
+    <string name="dialog_stale_title">Sabak çeredecesi 3 günden köp wagt täzelenmedi</string>
+    <string name="dialog_stale_desc">Uniwersitetiň sabak çeredecesini köp üýtgedýärler — täze maglumatlary çek.</string>
+
+    <!-- ==== Täzeleme snekbarlary ==== -->
+    <string name="err_no_target">Ilki sazlamalardan topar ýa-da mugallym saýla</string>
+    <string name="msg_refreshed">Sabak çeredecesi täzelendi</string>
+    <string name="refresh_empty_week">Täzelendi: şu hepdede sapak ýok</string>
+    <string name="refresh_ok_count">Sabak çeredecesi täzelendi — hepdädeki sapaklar: %1$d</string>
+    <string name="refresh_no_connection">kabinet.kgeu.ru bilen baglanyşyk ýok — saklanan nusgasy görkezilýär</string>
+    <string name="refresh_network">Tor elýeterli däl — saklanan nusgasy görkezilýär</string>
+    <string name="refresh_error">Täzeleme ýalňyşlygy: %1$s</string>
+    <string name="err_unknown_cause">näbelli sebäp</string>
+
+    <!-- ==== Çeredece ekrany ==== -->
+    <string name="cd_prev_week">Öňki hepde</string>
+    <string name="cd_next_week">Indiki hepde</string>
+    <string name="cd_go_today">Häzirki hepde we şu güne geç</string>
+    <string name="cd_refresh_week">Hepdedi täzele</string>
+    <string name="badge_this_week">şu hepde</string>
+    <string name="snackbar_excluded_on">«%1$s» öňünde ýatgyjy goýulmaýar</string>
+    <string name="snackbar_excluded_off">Istisna aýryldy</string>
+    <string name="cd_enable_alarm">Bu sapakdan öň ýatgyjyny ýak</string>
+    <string name="cd_disable_alarm">Bu sapakdan öň ýatgyjy goýma</string>
+    <string name="empty_no_lessons">Sapak ýok</string>
+    <string name="empty_no_alarm_needed">Bu güne ýatgyjy gerek bolmaz</string>
+
+    <!-- ==== Bildirişler ==== -->
+    <string name="notif_channel_name">Awtomatik ýatgyjynyň ýagdaýy</string>
+    <string name="notif_channel_desc">Goýlan we goýylmadyk ýatgyjylar barada bildirişler</string>
+    <string name="notif_alarm_set">Ýatgyjy goýuldy: %1$s</string>
+    <string name="notif_skipped_title">Ýatgyjy goýulmady</string>
+    <string name="notif_week_one">1 gaýtalanylýan ýatgyjy goýuldy</string>
+    <string name="notif_week_many">Goýlan gaýtalanylýan ýatgyjylar: %1$d</string>
+    <string name="notif_week_text">hepdäniň sapakly günleri boýunça (%1$s – %2$s), hepdelik gaýtalanylýar</string>
+    <string name="notif_week_already_title">Hepdä üçin ýatgyjylar eýýäm goýlan</string>
+    <string name="notif_week_already_text">Sabak çeredecesi oýanmak wagtalaryny üýtgetmedi — täzeden goýmak gerek däl</string>
+    <string name="notif_reminder_title">Ýatgyjyny goýmagy unutma</string>
+    <string name="notif_reminder_text">Ertir, %1$s: sapak %2$s — %3$s. Ýatgyjyny goýmagy unutma.</string>
+    <string name="notif_sync_title">Sabak çeredecesini utgaşdyrmak</string>
+    <string name="notif_sync_text">KGEU sabak çeredecesini täzleýäris</string>
+    <string name="notif_details_room">%1$s, aud. %2$s</string>
+
+    <!-- ==== Ýatgyjy goýylmazlygynyň sebäpleri (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">sapak ýok</string>
+    <string name="skip_no_upcoming">geljekki sapak tapylmady</string>
+    <string name="skip_clock_refused">telefonuň sagady buýrugy kabul etmedi — sazlamalarda «Ýatgyjy ýada salyşy» bölümini ýak</string>
+    <string name="test_alarm_label">Synag: Awtomatik ýatgyjy işleýär!</string>
+    <string name="test_alarm_ok">2 minutlyk ýatgyjy goýuldy — sagady barla</string>
+    <string name="test_alarm_fail">Synag ýatgyjysyny goýmak başartmady — sagat jogap bermeýär</string>
+
+    <!-- ==== Sazlamalar: bölümler ==== -->
+    <string name="sec_profile">Profil</string>
+    <string name="sec_alarm">Ýatgyjy</string>
+    <string name="sec_reminder">Ýatgyjy ýada salyşy</string>
+    <string name="sec_exceptions">Istisnalar</string>
+    <string name="sec_custom_events">Şahsy wakalar</string>
+    <string name="sec_appearance">Görnüş</string>
+    <string name="sec_system">Ulgam</string>
+    <string name="sec_about">Programma barada</string>
+
+    <!-- ==== Sazlamalar: profil ==== -->
+    <string name="profile_change_note">Maksady çalyşmak oýanmak boşluguny hem-de sazlamalary ýok etmez</string>
+
+    <!-- ==== Sazlamalar: ýatgyjy ==== -->
+    <string name="set_auto_title">Awtomatik ýatgyjy</string>
+    <string name="set_show_clock">Ýatgyjy goýlanda sagady görkez</string>
+    <string name="set_show_clock_desc">Ýatgyjylar öz-özünden goýulmasa, muny ýak (Realme, Oppo, Huawei): sagat taýýar ýatgyjy bilen açylar — «Sakla» düwmesi bilen tassykla.</string>
+    <string name="set_wake_offset">Birinji sapakdan %1$s öň oýanmak</string>
+    <string name="set_offset_example">Birinji sapak 08:30-da → ýatgyjy %1$s</string>
+    <string name="set_per_pair">Her sapak üçin aýry oýanmak</string>
+    <string name="set_per_pair_desc">Her birinji sapak üçin ýygnanmaga aýry boş wagt: erte sapakdan öň — azrak, soň sapakdan öň — köprek, ertirlik nahara ýetişmek üçin. Öz bahasy ýok sapaklar ýokardaky umumy oýanmagy ulanýar.</string>
+    <string name="set_pairs_after_sync">Sapak wagtalary sabak çeredecesini utgaşdyrylandan soň göruner</string>
+    <string name="pair_at">Sapak %1$s</string>
+    <string name="pair_custom_offset">%1$s öň oýanmak → ýatgyjy %2$s</string>
+    <string name="pair_common_offset">Umumy oýanmak: %1$s öň</string>
+    <string name="set_mode">Rejim</string>
+    <string name="mode_standard_title">Standart — ertire</string>
+    <string name="mode_standard_desc">Her gije ýatgyjy ertirki güne goýulýar</string>
+    <string name="mode_week_title">Birnäçe gün öňüne</string>
+    <string name="mode_week_desc">Hepdäniň her sapakly güni üçin gaýtalanylýan ýatgyjy — prozessleriň öldürilmegine garşy isygorta; häzirki sabak çeredecesi boýunça hepdelik gaýtalanylýar, aşakdaky düwme bilen öçürip bilersiň</string>
+    <string name="mode_week_window">Sapak gözleg aralygy: %1$s — sapakly günleriň ählisi üçin ýatgyjylar</string>
+    <string name="btn_set_now">Şu wagt goý</string>
+    <string name="btn_disable_app_alarms">Programmanyň ýatgyjylaryny öçür</string>
+    <string name="disable_alarms_desc">Düwme sagada «Авто: Пн»…«Авто: Вс» bellikli ýatgyjylary öçürmek buýrugyny ýollaýar. Eger örtük buýrugy kabul etmese (Realme UI/ColorOS-yň bir bölegi — ulgamyň çäklendirmesi), programma özi ýatgyjylaryň sanawyny açar — «Авто:» belliklerini el bilen aýyr.</string>
+    <string name="btn_test_alarm">Ýatgyjy barla</string>
+    <string name="btn_alarm_list">Ýatgyjylaryň sanawy</string>
+    <string name="alarms_list_open_failed">Sagat ýatgyjylaryň sanawyny açmady</string>
+    <string name="dismiss_alarms_sent">Öçürmek buýrugy sagata ýollandy (%1$d / %2$d). «Авто: …» ýatgyjylary galdy bolsa — olary ýatgyjylaryň sanawynda öçür</string>
+    <string name="dismiss_unsupported_opened">Sagat buýruk bilen öçürmegi goldamaýar (örtügiň çäklemesi) — ýatgyjylaryň sanawyny açdym: «Авто:» bellikli ýatgyjylary el bilen aýyr</string>
+    <string name="dismiss_unsupported_manual">Sagat buýruk bilen öçürmegi goldamaýar (örtügiň çäklemesi) — sagat programmasynda ýatgyjylary aç we «Авто:» belliklerini el bilen aýyr</string>
+
+    <!-- ==== Sazlamalaryň diialoglary: oýanmak boşlugy ==== -->
+    <string name="dialog_offset_title">Sapakdan öň oýanmak</string>
+    <string name="dialog_offset_example">Birinji sapak 08:30-da → ýatgyjy %1$s wagtynda çalar</string>
+    <string name="dialog_pair_title">Sapak %1$s</string>
+    <string name="dialog_pair_example">Sapak %1$s → ýatgyjy %2$s wagtynda çalar</string>
+
+    <!-- ==== Sazlamalar: ýada salyş ==== -->
+    <string name="set_reminder_desc">Öz bildirişiň: «ertir sapak şu wagtda — ýatgyjyny goýmagy unutma»</string>
+    <string name="set_reminder_fallback">Deslapky sagat programmanyň buýruklaryny kabul etmedik ýagdaýlar üçin goşmaça çözgüt — Realme, Huawei, Xiaomi arkaly duş gelýär (esasan hem Hytaý proşiwkalary). Ertir sapak bar bolsa, ýada salyş her gün saýlanan wagtda gelýär.</string>
+    <string name="reminder_time">Ýada salyş wagty: %1$s</string>
+    <string name="dialog_reminder_title">Ýada salyş wagty</string>
+
+    <!-- ==== Sazlamalar: istisnalar ==== -->
+    <string name="exceptions_title_desc">Bu dersleriň öňünde ýatgyjy goýulmaýar</string>
+    <string name="exceptions_empty">Häzir boş — oýatmagyň gerek bolmajak dersleri goş</string>
+    <string name="cd_delete_named">«%1$s» öçür</string>
+    <string name="hint_subject_name">Dersiň ady</string>
+    <string name="cd_add_exception">Istisna goş</string>
+    <string name="exceptions_found">Sabak çeredecesinde tapylan:</string>
+
+    <!-- ==== Sazlamalar: şahsy wakalar ==== -->
+    <string name="custom_events_desc">Aýry ýatgyjy wagty bilen şahsy wakalaryň — sport dersleri, repetisiýalar, bir gezeklik işler</string>
+    <string name="custom_empty">Entek hiç zat goşulmady</string>
+    <string name="dialog_event_title">Şahsy waka</string>
+    <string name="hint_name">Ady</string>
+    <string name="event_days_mode">Hepdäniň günleri boýunça</string>
+    <string name="event_date_mode">Bir senesi</string>
+    <string name="btn_pick_date">Senesi saýla</string>
+    <string name="event_time">Wagt: %1$s</string>
+    <string name="event_offset_suffix">· %1$s öň</string>
+    <string name="event_wake_before">Wakadan %1$s öň oýat</string>
+    <string name="dialog_event_time_title">Wakanyň wagty</string>
+
+    <!-- ==== Sazlamalar: görnüş ==== -->
+    <string name="set_theme">Tema</string>
+    <string name="theme_system">Ulgamyňky</string>
+    <string name="theme_light">Ýagty</string>
+    <string name="theme_dark">Garaňky</string>
+    <string name="dynamic_color">Material You (ulgam reňki)</string>
+    <string name="set_accent">Aksent</string>
+    <string name="accent_amber">Kehribar</string>
+    <string name="accent_orange">Göreýin</string>
+    <string name="accent_red">Gyzyl</string>
+    <string name="accent_green">Ýaşyl</string>
+    <string name="accent_pink">Gülreňki</string>
+    <string name="accent_purple">Binegär</string>
+    <string name="schedule_style">Sabak çeredecesiniň stili</string>
+    <string name="style_standard">Standart</string>
+    <string name="style_paper">Kagyz senenama</string>
+    <string name="set_background">Fon</string>
+    <string name="btn_pick_image">Surat saýla</string>
+    <string name="btn_remove">Aýyr</string>
+    <string name="bg_opacity">Astky gatlagyň transparanlygy</string>
+    <string name="set_glass">Aýna effekt</string>
+    <string name="set_glass_desc">Kartlar duýuk aýna ýaly ýarym düýşük; fon suraty bulanylýar</string>
+    <string name="glass_intensity">Aýna effektiniň güýçlüligi</string>
+    <string name="glass_tip">Maslahat: aýna effekti fon suraty (ýokardaky) bilen iň gowy görünýär</string>
+    <string name="glass_active">Aýna effekt işleýär</string>
+
+    <!-- ==== Sazlamalar: ulgam ==== -->
+    <string name="status_exact_allowed">Anyk ýatgyjylara rugsat berilýär</string>
+    <string name="dialog_exact_off_title">Anyk ýatgyjylary ulgam öçüren</string>
+    <string name="dialog_exact_off_desc">Gijäki meýilnamaçy ýatgyjy diňe ±10 minut töweregi takyksyzlyk bilen goýup biler.</string>
+    <string name="dialog_battery2_title">Batareýa optimizasiýasy büzgün edip bilýär</string>
+    <string name="dialog_battery2_desc">Gijäki sabak çeredecesi barlamasy bozulmasyn üçin programmany optimizasiýadan çykaryl</string>
+    <string name="action_disable_optimization">Optimizasiýany öçür</string>
+    <string name="autostart_title">Awtobaşlatma we agresiw örtükler</string>
+    <string name="autostart_desc">MIUI, HarmonyOS we beýleki örtükler fon programmalaryny öldürýär</string>
+    <string name="btn_instructions">Gollanma</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nHowpsuzlyk → Programmalar → Awtobaşlatma: Awtomatik ýatgyjyny ýak; programmanyň batareýa sazlamalarynda «çäklendirme ýok» saýla.</string>
+    <string name="autostart_huawei">Huawei / Honor:\nSazlamalar → Batareýa → Programmalaryň başlamagy → Awtomatik ýatgyjy → El bilen dolandyrmak: ähli düwmeleri ýak.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nSazlamalar → Batareýa → Goşmaça sazlamalar → Sarpa optimizasiýasy → programma üçin optimizasiýany gadagan et; Programma dolandyryjysy → Awtobaşlatma.</string>
+    <string name="autostart_samsung">Samsung:\nSazlamalar → Batareýa → Fon çäklendirmeleri → Ýatmaýan programmalara → Awtomatik ýatgyjyny goş.</string>
+    <string name="autostart_other">Beýleki örtük:\nProgrammany awtobaşlatmaga goş we ulgam sazlamalaryndan batareýa optimizasiýalaryny aýyr.</string>
+    <string name="autostart_standard_note">«Standart» rejimi her gije ýatgyjyny täzeden goýýar — programmanyň 00:05-de fonda başlamagy zerur.</string>
+
+    <!-- ==== Sazlamalar: programma barada ==== -->
+    <string name="about_version">KGEU awtomatik ýatgyjy · v%1$s</string>
+    <string name="about_data">Sabak çeredecesi maglumatlary: kabinet.kgeu.ru-nyň resmi API-sy. Programmanyň KGEU bilen resmi gatnaşygy ýok.</string>
+    <string name="btn_github">GitHub repozitoriýasy</string>
+</resources>

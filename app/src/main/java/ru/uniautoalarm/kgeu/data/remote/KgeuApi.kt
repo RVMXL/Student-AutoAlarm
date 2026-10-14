@@ -100,7 +100,10 @@ class KgeuApi {
             .build()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw KgeuApiException("HTTP ${response.code} ${response.message}")
-            return response.body?.string() ?: throw KgeuApiException("Пустой ответ сервера")
+            // Технические тексты здесь на английском: они попадают в снекбар
+            // «Ошибка обновления: …» при ЛЮБОМ языке интерфейса (i18n 0.5.0)
+            return response.body?.string()
+                ?: throw KgeuApiException("Empty response from server")
         }
     }
 
@@ -112,7 +115,7 @@ class KgeuApi {
 
     /** Успех = state:1; иначе человекочитаемая ошибка сервера в msg. */
     private fun requireState(state: Int, msg: String?) {
-        if (state != 1) throw KgeuApiException(msg ?: "Ошибка API КГЭУ (state=$state)")
+        if (state != 1) throw KgeuApiException(msg ?: "KGEU API error (state=$state)")
     }
 
     companion object {

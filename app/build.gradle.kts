@@ -15,8 +15,8 @@ android {
         minSdk = 26
         targetSdk = 35
         // Версионирование: versionCode = major*10000 + minor*100 + patch (0.4.0 -> 400)
-        versionCode = 400
-        versionName = "0.4.0"
+        versionCode = 500
+        versionName = "0.5.0"
     }
 
     buildTypes {

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== Общее ==== -->
+    <string name="app_name">KGEU Otomatik Alarmı</string>
+    <string name="action_cancel">İptal</string>
+    <string name="action_ok">Tamam</string>
+    <string name="action_save">Kaydet</string>
+    <string name="action_done">Bitti</string>
+    <string name="action_edit">Düzenle</string>
+    <string name="action_reset">Sıfırla</string>
+    <string name="action_retry">Tekrar dene</string>
+    <string name="action_allow">İzin ver</string>
+    <string name="action_fix">Düzelt</string>
+    <string name="action_refresh">Yenile</string>
+    <string name="action_change">Değiştir</string>
+    <string name="action_next">İleri</string>
+    <string name="action_back">Geri</string>
+    <string name="action_start">Başla</string>
+    <string name="action_add">Ekle</string>
+    <string name="action_load">Yükle</string>
+    <string name="action_understood">Anladım</string>
+
+    <!-- ==== Нижняя навигация ==== -->
+    <string name="nav_home">Ana Sayfa</string>
+    <string name="nav_schedule">Ders Programı</string>
+    <string name="nav_settings">Ayarlar</string>
+
+    <!-- ==== Единицы и форматирования ==== -->
+    <string name="fmt_offset_m">%1$d dk</string>
+    <string name="fmt_offset_h">%1$d sa</string>
+    <string name="fmt_offset_hm">%1$d sa %2$d dk</string>
+    <string name="fmt_days_short">%1$d gün</string>
+    <string name="fmt_time_alarm_will_ring">Alarmın çalma saati</string>
+
+    <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
+    <string name="day_short_1">Pzt</string>
+    <string name="day_short_2">Sal</string>
+    <string name="day_short_3">Çar</string>
+    <string name="day_short_4">Per</string>
+    <string name="day_short_5">Cum</string>
+    <string name="day_short_6">Cmt</string>
+    <string name="day_short_7">Paz</string>
+
+    <!-- ==== Язык ==== -->
+    <string name="lang_title">Dil</string>
+    <string name="lang_subtitle">Arayüz dilini seç — daha sonra ayarlardan değiştirebilirsin</string>
+    <string name="lang_system">Sistem dili</string>
+    <string name="set_language">Dil</string>
+    <string name="set_language_desc">Uygulamanın arayüz dili</string>
+
+    <!-- ==== Мастер настройки ==== -->
+    <string name="setup_step_of">Adım %1$d/%2$d</string>
+    <string name="setup_welcome_subtitle">Üniversite ders programına göre ilk dersten önce telefonun yerleşik Saat uygulamasına alarm kurar. Bir dakikada hazır.</string>
+    <string name="setup_university">Kazan Devlet Enerji Üniversitesi (KGEU)</string>
+    <string name="setup_official_api">kabinet.kgeu.ru resmi API\'si</string>
+    <string name="setup_who_are_you">Sen kimsin?</string>
+    <string name="role_student">Öğrenci</string>
+    <string name="role_student_subtitle">Grubumun ders programına göre alarm</string>
+    <string name="role_teacher">Öğretim üyesi</string>
+    <string name="role_teacher_subtitle">Derslerimin programına göre alarm</string>
+    <string name="setup_search_hint">Yazmaya başla: А-1-23 …</string>
+    <string name="setup_found">Bulunan: %1$d</string>
+    <string name="setup_found_capped">Bulunan: %1$d (ilk %2$d tanesi gösteriliyor)</string>
+    <string name="setup_load_failed">Liste yüklenemedi</string>
+    <string name="setup_check_internet">İnternet bağlantısını kontrol edip tekrar dene</string>
+    <string name="setup_nothing_found">Sonuç bulunamadı</string>
+    <string name="setup_pick_role_first">Önce kim olduğunu seç</string>
+    <string name="setup_course">%1$d. sınıf</string>
+    <string name="setup_wake_question">İlk dersten genelde ne kadar önce kalkarsın?</string>
+    <string name="setup_example">İlk ders 08:30 → alarm %1$s</string>
+    <string name="setup_done_all">Her şey hazır!</string>
+    <string name="setup_finish_mode_note">“Standart” mod: her gece yarına alarm kurulur. Sonra ayarlardan değiştirebilirsin.</string>
+    <string name="setup_no_target">Hedef seçilmedi — geri dönüp grup veya öğretim üyesi seç</string>
+    <string name="summary_group">Grup</string>
+    <string name="summary_teacher">Öğretim üyesi</string>
+    <string name="summary_wake_offset">İlk dersten önce kalkma</string>
+    <string name="profile_no_target">Hedef seçilmedi</string>
+
+    <!-- ==== Главный экран ==== -->
+    <string name="home_title">Otomatik Alarm</string>
+    <string name="cd_refresh_schedule">Ders programını yenile</string>
+    <string name="mode_week_chip">%1$d günlük</string>
+    <string name="mode_standard_chip">Standart</string>
+    <string name="loading_settings">Ayarlar yükleniyor…</string>
+    <string name="alarm_off_title">Alarm kapalı</string>
+    <string name="alarm_off_subtitle">Aşağıdaki düğmeyle aç</string>
+    <string name="refreshing">Ders programı yenileniyor…</string>
+    <string name="not_loaded_title">Ders programı henüz yüklenmedi</string>
+    <string name="not_loaded_hint">Dersleri kabinet.kgeu.ru\'dan çek — burada kalkma saati görünecek</string>
+    <string name="tomorrow_free_title">Yarın ders yok</string>
+    <string name="tomorrow_free_sub">alarm kurulmaz</string>
+    <string name="tomorrow_label">Yarın · %1$s</string>
+    <string name="today_label">Bugün</string>
+    <string name="tomorrow_label_short">Yarın</string>
+    <string name="badge_replacement">değişiklik</string>
+    <string name="room_prefix">Derslik %1$s</string>
+    <string name="lesson_at">Ders: %1$s</string>
+    <string name="own_event_at">Kendi etkinliği: %1$s</string>
+    <string name="home_auto_title">Otomatik alarm</string>
+    <string name="home_auto_subtitle">İlk dersten önce telefonun yerleşik Saat uygulamasına alarm kurar</string>
+    <string name="home_week_title">Birkaç gün önceden</string>
+    <string name="home_week_desc">Haftanın günlerine göre tekrarlayan alarmlar — sistem uygulamayı sonlandırırsa sigorta</string>
+    <string name="btn_set_for_days">%1$d günlüğüne kur</string>
+    <string name="chip_weekly_repeat">Haftalık tekrar</string>
+    <string name="home_week_note">Alarmlar haftalık tekrarlanır; fazlalıklar telefonun yerleşik Saat uygulamasında kapatılır (“Alarm listesi” — uygulamanın ayarlarında)</string>
+    <string name="home_upcoming_title">Yaklaşan dersler</string>
+    <string name="home_no_pairs">Ders yok</string>
+
+    <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
+    <string name="week_result_delivered">Kurulan tekrarlayan alarm sayısı: %1$d</string>
+    <string name="week_result_delivered_note">Kurulan tekrarlayan alarm sayısı: %1$d (haftanın günlerine göre)</string>
+    <string name="week_result_uptodate">Alarmlar zaten kurulu — ders programı değişmedi</string>
+    <string name="week_result_empty">Yaklaşan ders bulunamadı</string>
+
+    <!-- ==== Диагностика на главном ==== -->
+    <string name="dialog_exact_alarms_title">Kesin alarmlara izin verilmiyor</string>
+    <string name="dialog_exact_alarms_desc">İzin verilmezse sistem, alarmları hesaplanan tam saatte kurmana izin vermez.</string>
+    <string name="dialog_battery_title">Pil optimizasyonu engel olabilir</string>
+    <string name="dialog_battery_desc">Agresif güç tasarrufu modu, gece ders programı kontrolünü iptal edebilir.</string>
+    <string name="dialog_stale_title">Ders programı 3 günden uzun süredir güncellenmedi</string>
+    <string name="dialog_stale_desc">Üniversitenin programı sık değişir — güncel verileri çek.</string>
+
+    <!-- ==== Снекбары обновления ==== -->
+    <string name="err_no_target">Önce ayarlardan grup veya öğretim üyesi seç</string>
+    <string name="msg_refreshed">Ders programı güncellendi</string>
+    <string name="refresh_empty_week">Güncellendi: bu hafta ders yok</string>
+    <string name="refresh_ok_count">Ders programı güncellendi — haftadaki ders sayısı: %1$d</string>
+    <string name="refresh_no_connection">kabinet.kgeu.ru ile bağlantı yok — kayıtlı önbellek gösteriliyor</string>
+    <string name="refresh_network">Ağ kullanılamıyor — kayıtlı önbellek gösteriliyor</string>
+    <string name="refresh_error">Güncelleme hatası: %1$s</string>
+    <string name="err_unknown_cause">bilinmeyen neden</string>
+
+    <!-- ==== Экран расписания ==== -->
+    <string name="cd_prev_week">Önceki hafta</string>
+    <string name="cd_next_week">Sonraki hafta</string>
+    <string name="cd_go_today">Bu haftaya ve bugüne dön</string>
+    <string name="cd_refresh_week">Haftayı yenile</string>
+    <string name="badge_this_week">bu hafta</string>
+    <string name="snackbar_excluded_on">“%1$s” öncesi alarm kurulmaz</string>
+    <string name="snackbar_excluded_off">İstisna kaldırıldı</string>
+    <string name="cd_enable_alarm">Bu dersten önce alarmı aç</string>
+    <string name="cd_disable_alarm">Bu dersten önce alarm kurma</string>
+    <string name="empty_no_lessons">Ders yok</string>
+    <string name="empty_no_alarm_needed">Bu gün için alarm gerekmez</string>
+
+    <!-- ==== Уведомления ==== -->
+    <string name="notif_channel_name">Otomatik alarm durumu</string>
+    <string name="notif_channel_desc">Kurulan ve atlanan alarmlarla ilgili bildirimler</string>
+    <string name="notif_alarm_set">Alarm %1$s için kuruldu</string>
+    <string name="notif_skipped_title">Alarm kurulmadı</string>
+    <string name="notif_week_one">1 tekrarlayan alarm kuruldu</string>
+    <string name="notif_week_many">Kurulan tekrarlayan alarm sayısı: %1$d</string>
+    <string name="notif_week_text">ders olan günler için (%1$s – %2$s), haftalık tekrarlar</string>
+    <string name="notif_week_already_title">Haftanın alarmları zaten kurulu</string>
+    <string name="notif_week_already_text">Ders programı kalkma saatlerini değiştirmedi — yeniden kurmaya gerek yok</string>
+    <string name="notif_reminder_title">Alarm kurmayı unutma</string>
+    <string name="notif_reminder_text">Yarın, %1$s: %2$s ders — %3$s. Alarm kurmayı unutma.</string>
+    <string name="notif_sync_title">Ders programı eşitleniyor</string>
+    <string name="notif_sync_text">KGEU ders programı güncelleniyor</string>
+    <string name="notif_details_room">%1$s, derslik %2$s</string>
+
+    <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">ders yok</string>
+    <string name="skip_no_upcoming">yaklaşan ders bulunamadı</string>
+    <string name="skip_clock_refused">telefonun Saat uygulaması komutu kabul etmedi — ayarlarda “Alarm hatırlatması” seçeneğini aç</string>
+    <string name="test_alarm_label">Test: Otomatik alarm çalışıyor!</string>
+    <string name="test_alarm_ok">2 dakika sonraya alarm kuruldu — Saat uygulamasını kontrol et</string>
+    <string name="test_alarm_fail">Test alarmı kurulamadı — Saat uygulaması yanıt vermiyor</string>
+
+    <!-- ==== Настройки: секции ==== -->
+    <string name="sec_profile">Profil</string>
+    <string name="sec_alarm">Alarm</string>
+    <string name="sec_reminder">Alarm hatırlatması</string>
+    <string name="sec_exceptions">İstisnalar</string>
+    <string name="sec_custom_events">Kendi etkinlikleri</string>
+    <string name="sec_appearance">Görünüm</string>
+    <string name="sec_system">Sistem</string>
+    <string name="sec_about">Uygulama hakkında</string>
+
+    <!-- ==== Настройки: профиль ==== -->
+    <string name="profile_change_note">Hedefi değiştirmek kalkma süresini ve ayarları sıfırlamaz</string>
+
+    <!-- ==== Настройки: будильник ==== -->
+    <string name="set_auto_title">Otomatik alarm</string>
+    <string name="set_show_clock">Kurarken Saat uygulamasını göster</string>
+    <string name="set_show_clock_desc">Alarmlar kendi kendine kurulmuyorsa aç (Realme, Oppo, Huawei): Saat uygulaması hazır alarmla açılır — “Kaydet” düğmesiyle onayla.</string>
+    <string name="set_wake_offset">İlk dersten %1$s önce kalkma</string>
+    <string name="set_offset_example">İlk ders 08:30 → alarm %1$s</string>
+    <string name="set_per_pair">Her ders için ayrı kalkma</string>
+    <string name="set_per_pair_desc">Her ilk ders için ayrı hazırlık süresi belirle: erken derse az, geç derse kahvaltıya vakit kalacak kadar çok ayarla. Ayrı değeri olmayan dersler yukarıdaki ortak kalkma süresini kullanır.</string>
+    <string name="set_pairs_after_sync">Ders saatleri, ders programı eşitlendikten sonra görünür</string>
+    <string name="pair_at">Ders: %1$s</string>
+    <string name="pair_custom_offset">%1$s önce kalk → alarm %2$s</string>
+    <string name="pair_common_offset">Ortak kalkma: %1$s önce</string>
+    <string name="set_mode">Mod</string>
+    <string name="mode_standard_title">Standart — yarın için</string>
+    <string name="mode_standard_desc">Her gece alarm yarına göre yeniden kurulur</string>
+    <string name="mode_week_title">Birkaç gün önceden</string>
+    <string name="mode_week_desc">Haftanın her ders günü için tekrarlayan alarm — uygulamanın sonlandırılmasına karşı sigorta; güncel ders programına göre haftalık tekrarlanır, aşağıdaki düğmeyle kapatılır</string>
+    <string name="mode_week_window">Ders arama aralığı: %1$s — ders olan tüm hafta günlerine alarm kurulur</string>
+    <string name="btn_set_now">Şimdi kur</string>
+    <string name="btn_disable_app_alarms">Uygulamanın alarmlarını kapat</string>
+    <string name="disable_alarms_desc">Düğme, «Авто: Пн»…«Авто: Вс» etiketlerine göre Saat uygulamasına kapatma komutu gönderir. Sistem komutu kabul etmezse (bazı Realme UI/ColorOS sürümlerinde sistem kısıtlaması) uygulama alarm listesini kendisi açar — «Авто:» etiketlerini elle kaldır.</string>
+    <string name="btn_test_alarm">Alarmı test et</string>
+    <string name="btn_alarm_list">Alarm listesi</string>
+    <string name="alarms_list_open_failed">Saat uygulaması alarm listesini açmadı</string>
+    <string name="dismiss_alarms_sent">Kapatma komutu Saat uygulamasına gönderildi (%1$d/%2$d). «Авто: …» alarmları hâlâ duruyorsa alarm listesinden elle kapat</string>
+    <string name="dismiss_unsupported_opened">Saat uygulaması komutla kapatmayı desteklemiyor (arayüz kısıtlaması) — alarm listesi açıldı: «Авто:» etiketli alarmları elle kaldır</string>
+    <string name="dismiss_unsupported_manual">Saat uygulaması komutla kapatmayı desteklemiyor (arayüz kısıtlaması) — alarmları Saat uygulamasında aç ve «Авто:» etiketlerini elle kaldır</string>
+
+    <!-- ==== Диалоги настроек: смещение подъёма ==== -->
+    <string name="dialog_offset_title">Ders öncesi kalkma</string>
+    <string name="dialog_offset_example">İlk ders 08:30 → alarm %1$s</string>
+    <string name="dialog_pair_title">Ders: %1$s</string>
+    <string name="dialog_pair_example">Ders: %1$s → alarm %2$s</string>
+
+    <!-- ==== Настройки: напоминание ==== -->
+    <string name="set_reminder_desc">Özel bildirim: “yarın şu saatte ders var — alarm kurmayı unutma”</string>
+    <string name="set_reminder_fallback">Telefonun yerleşik Saat uygulaması komutları kabul etmediğinde kullanılan yedek yöntem — Realme, Huawei, Xiaomi\'de (özellikle Çin yazılımlı cihazlarda) görülür. Yarın ders varsa her gün seçtiğin saatte hatırlatma gelir.</string>
+    <string name="reminder_time">Hatırlatma saati: %1$s</string>
+    <string name="dialog_reminder_title">Hatırlatma saati</string>
+
+    <!-- ==== Настройки: исключения ==== -->
+    <string name="exceptions_title_desc">Bu derslerden önce alarm kurulmaz</string>
+    <string name="exceptions_empty">Şimdilik boş — öncesinde alarm kurulmasını istemediğin dersleri ekle</string>
+    <string name="cd_delete_named">“%1$s” öğesini sil</string>
+    <string name="hint_subject_name">Ders adı</string>
+    <string name="cd_add_exception">İstisna ekle</string>
+    <string name="exceptions_found">Ders programında bulunanlar:</string>
+
+    <!-- ==== Настройки: свои занятия ==== -->
+    <string name="custom_events_desc">Kendi etkinliklerin için ayrı alarm — kulüpler, provalar, tek seferlik işler</string>
+    <string name="custom_empty">Henüz bir şey eklenmedi</string>
+    <string name="dialog_event_title">Kendi etkinliğin</string>
+    <string name="hint_name">Ad</string>
+    <string name="event_days_mode">Haftanın günleri</string>
+    <string name="event_date_mode">Tek tarih</string>
+    <string name="btn_pick_date">Tarih seç</string>
+    <string name="event_time">Saat: %1$s</string>
+    <string name="event_offset_suffix">· %1$s önce</string>
+    <string name="event_wake_before">Etkinlikten %1$s önce uyandır</string>
+    <string name="dialog_event_time_title">Etkinlik saati</string>
+
+    <!-- ==== Настройки: оформление ==== -->
+    <string name="set_theme">Tema</string>
+    <string name="theme_system">Sistem</string>
+    <string name="theme_light">Açık</string>
+    <string name="theme_dark">Koyu</string>
+    <string name="dynamic_color">Material You (sistem rengi)</string>
+    <string name="set_accent">Vurgu rengi</string>
+    <string name="accent_amber">Amber</string>
+    <string name="accent_orange">Turuncu</string>
+    <string name="accent_red">Kırmızı</string>
+    <string name="accent_green">Yeşil</string>
+    <string name="accent_pink">Pembe</string>
+    <string name="accent_purple">Mor</string>
+    <string name="schedule_style">Program stili</string>
+    <string name="style_standard">Standart</string>
+    <string name="style_paper">Kağıt takvim</string>
+    <string name="set_background">Arka plan</string>
+    <string name="btn_pick_image">Resim seç</string>
+    <string name="btn_remove">Kaldır</string>
+    <string name="bg_opacity">Altlık saydamlığı</string>
+    <string name="set_glass">Cam efekti</string>
+    <string name="set_glass_desc">Kartlar buzlu cam gibi yarı saydam olur; arka plan resmi bulanıklaştırılır</string>
+    <string name="glass_intensity">Cam efekti yoğunluğu</string>
+    <string name="glass_tip">İpucu: Cam efekti, arka plan resmiyle (yukarıda) en iyi görünümü verir</string>
+    <string name="glass_active">Cam efekti açık</string>
+
+    <!-- ==== Настройки: система ==== -->
+    <string name="status_exact_allowed">Kesin alarmlara izin verildi</string>
+    <string name="dialog_exact_off_title">Sistem kesin alarmları devre dışı bıraktı</string>
+    <string name="dialog_exact_off_desc">Gece zamanlayıcısı alarmları yalnızca ±10 dakika sapmayla kurabilecek.</string>
+    <string name="dialog_battery2_title">Pil optimizasyonu engel olabilir</string>
+    <string name="dialog_battery2_desc">Gece ders programı kontrolünün aksamaması için uygulamayı pil optimizasyonunun dışında tut.</string>
+    <string name="action_disable_optimization">Optimizasyonu kapat</string>
+    <string name="autostart_title">Otomatik başlatma ve agresif arayüzler</string>
+    <string name="autostart_desc">MIUI, HarmonyOS ve diğer arayüzler arka plan uygulamalarını sonlandırır</string>
+    <string name="btn_instructions">Talimatlar</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nGüvenlik → Uygulamalar → Otomatik başlatma: KGEU Otomatik Alarmı için aç; uygulamanın pil ayarlarında “kısıtlama yok” seçeneğini seç.</string>
+    <string name="autostart_huawei">Huawei / Honor:\nAyarlar → Pil → Uygulama başlatma → KGEU Otomatik Alarmı → Elle yönet: tüm anahtarları aç.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nAyarlar → Pil → Diğer ayarlar → Güç tüketimi optimizasyonu → uygulama için optimizasyonu yasakla; Uygulama yöneticisi → Otomatik başlatma.</string>
+    <string name="autostart_samsung">Samsung:\nAyarlar → Pil → Arka plan kısıtlamaları → Uyumayan uygulamalar → KGEU Otomatik Alarmı\'nı ekle.</string>
+    <string name="autostart_other">Diğer arayüzler:\nUygulamayı otomatik başlatmaya ekle ve sistem ayarlarından pil optimizasyonlarını kaldır.</string>
+    <string name="autostart_standard_note">“Standart” mod her gece alarmı yeniden kurar — uygulamanın 00:05\'te arka planda başlatılması gerekiyor.</string>
+
+    <!-- ==== Настройки: о приложении ==== -->
+    <string name="about_version">KGEU Otomatik Alarmı · v%1$s</string>
+    <string name="about_data">Ders programı verileri: kabinet.kgeu.ru resmi API\'si. Uygulama KGEU ile bağlantılı değildir.</string>
+    <string name="btn_github">GitHub deposu</string>
+</resources>

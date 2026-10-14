@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== General ==== -->
+    <string name="app_name">Autoalarma KGEU</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_ok">Aceptar</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_done">Listo</string>
+    <string name="action_edit">Editar</string>
+    <string name="action_reset">Restablecer</string>
+    <string name="action_retry">Reintentar</string>
+    <string name="action_allow">Permitir</string>
+    <string name="action_fix">Corregir</string>
+    <string name="action_refresh">Actualizar</string>
+    <string name="action_change">Cambiar</string>
+    <string name="action_next">Siguiente</string>
+    <string name="action_back">Atrás</string>
+    <string name="action_start">Comenzar</string>
+    <string name="action_add">Agregar</string>
+    <string name="action_load">Cargar</string>
+    <string name="action_understood">Entendido</string>
+
+    <!-- ==== Navegación inferior ==== -->
+    <string name="nav_home">Inicio</string>
+    <string name="nav_schedule">Horario</string>
+    <string name="nav_settings">Ajustes</string>
+
+    <!-- ==== Unidades y formatos ==== -->
+    <string name="fmt_offset_m">%1$d min</string>
+    <string name="fmt_offset_h">%1$d h</string>
+    <string name="fmt_offset_hm">%1$d h %2$d min</string>
+    <string name="fmt_days_short">%1$d días</string>
+    <string name="fmt_time_alarm_will_ring">la alarma sonará a las</string>
+
+    <!-- ==== Días de la semana (cortos, chips del calendario) ==== -->
+    <string name="day_short_1">Lun</string>
+    <string name="day_short_2">Mar</string>
+    <string name="day_short_3">Mié</string>
+    <string name="day_short_4">Jue</string>
+    <string name="day_short_5">Vie</string>
+    <string name="day_short_6">Sáb</string>
+    <string name="day_short_7">Dom</string>
+
+    <!-- ==== Idioma ==== -->
+    <string name="lang_title">Idioma</string>
+    <string name="lang_subtitle">Elige el idioma de la interfaz — luego puedes cambiarlo en Ajustes</string>
+    <string name="lang_system">Idioma del sistema</string>
+    <string name="set_language">Idioma</string>
+    <string name="set_language_desc">El idioma de la interfaz de la app</string>
+
+    <!-- ==== Asistente de configuración ==== -->
+    <string name="setup_step_of">Paso %1$d de %2$d</string>
+    <string name="setup_welcome_subtitle">Pone una alarma en la app de reloj del teléfono antes de tu primera clase, según el horario de la universidad. La configuración toma un minuto.</string>
+    <string name="setup_university">Universidad Estatal de Energía de Kazán (KGEU)</string>
+    <string name="setup_official_api">API oficial de kabinet.kgeu.ru</string>
+    <string name="setup_who_are_you">¿Quién eres?</string>
+    <string name="role_student">Estudiante</string>
+    <string name="role_student_subtitle">Alarma según el horario de mi grupo</string>
+    <string name="role_teacher">Profesor</string>
+    <string name="role_teacher_subtitle">Alarma según el horario de mis clases</string>
+    <string name="setup_search_hint">Empieza a escribir: А-1-23 …</string>
+    <string name="setup_found">Encontrados: %1$d</string>
+    <string name="setup_found_capped">Encontrados: %1$d (se muestran los primeros %2$d)</string>
+    <string name="setup_load_failed">No se pudo cargar la lista</string>
+    <string name="setup_check_internet">Revisa tu conexión a internet e inténtalo de nuevo</string>
+    <string name="setup_nothing_found">No se encontró nada</string>
+    <string name="setup_pick_role_first">Primero elige quién eres</string>
+    <string name="setup_course">curso %1$d</string>
+    <string name="setup_wake_question">¿Cuánto tiempo antes de tu primera clase te levantas normalmente?</string>
+    <string name="setup_example">Primera clase a las 08:30 → alarma a las %1$s</string>
+    <string name="setup_done_all">¡Todo listo!</string>
+    <string name="setup_finish_mode_note">Modo \"Estándar\": cada noche la alarma queda programada para el día siguiente. Después puedes cambiarlo en Ajustes.</string>
+    <string name="setup_no_target">No elegiste un objetivo — vuelve atrás y elige un grupo o un profesor</string>
+    <string name="summary_group">Grupo</string>
+    <string name="summary_teacher">Profesor</string>
+    <string name="summary_wake_offset">Levantarte antes de la primera clase</string>
+    <string name="profile_no_target">Sin objetivo elegido</string>
+
+    <!-- ==== Pantalla principal ==== -->
+    <string name="home_title">Autoalarma</string>
+    <string name="cd_refresh_schedule">Actualizar el horario</string>
+    <string name="mode_week_chip">Por %1$d días</string>
+    <string name="mode_standard_chip">Estándar</string>
+    <string name="loading_settings">Cargando ajustes…</string>
+    <string name="alarm_off_title">La alarma está apagada</string>
+    <string name="alarm_off_subtitle">Actívala con el interruptor de abajo</string>
+    <string name="refreshing">Actualizando el horario…</string>
+    <string name="not_loaded_title">El horario aún no se ha cargado</string>
+    <string name="not_loaded_hint">Descarga tus clases desde kabinet.kgeu.ru — aquí aparecerá la hora para levantarte</string>
+    <string name="tomorrow_free_title">Mañana no hay clases</string>
+    <string name="tomorrow_free_sub">no se programará alarma</string>
+    <string name="tomorrow_label">Mañana · %1$s</string>
+    <string name="today_label">Hoy</string>
+    <string name="tomorrow_label_short">Mañana</string>
+    <string name="badge_replacement">reemplazo</string>
+    <string name="room_prefix">aula %1$s</string>
+    <string name="lesson_at">clase a las %1$s</string>
+    <string name="own_event_at">tu propio evento a las %1$s</string>
+    <string name="home_auto_title">Autoalarma</string>
+    <string name="home_auto_subtitle">Pone una alarma en la app de reloj del teléfono antes de tu primera clase</string>
+    <string name="home_week_title">Varios días por adelantado</string>
+    <string name="home_week_desc">Alarmas repetitivas para cada día de la semana — un respaldo por si el sistema mata la app</string>
+    <string name="btn_set_for_days">Programar por %1$d días</string>
+    <string name="chip_weekly_repeat">Se repiten semanalmente</string>
+    <string name="home_week_note">Las alarmas se repiten semanalmente; apaga las que sobren en la app de reloj del teléfono (\"Lista de alarmas\" — en los ajustes de la app)</string>
+    <string name="home_upcoming_title">Próximas clases</string>
+    <string name="home_no_pairs">No hay clases</string>
+
+    <!-- ==== Resultados de la programación (principal + ajustes) ==== -->
+    <string name="week_result_delivered">Alarmas repetitivas programadas: %1$d</string>
+    <string name="week_result_delivered_note">Alarmas repetitivas programadas: %1$d (una por día de la semana)</string>
+    <string name="week_result_uptodate">Las alarmas ya están programadas — el horario no cambió</string>
+    <string name="week_result_empty">No se encontraron clases próximas</string>
+
+    <!-- ==== Diagnóstico en la pantalla principal ==== -->
+    <string name="dialog_exact_alarms_title">Alarmas exactas no permitidas</string>
+    <string name="dialog_exact_alarms_desc">Sin el permiso, el sistema no dejará programar la alarma a la hora exacta calculada.</string>
+    <string name="dialog_battery_title">La optimización de batería puede interferir</string>
+    <string name="dialog_battery_desc">El modo de ahorro de energía agresivo puede cancelar la re-verificación nocturna del horario.</string>
+    <string name="dialog_stale_title">El horario no se actualiza hace más de 3 días</string>
+    <string name="dialog_stale_desc">Los horarios de la universidad cambian seguido — descarga datos frescos.</string>
+
+    <!-- ==== Snackbars de actualización ==== -->
+    <string name="err_no_target">Primero elige un grupo o un profesor en Ajustes</string>
+    <string name="msg_refreshed">Horario actualizado</string>
+    <string name="refresh_empty_week">Actualizado: no hay clases esta semana</string>
+    <string name="refresh_ok_count">Horario actualizado — clases esta semana: %1$d</string>
+    <string name="refresh_no_connection">Sin conexión con kabinet.kgeu.ru — se muestra la caché guardada</string>
+    <string name="refresh_network">Red no disponible — se muestra la caché guardada</string>
+    <string name="refresh_error">Error al actualizar: %1$s</string>
+    <string name="err_unknown_cause">motivo desconocido</string>
+
+    <!-- ==== Pantalla de horario ==== -->
+    <string name="cd_prev_week">Semana anterior</string>
+    <string name="cd_next_week">Semana siguiente</string>
+    <string name="cd_go_today">Ir a la semana actual y al día de hoy</string>
+    <string name="cd_refresh_week">Actualizar esta semana</string>
+    <string name="badge_this_week">esta semana</string>
+    <string name="snackbar_excluded_on">No se programa alarma antes de \"%1$s\"</string>
+    <string name="snackbar_excluded_off">Excepción eliminada</string>
+    <string name="cd_enable_alarm">Activar la alarma antes de esta clase</string>
+    <string name="cd_disable_alarm">No programar alarma antes de esta clase</string>
+    <string name="empty_no_lessons">No hay clases</string>
+    <string name="empty_no_alarm_needed">Este día no necesitarás alarma</string>
+
+    <!-- ==== Notificaciones ==== -->
+    <string name="notif_channel_name">Estado de la autoalarma</string>
+    <string name="notif_channel_desc">Avisos sobre alarmas programadas y omitidas</string>
+    <string name="notif_alarm_set">Alarma programada a las %1$s</string>
+    <string name="notif_skipped_title">Alarma no programada</string>
+    <string name="notif_week_one">Se programó 1 alarma repetitiva</string>
+    <string name="notif_week_many">Alarmas repetitivas programadas: %1$d</string>
+    <string name="notif_week_text">en los días con clases (%1$s – %2$s), se repiten semanalmente</string>
+    <string name="notif_week_already_title">Las alarmas de la semana ya están programadas</string>
+    <string name="notif_week_already_text">El horario no cambió las horas de levantarse — no hace falta reprogramar nada</string>
+    <string name="notif_reminder_title">No olvides programar la alarma</string>
+    <string name="notif_reminder_text">Mañana, %1$s: clase a las %2$s — %3$s. No olvides programar la alarma.</string>
+    <string name="notif_sync_title">Sincronización del horario</string>
+    <string name="notif_sync_text">Actualizando el horario de KGEU</string>
+    <string name="notif_details_room">%1$s, aula %2$s</string>
+
+    <!-- ==== Motivos de omisión de la alarma (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">no hay clases</string>
+    <string name="skip_no_upcoming">no se encontraron clases próximas</string>
+    <string name="skip_clock_refused">la app de reloj del teléfono no aceptó el comando — activa \"Recordatorio de alarma\" en los ajustes</string>
+    <string name="test_alarm_label">¡Prueba: la Autoalarma funciona!</string>
+    <string name="test_alarm_ok">Alarma programada para dentro de 2 minutos — revisa el reloj</string>
+    <string name="test_alarm_fail">No se pudo programar la alarma de prueba — el reloj no responde</string>
+
+    <!-- ==== Ajustes: secciones ==== -->
+    <string name="sec_profile">Perfil</string>
+    <string name="sec_alarm">Alarma</string>
+    <string name="sec_reminder">Recordatorio de alarma</string>
+    <string name="sec_exceptions">Excepciones</string>
+    <string name="sec_custom_events">Eventos propios</string>
+    <string name="sec_appearance">Apariencia</string>
+    <string name="sec_system">Sistema</string>
+    <string name="sec_about">Acerca de la app</string>
+
+    <!-- ==== Ajustes: perfil ==== -->
+    <string name="profile_change_note">Cambiar el objetivo no restablecerá tu hora de levantarte ni tus ajustes</string>
+
+    <!-- ==== Ajustes: alarma ==== -->
+    <string name="set_auto_title">Autoalarma</string>
+    <string name="set_show_clock">Mostrar el reloj al programar las alarmas</string>
+    <string name="set_show_clock_desc">Actívalo si las alarmas no se programan solas (Realme, Oppo, Huawei): el reloj se abrirá con la alarma ya lista — confírmala con \"Guardar\".</string>
+    <string name="set_wake_offset">Levantarte %1$s antes de la primera clase</string>
+    <string name="set_offset_example">Primera clase a las 08:30 → alarma a las %1$s</string>
+    <string name="set_per_pair">Levantarte para cada clase</string>
+    <string name="set_per_pair_desc">Tu propio margen para prepararte antes de la primera clase de cada día: menos para las tempranas y más para las tardes, para que te dé tiempo de desayunar. Las clases sin valor propio usan la hora de levantarse general de arriba.</string>
+    <string name="set_pairs_after_sync">Las horas de las clases aparecerán tras sincronizar el horario</string>
+    <string name="pair_at">Clase a las %1$s</string>
+    <string name="pair_custom_offset">Levantarte %1$s antes → alarma a las %2$s</string>
+    <string name="pair_common_offset">Levantarse general: %1$s antes</string>
+    <string name="set_mode">Modo</string>
+    <string name="mode_standard_title">Estándar — para mañana</string>
+    <string name="mode_standard_desc">Cada noche la alarma se reprograma para mañana</string>
+    <string name="mode_week_title">Varios días por adelantado</string>
+    <string name="mode_week_desc">Alarmas repetitivas para cada día de clases de la semana — un respaldo por si el sistema mata la app; se repiten semanalmente según el horario vigente y puedes apagarlas con el botón de abajo</string>
+    <string name="mode_week_window">Ventana de búsqueda de clases: %1$s — alarmas para todos los días de la semana con clases</string>
+    <string name="btn_set_now">Programar ahora</string>
+    <string name="btn_disable_app_alarms">Desactivar las alarmas de la app</string>
+    <string name="disable_alarms_desc">El botón envía al reloj un comando de desactivación con las etiquetas exactas \"Авто: Пн\"…\"Авто: Вс\". Si la capa del sistema no acepta el comando (en algunas versiones de Realme UI/ColorOS es una limitación del sistema), la app abrirá por sí misma la lista de alarmas — quita las etiquetas \"Авто:\" a mano.</string>
+    <string name="btn_test_alarm">Probar la alarma</string>
+    <string name="btn_alarm_list">Lista de alarmas</string>
+    <string name="alarms_list_open_failed">El reloj no abrió la lista de alarmas</string>
+    <string name="dismiss_alarms_sent">Comando de desactivación enviado al reloj (%1$d de %2$d). Si quedan alarmas \"Авто: …\", desactívalas en la lista de alarmas</string>
+    <string name="dismiss_unsupported_opened">El reloj no admite la desactivación por comando (limitación de la capa del sistema) — se abrió la lista de alarmas: quita a mano las alarmas con la etiqueta \"Авто:\"</string>
+    <string name="dismiss_unsupported_manual">El reloj no admite la desactivación por comando (limitación de la capa del sistema) — abre las alarmas en la app de reloj y quita las etiquetas \"Авто:\" a mano</string>
+
+    <!-- ==== Diálogos de ajustes: hora de levantarse ==== -->
+    <string name="dialog_offset_title">Levantarte antes de la clase</string>
+    <string name="dialog_offset_example">Primera clase a las 08:30 → la alarma sonará a las %1$s</string>
+    <string name="dialog_pair_title">Clase a las %1$s</string>
+    <string name="dialog_pair_example">Clase a las %1$s → la alarma sonará a las %2$s</string>
+
+    <!-- ==== Ajustes: recordatorio ==== -->
+    <string name="set_reminder_desc">Tu propia notificación: \"mañana tienes clase a tal hora — no olvides programar la alarma\"</string>
+    <string name="set_reminder_fallback">Un respaldo para cuando la app de reloj del teléfono no acepta los comandos de la app — pasa en Realme, Huawei, Xiaomi (sobre todo con firmware chino). El recordatorio llega cada día a la hora elegida si hay clase mañana.</string>
+    <string name="reminder_time">Hora del recordatorio: %1$s</string>
+    <string name="dialog_reminder_title">Hora del recordatorio</string>
+
+    <!-- ==== Ajustes: excepciones ==== -->
+    <string name="exceptions_title_desc">No se programa alarma antes de estas materias</string>
+    <string name="exceptions_empty">Aún no hay nada — agrega las materias antes de las cuales no quieras alarma</string>
+    <string name="cd_delete_named">Eliminar \"%1$s\"</string>
+    <string name="hint_subject_name">Nombre de la materia</string>
+    <string name="cd_add_exception">Agregar excepción</string>
+    <string name="exceptions_found">Encontradas en el horario:</string>
+
+    <!-- ==== Ajustes: eventos propios ==== -->
+    <string name="custom_events_desc">Eventos propios con su propia hora de alarma — clubes, ensayos, pendientes de un solo día</string>
+    <string name="custom_empty">Aún no has agregado nada</string>
+    <string name="dialog_event_title">Evento propio</string>
+    <string name="hint_name">Nombre</string>
+    <string name="event_days_mode">Por días de la semana</string>
+    <string name="event_date_mode">Una sola fecha</string>
+    <string name="btn_pick_date">Elegir fecha</string>
+    <string name="event_time">Hora: %1$s</string>
+    <string name="event_offset_suffix">· %1$s antes</string>
+    <string name="event_wake_before">Despertar %1$s antes del evento</string>
+    <string name="dialog_event_time_title">Hora del evento</string>
+
+    <!-- ==== Ajustes: apariencia ==== -->
+    <string name="set_theme">Tema</string>
+    <string name="theme_system">Sistema</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Oscuro</string>
+    <string name="dynamic_color">Material You (colores del sistema)</string>
+    <string name="set_accent">Acento</string>
+    <string name="accent_amber">Ámbar</string>
+    <string name="accent_orange">Naranja</string>
+    <string name="accent_red">Rojo</string>
+    <string name="accent_green">Verde</string>
+    <string name="accent_pink">Rosa</string>
+    <string name="accent_purple">Morado</string>
+    <string name="schedule_style">Estilo del horario</string>
+    <string name="style_standard">Estándar</string>
+    <string name="style_paper">Calendario de papel</string>
+    <string name="set_background">Fondo</string>
+    <string name="btn_pick_image">Elegir imagen</string>
+    <string name="btn_remove">Quitar</string>
+    <string name="bg_opacity">Opacidad de la capa</string>
+    <string name="set_glass">Efecto de vidrio</string>
+    <string name="set_glass_desc">Las tarjetas son semitransparentes, como vidrio esmerilado; la imagen de fondo se desenfoca</string>
+    <string name="glass_intensity">Intensidad del vidrio</string>
+    <string name="glass_tip">Consejo: el vidrio luce mejor con una imagen de fondo (arriba)</string>
+    <string name="glass_active">Vidrio activado</string>
+
+    <!-- ==== Ajustes: sistema ==== -->
+    <string name="status_exact_allowed">Alarmas exactas permitidas</string>
+    <string name="dialog_exact_off_title">El sistema desactivó las alarmas exactas</string>
+    <string name="dialog_exact_off_desc">El programador nocturno solo podrá poner la alarma con una desviación de ±10 minutos.</string>
+    <string name="dialog_battery2_title">La optimización de batería puede interferir</string>
+    <string name="dialog_battery2_desc">Excluye la app de la optimización de batería para que la re-verificación nocturna del horario no falle.</string>
+    <string name="action_disable_optimization">Desactivar optimización</string>
+    <string name="autostart_title">Inicio automático y capas agresivas</string>
+    <string name="autostart_desc">MIUI, HarmonyOS y otras capas matan las apps en segundo plano</string>
+    <string name="btn_instructions">Instrucciones</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nSeguridad → Apps → Inicio automático: activa Autoalarma; en los ajustes de batería de la app elige \"sin restricciones\".</string>
+    <string name="autostart_huawei">Huawei / Honor:\nAjustes → Batería → Inicio de apps → Autoalarma → Gestionar manualmente: activa todos los interruptores.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nAjustes → Batería → Más ajustes → Optimización de consumo → prohíbe la optimización para la app; Gestor de apps → Inicio automático.</string>
+    <string name="autostart_samsung">Samsung:\nAjustes → Batería → Límites en segundo plano → Apps que no duermen → agrega Autoalarma.</string>
+    <string name="autostart_other">Otra capa:\nAgrega la app al inicio automático y quita sus optimizaciones de batería en los ajustes del sistema.</string>
+    <string name="autostart_standard_note">El modo \"Estándar\" reprograma la alarma cada noche — la app necesita ejecutarse en segundo plano a las 00:05.</string>
+
+    <!-- ==== Ajustes: acerca de ==== -->
+    <string name="about_version">Autoalarma KGEU · v%1$s</string>
+    <string name="about_data">Datos del horario: API oficial de kabinet.kgeu.ru. La app no está afiliada a KGEU.</string>
+    <string name="btn_github">Repositorio en GitHub</string>
+</resources>

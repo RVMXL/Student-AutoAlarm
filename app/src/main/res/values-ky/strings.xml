@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== Общее ==== -->
+    <string name="app_name">КГЭУ автоояткычы</string>
+    <string name="action_cancel">Жокко чыгаруу</string>
+    <string name="action_ok">ОК</string>
+    <string name="action_save">Сактоо</string>
+    <string name="action_done">Даяр</string>
+    <string name="action_edit">Өзгөртүү</string>
+    <string name="action_reset">Калыбына келтирүү</string>
+    <string name="action_retry">Кайталоо</string>
+    <string name="action_allow">Уруксат берүү</string>
+    <string name="action_fix">Оңдоо</string>
+    <string name="action_refresh">Жаңыртуу</string>
+    <string name="action_change">Алмаштыруу</string>
+    <string name="action_next">Ары карай</string>
+    <string name="action_back">Артка</string>
+    <string name="action_start">Баштоо</string>
+    <string name="action_add">Кошуу</string>
+    <string name="action_load">Жүктөө</string>
+    <string name="action_understood">Түшүнүктүү</string>
+
+    <!-- ==== Нижняя навигация ==== -->
+    <string name="nav_home">Башкы бет</string>
+    <string name="nav_schedule">Кесте</string>
+    <string name="nav_settings">Параметрлер</string>
+
+    <!-- ==== Единицы и форматирования ==== -->
+    <string name="fmt_offset_m">%1$d мин</string>
+    <string name="fmt_offset_h">%1$d саат</string>
+    <string name="fmt_offset_hm">%1$d саат %2$d мин</string>
+    <string name="fmt_days_short">%1$d күн</string>
+    <string name="fmt_time_alarm_will_ring">ояткыч согула турган убакыт</string>
+
+    <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
+    <string name="day_short_1">Дш</string>
+    <string name="day_short_2">Шш</string>
+    <string name="day_short_3">Шр</string>
+    <string name="day_short_4">Бш</string>
+    <string name="day_short_5">Жм</string>
+    <string name="day_short_6">Иш</string>
+    <string name="day_short_7">Жш</string>
+
+    <!-- ==== Язык ==== -->
+    <string name="lang_title">Тил</string>
+    <string name="lang_subtitle">Интерфейс тилин танда — кийин параметрлерде өзгөртүүгө болот</string>
+    <string name="lang_system">Система тили</string>
+    <string name="set_language">Тил</string>
+    <string name="set_language_desc">Колдонмонун интерфейс тили</string>
+
+    <!-- ==== Мастер настройки ==== -->
+    <string name="setup_step_of">Кадам %1$d / %2$d</string>
+    <string name="setup_welcome_subtitle">Университеттин кестеси боюнча биринчи жуптун алдында телефоннун системалык саат колдонмосуна ояткыч коёт. Бир мүнөттө баптап алабыз.</string>
+    <string name="setup_university">Казан мамлекеттик энергетика университети (КГЭУ)</string>
+    <string name="setup_official_api">kabinet.kgeu.ru расмий API</string>
+    <string name="setup_who_are_you">Кимсин?</string>
+    <string name="role_student">Студент</string>
+    <string name="role_student_subtitle">Тобумдун кестеси боюнча ояткыч</string>
+    <string name="role_teacher">Октуучу</string>
+    <string name="role_teacher_subtitle">Жуптарымдын кестеси боюнча ояткыч</string>
+    <string name="setup_search_hint">Киргизип башта: А-1-23 …</string>
+    <string name="setup_found">Табылды: %1$d</string>
+    <string name="setup_found_capped">Табылды: %1$d (алгачкы %2$d көрсөтүлдү)</string>
+    <string name="setup_load_failed">Тизмени жүктөө мүмкүн болбоду</string>
+    <string name="setup_check_internet">Интернетти текшерип, кайра аракет кыл</string>
+    <string name="setup_nothing_found">Эч нерсе табылган жок</string>
+    <string name="setup_pick_role_first">Адегенде ким экениңди танда</string>
+    <string name="setup_course">%1$d курс</string>
+    <string name="setup_wake_question">Биринчи жуптан адатта канча убакыт мурун турасың?</string>
+    <string name="setup_example">Биринчи жуп саат 08:30 → ояткыч: %1$s</string>
+    <string name="setup_done_all">Баары даяр!</string>
+    <string name="setup_finish_mode_note">«Стандарт» режими: ар түнү эртеңкиге ояткыч коюлат. Кийин параметрлерден өзгөртсө болот.</string>
+    <string name="setup_no_target">Максат тандалган эмес — артка кайтып топту же окутуучуну танда</string>
+    <string name="summary_group">Топ</string>
+    <string name="summary_teacher">Октуучу</string>
+    <string name="summary_wake_offset">Биринчи жупка чейинки оянгу</string>
+    <string name="profile_no_target">Максат тандалган эмес</string>
+
+    <!-- ==== Главный экран ==== -->
+    <string name="home_title">Автоояткыч</string>
+    <string name="cd_refresh_schedule">Кестени жаңыртуу</string>
+    <string name="mode_week_chip">%1$d күнгө</string>
+    <string name="mode_standard_chip">Стандарт</string>
+    <string name="loading_settings">Параметрлер жүктөлүүдө…</string>
+    <string name="alarm_off_title">Ояткыч өчүк</string>
+    <string name="alarm_off_subtitle">Төмөнкү которгуч менен күйгүз</string>
+    <string name="refreshing">Кесте жаңыртылууда…</string>
+    <string name="not_loaded_title">Кесте али жүктөлгөн эмес</string>
+    <string name="not_loaded_hint">kabinet.kgeu.ru сайтынан жуптарды тартып ал — бул жерде оянгу убактысы чыгат</string>
+    <string name="tomorrow_free_title">Эртең жуп жок</string>
+    <string name="tomorrow_free_sub">ояткыч коюлбайт</string>
+    <string name="tomorrow_label">Эртең · %1$s</string>
+    <string name="today_label">Бүгүн</string>
+    <string name="tomorrow_label_short">Эртең</string>
+    <string name="badge_replacement">алмашуу</string>
+    <string name="room_prefix">ауд. %1$s</string>
+    <string name="lesson_at">жуп саат %1$s</string>
+    <string name="own_event_at">өз сабагың саат %1$s</string>
+    <string name="home_auto_title">Автоояткыч</string>
+    <string name="home_auto_subtitle">Биринчи жуптун алдында системалык саат колдонмосуна ояткыч коёт</string>
+    <string name="home_week_title">Бир нече күнгө алдын ала</string>
+    <string name="home_week_desc">Апта күндөрүнө кайталануучу ояткычтар — система колдонмону өчүрүп койгон учурдагы сактык чарасы</string>
+    <string name="btn_set_for_days">%1$d күнгө коюу</string>
+    <string name="chip_weekly_repeat">Апта сайын кайталанат</string>
+    <string name="home_week_note">Ояткычтар апта сайын кайталанат; ашыкчалары системалык саат колдонмосунда өчүрүлөт («Ояткычтар тизмеси» — колдонмонун параметрлеринде)</string>
+    <string name="home_upcoming_title">Алдагы сабактар</string>
+    <string name="home_no_pairs">Жуп жок</string>
+
+    <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
+    <string name="week_result_delivered">Коюлган кайталануучу ояткычтар: %1$d</string>
+    <string name="week_result_delivered_note">Коюлган кайталануучу ояткычтар: %1$d (апта күндөрү боюнча)</string>
+    <string name="week_result_uptodate">Ояткычтар мурдатан эле коюлган — кесте өзгөргөн жок</string>
+    <string name="week_result_empty">Алдагы жуп табылган жок</string>
+
+    <!-- ==== Диагностика на главном ==== -->
+    <string name="dialog_exact_alarms_title">Так ояткычтарга тыюу салынган</string>
+    <string name="dialog_exact_alarms_desc">Уруксат болбосо, система ояткычты эсептелген убакытта так коюуга мүмкүнчүлүк бербейт.</string>
+    <string name="dialog_battery_title">Батареяны оптималдаштыруу тоскоол болушу мүмкүн</string>
+    <string name="dialog_battery_desc">Агрессивдүү энергия үнөмдөө режими түнгү кесте текшерүүсүн өчүрүп коюшу мүмкүн.</string>
+    <string name="dialog_stale_title">Кесте 3 күндөн ашык жаңыртылган эмес</string>
+    <string name="dialog_stale_desc">Университеттин кестеси көп өзгөрөт — жаңы маалыматтарды тартып ал.</string>
+
+    <!-- ==== Снекбары обновления ==== -->
+    <string name="err_no_target">Адегенде параметрлерден топту же окутуучуну танда</string>
+    <string name="msg_refreshed">Кесте жаңыртылды</string>
+    <string name="refresh_empty_week">Жаңыртылды: бул аптада жуп жок</string>
+    <string name="refresh_ok_count">Кесте жаңыртылды — аптадагы жуптар: %1$d</string>
+    <string name="refresh_no_connection">kabinet.kgeu.ru сайты менен байланыш жок — сакталган кеш көрсөтүлдү</string>
+    <string name="refresh_network">Тармак жеткиликсиз — сакталган кеш көрсөтүлдү</string>
+    <string name="refresh_error">Жаңыртуу катасы: %1$s</string>
+    <string name="err_unknown_cause">белгисиз себеп</string>
+
+    <!-- ==== Экран расписания ==== -->
+    <string name="cd_prev_week">Мурдагы апта</string>
+    <string name="cd_next_week">Кийинки апта</string>
+    <string name="cd_go_today">Учурдагы аптага жана бүгүнкү күнгө өтүү</string>
+    <string name="cd_refresh_week">Аптаны жаңыртуу</string>
+    <string name="badge_this_week">ушу апта</string>
+    <string name="snackbar_excluded_on">Ояткыч «%1$s» сабагынын алдында коюлбайт</string>
+    <string name="snackbar_excluded_off">Өзгөчөлүк өчүрүлдү</string>
+    <string name="cd_enable_alarm">Ушул жуптун алдында ояткычты күйгүзүү</string>
+    <string name="cd_disable_alarm">Ушул жуптун алдында ояткыч койбоо</string>
+    <string name="empty_no_lessons">Сабак жок</string>
+    <string name="empty_no_alarm_needed">Бул күнү ояткыч керек эмес</string>
+
+    <!-- ==== Уведомления ==== -->
+    <string name="notif_channel_name">Автоояткычтын абалы</string>
+    <string name="notif_channel_desc">Коюлган жана өткөрүлүп жиберилген ояткычтар жөнүндө билдирүүлөр</string>
+    <string name="notif_alarm_set">Ояткыч %1$s убакытына коюлду</string>
+    <string name="notif_skipped_title">Ояткыч коюлган жок</string>
+    <string name="notif_week_one">1 кайталануучу ояткыч коюлду</string>
+    <string name="notif_week_many">Коюлган кайталануучу ояткычтар: %1$d</string>
+    <string name="notif_week_text">жуп бар апта күндөрү боюнча (%1$s – %2$s), апта сайын кайталанат</string>
+    <string name="notif_week_already_title">Аптага ояткычтар мурдатан эле коюлган</string>
+    <string name="notif_week_already_text">Кесте оянгу убакыттарын өзгөрткөн эмес — кайра коюу керек эмес</string>
+    <string name="notif_reminder_title">Ояткыч коюуну унутпа</string>
+    <string name="notif_reminder_text">Эртең, %1$s: жуп саат %2$s — %3$s. Ояткыч коюуну унутпа.</string>
+    <string name="notif_sync_title">Кестени синхрондоштуруу</string>
+    <string name="notif_sync_text">КГЭУ кестеси жаңыртылууда</string>
+    <string name="notif_details_room">%1$s, ауд. %2$s</string>
+
+    <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">жуп жок</string>
+    <string name="skip_no_upcoming">алдагы жуп табылган жок</string>
+    <string name="skip_clock_refused">Телефондун саат колдонмосу буйрукту кабыл албады — параметрлерден «Ояткыч эскертүүсүн» күйгүз</string>
+    <string name="test_alarm_label">Тест: Автоояткыч иштеп турат!</string>
+    <string name="test_alarm_ok">2 минутка ояткыч коюлду — саатты текшер</string>
+    <string name="test_alarm_fail">Сыноо ояткычын коюу мүмкүн болбоду — саат жооп бербейт</string>
+
+    <!-- ==== Настройки: секции ==== -->
+    <string name="sec_profile">Профиль</string>
+    <string name="sec_alarm">Ояткыч</string>
+    <string name="sec_reminder">Ояткыч эскертүүсү</string>
+    <string name="sec_exceptions">Өзгөчөлүктөр</string>
+    <string name="sec_custom_events">Өз сабактарың</string>
+    <string name="sec_appearance">Көрүнүш</string>
+    <string name="sec_system">Система</string>
+    <string name="sec_about">Колдонмо жөнүндө</string>
+
+    <!-- ==== Настройки: профиль ==== -->
+    <string name="profile_change_note">Максатты өзгөрткөндө оянгу жылышуусу менен параметрлер сакталат</string>
+
+    <!-- ==== Настройки: будильник ==== -->
+    <string name="set_auto_title">Автоояткыч</string>
+    <string name="set_show_clock">Коюу учурунда саатты көрсөтүү</string>
+    <string name="set_show_clock_desc">Ояткычтар өзү-өзүнөн коюлбай калса, күйгүз (Realme, Oppo, Huawei): саат даяр ояткыч менен ачылат — «Сактоо» баскычы менен ыраста.</string>
+    <string name="set_wake_offset">Биринчи жуптан %1$s мурун оянгу</string>
+    <string name="set_offset_example">Биринчи жуп саат 08:30 → ояткыч убакыты: %1$s</string>
+    <string name="set_per_pair">Ар бир жупка өзүнчө оянгу</string>
+    <string name="set_per_pair_desc">Ар бир биринчи жупка жыйналууга өзүнчө убакыт: эрте жупка — азыраак, кеч жупка — көбүрөөк, эртеңки тамак ичүүгө үлгүрүү үчүн. Өз мааниси белгиленбеген жуптар жогорудагы жалпы оянгуну колдонот.</string>
+    <string name="set_pairs_after_sync">Жуп убакыттары кесте синхрондоштурулгандан кийин пайда болот</string>
+    <string name="pair_at">Жуп саат %1$s</string>
+    <string name="pair_custom_offset">Оянгу: %1$s мурун → ояткыч: %2$s</string>
+    <string name="pair_common_offset">Жалпы оянгу: %1$s мурун</string>
+    <string name="set_mode">Режим</string>
+    <string name="mode_standard_title">Стандарт — эртеңге</string>
+    <string name="mode_standard_desc">Ар түнү ояткыч эртеңге кайра коюлат</string>
+    <string name="mode_week_title">Бир нече күнгө алдын ала</string>
+    <string name="mode_week_desc">Аптанын ар бир окуу күнүнө кайталануучу ояткыч — процесстерди өлтүрүүдөн сактык; учурдагы кесте боюнча апта сайын кайталанат, төмөнкү баскыч менен өчүрсө болот</string>
+    <string name="mode_week_window">Жуп издөө диапазону: %1$s — жуп бар аптанын бардык күндөрүнө ояткыч коюлат</string>
+    <string name="btn_set_now">Азыр коюу</string>
+    <string name="btn_disable_app_alarms">Колдонмо ояткычтарын өчүрүү</string>
+    <string name="disable_alarms_desc">Баскыч саатка «Авто: Пн»…«Авто: Вс» так энбелгилери боюнча өчүрүү буйругун жиберет. Оболочка буйрукту кабыл албаса (Realme UI/ColorOS-тун айрым нускалары — системалык чектөө), колдонмо ояткычтар тизмесин өзү ачат — «Авто:» энбелгилерин кол менен алып сал.</string>
+    <string name="btn_test_alarm">Ояткычты текшерүү</string>
+    <string name="btn_alarm_list">Ояткычтар тизмеси</string>
+    <string name="alarms_list_open_failed">Саат колдонмосу ояткычтар тизмесин ачкан жок</string>
+    <string name="dismiss_alarms_sent">Саатка өчүрүү буйругу жиберилди (%1$d/%2$d). «Авто: …» ояткычтары калса — аларды ояткычтар тизмесинен өчүр.</string>
+    <string name="dismiss_unsupported_opened">Саат буйрук менен өчүрүүнү колдообойт (оболочка чектөөсү) — ояткычтар тизмесин ачтым: «Авто:» энбелгиси бар ояткычтарды кол менен алып сал</string>
+    <string name="dismiss_unsupported_manual">Саат буйрук менен өчүрүүнү колдообойт (оболочка чектөөсү) — саат колдонмосунан ояткычтарды ачып, «Авто:» энбелгилерин кол менен алып сал</string>
+
+    <!-- ==== Диалоги настроек: смещение подъёма ==== -->
+    <string name="dialog_offset_title">Жупка чейинки оянгу</string>
+    <string name="dialog_offset_example">Биринчи жуп саат 08:30 → ояткыч согула турган убакыт: %1$s</string>
+    <string name="dialog_pair_title">Жуп саат %1$s</string>
+    <string name="dialog_pair_example">Жуп саат %1$s → ояткыч согула турган убакыт: %2$s</string>
+
+    <!-- ==== Настройки: напоминание ==== -->
+    <string name="set_reminder_desc">Өзүңдүн билдирмең: «эртең ушул убакта жуп — ояткыч коюуну унутпа»</string>
+    <string name="set_reminder_fallback">Адаттагы саат колдонмосу колдонмонун буйруктарын кабыл албаган учурдагы камдык вариант — Realme, Huawei, Xiaomi-де кезигет (айрыкча кытай прошивкаларында). Эртеңге жуп болсо, эскертүү ар күнү тандаган убакта келет.</string>
+    <string name="reminder_time">Эскертүү убакыты: %1$s</string>
+    <string name="dialog_reminder_title">Эскертүү убакыты</string>
+
+    <!-- ==== Настройки: исключения ==== -->
+    <string name="exceptions_title_desc">Бул сабактардын алдында ояткыч коюлбайт</string>
+    <string name="exceptions_empty">Азырынча бош — алдында ояткыч кереги жок предметтерди кош</string>
+    <string name="cd_delete_named">«%1$s» өчүрүү</string>
+    <string name="hint_subject_name">Сабактын аталышы</string>
+    <string name="cd_add_exception">Өзгөчөлүк кошуу</string>
+    <string name="exceptions_found">Кестеден табылды:</string>
+
+    <!-- ==== Настройки: свои занятия ==== -->
+    <string name="custom_events_desc">Ояткыч убакыты бөлөк өз иш-чараларың — секциялар, репетициялар, бир жолку иштер</string>
+    <string name="custom_empty">Азырынча эч нерсе кошулган эмес</string>
+    <string name="dialog_event_title">Өз сабагың</string>
+    <string name="hint_name">Аталышы</string>
+    <string name="event_days_mode">Апта күндөрү боюнча</string>
+    <string name="event_date_mode">Бир күн</string>
+    <string name="btn_pick_date">Күндү тандоо</string>
+    <string name="event_time">Убакыт: %1$s</string>
+    <string name="event_offset_suffix">· %1$s мурун</string>
+    <string name="event_wake_before">Иш-чарадан %1$s мурун ойготуу</string>
+    <string name="dialog_event_time_title">Иш-чара убакыты</string>
+
+    <!-- ==== Настройки: оформление ==== -->
+    <string name="set_theme">Тема</string>
+    <string name="theme_system">Системалык</string>
+    <string name="theme_light">Ачык</string>
+    <string name="theme_dark">Караңгы</string>
+    <string name="dynamic_color">Material You (система түсү)</string>
+    <string name="set_accent">Акцент</string>
+    <string name="accent_amber">Кагыл</string>
+    <string name="accent_orange">Кызгылт сары</string>
+    <string name="accent_red">Кызыл</string>
+    <string name="accent_green">Жашыл</string>
+    <string name="accent_pink">Кызгылт</string>
+    <string name="accent_purple">Кызгылт көк</string>
+    <string name="schedule_style">Кесте стили</string>
+    <string name="style_standard">Стандарт</string>
+    <string name="style_paper">Кагаз календарь</string>
+    <string name="set_background">Фон</string>
+    <string name="btn_pick_image">Сүрөт тандоо</string>
+    <string name="btn_remove">Алып салу</string>
+    <string name="bg_opacity">Астыңгы катмардын тунуктугу</string>
+    <string name="set_glass">Айнек эффектиси</string>
+    <string name="set_glass_desc">Карталар жарым-жартылай тунук, үбүлөнгөн айнек сыяктуу; фондогу сүрөт бүдөмүктөлөт</string>
+    <string name="glass_intensity">Айнек эффектисинин күчү</string>
+    <string name="glass_tip">Кеңеш: айнек эффектиси фон сүрөтү менен (жогоруда) эң жакшы көрүнөт</string>
+    <string name="glass_active">Айнек эффектиси күйгүзүлгөн</string>
+
+    <!-- ==== Настройки: система ==== -->
+    <string name="status_exact_allowed">Так ояткычтарга уруксат берилген</string>
+    <string name="dialog_exact_off_title">Так ояткычтарды система өчүргөн</string>
+    <string name="dialog_exact_off_desc">Түнгү пландаштыруучу ояткычты ±10 минут чегинде гана коё алат.</string>
+    <string name="dialog_battery2_title">Батареяны оптималдаштыруу тоскоол болушу мүмкүн</string>
+    <string name="dialog_battery2_desc">Түнгү кесте текшерүүсү бузулбаш үчүн колдонмону оптималдаштыруудан чыгарып сал</string>
+    <string name="action_disable_optimization">Оптималдаштырууну өчүрүү</string>
+    <string name="autostart_title">Автостарт жана агрессивдүү оболочалар</string>
+    <string name="autostart_desc">MIUI, HarmonyOS жана башка оболочалар фондо иштеген колдонмолорду өлтүрөт</string>
+    <string name="btn_instructions">Нускоо</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nКоопсуздук → Колдонмолор → Автостарт: Автоояткычты күйгүз; колдонмонун батарея жөндөөлөрүнөн «чектөө жок» дегенди танда.</string>
+    <string name="autostart_huawei">Huawei / Honor:\nПараметрлер → Батарея → Колдонмолорду баштоо → Автоояткыч → Кол менен башкаруу: бардык которгучтарды күйгүз.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nПараметрлер → Батарея → Дагы жөндөөлөр → Куат керектөөнү оптималдаштыруу → колдонмо үчүн оптималдаштырууга тыйым сал; Колдонмо менеджери → Автостарт.</string>
+    <string name="autostart_samsung">Samsung:\nПараметрлер → Батарея → Фондогу чектөөлөр → Уктабаган колдонмолор → Автоояткычты кош.</string>
+    <string name="autostart_other">Башка оболочка:\nКолдонмону автостартка кошуп, системанын жөндөөлөрүнөн батареяны оптималдаштырууларды алып сал.</string>
+    <string name="autostart_standard_note">«Стандарт» режими ояткычты ар түнү кайра коёт — колдонмого саат 00:05-те фондо башталуу керек.</string>
+
+    <!-- ==== Настройки: о приложении ==== -->
+    <string name="about_version">КГЭУ автоояткычы · v%1$s</string>
+    <string name="about_data">Кесте маалыматтары: kabinet.kgeu.ru расмий API. Колдонмо КГЭУ менен эч кандай байланышта эмес.</string>
+    <string name="btn_github">GitHub-дагы репозиторий</string>
+</resources>

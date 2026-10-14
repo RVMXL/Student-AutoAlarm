@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Холодный старт при тёмной СИСТЕМНОЙ теме; дальше окно красит MainActivity
+         по теме ПРИЛОЖЕНИЯ (window_background_light/dark). Цвет совпадает с
+         фоном тёмной схемы (WarmBackgroundDark #1A1611). -->
+    <color name="window_background">#FF1A1611</color>
+</resources>

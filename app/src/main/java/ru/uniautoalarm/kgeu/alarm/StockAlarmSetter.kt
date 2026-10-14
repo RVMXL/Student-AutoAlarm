@@ -12,10 +12,12 @@ import java.time.LocalDateTime
 import java.util.Calendar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
 import ru.uniautoalarm.kgeu.data.model.WeekAheadResult
 import ru.uniautoalarm.kgeu.data.repository.SettingsRepository
 import ru.uniautoalarm.kgeu.domain.AlarmPlanner
+import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 
 /**
  * Постановка будильника в СТОКОВОЕ приложение часов через публичный intent
@@ -102,7 +104,11 @@ class StockAlarmSetter(
 
             val plan = planner.planFor(date)
             if (plan == null) {
-                if (notify) Notifications.alarmSkipped(context, date, "пар нет")
+                if (notify) {
+                    Notifications.alarmSkipped(
+                        context, date, LocaleHelper.string(context, R.string.skip_no_lessons)
+                    )
+                }
                 return@withContext null
             }
 
@@ -122,7 +128,7 @@ class StockAlarmSetter(
                 if (notify) {
                     Notifications.alarmSkipped(
                         context, date,
-                        "часы телефона не приняли команду — включите «Напоминание о будильнике» в настройках"
+                        LocaleHelper.string(context, R.string.skip_clock_refused)
                     )
                 }
                 null
@@ -154,7 +160,12 @@ class StockAlarmSetter(
             }
             return setForDate(date, notify)
         }
-        if (notify) Notifications.alarmSkipped(context, now.toLocalDate(), "предстоящих пар не нашлось")
+        if (notify) {
+            Notifications.alarmSkipped(
+                context, now.toLocalDate(),
+                LocaleHelper.string(context, R.string.skip_no_upcoming)
+            )
+        }
         return null
     }
 
@@ -198,7 +209,12 @@ class StockAlarmSetter(
         val until = fromDate.plusDays(s.weekAheadDays.toLong())
 
         if (byDow.isEmpty()) {
-            if (notify) Notifications.alarmSkipped(context, fromDate, "предстоящих пар не нашлось")
+            if (notify) {
+                Notifications.alarmSkipped(
+                    context, fromDate,
+                    LocaleHelper.string(context, R.string.skip_no_upcoming)
+                )
+            }
             return WeekAheadResult(0, alreadyUpToDate = false)
         }
 
@@ -249,7 +265,10 @@ class StockAlarmSetter(
     suspend fun setTestAlarm(minutesFromNow: Int = 2): Boolean {
         val at = LocalDateTime.now().plusMinutes(minutesFromNow.toLong())
         val showUi = settings.current().alarmShowClockUi
-        return deliver(at.hour, at.minute, "Тест: Автобудильник работает!", showUi)
+        return deliver(
+            at.hour, at.minute,
+            LocaleHelper.string(context, R.string.test_alarm_label), showUi
+        )
     }
 
     /**
@@ -311,6 +330,10 @@ class StockAlarmSetter(
          * WHERE label = ?), а не «начинается с». В 0.3.1 кнопка отправляла метку
          * «Авто», под которую не подходило ни «Авто: Пн», ни что-либо ещё — часы
          * молча ничего не отключали (см. RELEASE-0.4.0).
+         *
+         * Метки намеренно не локализуются: они пишутся в стоковые часы и
+         * сопоставляются байт-в-байт при DISMISS — смена языка приложения
+         * не должна ломать совпадение SET/DISMISS.
          */
         val WEEK_AHEAD_LABELS: List<String> =
             listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс").map { "Авто: $it" }

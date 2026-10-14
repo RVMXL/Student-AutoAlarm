@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== Общее ==== -->
+    <string name="app_name">Автобудильник КГЭУ</string>
+    <string name="action_cancel">Кире алыу</string>
+    <string name="action_ok">ОК</string>
+    <string name="action_save">Һаҡлау</string>
+    <string name="action_done">Әҙер</string>
+    <string name="action_edit">Үҙгәртеү</string>
+    <string name="action_reset">Ҡайтарыу</string>
+    <string name="action_retry">Ҡабатлау</string>
+    <string name="action_allow">Рөхсәт итеү</string>
+    <string name="action_fix">Төҙөтеү</string>
+    <string name="action_refresh">Яңыртыу</string>
+    <string name="action_change">Алмаштырыу</string>
+    <string name="action_next">Артабан</string>
+    <string name="action_back">Артҡа</string>
+    <string name="action_start">Башлау</string>
+    <string name="action_add">Өҫтәү</string>
+    <string name="action_load">Тейәү</string>
+    <string name="action_understood">Аңлашылды</string>
+
+    <!-- ==== Нижняя навигация ==== -->
+    <string name="nav_home">Төп</string>
+    <string name="nav_schedule">Расписание</string>
+    <string name="nav_settings">Көйләүҙәр</string>
+
+    <!-- ==== Единицы и форматирования ==== -->
+    <string name="fmt_offset_m">%1$d мин</string>
+    <string name="fmt_offset_h">%1$d сәғ</string>
+    <string name="fmt_offset_hm">%1$d сәғ %2$d мин</string>
+    <string name="fmt_days_short">%1$d көн</string>
+    <string name="fmt_time_alarm_will_ring">будильник шылтыратыр сәғәт</string>
+
+    <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
+    <string name="day_short_1">Дш</string>
+    <string name="day_short_2">Шш</string>
+    <string name="day_short_3">Шр</string>
+    <string name="day_short_4">Кс</string>
+    <string name="day_short_5">Йм</string>
+    <string name="day_short_6">Шб</string>
+    <string name="day_short_7">Як</string>
+
+    <!-- ==== Язык ==== -->
+    <string name="lang_title">Тел</string>
+    <string name="lang_subtitle">Интерфейс телен һайла — уны һуңынан көйләүҙәрҙә үҙгәртергә мөмкин</string>
+    <string name="lang_system">Система теле</string>
+    <string name="set_language">Тел</string>
+    <string name="set_language_desc">Ҡушымта интерфейсы теле</string>
+
+    <!-- ==== Мастер настройки ==== -->
+    <string name="setup_step_of">Аҙым %1$d / %2$d</string>
+    <string name="setup_welcome_subtitle">Университет расписание буйынса беренсе пара алдынан телефондың ҡәғәҙәтге сәғәт ҡушымтаһында будильник ҡуя. Бер минутта көйләп бөтөрбөҙ.</string>
+    <string name="setup_university">Ҡазан дәүләт энергетика университеты (КГЭУ)</string>
+    <string name="setup_official_api">kabinet.kgeu.ru рәсми API-һы</string>
+    <string name="setup_who_are_you">Һин кем?</string>
+    <string name="role_student">Студент</string>
+    <string name="role_student_subtitle">Минең группа расписание буйынса будильник</string>
+    <string name="role_teacher">Уҡытыусы</string>
+    <string name="role_teacher_subtitle">Минең паралар расписание буйынса будильник</string>
+    <string name="setup_search_hint">Яҙа башла: А-1-23 …</string>
+    <string name="setup_found">Табылды: %1$d</string>
+    <string name="setup_found_capped">Табылды: %1$d (тәүге %2$d күрһәтелгән)</string>
+    <string name="setup_load_failed">Исемлекте тейәп булманы</string>
+    <string name="setup_check_internet">Интернетты тикшер һәм тағы ла бер тапҡыр ҡабатла</string>
+    <string name="setup_nothing_found">Бер нәмә лә табылманы</string>
+    <string name="setup_pick_role_first">Тәүҙә кем икәнеңде һайла</string>
+    <string name="setup_course">%1$d курс</string>
+    <string name="setup_wake_question">Беренсе параға тиклем ғәҙәттә ни тиклем алдан уянаһың?</string>
+    <string name="setup_example">Беренсе пара сәғәт 08:30 → будильник сәғәт %1$s</string>
+    <string name="setup_done_all">Барыһы ла әҙер!</string>
+    <string name="setup_finish_mode_note">„Стандарт“ режимы: һәр төндә будильник иртәгәгә ҡуйыла. Уны һуңынан көйләүҙәрҙә үҙгәртеп була.</string>
+    <string name="setup_no_target">Маҡсат һайланмаған — артҡа ҡайтып, группа йәки уҡытыусы һайла</string>
+    <string name="summary_group">Группа</string>
+    <string name="summary_teacher">Уҡытыусы</string>
+    <string name="summary_wake_offset">Беренсе параға тиклем уяныу</string>
+    <string name="profile_no_target">Маҡсат һайланмаған</string>
+
+    <!-- ==== Главный экран ==== -->
+    <string name="home_title">Автобудильник</string>
+    <string name="cd_refresh_schedule">Расписание яңыртыу</string>
+    <string name="mode_week_chip">%1$d көнгә</string>
+    <string name="mode_standard_chip">Стандарт</string>
+    <string name="loading_settings">Көйләүҙәр тейәлә…</string>
+    <string name="alarm_off_title">Будильник һүндерелгән</string>
+    <string name="alarm_off_subtitle">Аҫтағы тумблер менән ҡабыҙ</string>
+    <string name="refreshing">Расписание яңыртыла…</string>
+    <string name="not_loaded_title">Расписание әлегә тейәлмәгән</string>
+    <string name="not_loaded_hint">kabinet.kgeu.ru сайтынан параларҙы тейә — бында уяныу ваҡыты күренәсәк</string>
+    <string name="tomorrow_free_title">Иртәгә паралар юҡ</string>
+    <string name="tomorrow_free_sub">будильник ҡуйылмай</string>
+    <string name="tomorrow_label">Иртәгә · %1$s</string>
+    <string name="today_label">Бөгөн</string>
+    <string name="tomorrow_label_short">Иртәгә</string>
+    <string name="badge_replacement">алмаш</string>
+    <string name="room_prefix">ауд. %1$s</string>
+    <string name="lesson_at">пара сәғәт %1$s</string>
+    <string name="own_event_at">үҙ ваҡиғаң сәғәт %1$s</string>
+    <string name="home_auto_title">Авто-будильник</string>
+    <string name="home_auto_subtitle">Беренсе пара алдынан ҡәғәҙәтге сәғәттә будильник ҡуя</string>
+    <string name="home_week_title">Бер нисә көнгә алдан</string>
+    <string name="home_week_desc">Аҙна көндәре буйынса ҡабатланған будильниктар — система ҡушымтаны үлтерһә, страховка булып ҡала</string>
+    <string name="btn_set_for_days">%1$d көнгә ҡуйырға</string>
+    <string name="chip_weekly_repeat">Һәр аҙнала ҡабатлана</string>
+    <string name="home_week_note">Будильниктар һәр аҙнала ҡабатлана; артыҡтары ҡәғәҙәтге сәғәттә һүндерелә («Будильниктар исемлеге» — ҡушымта көйләүҙәрендә)</string>
+    <string name="home_upcoming_title">Алдағы дәрестәр</string>
+    <string name="home_no_pairs">Паралар юҡ</string>
+
+    <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
+    <string name="week_result_delivered">Ҡабатланған будильниктар ҡуйылды: %1$d</string>
+    <string name="week_result_delivered_note">Ҡабатланған будильниктар ҡуйылды: %1$d (аҙна көндәре буйынса)</string>
+    <string name="week_result_uptodate">Будильниктар инде ҡуйылған — расписание үҙгәрмәгән</string>
+    <string name="week_result_empty">Алдағы паралар табылманы</string>
+
+    <!-- ==== Диагностика на главном ==== -->
+    <string name="dialog_exact_alarms_title">Аныҡ будильниктар тыйылған</string>
+    <string name="dialog_exact_alarms_desc">Рөхсәтһеҙ система будильникты иҫәпләнгән ваҡытта теүәл ҡуя алмаясаҡ.</string>
+    <string name="dialog_battery_title">Батарея оптимизацияһы ҡамасаулауы мөмкин</string>
+    <string name="dialog_battery_desc">Агрессив энергия һаҡлау режимы төнөн расписание яңынан тикшереүҙе ғәмәлдән сығарыуы мөмкин.</string>
+    <string name="dialog_stale_title">Расписание 3 көндән артыҡ яңыртылмаған</string>
+    <string name="dialog_stale_desc">Вузҙа расписание йыш үҙгәртәләр — яңы мәғлүмәттәрҙе тейәп ал.</string>
+
+    <!-- ==== Снекбары обновления ==== -->
+    <string name="err_no_target">Тәүҙә көйләүҙәрҙә группа йәки уҡытыусы һайла</string>
+    <string name="msg_refreshed">Расписание яңыртылды</string>
+    <string name="refresh_empty_week">Яңыртылды: был аҙнала паралар юҡ</string>
+    <string name="refresh_ok_count">Расписание яңыртылды — аҙнала паралар: %1$d</string>
+    <string name="refresh_no_connection">kabinet.kgeu.ru менән бәйләнеш юҡ — һаҡланған кэш күрһәтелә</string>
+    <string name="refresh_network">Сеть юҡ — һаҡланған кэш күрһәтелә</string>
+    <string name="refresh_error">Яңыртыу хатаһы: %1$s</string>
+    <string name="err_unknown_cause">билдәһеҙ сәбәп</string>
+
+    <!-- ==== Экран расписания ==== -->
+    <string name="cd_prev_week">Үткән аҙна</string>
+    <string name="cd_next_week">Киләһе аҙна</string>
+    <string name="cd_go_today">Ағымдағы аҙнаға һәм бөгөнгө көнгә күсеү</string>
+    <string name="cd_refresh_week">Аҙнаны яңыртыу</string>
+    <string name="badge_this_week">был аҙна</string>
+    <string name="snackbar_excluded_on">„%1$s“ алдында будильник ҡуйылмай</string>
+    <string name="snackbar_excluded_off">Айырым осраҡ алынды</string>
+    <string name="cd_enable_alarm">Был параның алдында будильникты ҡабыҙыу</string>
+    <string name="cd_disable_alarm">Был параның алдында будильник ҡуймау</string>
+    <string name="empty_no_lessons">Дәрестәр юҡ</string>
+    <string name="empty_no_alarm_needed">Был көндө будильник кәрәкмәйәсәк</string>
+
+    <!-- ==== Уведомления ==== -->
+    <string name="notif_channel_name">Авто-будильник статусы</string>
+    <string name="notif_channel_desc">Ҡуйылған һәм ҡуйылмаған будильниктар тураһында хәбәрҙәр</string>
+    <string name="notif_alarm_set">Будильник ҡуйылды: %1$s</string>
+    <string name="notif_skipped_title">Будильник ҡуйылманы</string>
+    <string name="notif_week_one">1 ҡабатланған будильник ҡуйылды</string>
+    <string name="notif_week_many">Ҡабатланған будильниктар ҡуйылды: %1$d</string>
+    <string name="notif_week_text">паралар булған аҙна көндәрендә (%1$s – %2$s), һәр аҙнала ҡабатлана</string>
+    <string name="notif_week_already_title">Аҙнаға будильниктар инде ҡуйылған</string>
+    <string name="notif_week_already_text">Расписание уяныу ваҡыттарын үҙгәртмәгән — ҡабаттан ҡуйырға кәрәкмәй</string>
+    <string name="notif_reminder_title">Будильник ҡуйырға онотма</string>
+    <string name="notif_reminder_text">Иртәгә, %1$s: пара сәғәт %2$s — %3$s. Будильник ҡуйырға онотма.</string>
+    <string name="notif_sync_title">Расписание синхронизацияһы</string>
+    <string name="notif_sync_text">КГЭУ расписаниеһын яңыртабыҙ</string>
+    <string name="notif_details_room">%1$s, ауд. %2$s</string>
+
+    <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">паралар юҡ</string>
+    <string name="skip_no_upcoming">алдағы паралар табылманы</string>
+    <string name="skip_clock_refused">Телефон сәғәте бойороҡто ҡабул итмәне — көйләүҙәрҙә «Будильник иҫкәрмәһен» ҡабыҙ</string>
+    <string name="test_alarm_label">Тест: Автобудильник эшләй!</string>
+    <string name="test_alarm_ok">2 минутҡа будильник ҡуйылды — сәғәтте тикшер</string>
+    <string name="test_alarm_fail">Тест будильнигын ҡуйып булманы — сәғәт яуап бирмәй</string>
+
+    <!-- ==== Настройки: секции ==== -->
+    <string name="sec_profile">Профиль</string>
+    <string name="sec_alarm">Будильник</string>
+    <string name="sec_reminder">Будильник иҫкәрмәһе</string>
+    <string name="sec_exceptions">Айырым осраҡтар</string>
+    <string name="sec_custom_events">Үҙ ваҡиғаларың</string>
+    <string name="sec_appearance">Тышҡы күренеш</string>
+    <string name="sec_system">Система</string>
+    <string name="sec_about">Ҡушымта тураһында</string>
+
+    <!-- ==== Настройки: профиль ==== -->
+    <string name="profile_change_note">Маҡсатты алмаштырғанда уяныу ваҡыты һәм көйләүҙәр һаҡланып ҡала</string>
+
+    <!-- ==== Настройки: будильник ==== -->
+    <string name="set_auto_title">Авто-будильник</string>
+    <string name="set_show_clock">Будильник ҡуйылғанда сәғәтте күрһәтеү</string>
+    <string name="set_show_clock_desc">Будильниктар үҙҙәре ҡуйылмаһа, ҡабыҙ (Realme, Oppo, Huawei): сәғәт әҙер будильник менән асыласаҡ — «Һаҡлау» төймәһе менән раҫла.</string>
+    <string name="set_wake_offset">Беренсе параға тиклем %1$s ҡалғас уяныу</string>
+    <string name="set_offset_example">Беренсе пара сәғәт 08:30 → будильник сәғәт %1$s</string>
+    <string name="set_per_pair">Һәр парала уяныу</string>
+    <string name="set_per_pair_desc">Һәр беренсе пара өсөн йыйылырға айырым ваҡыт: иртә паралар алдынан — әҙерәк, һуңғылары алдынан — күберәк, иртәнге ашҡа өлгөрөр өсөн. Үҙ ҡиммәте булмаған паралар өҫтәге дөйөм уяныуҙы ҡуллана.</string>
+    <string name="set_pairs_after_sync">Паралар ваҡыттары расписание синхронизацияланғандан һуң күренәсәк</string>
+    <string name="pair_at">Пара сәғәт %1$s</string>
+    <string name="pair_custom_offset">Уяныу: %1$s → будильник сәғәт %2$s</string>
+    <string name="pair_common_offset">Дөйөм уяныу: %1$s</string>
+    <string name="set_mode">Режим</string>
+    <string name="mode_standard_title">Стандарт — иртәгәгә</string>
+    <string name="mode_standard_desc">Һәр төндә будильник иртәгәгә күсереп ҡуйыла</string>
+    <string name="mode_week_title">Бер нисә көнгә алдан</string>
+    <string name="mode_week_desc">Аҙнаның һәр уҡыу көнөнә ҡабатланған будильник — процестарҙы үлтереүҙән страховка; ағымдағы расписание буйынса һәр аҙнала ҡабатлана, аҫтағы төймә менән һүндерергә мөмкин</string>
+    <string name="mode_week_window">Паралар эҙләү осоро: %1$s — паралар булған аҙна көндәренең бөтәһенә будильниктар</string>
+    <string name="btn_set_now">Хәҙер ҡуйырға</string>
+    <string name="btn_disable_app_alarms">Ҡушымта будильниктарын һүндереү</string>
+    <string name="disable_alarms_desc">Төймә сәғәткә «Авто: Пн»…«Авто: Вс» теүәл билдәләре буйынса һүндереү бойороғон ебәрә. Оболочка бойороҡто ҡабул итмәһә (Realme UI/ColorOS-тың бер өлөшө — система сикләүе), ҡушымта будильниктар исемлеген үҙе асасаҡ — «Авто:» билдәләрен ҡул менән алып ташла.</string>
+    <string name="btn_test_alarm">Будильникты тикшереү</string>
+    <string name="btn_alarm_list">Будильниктар исемлеге</string>
+    <string name="alarms_list_open_failed">Сәғәт будильниктар исемлеген асманы</string>
+    <string name="dismiss_alarms_sent">Һүндереү бойороғо сәғәткә ебәрелде (%2$d араһынан %1$d). «Авто: …» будильниктары ҡалған булһа — будильниктар исемлегендә һүндер</string>
+    <string name="dismiss_unsupported_opened">Сәғәт бойороҡ менән һүндереүҙе хупламай (оболочка сикләүе) — будильниктар исемлеген астым: «Авто:» билдәле будильниктарҙы ҡул менән алып ташла</string>
+    <string name="dismiss_unsupported_manual">Сәғәт бойороҡ менән һүндереүҙе хупламай (оболочка сикләүе) — сәғәт ҡушымтаһында будильниктарҙы асып, «Авто:» билдәләрен ҡул менән алып ташла</string>
+
+    <!-- ==== Диалоги настроек: смещение подъёма ==== -->
+    <string name="dialog_offset_title">Параға тиклем уяныу</string>
+    <string name="dialog_offset_example">Беренсе пара сәғәт 08:30 → будильник сәғәт %1$s шылтыратыр</string>
+    <string name="dialog_pair_title">Пара сәғәт %1$s</string>
+    <string name="dialog_pair_example">Пара сәғәт %1$s → будильник сәғәт %2$s шылтыратыр</string>
+
+    <!-- ==== Настройки: напоминание ==== -->
+    <string name="set_reminder_desc">Үҙ хәбәрең: «иртәгә сәғәт нисәлә пара — будильник ҡуйырға онотма»</string>
+    <string name="set_reminder_fallback">Фолбэк — ҡәғәҙәтге сәғәт ҡушымтаның бойороҡтарын ҡабул итмәгән осраҡ өсөн: Realme, Huawei, Xiaomi осраҡтарында күренә (айырыуса ҡытай прошивкаларында). Иртәгә паралар булһа, иҫкәрмә һайланған ваҡытта һәр көн килә.</string>
+    <string name="reminder_time">Иҫкәрмә ваҡыты: %1$s</string>
+    <string name="dialog_reminder_title">Иҫкәрмә ваҡыты</string>
+
+    <!-- ==== Настройки: исключения ==== -->
+    <string name="exceptions_title_desc">Был дисциплиналар алдында будильник ҡуйылмай</string>
+    <string name="exceptions_empty">Әлегә буш — уятырға кәрәкмәгән фәндәрҙе өҫтә</string>
+    <string name="cd_delete_named">Бөтөрөргә: «%1$s»</string>
+    <string name="hint_subject_name">Дисциплина исеме</string>
+    <string name="cd_add_exception">Айырым осраҡ өҫтәү</string>
+    <string name="exceptions_found">Расписаниела табылды:</string>
+
+    <!-- ==== Настройки: свои занятия ==== -->
+    <string name="custom_events_desc">Будильник ваҡыты айырым булған үҙ ваҡиғаларың — секциялар, репетициялар, бер тапҡыр эштәр</string>
+    <string name="custom_empty">Әлегә бер нәмә өҫтәлмәгән</string>
+    <string name="dialog_event_title">Үҙ ваҡиғаң</string>
+    <string name="hint_name">Исем</string>
+    <string name="event_days_mode">Аҙна көндәре буйынса</string>
+    <string name="event_date_mode">Бер генә дата</string>
+    <string name="btn_pick_date">Датаны һайлау</string>
+    <string name="event_time">Ваҡыт: %1$s</string>
+    <string name="event_offset_suffix">· %1$s алдараҡ</string>
+    <string name="event_wake_before">Ваҡиғаға тиклем %1$s ҡалғас уятыу</string>
+    <string name="dialog_event_time_title">Ваҡиға ваҡыты</string>
+
+    <!-- ==== Настройки: оформление ==== -->
+    <string name="set_theme">Тема</string>
+    <string name="theme_system">Система буйынса</string>
+    <string name="theme_light">Яҡты</string>
+    <string name="theme_dark">Ҡараңғы</string>
+    <string name="dynamic_color">Material You (система төҫө)</string>
+    <string name="set_accent">Акцент</string>
+    <string name="accent_amber">Йәнтар</string>
+    <string name="accent_orange">Ҡыҙғылт һары</string>
+    <string name="accent_red">Ҡыҙыл</string>
+    <string name="accent_green">Йәшел</string>
+    <string name="accent_pink">Алһыу</string>
+    <string name="accent_purple">Шәмәхә</string>
+    <string name="schedule_style">Расписание күренеше</string>
+    <string name="style_standard">Стандарт</string>
+    <string name="style_paper">Ҡағыҙ календарь</string>
+    <string name="set_background">Фон</string>
+    <string name="btn_pick_image">Рәсемде һайлау</string>
+    <string name="btn_remove">Алып ташлау</string>
+    <string name="bg_opacity">Аҫҡы ҡат үтә күренеүсәнлеге</string>
+    <string name="set_glass">Быяла эффекты</string>
+    <string name="set_glass_desc">Карталар яртылаш үтә күренеүсән, йылтырһыҙ быяла кеүек; фон рәсеме тоноҡлоғон юғалта</string>
+    <string name="glass_intensity">Быяла дәрәжәһе</string>
+    <string name="glass_tip">Кәңәш: быяла фон рәсеме менән иң яҡшы күренә (өҫтәрәк)</string>
+    <string name="glass_active">Быяла ҡабыҙылған</string>
+
+    <!-- ==== Настройки: система ==== -->
+    <string name="status_exact_allowed">Аныҡ будильниктар рөхсәт ителгән</string>
+    <string name="dialog_exact_off_title">Аныҡ будильниктар система тарафынан һүндерелгән</string>
+    <string name="dialog_exact_off_desc">Төнгө планлаштырыусы будильникты ±10 минут хата менән генә ҡуя алаясаҡ.</string>
+    <string name="dialog_battery2_title">Батарея оптимизацияһы ҡамасаулауы мөмкин</string>
+    <string name="dialog_battery2_desc">Төнгө расписание тикшереүе өҙөлмәһен өсөн ҡушымтаны оптимизациянан алып ташла.</string>
+    <string name="action_disable_optimization">Оптимизацияны һүндереү</string>
+    <string name="autostart_title">Автозапуск һәм агрессив оболочкалар</string>
+    <string name="autostart_desc">MIUI, HarmonyOS һәм башҡа оболочкалар фондағы ҡушымталарҙы үлтерә</string>
+    <string name="btn_instructions">Инструкция</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nХәүефһеҙлек → Ҡушымталар → Автозапуск: Автобудильникды ҡабыҙ; ҡушымтаның батарея көйләүҙәрендә «сикләүләр юҡ» вариантын һайла.</string>
+    <string name="autostart_huawei">Huawei / Honor:\nКөйләүҙәр → Батарея → Ҡушымталарҙы башлау → Автобудильник → Ҡул менән идара: бөтә тумблерҙарҙы ла ҡабыҙ.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nКөйләүҙәр → Батарея → Башҡа көйләүҙәр → Ҡулланыу оптимизацияһы → ҡушымта өсөн оптимизацияны тый; Ҡушымталар менеджеры → Автозапуск.</string>
+    <string name="autostart_samsung">Samsung:\nКөйләүҙәр → Батарея → Фонда сикләүҙәр → Йоҡамай торған ҡушымталар → Автобудильникды өҫтә.</string>
+    <string name="autostart_other">Башҡа оболочка:\nҠушымтаны автозапусҡа өҫтә һәм система көйләүҙәрендә батарея оптимизацияларын алып ташла.</string>
+    <string name="autostart_standard_note">«Стандарт» режимы будильникды һәр төн күсереп ҡуя — ҡушымтаға 00:05-тә фонта башланыу кәрәк.</string>
+
+    <!-- ==== Настройки: о приложении ==== -->
+    <string name="about_version">Автобудильник КГЭУ · v%1$s</string>
+    <string name="about_data">Расписание мәғлүмәттәре: kabinet.kgeu.ru рәсми API-һы. Ҡушымта КГЭУ менән бәйле түгел.</string>
+    <string name="btn_github">GitHub-тағы репозиторий</string>
+</resources>

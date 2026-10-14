@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#FF8F00</color>
+    <!-- Окно в цвет темы ПРИЛОЖЕНИЯ по умолчанию (холодный старт, светлая тема).
+         В рантайме MainActivity перекрашивает окно по ThemeMode (0.5.0):
+         серая каша «светлой темы на тёмной системе» была именно из-за
+         системного windowBackground под полупрозрачными поверхностями. -->
     <color name="window_background">#FFFDF7F0</color>
+    <color name="window_background_light">#FFFDF7F0</color>
+    <color name="window_background_dark">#FF1A1611</color>
 </resources>

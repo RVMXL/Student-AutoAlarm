@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.alarm.NightlyScheduler
 import ru.uniautoalarm.kgeu.data.model.AlarmMode
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
@@ -20,6 +21,7 @@ import ru.uniautoalarm.kgeu.data.model.SyncInfo
 import ru.uniautoalarm.kgeu.data.model.Target
 import ru.uniautoalarm.kgeu.data.model.WeekAheadResult
 import ru.uniautoalarm.kgeu.di.AppContainer
+import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 import ru.uniautoalarm.kgeu.ui.common.refreshErrorMessage
 
 /**
@@ -86,7 +88,7 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             val target = container.settings.current().toTarget()
             if (target == null) {
-                onResult("Сначала выберите группу или преподавателя в настройках")
+                onResult(LocaleHelper.string(container.appContext, R.string.err_no_target))
                 return@launch
             }
             val results = listOf(
@@ -95,8 +97,11 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
             )
             val firstError = results.firstOrNull { it.isFailure }?.exceptionOrNull()
             onResult(
-                if (firstError == null) "Расписание обновлено"
-                else refreshErrorMessage(firstError)
+                if (firstError == null) {
+                    LocaleHelper.string(container.appContext, R.string.msg_refreshed)
+                } else {
+                    refreshErrorMessage(container.appContext, firstError)
+                }
             )
         }
     }

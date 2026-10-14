@@ -25,13 +25,23 @@ import ru.uniautoalarm.kgeu.data.model.ThemeMode
  *
  * Тёмная тема: ThemeMode.SYSTEM → isSystemInDarkTheme(), LIGHT/DARK — явно.
  */
+/**
+ * Светлая/тёмная схема по ThemeMode из настроек (SYSTEM → системная). Вынесено отдельно,
+ * чтобы MainActivity синхронно красил windowBackground в цвет ТЕМЫ ПРИЛОЖЕНИЯ:
+ * раньше окно красилось по системной теме (values-night), и при светлом приложении
+ * на тёмной системе полупрозрачные поверхности («стекло») композитились поверх
+ * почти чёрного окна — получалась серая каша с нечитаемым текстом (баг с Realme).
+ */
+@Composable
+fun resolveDarkTheme(settings: Settings?): Boolean = when (settings?.themeMode) {
+    ThemeMode.DARK -> true
+    ThemeMode.LIGHT -> false
+    ThemeMode.SYSTEM, null -> isSystemInDarkTheme()
+}
+
 @Composable
 fun AutoAlarmTheme(settings: Settings?, content: @Composable () -> Unit) {
-    val darkTheme = when (settings?.themeMode) {
-        ThemeMode.DARK -> true
-        ThemeMode.LIGHT -> false
-        ThemeMode.SYSTEM, null -> isSystemInDarkTheme()
-    }
+    val darkTheme = resolveDarkTheme(settings)
 
     val context = LocalContext.current
     var colorScheme = when {
@@ -48,9 +58,13 @@ fun AutoAlarmTheme(settings: Settings?, content: @Composable () -> Unit) {
     }
 
     // Эффект стекла: все поверхности/карточки становятся полупрозрачными, под ними
-    // просвечивает фон (окно или пользовательская картинка). Интенсивность — ползунок
-    // в настройках (0..1): чем больше, тем прозрачнее. Минимум 0.15 — текст читается.
-    if (settings?.glassEnabled == true) {
+    // просвечивает фоновая картинка. Интенсивность — ползунок в настройках (0..1):
+    // чем больше, тем прозрачнее. Минимум 0.15 — текст читается.
+    // ВАЖНО: стекло применяется ТОЛЬКО при заданной фоновой картинке. Без картинки
+    // полупрозрачные поверхности композитились бы с windowBackground — при тёмной
+    // системе и светлой теме это давало серую кашу («текст сливается»); без картинки
+    // в стекле нет смысла, поэтому схема остаётся плотной и контрастной.
+    if (settings?.glassEnabled == true && settings.backgroundImagePath != null) {
         val glassAlpha = (1f - settings.glassIntensity * 0.85f).coerceIn(0.15f, 1f)
         colorScheme = colorScheme.copy(
             background = colorScheme.background.copy(alpha = glassAlpha),

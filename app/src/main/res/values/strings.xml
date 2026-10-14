@@ -1,4 +1,291 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ==== Общее ==== -->
     <string name="app_name">Автобудильник КГЭУ</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_ok">ОК</string>
+    <string name="action_save">Сохранить</string>
+    <string name="action_done">Готово</string>
+    <string name="action_edit">Изменить</string>
+    <string name="action_reset">Сбросить</string>
+    <string name="action_retry">Повторить</string>
+    <string name="action_allow">Разрешить</string>
+    <string name="action_fix">Исправить</string>
+    <string name="action_refresh">Обновить</string>
+    <string name="action_change">Сменить</string>
+    <string name="action_next">Далее</string>
+    <string name="action_back">Назад</string>
+    <string name="action_start">Начать</string>
+    <string name="action_add">Добавить</string>
+    <string name="action_load">Загрузить</string>
+    <string name="action_understood">Понятно</string>
+
+    <!-- ==== Нижняя навигация ==== -->
+    <string name="nav_home">Главная</string>
+    <string name="nav_schedule">Расписание</string>
+    <string name="nav_settings">Настройки</string>
+
+    <!-- ==== Единицы и форматирования ==== -->
+    <string name="fmt_offset_m">%1$d мин</string>
+    <string name="fmt_offset_h">%1$d ч</string>
+    <string name="fmt_offset_hm">%1$d ч %2$d мин</string>
+    <string name="fmt_days_short">%1$d дн.</string>
+    <string name="fmt_time_alarm_will_ring">будильник прозвонит в</string>
+
+    <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
+    <string name="day_short_1">Пн</string>
+    <string name="day_short_2">Вт</string>
+    <string name="day_short_3">Ср</string>
+    <string name="day_short_4">Чт</string>
+    <string name="day_short_5">Пт</string>
+    <string name="day_short_6">Сб</string>
+    <string name="day_short_7">Вс</string>
+
+    <!-- ==== Язык ==== -->
+    <string name="lang_title">Язык</string>
+    <string name="lang_subtitle">Выберите язык интерфейса — позже можно изменить в настройках</string>
+    <string name="lang_system">Язык системы</string>
+    <string name="set_language">Язык</string>
+    <string name="set_language_desc">Язык интерфейса приложения</string>
+
+    <!-- ==== Мастер настройки ==== -->
+    <string name="setup_step_of">Шаг %1$d из %2$d</string>
+    <string name="setup_welcome_subtitle">Ставит будильник в стоковые часы перед первой парой — по расписанию университета. Настроим за минуту.</string>
+    <string name="setup_university">Казанский государственный энергетический университет (КГЭУ)</string>
+    <string name="setup_official_api">официальный API kabinet.kgeu.ru</string>
+    <string name="setup_who_are_you">Кто вы?</string>
+    <string name="role_student">Студент</string>
+    <string name="role_student_subtitle">Будильник по расписанию моей группы</string>
+    <string name="role_teacher">Преподаватель</string>
+    <string name="role_teacher_subtitle">Будильник по расписанию моих пар</string>
+    <string name="setup_search_hint">Начните вводить: А-1-23 …</string>
+    <string name="setup_found">Найдено: %1$d</string>
+    <string name="setup_found_capped">Найдено: %1$d (показаны первые %2$d)</string>
+    <string name="setup_load_failed">Не удалось загрузить список</string>
+    <string name="setup_check_internet">Проверьте интернет и попробуйте ещё раз</string>
+    <string name="setup_nothing_found">Ничего не найдено</string>
+    <string name="setup_pick_role_first">Сначала выберите, кто вы</string>
+    <string name="setup_course">курс %1$d</string>
+    <string name="setup_wake_question">За сколько вы обычно встаёте до первой пары?</string>
+    <string name="setup_example">Первая пара в 08:30 → будильник на %1$s</string>
+    <string name="setup_done_all">Всё готово!</string>
+    <string name="setup_finish_mode_note">Режим „Стандарт“: каждую ночь будильник на завтра. Потом можно сменить в настройках.</string>
+    <string name="setup_no_target">Цель не выбрана — вернитесь назад и выберите группу или преподавателя</string>
+    <string name="summary_group">Группа</string>
+    <string name="summary_teacher">Преподаватель</string>
+    <string name="summary_wake_offset">Подъём до первой пары</string>
+    <string name="profile_no_target">Цель не выбрана</string>
+
+    <!-- ==== Главный экран ==== -->
+    <string name="home_title">Автобудильник</string>
+    <string name="cd_refresh_schedule">Обновить расписание</string>
+    <string name="mode_week_chip">На %1$d дней</string>
+    <string name="mode_standard_chip">Стандарт</string>
+    <string name="loading_settings">Загрузка настроек…</string>
+    <string name="alarm_off_title">Будильник выключен</string>
+    <string name="alarm_off_subtitle">Включите тумблером ниже</string>
+    <string name="refreshing">Обновляем расписание…</string>
+    <string name="not_loaded_title">Расписание ещё не загружено</string>
+    <string name="not_loaded_hint">Подтяните пары из kabinet.kgeu.ru — здесь появится время подъёма</string>
+    <string name="tomorrow_free_title">Завтра пар нет</string>
+    <string name="tomorrow_free_sub">будильник не ставится</string>
+    <string name="tomorrow_label">Завтра · %1$s</string>
+    <string name="today_label">Сегодня</string>
+    <string name="tomorrow_label_short">Завтра</string>
+    <string name="badge_replacement">замена</string>
+    <string name="room_prefix">ауд. %1$s</string>
+    <string name="lesson_at">пара в %1$s</string>
+    <string name="own_event_at">своё занятие в %1$s</string>
+    <string name="home_auto_title">Авто-будильник</string>
+    <string name="home_auto_subtitle">Ставит будильник в стоковые часы перед первой парой</string>
+    <string name="home_week_title">На несколько дней вперёд</string>
+    <string name="home_week_desc">Повторяющиеся будильники по дням недели — страховка, если система убивает приложение</string>
+    <string name="btn_set_for_days">Поставить на %1$d дней</string>
+    <string name="chip_weekly_repeat">Повторяются еженедельно</string>
+    <string name="home_week_note">Будильники повторяются еженедельно; лишние отключаются в стоковых часах («Список будильников» — в настройках приложения)</string>
+    <string name="home_upcoming_title">Ближайшие занятия</string>
+    <string name="home_no_pairs">Пар нет</string>
+
+    <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
+    <string name="week_result_delivered">Поставлено повторяющихся будильников: %1$d</string>
+    <string name="week_result_delivered_note">Поставлено повторяющихся будильников: %1$d (по дням недели)</string>
+    <string name="week_result_uptodate">Будильники уже стоят — расписание не менялось</string>
+    <string name="week_result_empty">Предстоящих пар не нашлось</string>
+
+    <!-- ==== Диагностика на главном ==== -->
+    <string name="dialog_exact_alarms_title">Точные будильники запрещены</string>
+    <string name="dialog_exact_alarms_desc">Без разрешения система не позволит ставить будильник точно в рассчитанное время.</string>
+    <string name="dialog_battery_title">Оптимизация батареи может мешать</string>
+    <string name="dialog_battery_desc">Агрессивный энергосберегающий режим может снимать ночную перепроверку расписания.</string>
+    <string name="dialog_stale_title">Расписание не обновлялось более 3 дней</string>
+    <string name="dialog_stale_desc">Расписание вуза часто меняют — подтяните свежие данные.</string>
+
+    <!-- ==== Снекбары обновления ==== -->
+    <string name="err_no_target">Сначала выберите группу или преподавателя в настройках</string>
+    <string name="msg_refreshed">Расписание обновлено</string>
+    <string name="refresh_empty_week">Обновлено: пар на этой неделе нет</string>
+    <string name="refresh_ok_count">Расписание обновлено — пар на неделе: %1$d</string>
+    <string name="refresh_no_connection">Нет связи с kabinet.kgeu.ru — показан сохранённый кэш</string>
+    <string name="refresh_network">Сеть недоступна — показан сохранённый кэш</string>
+    <string name="refresh_error">Ошибка обновления: %1$s</string>
+    <string name="err_unknown_cause">неизвестная причина</string>
+
+    <!-- ==== Экран расписания ==== -->
+    <string name="cd_prev_week">Предыдущая неделя</string>
+    <string name="cd_next_week">Следующая неделя</string>
+    <string name="cd_go_today">Перейти к текущей неделе и сегодняшнему дню</string>
+    <string name="cd_refresh_week">Обновить неделю</string>
+    <string name="badge_this_week">эта неделя</string>
+    <string name="snackbar_excluded_on">Перед „%1$s“ будильник не ставится</string>
+    <string name="snackbar_excluded_off">Исключение снято</string>
+    <string name="cd_enable_alarm">Включить будильник перед этой парой</string>
+    <string name="cd_disable_alarm">Не ставить будильник перед этой парой</string>
+    <string name="empty_no_lessons">Занятий нет</string>
+    <string name="empty_no_alarm_needed">В этот день будильник не понадобится</string>
+
+    <!-- ==== Уведомления ==== -->
+    <string name="notif_channel_name">Статус авто-будильника</string>
+    <string name="notif_channel_desc">Сообщения о поставленных и пропущенных будильниках</string>
+    <string name="notif_alarm_set">Будильник поставлен на %1$s</string>
+    <string name="notif_skipped_title">Будильник не поставлен</string>
+    <string name="notif_week_one">Поставлен 1 повторяющийся будильник</string>
+    <string name="notif_week_many">Поставлено повторяющихся будильников: %1$d</string>
+    <string name="notif_week_text">по дням недели с парами (%1$s – %2$s), повтор еженедельно</string>
+    <string name="notif_week_already_title">Будильники на неделю уже стоят</string>
+    <string name="notif_week_already_text">Расписание не меняло времена подъёма — переставлять не нужно</string>
+    <string name="notif_reminder_title">Не забудьте поставить будильник</string>
+    <string name="notif_reminder_text">Завтра, %1$s: пара в %2$s — %3$s. Не забудьте поставить будильник.</string>
+    <string name="notif_sync_title">Синхронизация расписания</string>
+    <string name="notif_sync_text">Обновляем расписание КГЭУ</string>
+    <string name="notif_details_room">%1$s, ауд. %2$s</string>
+
+    <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">пар нет</string>
+    <string name="skip_no_upcoming">предстоящих пар не нашлось</string>
+    <string name="skip_clock_refused">часы телефона не приняли команду — включите «Напоминание о будильнике» в настройках</string>
+    <string name="test_alarm_label">Тест: Автобудильник работает!</string>
+    <string name="test_alarm_ok">Будильник на 2 минуты поставлен — проверь часы</string>
+    <string name="test_alarm_fail">Не удалось поставить тестовый будильник — часы не отвечают</string>
+
+    <!-- ==== Настройки: секции ==== -->
+    <string name="sec_profile">Профиль</string>
+    <string name="sec_alarm">Будильник</string>
+    <string name="sec_reminder">Напоминание о будильнике</string>
+    <string name="sec_exceptions">Исключения</string>
+    <string name="sec_custom_events">Свои занятия</string>
+    <string name="sec_appearance">Оформление</string>
+    <string name="sec_system">Система</string>
+    <string name="sec_about">О приложении</string>
+
+    <!-- ==== Настройки: профиль ==== -->
+    <string name="profile_change_note">Смена цели не сбросит смещение подъёма и настройки</string>
+
+    <!-- ==== Настройки: будильник ==== -->
+    <string name="set_auto_title">Авто-будильник</string>
+    <string name="set_show_clock">Показывать часы при постановке</string>
+    <string name="set_show_clock_desc">Включите, если будильники не ставятся сами (Realme, Oppo, Huawei): часы откроются с готовым будильником — подтвердите кнопкой «Сохранить».</string>
+    <string name="set_wake_offset">Подъём за %1$s до первой пары</string>
+    <string name="set_offset_example">Первая пара в 08:30 → будильник в %1$s</string>
+    <string name="set_per_pair">Подъём под каждую пару</string>
+    <string name="set_per_pair_desc">Свой запас на сборы для каждой первой пары: перед ранней — поменьше, а перед поздней — побольше, чтобы успеть позавтракать. Пары без своего значения используют общий подъём выше.</string>
+    <string name="set_pairs_after_sync">Времена пар появятся после синхронизации расписания</string>
+    <string name="pair_at">Пара в %1$s</string>
+    <string name="pair_custom_offset">Подъём за %1$s → будильник в %2$s</string>
+    <string name="pair_common_offset">Общий подъём: за %1$s</string>
+    <string name="set_mode">Режим</string>
+    <string name="mode_standard_title">Стандарт — на завтра</string>
+    <string name="mode_standard_desc">Каждую ночь будильник переставляется на завтра</string>
+    <string name="mode_week_title">На несколько дней вперёд</string>
+    <string name="mode_week_desc">Повторяющийся будильник на каждый учебный день недели — страховка от убийства процессов; повторяются еженедельно по актуальному расписанию, отключить можно кнопкой ниже</string>
+    <string name="mode_week_window">Окно поиска пар: %1$s — будильники на все дни недели с парами</string>
+    <string name="btn_set_now">Поставить сейчас</string>
+    <string name="btn_disable_app_alarms">Отключить будильники приложения</string>
+    <string name="disable_alarms_desc">Кнопка отправляет в часы команду отключения по точным меткам «Авто: Пн»…«Авто: Вс». Если оболочка команду не принимает (часть Realme UI/ColorOS — ограничение системы), приложение само откроет список будильников — снимите метки «Авто:» вручную.</string>
+    <string name="btn_test_alarm">Проверить будильник</string>
+    <string name="btn_alarm_list">Список будильников</string>
+    <string name="alarms_list_open_failed">Часы не открыли список будильников</string>
+    <string name="dismiss_alarms_sent">Команда отключения отправлена в часы (%1$d из %2$d). Если будильники «Авто: …» остались — отключите их в списке будильников</string>
+    <string name="dismiss_unsupported_opened">Часы не поддерживают отключение командой (ограничение оболочки) — открыл список будильников: снимите будильники с меткой «Авто:» вручную</string>
+    <string name="dismiss_unsupported_manual">Часы не поддерживают отключение командой (ограничение оболочки) — откройте будильники в приложении часов и снимите метки «Авто:» вручную</string>
+
+    <!-- ==== Диалоги настроек: смещение подъёма ==== -->
+    <string name="dialog_offset_title">Подъём до пары</string>
+    <string name="dialog_offset_example">Первая пара в 08:30 → будильник прозвонит в %1$s</string>
+    <string name="dialog_pair_title">Пара в %1$s</string>
+    <string name="dialog_pair_example">Пара в %1$s → будильник прозвонит в %2$s</string>
+
+    <!-- ==== Настройки: напоминание ==== -->
+    <string name="set_reminder_desc">Своё уведомление: «завтра пара во столько — не забудьте поставить будильник»</string>
+    <string name="set_reminder_fallback">Фолбэк, когда стоковые часы не принимают команды приложения — встречается на Realme, Huawei, Xiaomi (особенно китайские прошивки). Напоминание приходит каждый день в выбранное время, если на завтра есть пара.</string>
+    <string name="reminder_time">Время напоминания: %1$s</string>
+    <string name="dialog_reminder_title">Время напоминания</string>
+
+    <!-- ==== Настройки: исключения ==== -->
+    <string name="exceptions_title_desc">Будильник не ставится перед этими дисциплинами</string>
+    <string name="exceptions_empty">Пока пусто — добавьте предметы, перед которыми будить не нужно</string>
+    <string name="cd_delete_named">Удалить «%1$s»</string>
+    <string name="hint_subject_name">Название дисциплины</string>
+    <string name="cd_add_exception">Добавить исключение</string>
+    <string name="exceptions_found">Найдено в расписании:</string>
+
+    <!-- ==== Настройки: свои занятия ==== -->
+    <string name="custom_events_desc">Свои события с отдельным временем будильника — секции, репетиции, разовые дела</string>
+    <string name="custom_empty">Пока ничего не добавлено</string>
+    <string name="dialog_event_title">Своё занятие</string>
+    <string name="hint_name">Название</string>
+    <string name="event_days_mode">По дням недели</string>
+    <string name="event_date_mode">Одна дата</string>
+    <string name="btn_pick_date">Выбрать дату</string>
+    <string name="event_time">Время: %1$s</string>
+    <string name="event_offset_suffix">· за %1$s</string>
+    <string name="event_wake_before">Будить за %1$s до события</string>
+    <string name="dialog_event_time_title">Время события</string>
+
+    <!-- ==== Настройки: оформление ==== -->
+    <string name="set_theme">Тема</string>
+    <string name="theme_system">Системная</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="dynamic_color">Material You (цвет системы)</string>
+    <string name="set_accent">Акцент</string>
+    <string name="accent_amber">Янтарь</string>
+    <string name="accent_orange">Оранжевый</string>
+    <string name="accent_red">Красный</string>
+    <string name="accent_green">Зелёный</string>
+    <string name="accent_pink">Розовый</string>
+    <string name="accent_purple">Фиолетовый</string>
+    <string name="schedule_style">Стиль расписания</string>
+    <string name="style_standard">Стандарт</string>
+    <string name="style_paper">Бумажный календарь</string>
+    <string name="set_background">Фон</string>
+    <string name="btn_pick_image">Выбрать картинку</string>
+    <string name="btn_remove">Убрать</string>
+    <string name="bg_opacity">Прозрачность подложки</string>
+    <string name="set_glass">Эффект стекла</string>
+    <string name="set_glass_desc">Карточки полупрозрачные, как матовое стекло; фоновая картинка размывается</string>
+    <string name="glass_intensity">Интенсивность стекла</string>
+    <string name="glass_tip">Совет: стекло лучше всего смотрится с фоновой картинкой (выше)</string>
+    <string name="glass_active">Стекло активно</string>
+
+    <!-- ==== Настройки: система ==== -->
+    <string name="status_exact_allowed">Точные будильники разрешены</string>
+    <string name="dialog_exact_off_title">Точные будильники отключены системой</string>
+    <string name="dialog_exact_off_desc">Ночной планировщик сможет ставить будильник только с погрешностью ±10 минут.</string>
+    <string name="dialog_battery2_title">Оптимизация батареи может мешать</string>
+    <string name="dialog_battery2_desc">Исключите приложение из оптимизации, чтобы ночная перепроверка расписания не срывалась.</string>
+    <string name="action_disable_optimization">Отключить оптимизацию</string>
+    <string name="autostart_title">Автозапуск и агрессивные оболочки</string>
+    <string name="autostart_desc">MIUI, HarmonyOS и другие оболочки убивают фоновые приложения</string>
+    <string name="btn_instructions">Инструкция</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nБезопасность → Приложения → Автозапуск: включи Автобудильник; в настройках батареи приложения выбери «нет ограничений».</string>
+    <string name="autostart_huawei">Huawei / Honor:\nНастройки → Батарея → Запуск приложений → Автобудильник → Управлять вручную: включи все переключатели.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nНастройки → Батарея → Ещё настройки → Оптимизация потребления → запрети оптимизацию для приложения; Менеджер приложений → Автозапуск.</string>
+    <string name="autostart_samsung">Samsung:\nНастройки → Батарея → Ограничения в фоне → Не спящие приложения → добавь Автобудильник.</string>
+    <string name="autostart_other">Другая оболочка:\nДобавь приложение в автозапуск и сними оптимизации батареи в настройках системы.</string>
+    <string name="autostart_standard_note">Режим «Стандарт» переставляет будильник каждую ночь — приложению нужен запуск в фоне в 00:05.</string>
+
+    <!-- ==== Настройки: о приложении ==== -->
+    <string name="about_version">Автобудильник КГЭУ · v%1$s</string>
+    <string name="about_data">Данные расписания: официальный API kabinet.kgeu.ru. Приложение не аффилировано с КГЭУ.</string>
+    <string name="btn_github">Репозиторий на GitHub</string>
 </resources>

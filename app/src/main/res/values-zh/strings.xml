@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== Общее ==== -->
+    <string name="app_name">喀山动力大学自动闹钟</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_ok">确定</string>
+    <string name="action_save">保存</string>
+    <string name="action_done">完成</string>
+    <string name="action_edit">编辑</string>
+    <string name="action_reset">重置</string>
+    <string name="action_retry">重试</string>
+    <string name="action_allow">允许</string>
+    <string name="action_fix">修复</string>
+    <string name="action_refresh">刷新</string>
+    <string name="action_change">更换</string>
+    <string name="action_next">下一步</string>
+    <string name="action_back">返回</string>
+    <string name="action_start">开始</string>
+    <string name="action_add">添加</string>
+    <string name="action_load">加载</string>
+    <string name="action_understood">我知道了</string>
+
+    <!-- ==== Нижняя навигация ==== -->
+    <string name="nav_home">首页</string>
+    <string name="nav_schedule">课程表</string>
+    <string name="nav_settings">设置</string>
+
+    <!-- ==== Единицы и форматирования ==== -->
+    <string name="fmt_offset_m">%1$d 分钟</string>
+    <string name="fmt_offset_h">%1$d 小时</string>
+    <string name="fmt_offset_hm">%1$d 小时 %2$d 分钟</string>
+    <string name="fmt_days_short">%1$d 天</string>
+    <string name="fmt_time_alarm_will_ring">闹钟响铃时间</string>
+
+    <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
+    <string name="day_short_1">一</string>
+    <string name="day_short_2">二</string>
+    <string name="day_short_3">三</string>
+    <string name="day_short_4">四</string>
+    <string name="day_short_5">五</string>
+    <string name="day_short_6">六</string>
+    <string name="day_short_7">日</string>
+
+    <!-- ==== Язык ==== -->
+    <string name="lang_title">语言</string>
+    <string name="lang_subtitle">选择应用界面语言 — 之后可在设置中更改</string>
+    <string name="lang_system">跟随系统</string>
+    <string name="set_language">语言</string>
+    <string name="set_language_desc">应用界面语言</string>
+
+    <!-- ==== Мастер настройки ==== -->
+    <string name="setup_step_of">第 %1$d 步，共 %2$d 步</string>
+    <string name="setup_welcome_subtitle">按照大学课程表，在第一节课前自动在系统时钟应用中设置闹钟。一分钟就能完成设置。</string>
+    <string name="setup_university">喀山动力大学（KGEU）</string>
+    <string name="setup_official_api">kabinet.kgeu.ru 官方 API</string>
+    <string name="setup_who_are_you">你是谁？</string>
+    <string name="role_student">学生</string>
+    <string name="role_student_subtitle">按我班级的课程表设闹钟</string>
+    <string name="role_teacher">教师</string>
+    <string name="role_teacher_subtitle">按我的课表设闹钟</string>
+    <string name="setup_search_hint">开始输入：А-1-23 …</string>
+    <string name="setup_found">找到：%1$d 个</string>
+    <string name="setup_found_capped">找到：%1$d 个（仅显示前 %2$d 个）</string>
+    <string name="setup_load_failed">列表加载失败</string>
+    <string name="setup_check_internet">请检查网络后重试</string>
+    <string name="setup_nothing_found">未找到结果</string>
+    <string name="setup_pick_role_first">请先选择你的身份</string>
+    <string name="setup_course">%1$d 年级</string>
+    <string name="setup_wake_question">第一节课前你通常提前多久起床？</string>
+    <string name="setup_example">第一节课 08:30 上课 → 闹钟定在 %1$s</string>
+    <string name="setup_done_all">全部搞定！</string>
+    <string name="setup_finish_mode_note">“标准”模式：每晚为明天设好闹钟。之后可在设置中更改。</string>
+    <string name="setup_no_target">未选择目标 — 请返回并选择班级或教师</string>
+    <string name="summary_group">班级</string>
+    <string name="summary_teacher">教师</string>
+    <string name="summary_wake_offset">第一节课前的起床时间</string>
+    <string name="profile_no_target">未选择目标</string>
+
+    <!-- ==== Главный экран ==== -->
+    <string name="home_title">自动闹钟</string>
+    <string name="cd_refresh_schedule">刷新课程表</string>
+    <string name="mode_week_chip">%1$d 天</string>
+    <string name="mode_standard_chip">标准</string>
+    <string name="loading_settings">正在加载设置…</string>
+    <string name="alarm_off_title">闹钟已关闭</string>
+    <string name="alarm_off_subtitle">用下方开关开启</string>
+    <string name="refreshing">正在更新课程表…</string>
+    <string name="not_loaded_title">课程表尚未加载</string>
+    <string name="not_loaded_hint">从 kabinet.kgeu.ru 拉取课程后，这里会显示起床时间</string>
+    <string name="tomorrow_free_title">明天没有课</string>
+    <string name="tomorrow_free_sub">不设置闹钟</string>
+    <string name="tomorrow_label">明天 · %1$s</string>
+    <string name="today_label">今天</string>
+    <string name="tomorrow_label_short">明天</string>
+    <string name="badge_replacement">调课</string>
+    <string name="room_prefix">%1$s 教室</string>
+    <string name="lesson_at">%1$s 有课</string>
+    <string name="own_event_at">%1$s 有自定义活动</string>
+    <string name="home_auto_title">自动闹钟</string>
+    <string name="home_auto_subtitle">第一节课前自动在系统时钟应用设置闹钟</string>
+    <string name="home_week_title">一次设置多天</string>
+    <string name="home_week_desc">按星期几重复的闹钟 — 系统杀掉应用时的保险</string>
+    <string name="btn_set_for_days">设置 %1$d 天的闹钟</string>
+    <string name="chip_weekly_repeat">每周重复</string>
+    <string name="home_week_note">闹钟每周重复；多余的可在系统时钟应用中关闭（应用设置里有“闹钟列表”）</string>
+    <string name="home_upcoming_title">接下来的课程</string>
+    <string name="home_no_pairs">没有课</string>
+
+    <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
+    <string name="week_result_delivered">已设置重复闹钟：%1$d 个</string>
+    <string name="week_result_delivered_note">已设置重复闹钟：%1$d 个（按星期几）</string>
+    <string name="week_result_uptodate">闹钟已就位 — 课程表没有变化</string>
+    <string name="week_result_empty">没有找到即将到来的课程</string>
+
+    <!-- ==== Диагностика на главном ==== -->
+    <string name="dialog_exact_alarms_title">不允许精确闹钟</string>
+    <string name="dialog_exact_alarms_desc">没有权限时，系统不允许在计算出的精确时间设置闹钟。</string>
+    <string name="dialog_battery_title">电池优化可能造成干扰</string>
+    <string name="dialog_battery_desc">激进的省电模式可能会取消夜间的课程表复查。</string>
+    <string name="dialog_stale_title">课程表已超过 3 天未更新</string>
+    <string name="dialog_stale_desc">大学课程表经常变动 — 请拉取最新数据。</string>
+
+    <!-- ==== Снекбары обновления ==== -->
+    <string name="err_no_target">请先在设置中选择班级或教师</string>
+    <string name="msg_refreshed">课程表已更新</string>
+    <string name="refresh_empty_week">已更新：本周没有课</string>
+    <string name="refresh_ok_count">课程表已更新 — 本周课程：%1$d 节</string>
+    <string name="refresh_no_connection">无法连接 kabinet.kgeu.ru — 显示已保存的缓存</string>
+    <string name="refresh_network">网络不可用 — 显示已保存的缓存</string>
+    <string name="refresh_error">更新出错：%1$s</string>
+    <string name="err_unknown_cause">未知原因</string>
+
+    <!-- ==== Экран расписания ==== -->
+    <string name="cd_prev_week">上一周</string>
+    <string name="cd_next_week">下一周</string>
+    <string name="cd_go_today">回到本周和今天</string>
+    <string name="cd_refresh_week">刷新本周</string>
+    <string name="badge_this_week">本周</string>
+    <string name="snackbar_excluded_on">“%1$s”课前不会设置闹钟</string>
+    <string name="snackbar_excluded_off">已取消例外</string>
+    <string name="cd_enable_alarm">开启这节课前的闹钟</string>
+    <string name="cd_disable_alarm">这节课前不设置闹钟</string>
+    <string name="empty_no_lessons">没有课程</string>
+    <string name="empty_no_alarm_needed">这一天不需要闹钟</string>
+
+    <!-- ==== Уведомления ==== -->
+    <string name="notif_channel_name">自动闹钟状态</string>
+    <string name="notif_channel_desc">关于已设置和已跳过闹钟的通知</string>
+    <string name="notif_alarm_set">闹钟已设在 %1$s</string>
+    <string name="notif_skipped_title">未设置闹钟</string>
+    <string name="notif_week_one">已设置 1 个重复闹钟</string>
+    <string name="notif_week_many">已设置重复闹钟：%1$d 个</string>
+    <string name="notif_week_text">覆盖有课的日子（%1$s – %2$s），每周重复</string>
+    <string name="notif_week_already_title">本周的闹钟已设置</string>
+    <string name="notif_week_already_text">课程表没有改动起床时间 — 无需重新设置</string>
+    <string name="notif_reminder_title">别忘了设置闹钟</string>
+    <string name="notif_reminder_text">明天，%1$s：%2$s 有课 — %3$s。别忘了设置闹钟。</string>
+    <string name="notif_sync_title">正在同步课程表</string>
+    <string name="notif_sync_text">正在更新喀山动力大学课程表</string>
+    <string name="notif_details_room">%1$s，%2$s 教室</string>
+
+    <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">没有课</string>
+    <string name="skip_no_upcoming">没有找到即将到来的课程</string>
+    <string name="skip_clock_refused">手机时钟应用未接受命令 — 请在应用设置中开启“闹钟提醒”</string>
+    <string name="test_alarm_label">测试：自动闹钟运行中！</string>
+    <string name="test_alarm_ok">已设置 2 分钟后的闹钟 — 去时钟应用里看看</string>
+    <string name="test_alarm_fail">测试闹钟设置失败 — 时钟应用没有响应</string>
+
+    <!-- ==== Настройки: секции ==== -->
+    <string name="sec_profile">个人资料</string>
+    <string name="sec_alarm">闹钟</string>
+    <string name="sec_reminder">闹钟提醒</string>
+    <string name="sec_exceptions">例外</string>
+    <string name="sec_custom_events">自定义活动</string>
+    <string name="sec_appearance">外观</string>
+    <string name="sec_system">系统</string>
+    <string name="sec_about">关于应用</string>
+
+    <!-- ==== Настройки: профиль ==== -->
+    <string name="profile_change_note">更换目标不会重置起床提前时间和各项设置</string>
+
+    <!-- ==== Настройки: будильник ==== -->
+    <string name="set_auto_title">自动闹钟</string>
+    <string name="set_show_clock">设置时显示时钟应用</string>
+    <string name="set_show_clock_desc">如果闹钟无法自动设置（Realme、Oppo、Huawei），请开启：时钟应用会带着现成的闹钟打开 — 点“保存”确认即可。</string>
+    <string name="set_wake_offset">第一节课前 %1$s 起床</string>
+    <string name="set_offset_example">第一节课 08:30 上课 → 闹钟将在 %1$s 响铃</string>
+    <string name="set_per_pair">每节课的起床时间</string>
+    <string name="set_per_pair_desc">为每节第一节课单独预留准备时间：早课留短一点，晚课留长一点，来得及吃早饭。未单独设置的课将使用上方的统一起床时间。</string>
+    <string name="set_pairs_after_sync">同步课程表后会显示各课时间</string>
+    <string name="pair_at">%1$s 有课</string>
+    <string name="pair_custom_offset">提前 %1$s 起床 → %2$s 响铃</string>
+    <string name="pair_common_offset">统一起床：提前 %1$s</string>
+    <string name="set_mode">模式</string>
+    <string name="mode_standard_title">标准 — 为明天设置</string>
+    <string name="mode_standard_desc">每晚自动把闹钟更新到明天</string>
+    <string name="mode_week_title">一次设置多天</string>
+    <string name="mode_week_desc">为一周内每个有课的日子设置重复闹钟 — 防止系统杀后台的保险；按最新课程表每周重复，可用下方按钮关闭</string>
+    <string name="mode_week_window">查课范围：%1$s — 一周内所有有课的日子都会设闹钟</string>
+    <string name="btn_set_now">立即设置</string>
+    <string name="btn_disable_app_alarms">关闭应用设置的闹钟</string>
+    <string name="disable_alarms_desc">此按钮会按精确标签«Авто: Пн»…«Авто: Вс»向时钟应用发送关闭命令。如果系统不接受该命令（部分 Realme UI/ColorOS 受系统限制），应用会自行打开闹钟列表 — 请手动移除«Авто:»标签。</string>
+    <string name="btn_test_alarm">测试闹钟</string>
+    <string name="btn_alarm_list">闹钟列表</string>
+    <string name="alarms_list_open_failed">无法打开时钟应用的闹钟列表</string>
+    <string name="dismiss_alarms_sent">关闭命令已发送到时钟应用（%1$d/%2$d）。如果«Авто: …»闹钟还在，请在闹钟列表中手动关闭</string>
+    <string name="dismiss_unsupported_opened">时钟应用不支持通过命令关闭（系统界面限制）— 已为你打开闹钟列表：请手动移除«Авто:»标签的闹钟</string>
+    <string name="dismiss_unsupported_manual">时钟应用不支持通过命令关闭（系统界面限制）— 请在时钟应用中打开闹钟，手动移除«Авто:»标签</string>
+
+    <!-- ==== Диалоги настроек: смещение подъёма ==== -->
+    <string name="dialog_offset_title">课前的起床时间</string>
+    <string name="dialog_offset_example">第一节课 08:30 上课 → 闹钟将在 %1$s 响铃</string>
+    <string name="dialog_pair_title">%1$s 有课</string>
+    <string name="dialog_pair_example">%1$s 有课 → 闹钟将在 %2$s 响铃</string>
+
+    <!-- ==== Настройки: напоминание ==== -->
+    <string name="set_reminder_desc">自定义提醒通知：“明天有课 — 别忘了设置闹钟”</string>
+    <string name="set_reminder_fallback">备用方案：系统时钟应用不接受本应用命令时使用 — 常见于 Realme、Huawei、Xiaomi（尤其是国行系统）。只要明天有课，每天都会在设定时间收到提醒。</string>
+    <string name="reminder_time">提醒时间：%1$s</string>
+    <string name="dialog_reminder_title">提醒时间</string>
+
+    <!-- ==== Настройки: исключения ==== -->
+    <string name="exceptions_title_desc">这些课程前不会设置闹钟</string>
+    <string name="exceptions_empty">暂无内容 — 添加不想被叫醒的课程</string>
+    <string name="cd_delete_named">删除“%1$s”</string>
+    <string name="hint_subject_name">课程名称</string>
+    <string name="cd_add_exception">添加例外</string>
+    <string name="exceptions_found">在课程表中找到：</string>
+
+    <!-- ==== Настройки: свои занятия ==== -->
+    <string name="custom_events_desc">为自己的活动单独设闹钟 — 社团、排练、临时事务</string>
+    <string name="custom_empty">暂未添加任何内容</string>
+    <string name="dialog_event_title">自定义活动</string>
+    <string name="hint_name">名称</string>
+    <string name="event_days_mode">按星期</string>
+    <string name="event_date_mode">指定日期</string>
+    <string name="btn_pick_date">选择日期</string>
+    <string name="event_time">时间：%1$s</string>
+    <string name="event_offset_suffix">· 提前 %1$s</string>
+    <string name="event_wake_before">活动前 %1$s 叫醒我</string>
+    <string name="dialog_event_time_title">活动时间</string>
+
+    <!-- ==== Настройки: оформление ==== -->
+    <string name="set_theme">主题</string>
+    <string name="theme_system">跟随系统</string>
+    <string name="theme_light">浅色</string>
+    <string name="theme_dark">深色</string>
+    <string name="dynamic_color">Material You（系统配色）</string>
+    <string name="set_accent">强调色</string>
+    <string name="accent_amber">琥珀色</string>
+    <string name="accent_orange">橙色</string>
+    <string name="accent_red">红色</string>
+    <string name="accent_green">绿色</string>
+    <string name="accent_pink">粉色</string>
+    <string name="accent_purple">紫色</string>
+    <string name="schedule_style">课程表样式</string>
+    <string name="style_standard">标准</string>
+    <string name="style_paper">纸质日历</string>
+    <string name="set_background">背景</string>
+    <string name="btn_pick_image">选择图片</string>
+    <string name="btn_remove">移除</string>
+    <string name="bg_opacity">底衬透明度</string>
+    <string name="set_glass">玻璃效果</string>
+    <string name="set_glass_desc">卡片呈磨砂玻璃般的半透明效果，背景图片会虚化</string>
+    <string name="glass_intensity">玻璃效果强度</string>
+    <string name="glass_tip">小贴士：搭配背景图片（上方设置）效果最佳</string>
+    <string name="glass_active">玻璃效果已开启</string>
+
+    <!-- ==== Настройки: система ==== -->
+    <string name="status_exact_allowed">已允许精确闹钟</string>
+    <string name="dialog_exact_off_title">系统已停用精确闹钟</string>
+    <string name="dialog_exact_off_desc">夜间任务将只能设置误差 ±10 分钟以内的闹钟。</string>
+    <string name="dialog_battery2_title">电池优化可能造成干扰</string>
+    <string name="dialog_battery2_desc">请将本应用排除在电池优化之外，夜间复查课程表才不会被中断。</string>
+    <string name="action_disable_optimization">禁用优化</string>
+    <string name="autostart_title">自启动与激进的定制系统</string>
+    <string name="autostart_desc">MIUI、HarmonyOS 等定制系统会杀掉后台应用</string>
+    <string name="btn_instructions">操作指南</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO：\n安全中心 → 应用管理 → 自启动：开启“喀山动力大学自动闹钟”；在应用的省电策略中选择“无限制”。</string>
+    <string name="autostart_huawei">Huawei / 荣耀：\n设置 → 电池 → 应用启动管理 → “喀山动力大学自动闹钟” → 手动管理：打开全部开关。</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus：\n设置 → 电池 → 更多设置 → 耗电优化 → 禁止优化本应用；应用管理器 → 自启动。</string>
+    <string name="autostart_samsung">Samsung：\n设置 → 电池 → 后台使用限制 → 未休眠的应用 → 添加“喀山动力大学自动闹钟”。</string>
+    <string name="autostart_other">其他定制系统：\n在系统设置中把应用加入自启动，并取消它的电池优化。</string>
+    <string name="autostart_standard_note">“标准”模式每晚都会重设闹钟 — 应用需要在 00:05 于后台启动。</string>
+
+    <!-- ==== Настройки: о приложении ==== -->
+    <string name="about_version">喀山动力大学自动闹钟 · v%1$s</string>
+    <string name="about_data">课程表数据：kabinet.kgeu.ru 官方 API。本应用与喀山动力大学无隶属关系。</string>
+    <string name="btn_github">GitHub 仓库</string>
+</resources>

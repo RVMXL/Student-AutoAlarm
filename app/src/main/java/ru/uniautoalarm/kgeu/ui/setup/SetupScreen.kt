@@ -48,12 +48,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -61,13 +64,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import java.time.LocalTime
 import kotlin.math.roundToInt
+import ru.uniautoalarm.kgeu.R
+import ru.uniautoalarm.kgeu.data.local.LocaleStore
 import ru.uniautoalarm.kgeu.data.model.Target
 import ru.uniautoalarm.kgeu.data.model.TargetType
 import ru.uniautoalarm.kgeu.data.remote.KgeuGroup
 import ru.uniautoalarm.kgeu.data.remote.KgeuTeacher
+import ru.uniautoalarm.kgeu.ui.common.LanguagePicker
 import ru.uniautoalarm.kgeu.ui.common.LocalAppContainer
+import ru.uniautoalarm.kgeu.ui.common.exampleWakeTime
+import ru.uniautoalarm.kgeu.ui.common.formatOffset
+import ru.uniautoalarm.kgeu.ui.common.hhmm
 
 /** Скругление карточек мастера (по ТЗ — 20.dp). */
 private val ResultCardShape = RoundedCornerShape(20.dp)
@@ -75,9 +83,12 @@ private val ResultCardShape = RoundedCornerShape(20.dp)
 /** Максимум элементов списка поиска, показываемых за раз. */
 private const val MAX_RESULTS = 60
 
+/** Всего шагов мастера, включая шаг выбора языка. */
+private const val TOTAL_STEPS = 6
+
 /**
- * Мастер первичной настройки (5 шагов, state step: 0..4):
- *  0 приветствие → 1 роль → 2 поиск группы/преподавателя → 3 подъём → 4 финиш.
+ * Мастер первичной настройки (6 шагов, state step: 0..5):
+ *  0 язык → 1 приветствие → 2 роль → 3 поиск группы/преподавателя → 4 подъём → 5 финиш.
  * По завершении DataStore отдаёт setupComplete=true — Root в MainActivity сам
  * переключится на главный каркас; onFinished специально пустой.
  */
@@ -113,36 +124,38 @@ fun SetupScreen(onFinished: () -> Unit) {
                 TextButton(onClick = { step-- }) {
                     Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
                     Spacer(Modifier.width(4.dp))
-                    Text("Назад")
+                    Text(stringResource(R.string.action_back))
                 }
             }
         }
 
         Text(
-            "Шаг ${step + 1} из 5",
+            stringResource(R.string.setup_step_of, step + 1, TOTAL_STEPS),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(Modifier.height(6.dp))
         LinearProgressIndicator(
-            progress = { (step + 1) / 5f },
+            progress = { (step + 1) / TOTAL_STEPS.toFloat() },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(16.dp))
 
         when (step) {
-            0 -> StepWelcome(onStart = { step = 1 }, modifier = Modifier.weight(1f))
+            0 -> StepLanguage(onNext = { step = 1 }, modifier = Modifier.weight(1f))
 
-            1 -> StepRole(
+            1 -> StepWelcome(onStart = { step = 2 }, modifier = Modifier.weight(1f))
+
+            2 -> StepRole(
                 selected = role,
                 onPick = { type ->
                     vm.role.value = type
-                    step = 2
+                    step = 3
                 },
                 modifier = Modifier.weight(1f)
             )
 
-            2 -> StepSearch(
+            3 -> StepSearch(
                 role = role,
                 query = query,
                 onQueryChange = { vm.query.value = it },
@@ -153,19 +166,19 @@ fun SetupScreen(onFinished: () -> Unit) {
                 onLoadLists = { vm.loadLists(it) },
                 onPickGroup = { group ->
                     vm.selectGroup(group)
-                    step = 3
+                    step = 4
                 },
                 onPickTeacher = { teacher ->
                     vm.selectTeacher(teacher)
-                    step = 3
+                    step = 4
                 },
                 modifier = Modifier.weight(1f)
             )
 
-            3 -> StepWake(
+            4 -> StepWake(
                 offsetMinutes = offsetMinutes,
                 onOffsetChange = { vm.setOffset(it) },
-                onNext = { step = 4 },
+                onNext = { step = 5 },
                 modifier = Modifier.weight(1f)
             )
 
@@ -181,7 +194,66 @@ fun SetupScreen(onFinished: () -> Unit) {
     }
 }
 
-// --- Шаг 0: приветствие ---
+// --- Шаг 0: язык ---
+
+@Composable
+private fun StepLanguage(onNext: () -> Unit, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    var selected by remember { mutableStateOf(LocaleStore.language(context)) }
+
+    Column(modifier = modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Spacer(Modifier.height(12.dp))
+            Text(
+                stringResource(R.string.lang_title),
+                style = MaterialTheme.typography.headlineMedium,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                stringResource(R.string.lang_subtitle),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
+            )
+            Card(shape = ResultCardShape, modifier = Modifier.fillMaxWidth()) {
+                // Внутри вертикального скролла высоту ленивого списка ограничиваем,
+                // иначе LazyColumn получит бесконечную высоту и упадёт.
+                LanguagePicker(
+                    selected = selected,
+                    onSelect = { tag ->
+                        if (tag != selected) {
+                            selected = tag
+                            LocaleStore.setLanguage(context, tag)
+                            // recreate() мгновенно применяет локаль; рестарт вернёт на шаг 0
+                            (context as? android.app.Activity)?.recreate()
+                        }
+                    },
+                    modifier = Modifier
+                        .padding(vertical = 8.dp)
+                        .heightIn(max = 420.dp)
+                )
+            }
+            Spacer(Modifier.height(8.dp))
+        }
+        Spacer(Modifier.height(16.dp))
+        Button(
+            onClick = onNext,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp)
+        ) {
+            Text(stringResource(R.string.action_next), style = MaterialTheme.typography.titleMedium)
+        }
+    }
+}
+
+// --- Шаг 1: приветствие ---
 
 @Composable
 private fun StepWelcome(onStart: () -> Unit, modifier: Modifier = Modifier) {
@@ -209,13 +281,12 @@ private fun StepWelcome(onStart: () -> Unit, modifier: Modifier = Modifier) {
                 )
             }
             Text(
-                "Автобудильник КГЭУ",
+                stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineMedium,
                 textAlign = TextAlign.Center
             )
             Text(
-                "Ставит будильник в стоковые часы перед первой парой — " +
-                    "по расписанию университета. Настроим за минуту.",
+                stringResource(R.string.setup_welcome_subtitle),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -234,7 +305,7 @@ private fun StepWelcome(onStart: () -> Unit, modifier: Modifier = Modifier) {
                     Spacer(Modifier.width(12.dp))
                     Column {
                         Text(
-                            "Казанский государственный энергетический университет (КГЭУ)",
+                            stringResource(R.string.setup_university),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(Modifier.height(6.dp))
@@ -243,7 +314,7 @@ private fun StepWelcome(onStart: () -> Unit, modifier: Modifier = Modifier) {
                             color = MaterialTheme.colorScheme.primaryContainer
                         ) {
                             Text(
-                                "официальный API kabinet.kgeu.ru",
+                                stringResource(R.string.setup_official_api),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
@@ -261,12 +332,12 @@ private fun StepWelcome(onStart: () -> Unit, modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .height(52.dp)
         ) {
-            Text("Начать", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.action_start), style = MaterialTheme.typography.titleMedium)
         }
     }
 }
 
-// --- Шаг 1: роль ---
+// --- Шаг 2: роль ---
 
 @Composable
 private fun StepRole(
@@ -282,21 +353,21 @@ private fun StepRole(
     ) {
         Spacer(Modifier.height(8.dp))
         Text(
-            "Кто вы?",
+            stringResource(R.string.setup_who_are_you),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
         RoleCard(
-            title = "Студент",
-            subtitle = "Будильник по расписанию моей группы",
+            title = stringResource(R.string.role_student),
+            subtitle = stringResource(R.string.role_student_subtitle),
             icon = Icons.Rounded.School,
             selected = selected == TargetType.STUDENT,
             onClick = { onPick(TargetType.STUDENT) }
         )
         RoleCard(
-            title = "Преподаватель",
-            subtitle = "Будильник по расписанию моих пар",
+            title = stringResource(R.string.role_teacher),
+            subtitle = stringResource(R.string.role_teacher_subtitle),
             icon = Icons.Rounded.Person,
             selected = selected == TargetType.TEACHER,
             onClick = { onPick(TargetType.TEACHER) }
@@ -368,7 +439,7 @@ private fun RoleCard(
     }
 }
 
-// --- Шаг 2: поиск группы / преподавателя ---
+// --- Шаг 3: поиск группы / преподавателя ---
 
 @Composable
 private fun StepSearch(
@@ -402,15 +473,15 @@ private fun StepSearch(
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             shape = RoundedCornerShape(16.dp),
-            placeholder = { Text("Начните вводить: А-1-23 …") },
+            placeholder = { Text(stringResource(R.string.setup_search_hint)) },
             leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null) }
         )
         Spacer(Modifier.height(10.dp))
         Text(
             text = if (found > MAX_RESULTS) {
-                "Найдено: $found (показаны первые $MAX_RESULTS)"
+                stringResource(R.string.setup_found_capped, found, MAX_RESULTS)
             } else {
-                "Найдено: $found"
+                stringResource(R.string.setup_found, found)
             },
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -428,7 +499,7 @@ private fun StepSearch(
             }
 
             error != null -> LoadErrorCard(
-                message = error ?: "Не удалось загрузить список",
+                message = error ?: stringResource(R.string.setup_load_failed),
                 onRetry = { role?.let(onLoadLists) },
                 modifier = Modifier.weight(1f)
             )
@@ -445,7 +516,7 @@ private fun StepSearch(
                 modifier = Modifier.weight(1f)
             )
 
-            else -> EmptyHint("Сначала выберите, кто вы", Modifier.weight(1f))
+            else -> EmptyHint(stringResource(R.string.setup_pick_role_first), Modifier.weight(1f))
         }
     }
 }
@@ -458,7 +529,7 @@ private fun GroupResults(
 ) {
     val shown = groups.take(MAX_RESULTS)
     if (shown.isEmpty()) {
-        EmptyHint("Ничего не найдено", modifier)
+        EmptyHint(stringResource(R.string.setup_nothing_found), modifier)
         return
     }
     LazyColumn(
@@ -479,7 +550,7 @@ private fun GroupResults(
                     Text(group.name, style = MaterialTheme.typography.titleMedium)
                     val subtitle = listOfNotNull(
                         group.facul?.takeIf { it.isNotBlank() },
-                        group.kurs?.let { "курс $it" }
+                        group.kurs?.let { stringResource(R.string.setup_course, it) }
                     ).joinToString(" · ")
                     if (subtitle.isNotEmpty()) {
                         Text(
@@ -502,7 +573,7 @@ private fun TeacherResults(
 ) {
     val shown = teachers.take(MAX_RESULTS)
     if (shown.isEmpty()) {
-        EmptyHint("Ничего не найдено", modifier)
+        EmptyHint(stringResource(R.string.setup_nothing_found), modifier)
         return
     }
     LazyColumn(
@@ -562,7 +633,7 @@ private fun LoadErrorCard(
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "Не удалось загрузить список",
+                    stringResource(R.string.setup_load_failed),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onErrorContainer
                 )
@@ -572,7 +643,7 @@ private fun LoadErrorCard(
                     color = MaterialTheme.colorScheme.onErrorContainer,
                     textAlign = TextAlign.Center
                 )
-                TextButton(onClick = onRetry) { Text("Повторить") }
+                TextButton(onClick = onRetry) { Text(stringResource(R.string.action_retry)) }
             }
         }
     }
@@ -593,7 +664,7 @@ private fun EmptyHint(text: String, modifier: Modifier = Modifier) {
     }
 }
 
-// --- Шаг 3: время подъёма ---
+// --- Шаг 4: время подъёма ---
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -612,7 +683,7 @@ private fun StepWake(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                "За сколько вы обычно встаёте до первой пары?",
+                stringResource(R.string.setup_wake_question),
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 8.dp)
@@ -643,7 +714,7 @@ private fun StepWake(
                     FilterChip(
                         selected = offsetMinutes == preset,
                         onClick = { onOffsetChange(preset) },
-                        label = { Text("$preset мин") }
+                        label = { Text(stringResource(R.string.fmt_offset_m, preset)) }
                     )
                 }
             }
@@ -659,7 +730,10 @@ private fun StepWake(
                     )
                     Spacer(Modifier.width(12.dp))
                     Text(
-                        exampleText(offsetMinutes),
+                        stringResource(
+                            R.string.setup_example,
+                            exampleWakeTime(offsetMinutes).hhmm()
+                        ),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -672,12 +746,12 @@ private fun StepWake(
                 .fillMaxWidth()
                 .height(52.dp)
         ) {
-            Text("Далее", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.action_next), style = MaterialTheme.typography.titleMedium)
         }
     }
 }
 
-// --- Шаг 4: финиш ---
+// --- Шаг 5: финиш ---
 
 @Composable
 private fun StepFinish(
@@ -695,11 +769,13 @@ private fun StepFinish(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Spacer(Modifier.height(8.dp))
-            Text("Всё готово!", style = MaterialTheme.typography.headlineSmall)
+            Text(
+                stringResource(R.string.setup_done_all),
+                style = MaterialTheme.typography.headlineSmall
+            )
             SummaryCard(target = target, offsetMinutes = offsetMinutes)
             Text(
-                "Режим „Стандарт“: каждую ночь будильник на завтра. " +
-                    "Потом можно сменить в настройках.",
+                stringResource(R.string.setup_finish_mode_note),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -713,7 +789,7 @@ private fun StepFinish(
                 .fillMaxWidth()
                 .height(52.dp)
         ) {
-            Text("Готово", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.action_done), style = MaterialTheme.typography.titleMedium)
         }
     }
 }
@@ -729,7 +805,7 @@ private fun SummaryCard(target: Target?, offsetMinutes: Int) {
         ) {
             if (target == null) {
                 Text(
-                    "Цель не выбрана — вернитесь назад и выберите группу или преподавателя",
+                    stringResource(R.string.setup_no_target),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.error
                 )
@@ -748,7 +824,11 @@ private fun SummaryCard(target: Target?, offsetMinutes: Int) {
                     Spacer(Modifier.width(12.dp))
                     Column {
                         Text(
-                            if (target.type == TargetType.STUDENT) "Группа" else "Преподаватель",
+                            if (target.type == TargetType.STUDENT) {
+                                stringResource(R.string.summary_group)
+                            } else {
+                                stringResource(R.string.summary_teacher)
+                            },
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -766,7 +846,7 @@ private fun SummaryCard(target: Target?, offsetMinutes: Int) {
                     Spacer(Modifier.width(12.dp))
                     Column {
                         Text(
-                            "Подъём до первой пары",
+                            stringResource(R.string.summary_wake_offset),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -779,23 +859,4 @@ private fun SummaryCard(target: Target?, offsetMinutes: Int) {
             }
         }
     }
-}
-
-// --- Локальные помощники форматирования ---
-
-/** 90 → «1 ч 30 мин», 60 → «1 ч», 45 → «45 мин». */
-private fun formatOffset(minutes: Int): String {
-    val hours = minutes / 60
-    val rest = minutes % 60
-    return when {
-        hours > 0 && rest > 0 -> "$hours ч $rest мин"
-        hours > 0 -> "$hours ч"
-        else -> "$rest мин"
-    }
-}
-
-/** Пример-подпись: первая пара условно в 08:30 → время будильника. */
-private fun exampleText(offsetMinutes: Int): String {
-    val wake = LocalTime.of(8, 30).minusMinutes(offsetMinutes.toLong())
-    return "Первая пара в 08:30 → будильник на %02d:%02d".format(wake.hour, wake.minute)
 }

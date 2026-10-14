@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== Общее ==== -->
+    <string name="app_name">Автобудильник КГЭУ</string>
+    <string name="action_cancel">Пăрахăçла</string>
+    <string name="action_ok">ОК</string>
+    <string name="action_save">Сыхла</string>
+    <string name="action_done">Хатĕр</string>
+    <string name="action_edit">Улăштар</string>
+    <string name="action_reset">Çĕнĕрен</string>
+    <string name="action_retry">Тепĕр хут</string>
+    <string name="action_allow">Ирĕк пар</string>
+    <string name="action_fix">Тӳрлет</string>
+    <string name="action_refresh">Çĕнет</string>
+    <string name="action_change">Улăштар</string>
+    <string name="action_next">Малалла</string>
+    <string name="action_back">Кайалла</string>
+    <string name="action_start">Пуçла</string>
+    <string name="action_add">Хуш</string>
+    <string name="action_load">Тиесле</string>
+    <string name="action_understood">Ӑнлантӑм</string>
+
+    <!-- ==== Нижняя навигация ==== -->
+    <string name="nav_home">Тĕп</string>
+    <string name="nav_schedule">Расписание</string>
+    <string name="nav_settings">Йышăнусем</string>
+
+    <!-- ==== Единицы и форматирования ==== -->
+    <string name="fmt_offset_m">%1$d мин</string>
+    <string name="fmt_offset_h">%1$d сех</string>
+    <string name="fmt_offset_hm">%1$d сех %2$d мин</string>
+    <string name="fmt_days_short">%1$d кун</string>
+    <string name="fmt_time_alarm_will_ring">будильник çилĕклет</string>
+
+    <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
+    <string name="day_short_1">Тн</string>
+    <string name="day_short_2">Ут</string>
+    <string name="day_short_3">Юн</string>
+    <string name="day_short_4">Кӗ</string>
+    <string name="day_short_5">Эр</string>
+    <string name="day_short_6">Шӑ</string>
+    <string name="day_short_7">Выр</string>
+
+    <!-- ==== Язык ==== -->
+    <string name="lang_title">Чĕлхе</string>
+    <string name="lang_subtitle">Интерфейс чĕлхине суйла — каярахпа йышăнусенче улăштарма пулать</string>
+    <string name="lang_system">Системăн чĕлхи</string>
+    <string name="set_language">Чĕлхе</string>
+    <string name="set_language_desc">Программа интерфейсĕн чĕлхи</string>
+
+    <!-- ==== Мастер настройки ==== -->
+    <string name="setup_step_of">Утăм %1$d / %2$d</string>
+    <string name="setup_welcome_subtitle">Пӗрремӗш пара умӗнче будильник сток сехетсене лартать — университет расписаниӗ тӑрӑх. Пӗр минутра йӗркелетпӗр.</string>
+    <string name="setup_university">Казан патшалӑх энергетика университетӗ (КГЭУ)</string>
+    <string name="setup_official_api">официаллӑ API kabinet.kgeu.ru</string>
+    <string name="setup_who_are_you">Эсир кам?</string>
+    <string name="role_student">Студент</string>
+    <string name="role_student_subtitle">Будильник ман группӑм расписаниипе</string>
+    <string name="role_teacher">Вĕрентекен</string>
+    <string name="role_teacher_subtitle">Будильник ман парасен расписаниипе</string>
+    <string name="setup_search_hint">Çырма пуçла: А-1-23 …</string>
+    <string name="setup_found">Тупӑнчӗ: %1$d</string>
+    <string name="setup_found_capped">Тупӑнчӗ: %1$d (пӗрремӗш %2$d кӑтартӑнать)</string>
+    <string name="setup_load_failed">Йыша тиесле пулмарӗ</string>
+    <string name="setup_check_internet">Интернете тӗрӗсле те тепӗр хут тӑратӑр</string>
+    <string name="setup_nothing_found">Тупӑнмарӗ</string>
+    <string name="setup_pick_role_first">Малтан эсир камне суйла</string>
+    <string name="setup_course">курс %1$d</string>
+    <string name="setup_wake_question">Пӗрремӗш пара умӗнчен сирӗн вӑранма мӗн чухлӗ вӑхӑт кирлӗ?</string>
+    <string name="setup_example">Пӗрремӗш пара 08:30 → будильник %1$s çинче</string>
+    <string name="setup_done_all">Пурте хатӗр!</string>
+    <string name="setup_finish_mode_note">„Стандарт“ режим: кашни каҫ будильник ыран кунне лартӑнать. Каярах йышӑнусенче улӑштарма пулать.</string>
+    <string name="setup_no_target">Нимӗн суйланман — кайалла тавӑрӑнса группӑна е вӗрентекенне суйла</string>
+    <string name="summary_group">Группа</string>
+    <string name="summary_teacher">Вĕрентекен</string>
+    <string name="summary_wake_offset">Пӗрремӗш пара умӗн вӑранса тӑни</string>
+    <string name="profile_no_target">Нимӗн суйланман</string>
+
+    <!-- ==== Главный экран ==== -->
+    <string name="home_title">Автобудильник</string>
+    <string name="cd_refresh_schedule">Расписаниене çĕнет</string>
+    <string name="mode_week_chip">%1$d кун малан</string>
+    <string name="mode_standard_chip">Стандарт</string>
+    <string name="loading_settings">Йышӑнусене тиеслеҫҫӗ…</string>
+    <string name="alarm_off_title">Будильник сунтарӑннӑ</string>
+    <string name="alarm_off_subtitle">Аялти тумблерпа хушӑр</string>
+    <string name="refreshing">Расписаниене çĕнетпӗр…</string>
+    <string name="not_loaded_title">Расписание тиехçе мар</string>
+    <string name="not_loaded_hint">kabinet.kgeu.ru парасене тиесле — кунта вӑранса тӑмалли вӑхӑтсем курӑнаççӗ</string>
+    <string name="tomorrow_free_title">Ыран парасем çук</string>
+    <string name="tomorrow_free_sub">будильник лартӑнмасть</string>
+    <string name="tomorrow_label">Ыран · %1$s</string>
+    <string name="today_label">Паян</string>
+    <string name="tomorrow_label_short">Ыран</string>
+    <string name="badge_replacement">улӑштару</string>
+    <string name="room_prefix">ауд. %1$s</string>
+    <string name="lesson_at">пара %1$s çинче</string>
+    <string name="own_event_at">хӑвӑн ĕç %1$s çинче</string>
+    <string name="home_auto_title">Авто-будильник</string>
+    <string name="home_auto_subtitle">Будильник пӗрремӗш пара умӗнче сток сехетсене лартать</string>
+    <string name="home_week_title">Темиже кун малан</string>
+    <string name="home_week_desc">Эрне кунӗсемпе повторланакан будильниксем — система программӑна вӗҫтерсе пӑрахсан те пулӑшаçҫӗ</string>
+    <string name="btn_set_for_days">%1$d кун ларт</string>
+    <string name="chip_weekly_repeat">Эрнере пӗрре повторланаççӗ</string>
+    <string name="home_week_note">Будильниксем эрнере пӗрре повторланаççӗ; лишнисене сток сехетсенче сунтармалла („Будильник йышӗ“ — программӑн йышӑнусенче)</string>
+    <string name="home_upcoming_title">Çывӑх парасем</string>
+    <string name="home_no_pairs">Пара çук</string>
+
+    <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
+    <string name="week_result_delivered">Повторланакан будильниксем лартӑннӑ: %1$d</string>
+    <string name="week_result_delivered_note">Повторланакан будильниксем лартӑннӑ: %1$d (эрне кунӗсемпе)</string>
+    <string name="week_result_uptodate">Будильниксем пурте лартӑннӑ — расписание улӑшман</string>
+    <string name="week_result_empty">Малти парасем тупӑнмарӗҫ</string>
+
+    <!-- ==== Диагностика на главном ==== -->
+    <string name="dialog_exact_alarms_title">Тӗрӗс будильниксем чарӑннӑ</string>
+    <string name="dialog_exact_alarms_desc">Ирӗк пулман пулсан системӑн будильникӗ шутланӑ вӑхӑтра тӗрӗс лартаймасть.</string>
+    <string name="dialog_battery_title">Батареян оптимизаци пӑсма пултарать</string>
+    <string name="dialog_battery_desc">Хӑватлӑ энергосберегающи режим каҫхи тӗрӗслевӗсене пӑса пултарать.</string>
+    <string name="dialog_stale_title">Расписаниене 3 кунран ытла çĕнетмен</string>
+    <string name="dialog_stale_desc">Университет расписаниӗ час-часах улӑшӑнать — çӗнӗ даннӑйсене тиесле.</string>
+
+    <!-- ==== Снекбары обновления ==== -->
+    <string name="err_no_target">Малтан йышӑнусенче группӑна е вӗрентекенне суйла</string>
+    <string name="msg_refreshed">Расписание çĕнетнӗ</string>
+    <string name="refresh_empty_week">Çĕнетнӗ: ку эрнере парасем çук</string>
+    <string name="refresh_ok_count">Расписание çĕнетнӗ — эрнере пара: %1$d</string>
+    <string name="refresh_no_connection">kabinet.kgeu.ru патне çитеймерӗм — сыхланнӑ копие кӑтартатӑп</string>
+    <string name="refresh_network">Сеть çук — сыхланнӑ копие кӑтартатӑп</string>
+    <string name="refresh_error">Çĕнетӳ йӑнӑшӗ: %1$s</string>
+    <string name="err_unknown_cause">паллӑ мар сӑлтав</string>
+
+    <!-- ==== Экран расписания ==== -->
+    <string name="cd_prev_week">Иртнӗ эрне</string>
+    <string name="cd_next_week">Малаллахи эрне</string>
+    <string name="cd_go_today">Хальхи эрнепе паянкун çине куç</string>
+    <string name="cd_refresh_week">Эрнене çĕнет</string>
+    <string name="badge_this_week">хальхи эрне</string>
+    <string name="snackbar_excluded_on">„%1$s“ умӗнче будильник лартӑнмасть</string>
+    <string name="snackbar_excluded_off">Исключени кӑларса пӑрахнӑ</string>
+    <string name="cd_enable_alarm">Ку пара умӗнче будильник хуш</string>
+    <string name="cd_disable_alarm">Ку пара умӗнче будильник лартма</string>
+    <string name="empty_no_lessons">Заняти çук</string>
+    <string name="empty_no_alarm_needed">Ку кунта будильник кирлӗ мар</string>
+
+    <!-- ==== Уведомления ==== -->
+    <string name="notif_channel_name">Авто-будильник статусӗ</string>
+    <string name="notif_channel_desc">Лартнӑ тата лартӑнман будильниксем çинчен пӗлтерӳсем</string>
+    <string name="notif_alarm_set">Будильник лартӑннӑ: %1$s</string>
+    <string name="notif_skipped_title">Будильник лартӑнмарӗ</string>
+    <string name="notif_week_one">1 повторланакан будильник лартӑннӑ</string>
+    <string name="notif_week_many">Повторланакан будильниксем лартӑннӑ: %1$d</string>
+    <string name="notif_week_text">параллӑ эрне кунӗсемпе (%1$s – %2$s), эрнере пӗрре повторланаçҫӗ</string>
+    <string name="notif_week_already_title">Эрнене будильниксем пурте лартӑннӑ</string>
+    <string name="notif_week_already_text">Расписание вӑхӑтсене улӑшман — куçарма кирлӗ мар</string>
+    <string name="notif_reminder_title">Будильник лартма ан ман</string>
+    <string name="notif_reminder_text">Ыран, %1$s: пара %2$s çинче — %3$s. Будильник лартма ан ман.</string>
+    <string name="notif_sync_title">Расписание синхронизацийӗ</string>
+    <string name="notif_sync_text">КГЭУ расписаниене çĕнетпӗр</string>
+    <string name="notif_details_room">%1$s, ауд. %2$s</string>
+
+    <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">парасем çук</string>
+    <string name="skip_no_upcoming">малти парасем тупӑнмарӗҫ</string>
+    <string name="skip_clock_refused">телефон сехетӗсем команда йышӑнмарӗҫ — йышӑнусенче „Будильник çинчен асӑну“ хушӑр</string>
+    <string name="test_alarm_label">Тест: Автобудильник ĕçлет!</string>
+    <string name="test_alarm_ok">2 минутран будильник лартӑннӑ — сехетсене пӑх</string>
+    <string name="test_alarm_fail">Тест будильникне ларта пулмарӗ — сехетсем йышӑнмаҫҫӗ</string>
+
+    <!-- ==== Настройки: секции ==== -->
+    <string name="sec_profile">Профиль</string>
+    <string name="sec_alarm">Будильник</string>
+    <string name="sec_reminder">Будильник çинчен асӑну</string>
+    <string name="sec_exceptions">Исключенисем</string>
+    <string name="sec_custom_events">Хӑвӑн ĕçсем</string>
+    <string name="sec_appearance">Киеп</string>
+    <string name="sec_system">Система</string>
+    <string name="sec_about">Программа çинчен</string>
+
+    <!-- ==== Настройки: профиль ==== -->
+    <string name="profile_change_note">Суйланӑ вырӑна улӑштарни вӑхӑта тата йышӑнусене пӑсмасть</string>
+
+    <!-- ==== Настройки: будильник ==== -->
+    <string name="set_auto_title">Авто-будильник</string>
+    <string name="set_show_clock">Лартнӑ чух сехете кӑтарт</string>
+    <string name="set_show_clock_desc">Будильниксем хӑйсем лартӑнмастӑр пулсан хушӑр (Realme, Oppo, Huawei): сехетсем хатӗр будильникпа уҫӑнаҫҫӗ — „Сыхла“ пӑшӑлпа çирӗплетӗр.</string>
+    <string name="set_wake_offset">Пӗрремӗш пара умӗнчен %1$s вӑранса тӑни</string>
+    <string name="set_offset_example">Пӗрремӗш пара 08:30 → будильник %1$s çинче</string>
+    <string name="set_per_pair">Кашни пара умӗнче уйрӑм вӑранса тӑни</string>
+    <string name="set_per_pair_desc">Кашни пӗрремӗш пара валли уйрӑм запас: ирӗккине умӗн кӗскерех, каҫхине — вӑрӑмрах, çӑмӑл апатлама вӑхӑт пултӑр. Хӑй пӗлтерӗшӗ çук парасем пурте пӗрлехи вӑранса тӑнине усӑ кураççӗ.</string>
+    <string name="set_pairs_after_sync">Парасен вӑхӑтӗсем расписание синхронизацийӗ хыҫҫӑн курӑнаçҫӗ</string>
+    <string name="pair_at">Пара %1$s çинче</string>
+    <string name="pair_custom_offset">%1$s малӑн вӑранса тӑни → будильник %2$s çинче</string>
+    <string name="pair_common_offset">Пӗрлехи вӑранса тӑни: %1$s малӑн</string>
+    <string name="set_mode">Режим</string>
+    <string name="mode_standard_title">Стандарт — ыран кунне</string>
+    <string name="mode_standard_desc">Кашни каҫ будильник ыранне куçать</string>
+    <string name="mode_week_title">Темиже кун малан</string>
+    <string name="mode_week_desc">Эрнере кашни вӗренӳ кунне повторланакан будильник — процесс вӗҫтернисенчен хӑтару; актуаллӑ расписаниипе эрнере пӗрре повторланаççӗ, аялти пӑшӑлпа сунтарма пулать</string>
+    <string name="mode_week_window">Пара шырав тӑршшӗ: %1$s — будильниксем параллӑ пур эрне кунӗсене лартӑнаçҫӗ</string>
+    <string name="btn_set_now">Халь ларт</string>
+    <string name="btn_disable_app_alarms">Программа будильникӗсене сунтар</string>
+    <string name="disable_alarms_desc">Пӑшӑл сехетсене „Авто: Пн“…„Авто: Вс“ тӗплӗ ятсемпе сунтар командине парать. Оболочка командӑна йышӑнмасть пулсан (пӗр пайӗ Realme UI/ColorOS — системӑн чикӗленӗвӗ), программа хӑй будильник йышӗне уҫӗ — „Авто:“ ятсене алӑпа сунтар.</string>
+    <string name="btn_test_alarm">Будильникне тӗрӗсле</string>
+    <string name="btn_alarm_list">Будильник йышӗ</string>
+    <string name="alarms_list_open_failed">Сехетсем будильник йышӗне уҫмарӗҫ</string>
+    <string name="dismiss_alarms_sent">Сунтар команди сехетсене кайрӗ (%1$d / %2$d). „Авто: …“ будильниксем юлсан — будильник йышӗнче сунтар</string>
+    <string name="dismiss_unsupported_opened">Сехетсем командӑпа сунтарма йышӑнмаҫҫӗ (оболочка чикӗленӗвӗ) — будильник йышӗне уҫрӑм: „Авто:“ ятлӑ будильниксене алӑпа сунтар</string>
+    <string name="dismiss_unsupported_manual">Сехетсем командӑпа сунтарма йышӑнмаҫҫӗ (оболочка чикӗленӗвӗ) — сехет программинче будильниксене уҫса „Авто:“ ятсене алӑпа сунтар</string>
+
+    <!-- ==== Диалоги настроек: смещение подъёма ==== -->
+    <string name="dialog_offset_title">Пара умӗн вӑранса тӑни</string>
+    <string name="dialog_offset_example">Пӗрремӗш пара 08:30 → будильник %1$s çилӗклет</string>
+    <string name="dialog_pair_title">Пара %1$s çинче</string>
+    <string name="dialog_pair_example">Пара %1$s çинче → будильник %2$s çилӗклет</string>
+
+    <!-- ==== Настройки: напоминание ==== -->
+    <string name="set_reminder_desc">Хӑвӑн пӗлтерӳ: „ыран пара çапла вӑхӑтра — будильник лартма ан ман“</string>
+    <string name="set_reminder_fallback">Сток сехетсем программӑн командисене йышӑнмасть чухнехи фолбэк — Realme, Huawei, Xiaomi (ытларах китай прошивкисем) çинче пулать. Пӗлтерӳ кашни кун суйланӑ вӑхӑтпа çитет, ыран пара пулсан.</string>
+    <string name="reminder_time">Пӗлтерӳ вӑхӑчӗ: %1$s</string>
+    <string name="dialog_reminder_title">Пӗлтерӳ вӑхӑчӗ</string>
+
+    <!-- ==== Настройки: исключения ==== -->
+    <string name="exceptions_title_desc">Ку дисциплинсен умӗнче будильник лартӑнмасть</string>
+    <string name="exceptions_empty">Халӗ пушӑ — умӗнче вӑрантарма кирлӗ мар предметсене хушӑр</string>
+    <string name="cd_delete_named">„%1$s“ кӑларса пӑрах</string>
+    <string name="hint_subject_name">Дисциплина ячӗ</string>
+    <string name="cd_add_exception">Исключени хуш</string>
+    <string name="exceptions_found">Расписаниере тупӑнчӗ:</string>
+
+    <!-- ==== Настройки: свои занятия ==== -->
+    <string name="custom_events_desc">Хӑвӑн пулӑмсем уйрӑм будильник вӑхӑчӗпе — секцисем, репетицисем, пӗр хутлӑ ĕçсем</string>
+    <string name="custom_empty">Халӗ нимӗн те хушман</string>
+    <string name="dialog_event_title">Хӑвӑн ĕç</string>
+    <string name="hint_name">Ят</string>
+    <string name="event_days_mode">Эрне кунӗсемпе</string>
+    <string name="event_date_mode">Пӗр кун</string>
+    <string name="btn_pick_date">Кун суйла</string>
+    <string name="event_time">Вӑхӑт: %1$s</string>
+    <string name="event_offset_suffix">· %1$s малӑн</string>
+    <string name="event_wake_before">Пулӑм умӗнчен %1$s вӑрантар</string>
+    <string name="dialog_event_time_title">Пулӑм вӑхӑчӗ</string>
+
+    <!-- ==== Настройки: оформление ==== -->
+    <string name="set_theme">Тема</string>
+    <string name="theme_system">Системӑн</string>
+    <string name="theme_light">Çутӑ</string>
+    <string name="theme_dark">Тӗттӗм</string>
+    <string name="dynamic_color">Material You (системӑн тӗсӗ)</string>
+    <string name="set_accent">Акцент</string>
+    <string name="accent_amber">Янтарь</string>
+    <string name="accent_orange">Оранж</string>
+    <string name="accent_red">Хӗрлӗ</string>
+    <string name="accent_green">Çеçпĕл</string>
+    <string name="accent_pink">Розӑ</string>
+    <string name="accent_purple">Пурпур</string>
+    <string name="schedule_style">Расписание стилӗ</string>
+    <string name="style_standard">Стандарт</string>
+    <string name="style_paper">Хут календарь</string>
+    <string name="set_background">Фон</string>
+    <string name="btn_pick_image">Ӳкерчĕк суйла</string>
+    <string name="btn_remove">Кăларса пăрах</string>
+    <string name="bg_opacity">Фон курӑнни</string>
+    <string name="set_glass">Стекло эффектӗ</string>
+    <string name="set_glass_desc">Карттӑсем пӑрлӑ стекло пек çурӑ курӑнаҫҫӗ; фон ӳкерчӗкне пӑсӑрлатаҫҫӗ</string>
+    <string name="glass_intensity">Стекло вӑйӗ</string>
+    <string name="glass_tip">Канаш: стекло фон ӳкерчӗкӗпе чи лайӑх курӑнать (çиертех)</string>
+    <string name="glass_active">Стекло хастар</string>
+
+    <!-- ==== Настройки: система ==== -->
+    <string name="status_exact_allowed">Тӗрӗс будильниксене ирӗк парнӑ</string>
+    <string name="dialog_exact_off_title">Система тӗрӗс будильниксене сунтарнӑ</string>
+    <string name="dialog_exact_off_desc">Каҫхи планировщик будильникне ±10 минут йӑнӑшпа кӑна лартаймӗ.</string>
+    <string name="dialog_battery2_title">Батареян оптимизаци пӑсма пултарать</string>
+    <string name="dialog_battery2_desc">Каҫхи расписаниене тӗрӗслесси пӑсӑлмасӑн программӑне оптимизацирен кӑларӑр.</string>
+    <string name="action_disable_optimization">Оптимизаци сунтар</string>
+    <string name="autostart_title">Автозапуск тата хаяр оболочкисем</string>
+    <string name="autostart_desc">MIUI, HarmonyOS тата урӑх оболочкисем фон программисене вӗҫтереҫҫӗ</string>
+    <string name="btn_instructions">Инструкци</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nСыхлӑх → Программисем → Автозапуск: Автобудильнике хуш; программӑн батареи йышӑнусенче „чикӗленӳ çук“ суйла.</string>
+    <string name="autostart_huawei">Huawei / Honor:\nЙышӑнусем → Батареи → Программисене пуҫласси → Автобудильник → Алӑпа тытса тӑр: пур тумблерсене хушӑр.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nЙышӑнусем → Батареи → Ӳтти йышӑнусем → Пулӑшупа усӑ курни → программӑ валли оптимизаци чар; Программа менеджерӗ → Автозапуск.</string>
+    <string name="autostart_samsung">Samsung:\nЙышӑнусем → Батареи → Фон чикӗленӳсем → Ҫывайман программисем → Автобудильнике хуш.</string>
+    <string name="autostart_other">Урӑх оболочка:\nПрограммӑна автозапуска хушӑр тата системӑн йышӑнусенче батареи оптимизацисене кӑларса пӑрахӑр.</string>
+    <string name="autostart_standard_note">„Стандарт“ режим будильникне кашни каҫ куçарать — программӑна 00:05 вӑхӑтра фонта пуҫланма кирлӗ.</string>
+
+    <!-- ==== Настройки: о приложении ==== -->
+    <string name="about_version">Автобудильник КГЭУ · v%1$s</string>
+    <string name="about_data">Расписание даннӑйӗсем: официаллӑ API kabinet.kgeu.ru. Программа КГЭУпа çыхӑнман.</string>
+    <string name="btn_github">GitHub çинчи репозитори</string>
+</resources>
