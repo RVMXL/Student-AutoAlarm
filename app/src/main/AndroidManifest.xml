@@ -4,6 +4,10 @@
 
     <!-- Сеть: API расписания kabinet.kgeu.ru -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- КРИТИЧНО для постановки будильника: без этого разрешения стоковые часы
+         (AOSP/ColorOS/MIUI) МОЛЧА игнорируют ACTION_SET_ALARM — главная причина
+         «будильники не ставятся вообще» на Realme/Oppo/Xiaomi -->
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <!-- Перезапуск ночных задач после перезагрузки -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Уведомления «будильник поставлен» (Android 13+) -->
@@ -17,11 +21,27 @@
     <!-- Тип dataSync обязателен с API 34 (на старых API игнорируется) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
-    <!-- Android 11+ (package visibility): чтобы resolveActivity() видел стоковые часы для ACTION_SET_ALARM -->
+    <!-- Android 11+ (package visibility): видимость стоковых часов для ACTION_SET_ALARM.
+         Intent-запись покрывает часы с декларированным intent-filter; явные <package>
+         обязательны для оболочек, где часы НЕ декларируют SET_ALARM (ColorOS/Realme UI,
+         часть MIUI) — без них getPackageInfo() рапортует «не установлено», и явный
+         таргетинг пакета невозможен. -->
     <queries>
         <intent>
             <action android:name="android.intent.action.SET_ALARM" />
         </intent>
+        <!-- Oppo / OnePlus / Realme (ColorOS, OxygenOS, Realme UI) -->
+        <package android:name="com.oplus.alarmclock" />
+        <package android:name="com.coloros.alarmclock" />
+        <!-- Samsung (One UI) -->
+        <package android:name="com.sec.android.app.clockpackage" />
+        <!-- Google Pixel / Motorola / стоковый AOSP -->
+        <package android:name="com.google.android.deskclock" />
+        <!-- Xiaomi / Redmi / Poco (MIUI, HyperOS), Huawei/Honor, Vivo — стандартное имя -->
+        <package android:name="com.android.deskclock" />
+        <package android:name="com.huawei.deskclock" />
+        <!-- Tecno / Infinix / Itel (Transsion) -->
+        <package android:name="com.transsion.deskclock" />
     </queries>
 
     <application

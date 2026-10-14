@@ -56,6 +56,7 @@ class SettingsRepository(private val context: Context) {
         val WEEK_ALARMS_SET_UNTIL = longPreferencesKey("week_alarms_set_until_epoch_day")
         val REMINDER_ENABLED = booleanPreferencesKey("reminder_enabled")
         val REMINDER_TIME = stringPreferencesKey("reminder_time")
+        val ALARM_SHOW_CLOCK_UI = booleanPreferencesKey("alarm_show_clock_ui")
         val GLASS_ENABLED = booleanPreferencesKey("glass_enabled")
         val GLASS_INTENSITY = floatPreferencesKey("glass_intensity")
     }
@@ -106,6 +107,7 @@ class SettingsRepository(private val context: Context) {
         weekAlarmsSetUntilEpochDay = this[Keys.WEEK_ALARMS_SET_UNTIL] ?: -1L,
         reminderEnabled = this[Keys.REMINDER_ENABLED] ?: false,
         reminderTime = this[Keys.REMINDER_TIME]?.let { parseTime(it) } ?: LocalTime.of(21, 0),
+        alarmShowClockUi = this[Keys.ALARM_SHOW_CLOCK_UI] ?: false,
         glassEnabled = this[Keys.GLASS_ENABLED] ?: false,
         glassIntensity = this[Keys.GLASS_INTENSITY] ?: 0.5f
     )
@@ -145,6 +147,7 @@ class SettingsRepository(private val context: Context) {
 
         this[Keys.REMINDER_ENABLED] = s.reminderEnabled
         this[Keys.REMINDER_TIME] = s.reminderTime.toString()
+        this[Keys.ALARM_SHOW_CLOCK_UI] = s.alarmShowClockUi
         this[Keys.GLASS_ENABLED] = s.glassEnabled
         this[Keys.GLASS_INTENSITY] = s.glassIntensity
     }

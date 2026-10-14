@@ -45,6 +45,7 @@ import androidx.compose.material.icons.rounded.Event
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Schedule
+import androidx.compose.material.icons.rounded.TouchApp
 import androidx.compose.material.icons.rounded.Wallpaper
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -333,6 +334,38 @@ private fun AlarmSettingsCard(
                     modifier = Modifier.weight(1f)
                 )
                 Switch(checked = settings.autoAlarmEnabled, onCheckedChange = null)
+            }
+            HorizontalDivider()
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .toggleable(
+                        value = settings.alarmShowClockUi,
+                        role = Role.Switch,
+                        onValueChange = { vm.setAlarmShowClockUi(it) }
+                    ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Rounded.TouchApp,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.width(12.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        "Показывать часы при постановке",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        "Включите, если будильники не ставятся сами (Realme, Oppo, Huawei): " +
+                            "часы откроются с готовым будильником — подтвердите кнопкой «Сохранить».",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Switch(checked = settings.alarmShowClockUi, onCheckedChange = null)
             }
             HorizontalDivider()
 

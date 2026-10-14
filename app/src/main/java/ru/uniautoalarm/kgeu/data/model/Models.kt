@@ -49,6 +49,9 @@ data class Settings(val setupComplete: Boolean = false,
     val weekAlarmsSetUntilEpochDay: Long = -1,
     /** Напоминание о будильнике: своё уведомление — фолбэк, когда стоковые часы не принимают SET_ALARM. */
     val reminderEnabled: Boolean = false, val reminderTime: LocalTime = LocalTime.of(21, 0),
+    /** Открывать экран часов при постановке (SKIP_UI=false) — для ColorOS/Realme UI,
+     *  где фоновая постановка с SKIP_UI=true молча блокируется; пользователь подтверждает тапом. */
+    val alarmShowClockUi: Boolean = false,
     /** Эффект стекла: полупрозрачные карточки + размытие фоновой картинки. */
     val glassEnabled: Boolean = false, val glassIntensity: Float = 0.5f)
 

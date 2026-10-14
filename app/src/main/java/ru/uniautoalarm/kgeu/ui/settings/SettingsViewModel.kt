@@ -136,6 +136,13 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
+    /** Экран часов при постановке (SKIP_UI=false) — для ColorOS/Realme UI, где фон-постановка блокируется. */
+    fun setAlarmShowClockUi(enabled: Boolean) {
+        viewModelScope.launch {
+            container.settings.update { it.copy(alarmShowClockUi = enabled) }
+        }
+    }
+
     // --- Эффект стекла ---
 
     fun setGlassEnabled(enabled: Boolean) {
