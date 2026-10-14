@@ -80,13 +80,25 @@ object Notifications {
         post(context, NOTIF_SKIPPED_ID, notification)
     }
 
-    /** Партия будильников «на неделю вперёд» поставлена. */
+    /** Партия повторяющихся будильников «на несколько дней вперёд» поставлена. */
     fun weekSet(context: Context, count: Int, from: LocalDate, to: LocalDate) {
-        val title = if (count == 1) "Поставлен 1 будильник" else "Поставлено будильников: $count"
-        val text = "на ${from.format(RU_DATE_SHORT)} – ${to.format(RU_DATE_SHORT)}"
+        val title = if (count == 1) "Поставлен 1 повторяющийся будильник" else "Поставлено повторяющихся будильников: $count"
+        val text = "по дням недели с парами (${from.format(RU_DATE_SHORT)} – ${to.format(RU_DATE_SHORT)}), повтор еженедельно"
         val notification = baseBuilder(context)
             .setContentTitle(title)
             .setContentText(text)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+            .setContentIntent(mainActivityIntent(context))
+            .setAutoCancel(true)
+            .build()
+        post(context, NOTIF_WEEK_ID, notification)
+    }
+
+    /** Партия «на несколько дней вперёд» уже стоит и актуальна — перестановка не нужна. */
+    fun weekAlreadySet(context: Context) {
+        val notification = baseBuilder(context)
+            .setContentTitle("Будильники на неделю уже стоят")
+            .setContentText("Расписание не меняло времена подъёма — переставлять не нужно")
             .setContentIntent(mainActivityIntent(context))
             .setAutoCancel(true)
             .build()

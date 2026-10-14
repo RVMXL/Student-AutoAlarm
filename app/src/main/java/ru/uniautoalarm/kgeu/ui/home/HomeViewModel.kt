@@ -11,11 +11,14 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.uniautoalarm.kgeu.alarm.NightlyScheduler
+import ru.uniautoalarm.kgeu.data.model.AlarmMode
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
 import ru.uniautoalarm.kgeu.data.model.Lesson
 import ru.uniautoalarm.kgeu.data.model.Settings
 import ru.uniautoalarm.kgeu.data.model.SyncInfo
 import ru.uniautoalarm.kgeu.data.model.Target
+import ru.uniautoalarm.kgeu.data.model.WeekAheadResult
 import ru.uniautoalarm.kgeu.di.AppContainer
 
 /**
@@ -60,7 +63,16 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
     /** Тумблер авто-будильника. */
     fun toggleAuto(enabled: Boolean) {
         viewModelScope.launch {
+            val mode = container.settings.current().mode
             container.settings.update { it.copy(autoAlarmEnabled = enabled) }
+            if (enabled) {
+                // будильник на ближайшее утро — сразу, а не после ночного тика 00:05
+                withContext(Dispatchers.Default) {
+                    if (mode == AlarmMode.WEEK_AHEAD) container.stockAlarms.setWeekAhead(notify = true)
+                    else container.stockAlarms.setNextUpcoming()
+                }
+            }
+            NightlyScheduler.scheduleNext(container.appContext)
         }
     }
 
@@ -74,16 +86,17 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
     }
 
     /**
-     * Режим «на неделю вперёд»: партия одноразовых будильников через StockAlarmSetter.
-     * setWeekAhead сам делает withContext(Default) внутри setForDate, но всю партию
-     * дополнительно уводим с главного потока; onResult приходит уже на Main.
+     * Режим «на несколько дней вперёд»: партия повторяющихся будильников через StockAlarmSetter.
+     * Всю партию уводим с главного потока; onResult приходит уже на Main.
+     * force = true: явное «Поставить» — сигнатура пропускается (пользователь мог
+     * вручную убрать будильники в часах).
      */
-    fun setWeekAhead(onResult: (Int) -> Unit) {
+    fun setWeekAhead(onResult: (WeekAheadResult) -> Unit) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
-            val count = withContext(Dispatchers.Default) {
-                container.stockAlarms.setWeekAhead()
+            val result = withContext(Dispatchers.Default) {
+                container.stockAlarms.setWeekAhead(force = true)
             }
-            onResult(count)
+            onResult(result)
         }
     }
 

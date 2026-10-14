@@ -497,9 +497,9 @@ private fun AlarmSettingsCard(
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
-                        "Одноразовые будильники сразу на несколько дней (страховка от " +
-                            "убийства процессов); часы обычно удаляют их сами после звонка, " +
-                            "лишние можно отключить кнопкой ниже",
+                        "Повторяющийся будильник на каждый учебный день недели — страховка " +
+                            "от убийства процессов; повторяются еженедельно по актуальному " +
+                            "расписанию, отключить можно кнопкой ниже",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -517,7 +517,7 @@ private fun AlarmSettingsCard(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
-                        "Будильники на $days ${daysWord(days)}",
+                        "Окно поиска пар: $days ${daysWord(days)} — будильники на все дни недели с парами",
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Slider(
@@ -528,7 +528,16 @@ private fun AlarmSettingsCard(
                         steps = 10
                     )
                     Button(onClick = {
-                        vm.setWeekAhead(days) { count -> onSnackbar("Поставлено будильников: $count") }
+                        vm.setWeekAhead(days) { res ->
+                            onSnackbar(
+                                when {
+                                    res.delivered > 0 ->
+                                        "Поставлено повторяющихся будильников: ${res.delivered} (по дням недели)"
+                                    res.alreadyUpToDate -> "Будильники уже стоят — расписание не менялось"
+                                    else -> "Предстоящих пар не нашлось"
+                                }
+                            )
+                        }
                     }) {
                         Text("Поставить сейчас")
                     }

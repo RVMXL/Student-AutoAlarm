@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import ru.uniautoalarm.kgeu.AutoAlarmApp
+import ru.uniautoalarm.kgeu.data.model.AlarmMode
 import ru.uniautoalarm.kgeu.data.model.Target
 import ru.uniautoalarm.kgeu.work.SyncWorker
 
@@ -60,8 +61,12 @@ class NightlyAlarmReceiver : BroadcastReceiver() {
                     }
                 }
 
-                // 3) будильник на завтра (планировщик возьмёт кэш, если сеть упала)
-                container.stockAlarms.setForDate(tomorrow, notify = true)
+                // 3) будильник на завтра (планировщик возьмёт кэш, если сеть упала) —
+                //    только в «Стандарт»: в режиме «на несколько дней вперёд» стоят
+                //    повторяющиеся будильники, ночной одноразовый звенел бы дубликатом
+                if (s.mode == AlarmMode.STANDARD) {
+                    container.stockAlarms.setForDate(tomorrow, notify = true)
+                }
 
                 // 4) фоновая досинхронизация: сегодня, неделя+7, полный семестр по графику
                 val syncRequest = OneTimeWorkRequestBuilder<SyncWorker>()

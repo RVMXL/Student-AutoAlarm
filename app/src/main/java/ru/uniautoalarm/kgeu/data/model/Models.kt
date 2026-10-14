@@ -56,11 +56,22 @@ data class Settings(val setupComplete: Boolean = false,
      *  значение — запас на сборы. Пары без записи используют общий wakeOffsetMinutes. */
     val firstLessonOffsets: Map<Int, Int> = emptyMap(),
     /** Эффект стекла: полупрозрачные карточки + размытие фоновой картинки. */
-    val glassEnabled: Boolean = false, val glassIntensity: Float = 0.5f)
+    val glassEnabled: Boolean = false, val glassIntensity: Float = 0.5f,
+    /** Сигнатура партии «на несколько дней вперёд» («день недели:время подъёма»):
+     *  дедупликация — SET_ALARM не умеет читать/удалять уже стоящие будильники. */
+    val weekAlarmsSignature: String = "",
+    /** Эпоха-минута (день*1440 + минуты) последнего поставленного разового будильника —
+     *  чтобы мгновенная постановка при включении тумблера не дублировала ночной тик 00:05. */
+    val lastScheduledWakeEpochMinute: Long = -1)
 
 /** План пробуждения на дату: победивший кандидат (пара или своё событие). */
 data class AlarmPlan(val date: LocalDate, val wakeAt: LocalDateTime,
     val lesson: Lesson?, val customEvent: CustomEvent?, val label: String)
+
+/** Итог постановки партии «на несколько дней вперёд».
+ *  delivered — сколько повторяющихся будильников реально передано часам;
+ *  alreadyUpToDate — партия уже стоит, расписание не меняло времена подъёма. */
+data class WeekAheadResult(val delivered: Int, val alreadyUpToDate: Boolean)
 
 /** Состояние синхронизации расписания для UI. */
 data class SyncInfo(val lastSyncEpochMs: Long = 0, val lastError: String? = null,

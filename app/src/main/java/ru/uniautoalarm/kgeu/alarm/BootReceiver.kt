@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import java.time.LocalDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,16 +32,13 @@ class BootReceiver : BroadcastReceiver() {
                 ReminderScheduler.scheduleNext(appContext)
                 WorkScheduler.enqueueSyncNow(appContext)
 
-                // 2) страховка режима «на неделю вперёд»:
-                // если прошлая партия будильников не покрывает даже завтра — поставить заново
+                // 2) страховка режима «на несколько дней вперёд»: повторяющиеся будильники
+                //    живут в часах сами, но если их снесли или сменилось расписание — ставим
+                //    заново (сигнатура в настройках отфильтрует дубликаты)
                 val container = (appContext as AutoAlarmApp).container
                 val s = container.settings.current()
-                val tomorrowEpochDay = LocalDate.now().plusDays(1).toEpochDay()
-                if (s.setupComplete && s.autoAlarmEnabled &&
-                    s.mode == AlarmMode.WEEK_AHEAD &&
-                    s.weekAlarmsSetUntilEpochDay < tomorrowEpochDay
-                ) {
-                    container.stockAlarms.setWeekAhead()
+                if (s.setupComplete && s.autoAlarmEnabled && s.mode == AlarmMode.WEEK_AHEAD) {
+                    container.stockAlarms.setWeekAhead(notify = false)
                 }
             } catch (e: Exception) {
                 Log.w(TAG, "Обработка загрузки не удалась: ${e.message}")

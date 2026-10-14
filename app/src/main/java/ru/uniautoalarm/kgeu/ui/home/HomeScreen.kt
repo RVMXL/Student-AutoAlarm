@@ -67,7 +67,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -86,7 +85,6 @@ private val StatusCardShape = RoundedCornerShape(24.dp)
 private val RU_LONG_DATE: DateTimeFormatter =
     DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale("ru", "RU"))
 private val TIME: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
-private val DDMM: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM")
 
 /**
  * Главный экран: статус завтрашнего будильника, тумблер, партия «на неделю вперёд»,
@@ -181,9 +179,17 @@ fun HomeScreen() {
                         settings = s,
                         active = vm.weekAlarmsActive(s),
                         onSet = {
-                            vm.setWeekAhead { count ->
+                            vm.setWeekAhead { res ->
                                 scope.launch {
-                                    snackbarHostState.showSnackbar("Поставлено будильников: $count")
+                                    snackbarHostState.showSnackbar(
+                                        when {
+                                            res.delivered > 0 ->
+                                                "Поставлено повторяющихся будильников: ${res.delivered}"
+                                            res.alreadyUpToDate ->
+                                                "Будильники уже стоят — расписание не менялось"
+                                            else -> "Предстоящих пар не нашлось"
+                                        }
+                                    )
                                 }
                             }
                         }
@@ -489,10 +495,10 @@ private fun WeekAheadCard(settings: Settings, active: Boolean, onSet: () -> Unit
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(Modifier.width(12.dp))
-                Text("На неделю вперёд", style = MaterialTheme.typography.titleMedium)
+                Text("На несколько дней вперёд", style = MaterialTheme.typography.titleMedium)
             }
             Text(
-                "Одноразовые будильники на ${settings.weekAheadDays} дней — страховка, " +
+                "Повторяющиеся будильники по дням недели — страховка, " +
                     "если система убивает приложение",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -505,10 +511,9 @@ private fun WeekAheadCard(settings: Settings, active: Boolean, onSet: () -> Unit
                     Text("Поставить на ${settings.weekAheadDays} дней")
                 }
                 if (active) {
-                    val until = LocalDate.ofEpochDay(settings.weekAlarmsSetUntilEpochDay)
                     AssistChip(
                         onClick = { },
-                        label = { Text("Активны до ${until.format(DDMM)}") },
+                        label = { Text("Повторяются еженедельно") },
                         leadingIcon = {
                             Icon(
                                 Icons.Rounded.Check,
@@ -520,7 +525,8 @@ private fun WeekAheadCard(settings: Settings, active: Boolean, onSet: () -> Unit
                 }
             }
             Text(
-                "Старые одноразовые будильники в часах удаляются вручную",
+                "Будильники повторяются еженедельно; лишние отключаются в стоковых часах " +
+                    "(«Список будильников» — в настройках приложения)",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
             )

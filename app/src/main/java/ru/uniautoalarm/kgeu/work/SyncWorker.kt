@@ -40,11 +40,10 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
             }
         }
 
-        // «На неделю вперёд»: партия истекла (не покрывает завтра) — дособираем
-        if (s.mode == AlarmMode.WEEK_AHEAD && s.autoAlarmEnabled &&
-            s.weekAlarmsSetUntilEpochDay < LocalDate.now().plusDays(1).toEpochDay()
-        ) {
-            runCatching { container.stockAlarms.setWeekAhead() }
+        // «На несколько дней вперёд»: партия повторяющихся будильников переставляется,
+        // только если расписание изменило времена подъёма (сигнатура отфильтрует повторы)
+        if (s.mode == AlarmMode.WEEK_AHEAD && s.autoAlarmEnabled) {
+            runCatching { container.stockAlarms.setWeekAhead(notify = false) }
         }
 
         return Result.success()

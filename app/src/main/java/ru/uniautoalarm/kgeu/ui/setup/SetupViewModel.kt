@@ -2,11 +2,13 @@ package ru.uniautoalarm.kgeu.ui.setup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import java.time.LocalDate
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.uniautoalarm.kgeu.alarm.NightlyScheduler
 import ru.uniautoalarm.kgeu.data.model.Target
 import ru.uniautoalarm.kgeu.data.model.TargetType
 import ru.uniautoalarm.kgeu.data.remote.KgeuGroup
@@ -108,8 +110,9 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
     /**
      * Завершить настройку. Цель обязательна: без неё — no-op.
      * Порядок: цель в настройки → setupComplete/wakeOffset/autoAlarmEnabled →
-     * первая полная синхронизация семестра fire-and-forget в scope движка
-     * (UI не ждёт сеть) → onDone().
+     * в scope движка: неделя на ближайшие дни → будильник на ближайшее утро сразу
+     * (не дожидаясь ночного тика 00:05) → ночной планировщик → полный семестр;
+     * UI сеть не ждёт → onDone().
      */
     fun completeSetup(onDone: () -> Unit) {
         if (completing) return
@@ -126,7 +129,14 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
                 )
             }
             container.appScope.launch {
-                container.scheduleRepository.refreshFull(target)
+                // неделя на ближайшие дни — чтобы сразу поставить будильник на ближайшее утро
+                runCatching { container.scheduleRepository.refreshWeek(target, LocalDate.now()) }
+                runCatching { container.scheduleRepository.refreshWeek(target, LocalDate.now().plusDays(1)) }
+                // будильник сразу после онбординга, не дожидаясь ночного тика 00:05
+                runCatching { container.stockAlarms.setNextUpcoming() }
+                NightlyScheduler.scheduleNext(container.appContext)
+                // полный семестр — фоном, без блокировки онбординга
+                runCatching { container.scheduleRepository.refreshFull(target) }
             }
             onDone()
         }

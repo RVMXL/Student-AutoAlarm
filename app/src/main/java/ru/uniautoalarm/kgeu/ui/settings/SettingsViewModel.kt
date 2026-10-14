@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.uniautoalarm.kgeu.alarm.NightlyScheduler
 import ru.uniautoalarm.kgeu.alarm.ReminderScheduler
 import ru.uniautoalarm.kgeu.data.db.CustomEventEntity
 import ru.uniautoalarm.kgeu.data.db.ExceptionEntity
@@ -21,6 +22,7 @@ import ru.uniautoalarm.kgeu.data.model.CustomEvent
 import ru.uniautoalarm.kgeu.data.model.ExceptionRule
 import ru.uniautoalarm.kgeu.data.model.Settings
 import ru.uniautoalarm.kgeu.data.model.ThemeMode
+import ru.uniautoalarm.kgeu.data.model.WeekAheadResult
 import ru.uniautoalarm.kgeu.data.repository.ScheduleRepository
 import ru.uniautoalarm.kgeu.di.AppContainer
 import ru.uniautoalarm.kgeu.ui.theme.ACCENT_PALETTES
@@ -111,6 +113,15 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     fun setMode(mode: AlarmMode) {
         viewModelScope.launch {
             container.settings.update { it.copy(mode = mode) }
+            // ночной тик нужен в обоих режимах (в «неделе вперёд» он не ставит дубликатов)
+            NightlyScheduler.scheduleNext(container.appContext)
+            // мгновенное действие режима: не дожидаемся ночного тика 00:05
+            withContext(Dispatchers.Default) {
+                when (mode) {
+                    AlarmMode.WEEK_AHEAD -> container.stockAlarms.setWeekAhead(notify = true)
+                    AlarmMode.STANDARD -> container.stockAlarms.setNextUpcoming()
+                }
+            }
         }
     }
 
@@ -124,7 +135,16 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
 
     fun toggleAuto(enabled: Boolean) {
         viewModelScope.launch {
+            val mode = container.settings.current().mode
             container.settings.update { it.copy(autoAlarmEnabled = enabled) }
+            if (enabled) {
+                // будильник на ближайшее утро — сразу, а не после ночного тика 00:05
+                withContext(Dispatchers.Default) {
+                    if (mode == AlarmMode.WEEK_AHEAD) container.stockAlarms.setWeekAhead(notify = true)
+                    else container.stockAlarms.setNextUpcoming()
+                }
+            }
+            NightlyScheduler.scheduleNext(container.appContext)
         }
     }
 
@@ -270,22 +290,24 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     // --- Будильники через движок ---
 
     /**
-     * Партия одноразовых будильников «на неделю вперёд».
+     * Партия повторяющихся будильников «на несколько дней вперёд».
      * [days] — необязательный пересчёт weekAheadDays: сначала атомарно записывается
      * в настройки (иначе «Поставить сейчас» могло бы прочитать устаревшее значение,
      * пока запись слайдера ещё летит в DataStore), затем ставится партия.
      */
-    fun setWeekAhead(days: Int? = null, onResult: (Int) -> Unit) {
+    fun setWeekAhead(days: Int? = null, onResult: (WeekAheadResult) -> Unit) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
             if (days != null) {
                 container.settings.update {
                     it.copy(weekAheadDays = days.coerceIn(MIN_WEEK_AHEAD_DAYS, MAX_WEEK_AHEAD_DAYS))
                 }
             }
-            val count = withContext(Dispatchers.Default) {
-                container.stockAlarms.setWeekAhead()
+            // force = true: явное «Поставить сейчас» — пользователь мог вручную убрать
+            // будильники в часах и просит поставить заново (сигнатура пропускается)
+            val result = withContext(Dispatchers.Default) {
+                container.stockAlarms.setWeekAhead(force = true)
             }
-            onResult(count)
+            onResult(result)
         }
     }
 
