@@ -44,6 +44,19 @@ interface LessonDao {
     /** Уникальные названия дисциплин в кэше — для автодополнения исключений. */
     @Query("SELECT DISTINCT subject FROM lessons ORDER BY subject ASC")
     fun distinctSubjects(): Flow<List<String>>
+
+    /**
+     * Уникальные времена НАЧАЛА первой пары каждого дня — список для настройки
+     * «подъём под каждую пару». Подзапрос берёт MIN(startMinutes) по каждой дате,
+     * DISTINCT убирает повторы недели.
+     */
+    @Query(
+        "SELECT DISTINCT firstStart FROM " +
+            "(SELECT MIN(startMinutes) AS firstStart FROM lessons " +
+            "WHERE targetKey = :targetKey GROUP BY dateEpochDay) " +
+            "ORDER BY firstStart ASC"
+    )
+    fun distinctFirstStartMinutes(targetKey: String): Flow<List<Int>>
 }
 
 @Dao

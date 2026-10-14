@@ -164,6 +164,21 @@ class ScheduleRepository(
     }
 
     /**
+     * Времена первых пар по всем дням кэша (отсортированы) — список для настройки
+     * «подъём под каждую пару». Реактивно: меняется при смене цели и синхронизации.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun firstLessonStartTimes(): Flow<List<LocalTime>> =
+        settings.settings
+            .map { s -> s.toTargetOrNull() }
+            .distinctUntilChanged()
+            .flatMapLatest { target ->
+                if (target == null) flowOf(emptyList())
+                else db.lessonDao().distinctFirstStartMinutes(targetKey(target))
+                    .map { list -> list.map { minutesToTime(it) } }
+            }
+
+    /**
      * Первая пара на [date] среди НЕ исключённых (нормализованное название дисциплины
      * не входит в [excludedNormalized]). Пар нет или все исключены → null.
      */

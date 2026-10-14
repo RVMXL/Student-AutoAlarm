@@ -52,6 +52,9 @@ data class Settings(val setupComplete: Boolean = false,
     /** Открывать экран часов при постановке (SKIP_UI=false) — для ColorOS/Realme UI,
      *  где фоновая постановка с SKIP_UI=true молча блокируется; пользователь подтверждает тапом. */
     val alarmShowClockUi: Boolean = false,
+    /** Свой подъём для каждой первой пары: ключ — минуты от 00:00 начала пары,
+     *  значение — запас на сборы. Пары без записи используют общий wakeOffsetMinutes. */
+    val firstLessonOffsets: Map<Int, Int> = emptyMap(),
     /** Эффект стекла: полупрозрачные карточки + размытие фоновой картинки. */
     val glassEnabled: Boolean = false, val glassIntensity: Float = 0.5f)
 

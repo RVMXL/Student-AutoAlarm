@@ -56,7 +56,11 @@ class AlarmPlanner(
         // (4) кандидаты на пробуждение
         val candidates = buildList {
             if (first != null) {
-                val wakeAt = date.atTime(first.start).minusMinutes(s.wakeOffsetMinutes.toLong())
+                // Свой запас на сборы для этого времени первой пары (см. «Подъём под каждую пару»);
+                // записи нет — общий wakeOffsetMinutes.
+                val startMinutes = first.start.hour * 60 + first.start.minute
+                val offset = s.firstLessonOffsets[startMinutes] ?: s.wakeOffsetMinutes
+                val wakeAt = date.atTime(first.start).minusMinutes(offset.toLong())
                 add(AlarmPlan(date, wakeAt, first, null, lessonLabel(first)))
             }
             for (e in events) {

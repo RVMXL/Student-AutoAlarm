@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
+import android.provider.AlarmClock
 import android.provider.Settings as AndroidSettings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -149,6 +150,7 @@ fun SettingsScreen() {
     val settings by vm.settings.collectAsStateWithLifecycle()
     val exceptions by vm.exceptions.collectAsStateWithLifecycle()
     val customEvents by vm.customEvents.collectAsStateWithLifecycle()
+    val pairStartTimes by vm.pairStartTimes.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -198,6 +200,8 @@ fun SettingsScreen() {
                     AlarmSettingsCard(
                         settings = s,
                         vm = vm,
+                        pairStartTimes = pairStartTimes,
+                        context = context,
                         onSnackbar = showMessage
                     )
                 }
@@ -301,9 +305,12 @@ private fun ProfileCard(settings: Settings, onChangeTarget: () -> Unit) {
 private fun AlarmSettingsCard(
     settings: Settings,
     vm: SettingsViewModel,
+    pairStartTimes: List<LocalTime>,
+    context: Context,
     onSnackbar: (String) -> Unit
 ) {
     var showOffsetDialog by remember { mutableStateOf(false) }
+    var editPairStart by remember { mutableStateOf<Int?>(null) }
 
     Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
         Column(
@@ -392,6 +399,58 @@ private fun AlarmSettingsCard(
             }
             HorizontalDivider()
 
+            // --- Подъём под каждую пару: свой запас на сборы для каждого времени первой пары ---
+            Text("Подъём под каждую пару", style = MaterialTheme.typography.bodyLarge)
+            Text(
+                "Свой запас на сборы для каждой первой пары: перед ранней — поменьше, " +
+                    "а перед поздней — побольше, чтобы успеть позавтракать. Пары без своего " +
+                    "значения используют общий подъём выше.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            if (pairStartTimes.isEmpty()) {
+                Text(
+                    "Времена пар появятся после синхронизации расписания",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                pairStartTimes.forEach { pairStart ->
+                    val startMinutes = pairStart.hour * 60 + pairStart.minute
+                    val custom = settings.firstLessonOffsets[startMinutes]
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(Modifier.weight(1f)) {
+                            Text(
+                                "Пара в ${pairStart.format(TIME)}",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                if (custom != null) {
+                                    "Подъём за ${formatOffset(custom)} → будильник в " +
+                                        wakeExample(pairStart, custom)
+                                } else {
+                                    "Общий подъём: за ${formatOffset(settings.wakeOffsetMinutes)}"
+                                },
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        if (custom != null) {
+                            TextButton(onClick = { vm.setPairOffset(startMinutes, null) }) {
+                                Text("Сбросить")
+                            }
+                        }
+                        TextButton(onClick = { editPairStart = startMinutes }) {
+                            Text("Изменить")
+                        }
+                    }
+                }
+            }
+            HorizontalDivider()
+
             Text("Режим", style = MaterialTheme.typography.bodyLarge)
             Row(
                 modifier = Modifier
@@ -439,7 +498,8 @@ private fun AlarmSettingsCard(
                     )
                     Text(
                         "Одноразовые будильники сразу на несколько дней (страховка от " +
-                            "убийства процессов); минус — копятся в часах",
+                            "убийства процессов); часы обычно удаляют их сами после звонка, " +
+                            "лишние можно отключить кнопкой ниже",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -472,19 +532,40 @@ private fun AlarmSettingsCard(
                     }) {
                         Text("Поставить сейчас")
                     }
+                    OutlinedButton(onClick = { dismissAppAlarms(context) { onSnackbar(it) } }) {
+                        Text("Отключить будильники приложения")
+                    }
+                    Text(
+                        "Удалять будильники из часов приложение Android не позволяет — " +
+                            "но их можно отключить: часы покажут будильники с меткой «Авто:», " +
+                            "снимите с ненужных галочки или удалите их вручную.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
             HorizontalDivider()
 
-            OutlinedButton(onClick = {
-                vm.setTestAlarm { ok ->
-                    onSnackbar(
-                        if (ok) "Будильник на 2 минуты поставлен — проверь часы"
-                        else "Не удалось поставить тестовый будильник — часы не отвечают"
-                    )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedButton(
+                    onClick = {
+                        vm.setTestAlarm { ok ->
+                            onSnackbar(
+                                if (ok) "Будильник на 2 минуты поставлен — проверь часы"
+                                else "Не удалось поставить тестовый будильник — часы не отвечают"
+                            )
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Проверить будильник")
                 }
-            }) {
-                Text("Проверить будильник")
+                OutlinedButton(
+                    onClick = { openStockAlarms(context) { onSnackbar(it) } },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Список будильников")
+                }
             }
         }
     }
@@ -496,6 +577,24 @@ private fun AlarmSettingsCard(
             onConfirm = { value ->
                 vm.setWakeOffset(value)
                 showOffsetDialog = false
+            }
+        )
+    }
+
+    editPairStart?.let { startMinutes ->
+        PairOffsetDialog(
+            pairStart = LocalTime.of(startMinutes / 60, startMinutes % 60),
+            initialMinutes = settings.firstLessonOffsets[startMinutes]
+                ?: settings.wakeOffsetMinutes,
+            isCustom = settings.firstLessonOffsets.containsKey(startMinutes),
+            onDismiss = { editPairStart = null },
+            onSave = { value ->
+                vm.setPairOffset(startMinutes, value)
+                editPairStart = null
+            },
+            onReset = {
+                vm.setPairOffset(startMinutes, null)
+                editPairStart = null
             }
         )
     }
@@ -548,6 +647,70 @@ private fun OffsetDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text("Отмена") }
+        }
+    )
+}
+
+/**
+ * Диалог своего подъёма для одной пары («Подъём под каждую пару»).
+ * Сброс удаляет индивидуальную запись — пара снова использует общий подъём.
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun PairOffsetDialog(
+    pairStart: LocalTime,
+    initialMinutes: Int,
+    isCustom: Boolean,
+    onDismiss: () -> Unit,
+    onSave: (Int) -> Unit,
+    onReset: () -> Unit
+) {
+    var value by remember { mutableIntStateOf(initialMinutes) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Пара в ${pairStart.format(TIME)}") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(
+                    formatOffset(value),
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Slider(
+                    value = value.toFloat(),
+                    onValueChange = { value = it.roundToInt() },
+                    valueRange = 15f..240f,
+                    steps = 14
+                )
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OFFSET_PRESETS.forEach { preset ->
+                        FilterChip(
+                            selected = value == preset,
+                            onClick = { value = preset },
+                            label = { Text(formatOffset(preset)) }
+                        )
+                    }
+                }
+                Text(
+                    "Пара в ${pairStart.format(TIME)} → будильник прозвонит в " +
+                        wakeExample(pairStart, value),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onSave(value) }) { Text("Сохранить") }
+        },
+        dismissButton = {
+            Row {
+                if (isCustom) {
+                    TextButton(onClick = onReset) { Text("Сбросить") }
+                }
+                TextButton(onClick = onDismiss) { Text("Отмена") }
+            }
         }
     )
 }
@@ -1448,7 +1611,7 @@ private fun AboutCard(versionName: String?, context: Context) {
                     context.startActivity(
                         Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse("https://github.com/rvmxl/UniAutoAlarm-KGEU")
+                            Uri.parse("https://github.com/RVMXL/Student-AutoAlarm")
                         )
                     )
                 } catch (_: Exception) {
@@ -1483,6 +1646,10 @@ private fun daysWord(n: Int): String =
 /** Пример: будильник при первой паре в 08:30 и смещении [offsetMinutes]. */
 private fun exampleWake(offsetMinutes: Int): String =
     LocalTime.of(8, 30).minusMinutes(offsetMinutes.toLong()).format(TIME)
+
+/** Будильник при паре в [pairStart] и запасе на сборы [offsetMinutes]. */
+private fun wakeExample(pairStart: LocalTime, offsetMinutes: Int): String =
+    pairStart.minusMinutes(offsetMinutes.toLong()).format(TIME)
 
 /** «Студент · А-1-22» / «Преподаватель · Иванов И.И.» */
 private fun profileLine(settings: Settings): String {
@@ -1551,5 +1718,36 @@ private fun openBatteryOptimizationSettings(context: Context) {
                 .setData(Uri.parse("package:${context.packageName}"))
         )
     } catch (_: Exception) {
+    }
+}
+
+/** Открыть список будильников стоковых часов: удалить лишний одноразовый можно только там. */
+private fun openStockAlarms(context: Context, onError: (String) -> Unit) {
+    try {
+        context.startActivity(
+            Intent(AlarmClock.ACTION_SHOW_ALARMS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        )
+    } catch (_: Exception) {
+        onError("Часы не открыли список будильников")
+    }
+}
+
+/**
+ * Отключить будильники, поставленные приложением: DISMISS_ALARM с поиском по метке «Авто».
+ * Удалять чужие будильники из часов стороннее приложение Android не позволяет —
+ * только отключить (одноразовое отключённое не зазвонит). Часы без поддержки
+ * DISMISS_ALARM просто не отреагируют → подсказка открыть список вручную.
+ */
+private fun dismissAppAlarms(context: Context, onError: (String) -> Unit) {
+    try {
+        context.startActivity(
+            Intent(AlarmClock.ACTION_DISMISS_ALARM).apply {
+                putExtra(AlarmClock.EXTRA_ALARM_SEARCH_MODE, AlarmClock.ALARM_SEARCH_MODE_LABEL)
+                putExtra(AlarmClock.EXTRA_MESSAGE, "Авто")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        )
+    } catch (_: Exception) {
+        onError("Часы не поддерживают отключение — откройте список будильников вручную")
     }
 }

@@ -52,6 +52,11 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     val subjects: StateFlow<List<String>> = container.scheduleRepository.subjects
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    /** Времена первых пар из кэша расписания — список для «подъём под каждую пару». */
+    val pairStartTimes: StateFlow<List<LocalTime>> =
+        container.scheduleRepository.firstLessonStartTimes()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
     // --- Настройки-«примитивы» ---
 
     fun setThemeMode(mode: ThemeMode) {
@@ -84,6 +89,21 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             container.settings.update {
                 it.copy(wakeOffsetMinutes = minutes.coerceIn(MIN_OFFSET, MAX_OFFSET))
+            }
+        }
+    }
+
+    /**
+     * Свой подъём для пары, начинающейся в [startMinutes] (минуты от 00:00).
+     * [offset] = null — сброс на общий wakeOffsetMinutes.
+     */
+    fun setPairOffset(startMinutes: Int, offset: Int?) {
+        viewModelScope.launch {
+            container.settings.update {
+                val map = it.firstLessonOffsets.toMutableMap()
+                if (offset == null) map.remove(startMinutes)
+                else map[startMinutes] = offset.coerceIn(MIN_OFFSET, MAX_OFFSET)
+                it.copy(firstLessonOffsets = map)
             }
         }
     }

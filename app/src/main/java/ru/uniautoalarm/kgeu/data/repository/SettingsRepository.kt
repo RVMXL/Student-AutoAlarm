@@ -57,6 +57,7 @@ class SettingsRepository(private val context: Context) {
         val REMINDER_ENABLED = booleanPreferencesKey("reminder_enabled")
         val REMINDER_TIME = stringPreferencesKey("reminder_time")
         val ALARM_SHOW_CLOCK_UI = booleanPreferencesKey("alarm_show_clock_ui")
+        val FIRST_LESSON_OFFSETS = stringPreferencesKey("first_lesson_offsets")
         val GLASS_ENABLED = booleanPreferencesKey("glass_enabled")
         val GLASS_INTENSITY = floatPreferencesKey("glass_intensity")
     }
@@ -108,6 +109,7 @@ class SettingsRepository(private val context: Context) {
         reminderEnabled = this[Keys.REMINDER_ENABLED] ?: false,
         reminderTime = this[Keys.REMINDER_TIME]?.let { parseTime(it) } ?: LocalTime.of(21, 0),
         alarmShowClockUi = this[Keys.ALARM_SHOW_CLOCK_UI] ?: false,
+        firstLessonOffsets = this[Keys.FIRST_LESSON_OFFSETS]?.let { parseOffsets(it) } ?: emptyMap(),
         glassEnabled = this[Keys.GLASS_ENABLED] ?: false,
         glassIntensity = this[Keys.GLASS_INTENSITY] ?: 0.5f
     )
@@ -148,6 +150,7 @@ class SettingsRepository(private val context: Context) {
         this[Keys.REMINDER_ENABLED] = s.reminderEnabled
         this[Keys.REMINDER_TIME] = s.reminderTime.toString()
         this[Keys.ALARM_SHOW_CLOCK_UI] = s.alarmShowClockUi
+        this[Keys.FIRST_LESSON_OFFSETS] = serializeOffsets(s.firstLessonOffsets)
         this[Keys.GLASS_ENABLED] = s.glassEnabled
         this[Keys.GLASS_INTENSITY] = s.glassIntensity
     }
@@ -164,4 +167,21 @@ class SettingsRepository(private val context: Context) {
     private fun parseDate(iso: String): LocalDate? = runCatching { LocalDate.parse(iso) }.getOrNull()
 
     private fun parseTime(iso: String): LocalTime? = runCatching { LocalTime.parse(iso) }.getOrNull()
+
+    // --- Сериализация firstLessonOffsets: «480:60;580:90» (порядок не важен) ---
+
+    private fun serializeOffsets(map: Map<Int, Int>): String =
+        map.entries.joinToString(";") { "${it.key}:${it.value}" }
+
+    /** Битые записи молча выбрасываются; офсеты зажимаются в разумные границы. */
+    private fun parseOffsets(raw: String): Map<Int, Int> = raw.split(';')
+        .mapNotNull {
+            val parts = it.split(':')
+            if (parts.size != 2) return@mapNotNull null
+            val start = parts[0].trim().toIntOrNull() ?: return@mapNotNull null
+            val offset = parts[1].trim().toIntOrNull() ?: return@mapNotNull null
+            if (start !in 0..24 * 60 - 1) return@mapNotNull null
+            start to offset.coerceIn(15, 240)
+        }
+        .toMap()
 }
