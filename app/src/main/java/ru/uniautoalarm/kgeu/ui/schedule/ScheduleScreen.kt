@@ -26,6 +26,7 @@ import androidx.compose.material.icons.rounded.EventBusy
 import androidx.compose.material.icons.rounded.NotificationsActive
 import androidx.compose.material.icons.rounded.NotificationsOff
 import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.Today
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
@@ -58,6 +59,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
 import java.util.Locale
 import kotlinx.coroutines.launch
 import ru.uniautoalarm.kgeu.data.model.CalendarStyle
@@ -104,6 +106,11 @@ fun ScheduleScreen() {
 
     val paper = settings?.calendarStyle == CalendarStyle.PAPER
     val dayLessons = weekLessons[selectedDate].orEmpty()
+    val today = remember { LocalDate.now() }
+    val currentWeekMonday =
+        remember(today) { today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)) }
+    val isCurrentWeek = weekMonday == currentWeekMonday
+    val accent = if (paper) PaperAccent else MaterialTheme.colorScheme.primary
     val monthTitle = remember(weekMonday) {
         val month = weekMonday.month
             .getDisplayName(java.time.format.TextStyle.FULL, Locale("ru", "RU"))
@@ -156,21 +163,51 @@ fun ScheduleScreen() {
                         contentDescription = "Предыдущая неделя"
                     )
                 }
-                Text(
-                    "${weekMonday.format(RU_MONTH_DAY)} – " +
-                        weekMonday.plusDays(6).format(RU_MONTH_DAY),
-                    style = MaterialTheme.typography.titleMedium,
-                    textAlign = TextAlign.Center,
-                    color = if (paper) PaperInk else MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.weight(1f)
-                )
-                IconButton(onClick = { vm.nextWeek() }) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "${weekMonday.format(RU_MONTH_DAY)} – " +
+                            weekMonday.plusDays(6).format(RU_MONTH_DAY),
+                        style = MaterialTheme.typography.titleMedium,
+                        textAlign = TextAlign.Center,
+                        // текущая неделя выделена акцентом — из неё чаще всего и «уезжают»
+                        color = if (isCurrentWeek) accent
+                            else if (paper) PaperInk else MaterialTheme.colorScheme.onSurface
+                    )
+                    if (isCurrentWeek) {
+                        SmallBadge(
+                            text = "эта неделя",
+                            container = accent,
+                            content = PaperOnAccent
+                        )
+                    }
+                }
+                IconButton(onClick = {
+                    vm.nextWeek { msg ->
+                        scope.launch { snackbarHostState.showSnackbar(msg) }
+                    }
+                }) {
                     Icon(
                         Icons.Rounded.ChevronRight,
                         contentDescription = "Следующая неделя"
                     )
                 }
-                IconButton(onClick = { vm.refreshCurrent() }) {
+                IconButton(onClick = { vm.goToToday() }) {
+                    Icon(
+                        Icons.Rounded.Today,
+                        contentDescription = "Перейти к текущей неделе и сегодняшнему дню",
+                        // подсвечена, пока пользователь «уехал» с текущей недели
+                        tint = if (!isCurrentWeek) accent
+                            else if (paper) PaperInkSoft else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                IconButton(onClick = {
+                    vm.refreshCurrent { msg ->
+                        scope.launch { snackbarHostState.showSnackbar(msg) }
+                    }
+                }) {
                     Icon(Icons.Rounded.Refresh, contentDescription = "Обновить неделю")
                 }
             }
@@ -192,6 +229,7 @@ fun ScheduleScreen() {
                     DayChip(
                         date = date,
                         selected = date == selectedDate,
+                        isToday = date == today,
                         paper = paper,
                         onClick = { vm.selectDate(date) }
                     )
@@ -283,13 +321,35 @@ private fun PaperCalendarHeader(monthTitle: String) {
 // --- Чип дня недели ---
 
 @Composable
-private fun DayChip(date: LocalDate, selected: Boolean, paper: Boolean, onClick: () -> Unit) {
+private fun DayChip(
+    date: LocalDate,
+    selected: Boolean,
+    isToday: Boolean,
+    paper: Boolean,
+    onClick: () -> Unit
+) {
+    val accent = if (paper) PaperAccent else MaterialTheme.colorScheme.primary
     val label = "${ruShortDay(date.dayOfWeek)} ${date.dayOfMonth}"
+    // сегодняшний день: жирный + точка-акцент под числом (как в настенных календарях)
+    @Composable
+    fun todayLabel() {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(label, fontWeight = if (isToday) FontWeight.Bold else null)
+            if (isToday && !selected) {
+                Box(
+                    modifier = Modifier
+                        .padding(top = 1.dp)
+                        .size(4.dp)
+                        .background(accent, CircleShape)
+                )
+            }
+        }
+    }
     if (paper) {
         FilterChip(
             selected = selected,
             onClick = onClick,
-            label = { Text(label) },
+            label = { todayLabel() },
             shape = ChipShape,
             colors = FilterChipDefaults.filterChipColors(
                 containerColor = PaperCard,
@@ -302,7 +362,7 @@ private fun DayChip(date: LocalDate, selected: Boolean, paper: Boolean, onClick:
         FilterChip(
             selected = selected,
             onClick = onClick,
-            label = { Text(label) },
+            label = { todayLabel() },
             shape = ChipShape
         )
     }

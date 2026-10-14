@@ -108,6 +108,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.uniautoalarm.kgeu.alarm.StockAlarmSetter
 import ru.uniautoalarm.kgeu.data.model.AlarmMode
 import ru.uniautoalarm.kgeu.data.model.CalendarStyle
 import ru.uniautoalarm.kgeu.data.model.CustomEvent
@@ -311,6 +312,9 @@ private fun AlarmSettingsCard(
 ) {
     var showOffsetDialog by remember { mutableStateOf(false) }
     var editPairStart by remember { mutableStateOf<Int?>(null) }
+    // пакет часов — для адресной отправки DISMISS_ALARM (см. dismissAppAlarms)
+    val alarmContainer = LocalAppContainer.current
+    val clockPackage = remember(alarmContainer) { alarmContainer.stockAlarms.detectClockPackage() }
 
     Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
         Column(
@@ -541,13 +545,15 @@ private fun AlarmSettingsCard(
                     }) {
                         Text("Поставить сейчас")
                     }
-                    OutlinedButton(onClick = { dismissAppAlarms(context) { onSnackbar(it) } }) {
+                    OutlinedButton(onClick = {
+                        dismissAppAlarms(context, clockPackage) { onSnackbar(it) }
+                    }) {
                         Text("Отключить будильники приложения")
                     }
                     Text(
-                        "Удалять будильники из часов приложение Android не позволяет — " +
-                            "но их можно отключить: часы покажут будильники с меткой «Авто:», " +
-                            "снимите с ненужных галочки или удалите их вручную.",
+                        "Кнопка отправляет в часы команду отключения по точным меткам «Авто: Пн»…«Авто: Вс». " +
+                            "Если оболочка команду не принимает (часть Realme UI/ColorOS — ограничение системы), " +
+                            "приложение само откроет список будильников — снимите метки «Авто:» вручную.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -1742,21 +1748,67 @@ private fun openStockAlarms(context: Context, onError: (String) -> Unit) {
 }
 
 /**
- * Отключить будильники, поставленные приложением: DISMISS_ALARM с поиском по метке «Авто».
- * Удалять чужие будильники из часов стороннее приложение Android не позволяет —
- * только отключить (одноразовое отключённое не зазвонит). Часы без поддержки
- * DISMISS_ALARM просто не отреагируют → подсказка открыть список вручную.
+ * Отключить будильники, поставленные приложением: официальный канал DISMISS_ALARM.
+ *
+ * Баг 0.3.1 (исправлено в 0.4.0): раньше отправлялась метка «Авто», но поиск по метке
+ * в часах — ТОЧНОЕ совпадение (не «начинается с»), а будильники помечены
+ * «Авто: Пн»…«Авто: Вс» → совпадений ноль, часы молча ничего не делали.
+ * Теперь DISMISS отправляется по каждой точной метке из StockAlarmSetter.WEEK_AHEAD_LABELS.
+ *
+ * Ограничение системы: контракт не возвращает результат («сколько отключено»), а часть
+ * OEM-часов (Realme UI/ColorOS, старые MIUI) интент DISMISS_ALARM вообще не принимают —
+ * startActivity бросит исключение. Тогда честно открываем список будильников часов
+ * (SHOW_ALARMS), чтобы пользователь снял метки «Авто:» вручную.
  */
-private fun dismissAppAlarms(context: Context, onError: (String) -> Unit) {
-    try {
-        context.startActivity(
-            Intent(AlarmClock.ACTION_DISMISS_ALARM).apply {
-                putExtra(AlarmClock.EXTRA_ALARM_SEARCH_MODE, AlarmClock.ALARM_SEARCH_MODE_LABEL)
-                putExtra(AlarmClock.EXTRA_MESSAGE, "Авто")
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-        )
-    } catch (_: Exception) {
-        onError("Часы не поддерживают отключение — откройте список будильников вручную")
+private fun dismissAppAlarms(
+    context: Context,
+    clockPackage: String?,
+    onResult: (String) -> Unit,
+) {
+    var sent = 0
+    for (label in StockAlarmSetter.WEEK_AHEAD_LABELS) {
+        sent += try {
+            context.startActivity(
+                Intent(AlarmClock.ACTION_DISMISS_ALARM).apply {
+                    putExtra(AlarmClock.EXTRA_ALARM_SEARCH_MODE, AlarmClock.ALARM_SEARCH_MODE_LABEL)
+                    putExtra(AlarmClock.EXTRA_MESSAGE, label)
+                    // тихо, без UI на каждый будильник: пользователь нажал одну кнопку
+                    putExtra(AlarmClock.EXTRA_SKIP_UI, true)
+                    if (clockPackage != null) setPackage(clockPackage)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+            )
+            1
+        } catch (_: Exception) {
+            0
+        }
     }
+    if (sent > 0) {
+        onResult(
+            "Команда отключения отправлена в часы ($sent из ${StockAlarmSetter.WEEK_AHEAD_LABELS.size}). " +
+                "Если будильники «Авто: …» остались — отключите их в списке будильников"
+        )
+        return
+    }
+    // Часы не приняли ни одной команды — ограничение оболочки; открываем список вручную
+    val intents = buildList {
+        if (clockPackage != null) {
+            add(Intent(AlarmClock.ACTION_SHOW_ALARMS).setPackage(clockPackage))
+        }
+        add(Intent(AlarmClock.ACTION_SHOW_ALARMS))
+    }
+    val opened = intents.any { intent ->
+        try {
+            context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+    onResult(
+        if (opened) "Часы не поддерживают отключение командой (ограничение оболочки) — " +
+            "открыл список будильников: снимите будильники с меткой «Авто:» вручную"
+        else "Часы не поддерживают отключение командой (ограничение оболочки) — " +
+            "откройте будильники в приложении часов и снимите метки «Авто:» вручную"
+    )
 }

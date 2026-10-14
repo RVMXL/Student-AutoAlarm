@@ -217,7 +217,9 @@ class StockAlarmSetter(
             if (deliver(
                     hour = dw.wakeMinutes / 60,
                     minute = dw.wakeMinutes % 60,
-                    label = "Авто: ${dowShortRu(dw.dow)}",
+                    // метка из единого источника: DISMISS_ALARM по метке ищет ТОЧНОЕ
+                    // совпадение — метки SET и кнопки «Отключить» обязаны совпадать байт в байт
+                    label = WEEK_AHEAD_LABELS[dw.dow.value - 1],
                     showClockUi = s.alarmShowClockUi,
                     repeatCalendarDays = listOf(calendarDayOf(dw.dow))
                 )
@@ -238,16 +240,6 @@ class StockAlarmSetter(
     /** java.time.DayOfWeek → константа java.util.Calendar для EXTRA_DAYS (Sun=1 .. Sat=7). */
     private fun calendarDayOf(dow: DayOfWeek): Int =
         if (dow == DayOfWeek.SUNDAY) Calendar.SUNDAY else dow.value + 1
-
-    private fun dowShortRu(dow: DayOfWeek): String = when (dow) {
-        DayOfWeek.MONDAY -> "Пн"
-        DayOfWeek.TUESDAY -> "Вт"
-        DayOfWeek.WEDNESDAY -> "Ср"
-        DayOfWeek.THURSDAY -> "Чт"
-        DayOfWeek.FRIDAY -> "Пт"
-        DayOfWeek.SATURDAY -> "Сб"
-        DayOfWeek.SUNDAY -> "Вс"
-    }
 
     /**
      * Тестовый будильник через [minutesFromNow] минут (кнопка «Проверить будильник» в настройках).
@@ -311,5 +303,16 @@ class StockAlarmSetter(
 
     companion object {
         private const val TAG = "StockAlarmSetter"
+
+        /**
+         * Метки повторяющихся будильников режима «на несколько дней вперёд» —
+         * единый источник для SET_ALARM и кнопки «Отключить будильники приложения»
+         * (DISMISS_ALARM): поиск по метке в часах — ТОЧНОЕ совпадение (AOSP DeskClock:
+         * WHERE label = ?), а не «начинается с». В 0.3.1 кнопка отправляла метку
+         * «Авто», под которую не подходило ни «Авто: Пн», ни что-либо ещё — часы
+         * молча ничего не отключали (см. RELEASE-0.4.0).
+         */
+        val WEEK_AHEAD_LABELS: List<String> =
+            listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс").map { "Авто: $it" }
     }
 }

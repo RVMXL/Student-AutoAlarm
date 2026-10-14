@@ -154,7 +154,11 @@ fun HomeScreen() {
                 HeaderRow(
                     settings = settings,
                     busy = sync.busy,
-                    onRefresh = { vm.refresh() }
+                    onRefresh = {
+                        vm.refresh { msg ->
+                            scope.launch { snackbarHostState.showSnackbar(msg) }
+                        }
+                    }
                 )
             }
             item {
@@ -163,7 +167,11 @@ fun HomeScreen() {
                     sync = sync,
                     plan = plan,
                     tomorrowLessons = tomorrowLessons,
-                    onLoad = { vm.refresh() }
+                    onLoad = {
+                        vm.refresh { msg ->
+                            scope.launch { snackbarHostState.showSnackbar(msg) }
+                        }
+                    }
                 )
             }
             item {
@@ -231,7 +239,11 @@ fun HomeScreen() {
                         description = "Расписание вуза часто меняют — подтяните свежие данные.",
                         actionLabel = "Обновить",
                         isError = false,
-                        onAction = { vm.refresh() }
+                        onAction = {
+                            vm.refresh { msg ->
+                                scope.launch { snackbarHostState.showSnackbar(msg) }
+                            }
+                        }
                     )
                 }
             }

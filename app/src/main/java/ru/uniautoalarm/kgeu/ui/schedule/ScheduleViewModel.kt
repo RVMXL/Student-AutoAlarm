@@ -23,6 +23,8 @@ import ru.uniautoalarm.kgeu.data.model.SyncInfo
 import ru.uniautoalarm.kgeu.data.model.Target
 import ru.uniautoalarm.kgeu.data.repository.ScheduleRepository
 import ru.uniautoalarm.kgeu.di.AppContainer
+import ru.uniautoalarm.kgeu.ui.common.refreshErrorMessage
+import ru.uniautoalarm.kgeu.ui.common.refreshMessage
 
 /**
  * ViewModel экрана расписания: выбранная неделя (понедельник), выбранный день,
@@ -84,25 +86,39 @@ class ScheduleViewModel(private val container: AppContainer) : ViewModel() {
         _selectedDate.value = newMonday.plusDays(weekdayOffset(_selectedDate.value))
     }
 
+    /** Вернуться к текущей неделе и выбрать сегодня (кнопка «сегодня» в шапке календаря). */
+    fun goToToday() {
+        _weekMonday.value =
+            LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        _selectedDate.value = LocalDate.now()
+    }
+
     /**
      * Следующая неделя: сдвиг плюс тихая подгрузка новой недели из API
-     * (если цели нет — просто показываем кэш).
+     * (если цели нет — просто показываем кэш). onError — только при сбое загрузки:
+     * успех после перелистывания не значит ничего нового, а вот пустая неделя из-за
+     * отвалившейся сети должна объясниться.
      */
-    fun nextWeek() {
+    fun nextWeek(onError: (String) -> Unit = {}) {
         val newMonday = _weekMonday.value.plusDays(7)
         _weekMonday.value = newMonday
         _selectedDate.value = newMonday.plusDays(weekdayOffset(_selectedDate.value))
         viewModelScope.launch {
             val target = container.settings.current().toTarget() ?: return@launch
             container.scheduleRepository.refreshWeek(target, newMonday)
+                .onFailure { e -> onError(refreshErrorMessage(e)) }
         }
     }
 
-    /** Обновить текущую (выбранную) неделю из API. */
-    fun refreshCurrent() {
+    /** Обновить выбранную неделю из API; onResult — текст для снекбара (успех/причина). */
+    fun refreshCurrent(onResult: (String) -> Unit) {
         viewModelScope.launch {
-            val target = container.settings.current().toTarget() ?: return@launch
-            container.scheduleRepository.refreshWeek(target, _weekMonday.value)
+            val target = container.settings.current().toTarget()
+            if (target == null) {
+                onResult("Сначала выберите группу или преподавателя в настройках")
+                return@launch
+            }
+            onResult(refreshMessage(container.scheduleRepository.refreshWeek(target, _weekMonday.value)))
         }
     }
 

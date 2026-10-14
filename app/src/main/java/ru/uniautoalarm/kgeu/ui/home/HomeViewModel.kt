@@ -20,6 +20,7 @@ import ru.uniautoalarm.kgeu.data.model.SyncInfo
 import ru.uniautoalarm.kgeu.data.model.Target
 import ru.uniautoalarm.kgeu.data.model.WeekAheadResult
 import ru.uniautoalarm.kgeu.di.AppContainer
+import ru.uniautoalarm.kgeu.ui.common.refreshErrorMessage
 
 /**
  * ViewModel главного экрана: снимок настроек, состояние синхронизации, пары на сегодня/завтра
@@ -76,12 +77,27 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
-    /** Перепроверка расписания: текущая неделя и неделя завтрашнего дня (Result игнорируем). */
-    fun refresh() {
+    /**
+     * Перепроверка расписания: текущая неделя и неделя завтрашнего дня.
+     * onResult — текст для снекбара: раньше обновление молчало и в успехе,
+     * и в ошибке — было непонятно, сработала ли кнопка вообще.
+     */
+    fun refresh(onResult: (String) -> Unit) {
         viewModelScope.launch {
-            val target = container.settings.current().toTarget() ?: return@launch
-            container.scheduleRepository.refreshWeek(target, today)
-            container.scheduleRepository.refreshWeek(target, tomorrow)
+            val target = container.settings.current().toTarget()
+            if (target == null) {
+                onResult("Сначала выберите группу или преподавателя в настройках")
+                return@launch
+            }
+            val results = listOf(
+                container.scheduleRepository.refreshWeek(target, today),
+                container.scheduleRepository.refreshWeek(target, tomorrow)
+            )
+            val firstError = results.firstOrNull { it.isFailure }?.exceptionOrNull()
+            onResult(
+                if (firstError == null) "Расписание обновлено"
+                else refreshErrorMessage(firstError)
+            )
         }
     }
 
