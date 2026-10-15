@@ -135,13 +135,12 @@ class StockAlarmSetter(
 
             val now = LocalDateTime.now()
 
-            // защита от вызова с уже прошедшим моментом: одноразовый SET_ALARM зазвенел бы
-            // в следующее наступление этого времени — завтра
-            if (!plan.wakeAt.isAfter(now)) return@withContext null
-
-            val daysAhead = ChronoUnit.DAYS.between(LocalDate.now(), date)
-            val delivered = when {
-                daysAhead > 1L -> {
+            // Решение доставки — чистая функция (см. [deliveryDecision]): юнит-тест
+            // фиксирует правило «сегодня/безопасное завтра/откладка до ночи» (0.8.0)
+            // и spill-случай своего события в 00:30 (wakeAt вчера — AL-6).
+            val delivered = when (deliveryDecision(now, plan.wakeAt)) {
+                Delivery.PAST -> false // защита от прошедшего момента: разовый звенел бы завтра
+                Delivery.TOO_FAR -> {
                     if (notify) {
                         Notifications.alarmSkipped(
                             context, date, LocaleHelper.string(context, R.string.skip_too_far)
@@ -149,7 +148,7 @@ class StockAlarmSetter(
                     }
                     false
                 }
-                daysAhead == 1L && plan.wakeAt.toLocalTime().isAfter(now.toLocalTime()) -> {
+                Delivery.DEFER_TO_NIGHT -> {
                     // разовый будильник на завтра, поставленный сейчас, зазвенел бы СЕГОДНЯ:
                     // время подъёма ещё не наступило. Откладываем до ночной сверки 00:05 —
                     // она поставит его в правильный день (логика 0.8.0)
@@ -161,7 +160,7 @@ class StockAlarmSetter(
                     }
                     false
                 }
-                else -> deliver(plan.wakeAt.hour, plan.wakeAt.minute, plan.label, s.alarmShowClockUi)
+                Delivery.DELIVER -> deliver(plan.wakeAt.hour, plan.wakeAt.minute, plan.label, s.alarmShowClockUi)
             }
 
             if (delivered) {
@@ -357,6 +356,21 @@ class StockAlarmSetter(
 
     companion object {
         private const val TAG = "StockAlarmSetter"
+        /**
+         * Чистая функция решения доставки: пригодна для юнит-тестов без Android.
+         * Правило 0.8.0: сегодня — разовый; завтра — только когда время подъёма
+         * сегодня УЖЕ прошло (иначе одноразовый зазвенел бы сегодня); дальше — никогда.
+         */
+        fun deliveryDecision(now: LocalDateTime, wakeAt: LocalDateTime): Delivery {
+            if (!wakeAt.isAfter(now)) return Delivery.PAST
+            val daysAhead = ChronoUnit.DAYS.between(now.toLocalDate(), wakeAt.toLocalDate())
+            return when {
+                daysAhead > 1L -> Delivery.TOO_FAR
+                daysAhead == 1L && wakeAt.toLocalTime().isAfter(now.toLocalTime()) ->
+                    Delivery.DEFER_TO_NIGHT
+                else -> Delivery.DELIVER
+            }
+        }
 
         /**
          * Метки недельных будильников прежнего режима «на несколько дней вперёд»
@@ -373,4 +387,23 @@ class StockAlarmSetter(
         val WEEK_AHEAD_LABELS: List<String> =
             listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс").map { "Авто: $it" }
     }
+}
+
+/**
+ * Решение доставки разового SET_ALARM (0.8.0, логика «одна ночь вперёд»),
+ * возвращаемое [StockAlarmSetter.deliveryDecision].
+ */
+enum class Delivery {
+    /** Ставим прямо сейчас (сегодня либо безопасное завтра). */
+    DELIVER,
+
+    /** Завтрашняя пара, время подъёма сегодня ещё не прошло: одноразовый
+     *  звенел бы СЕГОДНЯ — откладываем до ночной сверки 00:05. */
+    DEFER_TO_NIGHT,
+
+    /** Пара дальше завтра: SET_ALARM не умеет в дату — не ставим. */
+    TOO_FAR,
+
+    /** Момент уже прошёл (в т.ч. spill 00:30 с офсетом в прошлый день). */
+    PAST,
 }

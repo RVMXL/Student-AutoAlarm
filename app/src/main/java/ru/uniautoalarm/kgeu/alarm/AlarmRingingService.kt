@@ -43,6 +43,11 @@ class AlarmRingingService : Service() {
             }
             else -> {
                 label = intent?.getStringExtra(EXTRA_LABEL) ?: ""
+                // AL-4: повторный ACTION_START (тестовый звонок пересёкся с реальным)
+                // не должен плодить второй MediaPlayer: прежний плеер/вибрация глушатся
+                // ДО нового старта, иначе первый экземпляр становится неостанавливаемым
+                // (кнопка «Отключить» глушит только последний).
+                stopSoundAndVibration()
                 startRinging()
             }
         }
@@ -102,6 +107,15 @@ class AlarmRingingService : Service() {
     }
 
     private fun stopRinging(missed: Boolean, rearm: Boolean) {
+        stopSoundAndVibration()
+        if (missed) Notifications.alarmMissed(this, label)
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
+        if (rearm) rearmNext()
+    }
+
+    /** Глушит звук и вибрацию (без уведомлений/stopSelf/rearm) — общий для STOP и повторного старта. */
+    private fun stopSoundAndVibration() {
         handler.removeCallbacksAndMessages(null)
         runCatching {
             player?.stop()
@@ -110,10 +124,6 @@ class AlarmRingingService : Service() {
         player = null
         runCatching { vibrator?.cancel() }
         vibrator = null
-        if (missed) Notifications.alarmMissed(this, label)
-        stopForeground(STOP_FOREGROUND_REMOVE)
-        stopSelf()
-        if (rearm) rearmNext()
     }
 
     /**

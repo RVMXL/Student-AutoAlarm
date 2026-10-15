@@ -32,14 +32,21 @@ class BootReceiver : BroadcastReceiver() {
                 ReminderScheduler.scheduleNext(appContext)
                 WorkScheduler.enqueueSyncNow(appContext)
 
-                // 2) движок приложения: будильник AlarmManager перезагрузку НЕ переживает —
-                //    ставим ближайшее предстоящее (сегодня/завтра) немедленно. Будильники
-                //    стоковых часов перезагрузку переживают — их сверит ночной тик.
-                //    Если телефон был выключен в 00:05 и включён утром — это и есть самовосстановление
+                // 2) восстановление ближайшего будильника. Слоты AlarmManager
+                //    перезагрузку НЕ переживают (движок приложения), маркер
+                //    дедупликации — переживает: без сброса маркера постановка
+                //    «подтвердила» бы мёртвый слот (AL-1). Будильники стоковых
+                //    часов перезагрузку переживают, но если телефон был выключен
+                //    ВСЮ НОЧЬ, тики 00:05/06:00 пропущены и будильник на сегодня
+                //    никто не ставил — сверка ставит его, пока время подъёма
+                //    не прошло (AL-3).
                 val container = (appContext as AutoAlarmApp).container
                 val s = container.settings.current()
-                if (s.setupComplete && s.autoAlarmEnabled && s.alarmTarget == AlarmTarget.APP) {
-                    container.alarm.setNextUpcoming(notify = false)
+                if (s.setupComplete && s.autoAlarmEnabled) {
+                    when (s.alarmTarget) {
+                        AlarmTarget.APP -> container.alarm.rearmFromBoot()
+                        AlarmTarget.CLOCK -> container.alarm.reconcileUpcoming(notifyOnChange = false)
+                    }
                 }
             } catch (e: Exception) {
                 Log.w(TAG, "Обработка загрузки не удалась: ${e.message}")

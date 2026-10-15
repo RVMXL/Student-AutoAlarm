@@ -41,9 +41,16 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
 
         // Единая логика 0.8.0: сверка с ближайшим ПРЕДСТОЯЩИМ пробуждением (сегодня/завтра)
         // по свежему расписанию — замена, опубликованная среди дня, переставляет будильник
-        // сразу, а не следующей ночью; верный будильник не трогается
+        // сразу, а не следующей ночью; верный будильник не трогается.
+        // AL-2: allowClockDelivery=false — из фона SET_ALARM часам не отправляем:
+        // startActivity вне allowlist может быть молча заблокирован (BAL, Android 10+),
+        // а «исключение не брошено» ≠ «будильник поставлен» — ложный маркер делал бы
+        // ночную сверку no-op ровно в тот день, когда она и нужна. APP-слот правится
+        // отсюда безопасно (AlarmManager, без BAL).
         if (s.autoAlarmEnabled) {
-            runCatching { container.alarm.reconcileUpcoming(notifyOnChange = true) }
+            runCatching {
+                container.alarm.reconcileUpcoming(notifyOnChange = true, allowClockDelivery = false)
+            }
         }
 
         return Result.success()

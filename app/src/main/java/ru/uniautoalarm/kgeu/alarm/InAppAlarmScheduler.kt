@@ -101,17 +101,29 @@ class InAppAlarmScheduler(private val context: Context) {
     /** Снять слот по коду, если он стоит. */
     private fun cancel(requestCode: Int) {
         val am = alarmManager() ?: return
-        val pending = PendingIntent.getBroadcast(
-            context, requestCode,
-            Intent(context, AlarmFireReceiver::class.java),
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
-        )
+        val pending = slotProbe(requestCode)
         if (pending != null) am.cancel(pending)
     }
 
     fun cancelOneShot() = cancel(REQ_ONE_SHOT)
 
     fun cancelTest() = cancel(REQ_TEST)
+
+    /**
+     * Стоит ли сейчас слот разового будильника (AL-1): PendingIntent-проба
+     * FLAG_NO_CREATE. Маркер дедупликации в DataStore переживает перезагрузку,
+     * а слот AlarmManager — нет, поэтому перед ранним выходом по маркеру
+     * [AlarmGateway.setNextUpcoming] проверяет слот фактическим состоянием системы.
+     */
+    fun hasOneShot(): Boolean = slotProbe(REQ_ONE_SHOT) != null
+
+    /** Проба слота: тот же интент-образец, что и при постановке, но без создания. */
+    private fun slotProbe(requestCode: Int): PendingIntent? =
+        PendingIntent.getBroadcast(
+            context, requestCode,
+            Intent(context, AlarmFireReceiver::class.java),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
+        )
 
     /** Legacy: снять слоты партии «на несколько дней вперёд» в диапазоне дат (с запасом по краям). */
     fun cancelRange(fromEpochDay: Long, toEpochDay: Long) {

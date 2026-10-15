@@ -1,8 +1,11 @@
 package ru.uniautoalarm.kgeu.alarm
 
 import android.content.Context
+import android.util.Log
 import java.time.LocalDate
 import java.time.LocalDateTime
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
 import ru.uniautoalarm.kgeu.data.model.AlarmTarget
@@ -29,6 +32,10 @@ import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
  * от прежнего режима/цели, а SET_ALARM/DISMISS не позволяют «перечислить» свои.
  * Сверка ([reconcileUpcoming]) сравнивает маркер с ближайшим ПРЕДСТОЯЩИМ пробуждением
  * — не с планом «на завтра» (баг 0.7.0: живой будильник снимался).
+ *
+ * 0.9.0: все входы сериализованы мьютексом [gate] (AL-7/SET-7) — интерливинг
+ * тумблер × ночной тик × смена цели больше не может дать двойной SET_ALARM
+ * или снять только что поставленный будильник.
  */
 class AlarmGateway(
     private val context: Context,
@@ -38,12 +45,14 @@ class AlarmGateway(
     private val planner: AlarmPlanner,
 ) {
 
+    /** Сериализация постановки/снятия/свёрки: взаимное исключение всех вызовов. */
+    private val gate = Mutex()
+
     private suspend fun target(): AlarmTarget = settings.current().alarmTarget
 
     /** Поставить будильник на [date] активным движком. */
     suspend fun setForDate(date: LocalDate, notify: Boolean = true): AlarmPlan? =
-        if (target() == AlarmTarget.APP) setForDateInApp(date, notify)
-        else stock.setForDate(date, notify)
+        gate.withLock { setForDateLocked(date, notify) }
 
     /**
      * Мгновенная постановка: ближайшее ПРЕДСТОЯЩЕЕ пробуждение — сегодня, если время
@@ -51,9 +60,12 @@ class AlarmGateway(
      * отвечает ночная сверка 00:05, см. логику 0.8.0). Вызывается при включении
      * тумблера, смене цели и после онбординга. Повторная постановка того же момента
      * блокируется маркером lastScheduledWakeEpochMinute (SET_ALARM создаёт НОВЫЙ
-     * будильник, не обновляет).
+     * будильник, не обновляет) — НО только если слот реально стоит (AL-1).
      */
-    suspend fun setNextUpcoming(notify: Boolean = true): AlarmPlan? {
+    suspend fun setNextUpcoming(notify: Boolean = true): AlarmPlan? =
+        gate.withLock { setNextUpcomingLocked(notify) }
+
+    private suspend fun setNextUpcomingLocked(notify: Boolean): AlarmPlan? {
         val s = settings.current()
         val next = findNextUpcoming()
         if (next == null) {
@@ -67,12 +79,35 @@ class AlarmGateway(
         }
         val wakeEpochMinute = next.wakeAt.toLocalDate().toEpochDay() * 1440L +
             next.wakeAt.hour * 60L + next.wakeAt.minute
-        if (wakeEpochMinute == s.lastScheduledWakeEpochMinute) {
+        val markerMatches = wakeEpochMinute == s.lastScheduledWakeEpochMinute
+        // AL-1: маркер переживает перезагрузку и force-stop, слот AlarmManager — нет.
+        // Ранний выход «уже стоит» разрешаем только после пробы фактического слота
+        // (FLAG_NO_CREATE). Для часов проба невозможна (их будильники живут в БД
+        // часов и ребут переживают) — маркеру доверяем, как и раньше.
+        val slotAlive = s.alarmTarget != AlarmTarget.APP || inApp.hasOneShot()
+        if (markerMatches && slotAlive) {
             // будильник на этот момент уже стоит — дубликат не плодим, только подтверждаем
             if (notify) Notifications.alarmSet(context, next)
             return next
         }
-        return setForDate(next.date, notify)
+        if (markerMatches && !slotAlive) {
+            Log.w(TAG, "Маркер=$wakeEpochMinute есть, слот APP мёртв (ребут/force-stop) — перепоставляю")
+        }
+        return setForDateLocked(next.date, notify)
+    }
+
+    /**
+     * Восстановление после перезагрузки (BootReceiver, AL-1): слоты AlarmManager
+     * перезагрузку НЕ переживают, а маркер дедупликации в DataStore — переживает.
+     * Без сброса маркера setNextUpcoming «подтвердил» бы мёртвый слот, и будильник
+     * молча не прозвенел бы до следующей сверки (которая тоже верила бы маркеру).
+     * Сбрасываем маркер и перепоставляем ближайшее предстоящее безусловно.
+     */
+    suspend fun rearmFromBoot() {
+        gate.withLock {
+            clearLastScheduledLocked()
+            setNextUpcomingLocked(notify = false)
+        }
     }
 
     /**
@@ -107,14 +142,7 @@ class AlarmGateway(
         }
         if (inApp.scheduleOneShot(plan.wakeAt, plan.label)) {
             if (notify) Notifications.alarmSet(context, plan)
-            settings.update {
-                it.copy(
-                    lastScheduledWakeEpochMinute =
-                        plan.wakeAt.toLocalDate().toEpochDay() * 1440L +
-                            plan.wakeAt.hour * 60L + plan.wakeAt.minute,
-                    lastScheduledLabel = plan.label
-                )
-            }
+            updateLastScheduledLocked(plan)
             return plan
         }
         if (notify) {
@@ -125,6 +153,10 @@ class AlarmGateway(
         return null
     }
 
+    private suspend fun setForDateLocked(date: LocalDate, notify: Boolean): AlarmPlan? =
+        if (settings.current().alarmTarget == AlarmTarget.APP) setForDateInApp(date, notify)
+        else stock.setForDate(date, notify)
+
     /**
      * Снять все будильники приложения: собственный движок отменяется гарантированно
      * (PendingIntent.cancel), стоковые часы получают DISMISS по меткам; маркеры
@@ -132,7 +164,10 @@ class AlarmGateway(
      * [openListOnUnsupported] = false — не открывать список часов при отказе оболочки
      * (смена цели будильника: выскакивать в чужое приложение не зачем).
      */
-    suspend fun dismissAll(openListOnUnsupported: Boolean = true): DismissResult {
+    suspend fun dismissAll(openListOnUnsupported: Boolean = true): DismissResult =
+        gate.withLock { dismissAllLocked(openListOnUnsupported) }
+
+    private suspend fun dismissAllLocked(openListOnUnsupported: Boolean): DismissResult {
         val s = settings.current()
         val appEngine = s.alarmTarget == AlarmTarget.APP
         inApp.cancelOneShot()
@@ -145,8 +180,10 @@ class AlarmGateway(
 
     /** Тестовый будильник «через 2 минуты» активным движком (проверка из настроек). */
     suspend fun setTestAlarm(): Boolean =
-        if (target() == AlarmTarget.APP) inApp.scheduleTest()
-        else stock.setTestAlarm()
+        gate.withLock {
+            if (target() == AlarmTarget.APP) inApp.scheduleTest()
+            else stock.setTestAlarm()
+        }
 
     /**
      * Сверка будильника с ближайшим ПРЕДСТОЯЩИМ пробуждением (ночная сверка 00:05,
@@ -167,19 +204,31 @@ class AlarmGateway(
      * ночная сверка поставит будильник в 00:05.
      * Ограничение: если часы игнорируют DISMISS/SET в фоне (ColorOS), сверка бессильна —
      * для полной надёжности существует движок «В приложении» (цель по умолчанию с 0.7.1).
+     *
+     * @param allowClockDelivery AL-2: из фонового SyncWorker SET_ALARM часам не
+     *   отправляем (startActivity из фона может быть молча заблокирован BAL-политикой
+     *   Android 10+, а «исключение не брошено» ≠ «будильник поставлен» — запись маркера
+     *   по ложной доставке превращала ночную сверку в no-op). Фоновая сверка правит
+     *   только APP-слот; CLOCK-постановку делает ночной тик (temporary allowlist
+     *   точного будильника) или тумблер на переднем плане.
      */
-    suspend fun reconcileUpcoming(notifyOnChange: Boolean = true) {
+    suspend fun reconcileUpcoming(
+        notifyOnChange: Boolean = true,
+        allowClockDelivery: Boolean = true,
+    ) = gate.withLock { reconcileUpcomingLocked(notifyOnChange, allowClockDelivery) }
+
+    private suspend fun reconcileUpcomingLocked(notifyOnChange: Boolean, allowClockDelivery: Boolean) {
         val s = settings.current()
         val next = findNextUpcoming()
         val markerWake = markerToLocalDateTime(s.lastScheduledWakeEpochMinute)
 
-        if (target() == AlarmTarget.APP) {
+        if (s.alarmTarget == AlarmTarget.APP) {
             when {
                 next == null -> {
                     if (markerWake != null) {
                         // предстоящих пробуждений в кэше нет — слот фантомный
                         inApp.cancelOneShot()
-                        clearLastScheduled()
+                        clearLastScheduledLocked()
                         if (notifyOnChange) {
                             Notifications.alarmSkipped(
                                 context, LocalDate.now(),
@@ -192,7 +241,7 @@ class AlarmGateway(
                 else -> {
                     // замена/перенос/устаревший маркер — перезаписываем слот свежим планом
                     inApp.scheduleOneShot(next.wakeAt, next.label)
-                    updateLastScheduled(next)
+                    updateLastScheduledLocked(next)
                     if (notifyOnChange) Notifications.alarmSet(context, next)
                 }
             }
@@ -204,19 +253,30 @@ class AlarmGateway(
             next == null -> {
                 if (markerWake != null) {
                     stock.dismissSingleLabel(s.lastScheduledLabel)
-                    clearLastScheduled()
+                    clearLastScheduledLocked()
                 }
             }
             markerWake == null -> {
+                if (!allowClockDelivery) {
+                    Log.i(TAG, "Фоновая сверка: SET_ALARM не отправляю (BAL-риск, AL-2) — поставит ночная сверка")
+                    return
+                }
                 val plan = stock.setForDate(next.date, notify = true)
-                if (plan == null) clearLastScheduled() // часы отказались — не храним ложный маркер
+                if (plan == null) clearLastScheduledLocked() // часы отказались — не храним ложный маркер
             }
             markerWake == next.wakeAt -> Unit // живой будильник на верный момент — не трогаем
             else -> {
+                if (!allowClockDelivery) {
+                    Log.i(TAG, "Фоновая сверка: перенос CLOCK-будильника отложен до ночной сверки (AL-2)")
+                    return
+                }
                 // время/день изменились (замена/перенос) или маркер устарел
-                stock.dismissSingleLabel(s.lastScheduledLabel)
+                val dismissed = stock.dismissSingleLabel(s.lastScheduledLabel)
+                if (!dismissed) {
+                    Log.w(TAG, "DISMISS не принят оболочкой — возможны оба будильника (см. настройки)")
+                }
                 val plan = stock.setForDate(next.date, notify = true)
-                if (plan == null) clearLastScheduled()
+                if (plan == null) clearLastScheduledLocked()
             }
         }
     }
@@ -224,7 +284,7 @@ class AlarmGateway(
     /** Ночная сверка (тик 00:05 и страховка 06:00). */
     suspend fun nightlyReconcile() = reconcileUpcoming(notifyOnChange = true)
 
-    private suspend fun updateLastScheduled(plan: AlarmPlan) {
+    private suspend fun updateLastScheduledLocked(plan: AlarmPlan) {
         settings.update {
             it.copy(
                 lastScheduledWakeEpochMinute =
@@ -235,7 +295,7 @@ class AlarmGateway(
         }
     }
 
-    private suspend fun clearLastScheduled() {
+    private suspend fun clearLastScheduledLocked() {
         settings.update {
             it.copy(lastScheduledWakeEpochMinute = -1L, lastScheduledLabel = "")
         }
@@ -245,4 +305,8 @@ class AlarmGateway(
     private fun markerToLocalDateTime(v: Long): LocalDateTime? =
         if (v <= 0) null
         else LocalDate.ofEpochDay(v / 1440L).atStartOfDay().plusMinutes(v % 1440L)
+
+    private companion object {
+        const val TAG = "AlarmGateway"
+    }
 }
