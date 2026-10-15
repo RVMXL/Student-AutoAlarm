@@ -97,7 +97,7 @@
     <string name="lesson_at">пара %1$s вакытында</string>
     <string name="own_event_at">үз чараң %1$s вакытында</string>
     <string name="home_auto_title">Авто-будильник</string>
-    <string name="home_auto_subtitle">Беренче пара алдыннан будильникны стандарт сәгатькә куя</string>
+    <string name="home_auto_subtitle">Расписание буенча беренче пара алдыннан будильник куя</string>
     <string name="home_week_title">Алдагы берничә көнгә</string>
     <string name="home_week_desc">Атна көннәре буенча кабатланучы будильниклар — система кушымтаны үтерсә, страховка булып торалар</string>
     <string name="btn_set_for_days">%1$d көнгә куярга</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">Расписаниены синхронлаштыру</string>
     <string name="notif_sync_text">КГЭУ расписаниесен яңартабыз</string>
     <string name="notif_details_room">%1$s, ауд. %2$s</string>
+    <string name="notif_missed_title">Будильник үткәрелде</string>
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">паралар юк</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Настройки: будильник ==== -->
     <string name="set_auto_title">Авто-будильник</string>
+    <string name="alarm_target_title">Будильник кайда уйный</string>
+    <string name="alarm_target_desc">«Сәгатьтә» — телефон сәгатендәге гадәти сигнал (оболочка боерыкларны тыеп куя ала). «Кушымтада» — кушымта үзе тулы экранда уйный: тумблер, сүндерү һәм расписание үзгәрешләре гарантияле эшли.</string>
+    <string name="alarm_target_clock">Сәгатьтә</string>
+    <string name="alarm_target_app">Кушымтада</string>
     <string name="set_show_clock">Будильник куелганда сәгать күрсәтү</string>
     <string name="set_show_clock_desc">Будильниклар үзләре куелмаса, кабыз (Realme, Oppo, Huawei): сәгать әзер будильник белән ачылачак — «Сакла» төймәсе белән расла.</string>
     <string name="set_wake_offset">Беренче пара алдыннан %1$s элегрәк уяну</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">Искәртү вакыты</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Будильник бу дисциплиналар алдыннан куелмый — исем яки пара төре буенча: лекция, практика, лаборатория</string>
+    <string name="exceptions_title_desc">Будильник исеме тулысынча туры килгән — тип кушымчасы белән — паралар алдыннан куелмый: «л. материаловедение» лекцияне генә, «пр. материаловедение» практиканы гына чыгарала</string>
     <string name="exceptions_empty">Әлегә буш — будильник куелмасын дигән предметларны өстә</string>
     <string name="cd_delete_named">Бетерү: «%1$s»</string>
     <string name="hint_subject_name">Дисциплина исеме</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">Автобудильник сүндерелде, кушымта будильниклары сәгатьтән алынды</string>
     <string name="toggle_off_opened">Автобудильник сүндерелде. Сәгать боерыкны кабул итмәде (оболочка чикләмәсе) — будильниклар исемлеген ачтым: «Авто:» меткалы будильникларны кул белән сүндер</string>
     <string name="toggle_off_manual">Автобудильник сүндерелде. Сәгать боерыкны кабул итмәде (оболочка чикләмәсе) — сәгать кушымтасында будильникларны ач һәм «Авто:» меткаларын кул белән алып ташла</string>
+    <string name="toggle_off_app_cancelled">Автобудильник сүндерелде, кушымта будильниклары алынды</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Аерым будильник вакыты булган үз чараларың — секцияләр, репетицияләр, бер тапкыр эшләр</string>
@@ -274,6 +280,12 @@
     <string name="glass_intensity">Чыбык эффекты көче</string>
     <string name="glass_tip">Киңәш: чыбык фондагы картина белән иң яхшы күренә (өстәрәк)</string>
     <string name="glass_active">Чыбык актив</string>
+
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">Уянырга вакыт!</string>
+    <string name="ring_dismiss">Сүндерү</string>
+    <string name="ring_channel_name">Будильник уйнавы</string>
+    <string name="ring_channel_desc">Кушымта будильнигының тулы экранлы сигналы</string>
 
     <!-- ==== Настройки: система ==== -->
     <string name="status_exact_allowed">Төгәл будильниклар рөхсәт ителгән</string>

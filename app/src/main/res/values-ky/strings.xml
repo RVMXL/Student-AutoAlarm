@@ -97,7 +97,7 @@
     <string name="lesson_at">жуп саат %1$s</string>
     <string name="own_event_at">өз сабагың саат %1$s</string>
     <string name="home_auto_title">Автоояткыч</string>
-    <string name="home_auto_subtitle">Биринчи жуптун алдында системалык саат колдонмосуна ояткыч коёт</string>
+    <string name="home_auto_subtitle">Кеште боюнча биринчи жуптун алдында ояткыч коёт</string>
     <string name="home_week_title">Бир нече күнгө алдын ала</string>
     <string name="home_week_desc">Апта күндөрүнө кайталануучу ояткычтар — система колдонмону өчүрүп койгон учурдагы сактык чарасы</string>
     <string name="btn_set_for_days">%1$d күнгө коюу</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">Кестени синхрондоштуруу</string>
     <string name="notif_sync_text">КГЭУ кестеси жаңыртылууда</string>
     <string name="notif_details_room">%1$s, ауд. %2$s</string>
+    <string name="notif_missed_title">Ояткыч өткөрүлүп кетти</string>
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">жуп жок</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Настройки: будильник ==== -->
     <string name="set_auto_title">Автоояткыч</string>
+    <string name="alarm_target_title">Ояткыч кайда эңгилейт</string>
+    <string name="alarm_target_desc">«Саатта» — телефон саатындагы кадимки сигнал (оболочка буйруктарды бөгөттөй алат). «Тиркемеде» — тиркеменин өзү толук экранда эңгилейт: калак, өчүрүү жана кеште өзгөрүүлөр кепилдик менен иштейт.</string>
+    <string name="alarm_target_clock">Саатта</string>
+    <string name="alarm_target_app">Тиркемеде</string>
     <string name="set_show_clock">Коюу учурунда саатты көрсөтүү</string>
     <string name="set_show_clock_desc">Ояткычтар өзү-өзүнөн коюлбай калса, күйгүз (Realme, Oppo, Huawei): саат даяр ояткыч менен ачылат — «Сактоо» баскычы менен ыраста.</string>
     <string name="set_wake_offset">Биринчи жуптан %1$s мурун оянгу</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">Эскертүү убакыты</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Бул предметтердин алдында ояткыч коюлбайт — аталышы же жуптун түрү боюнча: лекция, практика, лаборатория</string>
+    <string name="exceptions_title_desc">Ояткыч аталышы так дал келген — түрүнүн кошумчасы менен — жуптардын алдында коюлбайт: «л. материаловедение» гана лекцияны, «пр. материаловедение» гана практиканы чыгарып салат</string>
     <string name="exceptions_empty">Азырынча бош — алдында ояткыч кереги жок предметтерди кош</string>
     <string name="cd_delete_named">«%1$s» өчүрүү</string>
     <string name="hint_subject_name">Сабактын аталышы</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">Автоояткыч өчүрүлдү, тиркеменин ояткычтары сааттан алынды</string>
     <string name="toggle_off_opened">Автоояткыч өчүрүлдү. Саат буйрук менен өчүрүүнү колдообойт (оболочка чектөөсү) — ояткычтар тизмесин ачтым: «Авто:» энбелгиси бар ояткычтарды кол менен алып сал</string>
     <string name="toggle_off_manual">Автоояткыч өчүрүлдү. Саат буйрук менен өчүрүүнү колдообойт (оболочка чектөөсү) — саат колдонмосунан ояткычтарды ачып, «Авто:» энбелгилерин кол менен алып сал</string>
+    <string name="toggle_off_app_cancelled">Автоояткыч өчүрүлдү, тиркеменин ояткычтары алынды</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Ояткыч убакыты бөлөк өз иш-чараларың — секциялар, репетициялар, бир жолку иштер</string>
@@ -274,6 +280,12 @@
     <string name="glass_intensity">Айнек эффектисинин күчү</string>
     <string name="glass_tip">Кеңеш: айнек эффектиси фон сүрөтү менен (жогоруда) эң жакшы көрүнөт</string>
     <string name="glass_active">Айнек эффектиси күйгүзүлгөн</string>
+
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">Туруунун убактысы!</string>
+    <string name="ring_dismiss">Өчүрүү</string>
+    <string name="ring_channel_name">Ояткычтын эңгили</string>
+    <string name="ring_channel_desc">Тиркеме ояткычынын толук экрандык сигналы</string>
 
     <!-- ==== Настройки: система ==== -->
     <string name="status_exact_allowed">Так ояткычтарга уруксат берилген</string>

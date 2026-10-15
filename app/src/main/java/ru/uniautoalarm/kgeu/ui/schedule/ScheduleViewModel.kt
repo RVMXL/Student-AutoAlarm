@@ -75,7 +75,7 @@ class ScheduleViewModel(private val container: AppContainer) : ViewModel() {
     val exceptions: StateFlow<List<ExceptionRule>> = container.database.exceptionDao().all()
         .map { list ->
             list.map { e ->
-                ExceptionRule(id = e.id, subject = e.subject, kind = e.kind, enabled = e.enabled)
+                ExceptionRule(id = e.id, subject = e.subject, enabled = e.enabled)
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -134,20 +134,20 @@ class ScheduleViewModel(private val container: AppContainer) : ViewModel() {
     }
 
     /**
-     * Переключить исключение для дисциплины (иконка в расписании).
+     * Переключить исключение для пары (иконка в расписании).
      *
-     * Иконка управляет дисциплиной ЦЕЛИКОМ и честно сосуществует с типовыми правилами
-     * из настроек («только лекции» и т.п.):
-     * — правила есть (любые) → все они удаляются (иконка гасла — исключений нет вовсе);
-     * — правил нет → добавляется правило на всю дисциплину (как раньше).
-     * Сопоставление — по нормализованному названию (ScheduleRepository.normalizeSubject).
+     * С 0.7.0 правило привязано к ТОЧНОМУ полному названию пары — вместе с приставкой
+     * типа: тап по «л. материаловедение» гасит будильник ТОЛЬКО перед лекцией,
+     * «пр. материаловедение» продолжит звенеть (тип уже написан в названии пары,
+     * отдельные тумблеры типов не нужны — убраны).
+     * Правило с таким названием уже есть → удаляется (иконка гаснет), нет → добавляется.
      */
     fun toggleException(subject: String) {
         viewModelScope.launch {
             val dao = container.database.exceptionDao()
-            val normalized = ScheduleRepository.normalizeSubject(subject)
+            val normalized = ScheduleRepository.normalizeForMatch(subject)
             val matching = dao.allOnce().filter {
-                ScheduleRepository.normalizeSubject(it.subject) == normalized
+                ScheduleRepository.normalizeForMatch(it.subject) == normalized
             }
             if (matching.isNotEmpty()) {
                 matching.forEach { dao.delete(it.id) }
@@ -157,12 +157,12 @@ class ScheduleViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
-    /** Дисциплина попадает под активное исключение? */
+    /** Пара попадает под активное исключение (точное полное название)? */
     fun isExceptional(subject: String, exceptions: List<ExceptionRule>): Boolean =
         exceptions.any {
             it.enabled &&
-                ScheduleRepository.normalizeSubject(it.subject) ==
-                ScheduleRepository.normalizeSubject(subject)
+                ScheduleRepository.normalizeForMatch(it.subject) ==
+                ScheduleRepository.normalizeForMatch(subject)
         }
 
     /** Смещение дня недели относительно понедельника (0..6). */

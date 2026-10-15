@@ -19,6 +19,7 @@ import ru.uniautoalarm.kgeu.MainActivity
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
+import ru.uniautoalarm.kgeu.ui.ring.RingActivity
 
 /**
  * Статусные уведомления движка: «будильник поставлен / не поставлен / партия на неделю».
@@ -27,12 +28,14 @@ import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 object Notifications {
 
     const val CHANNEL_ID = "autoalarm_status"
+    const val RINGING_CHANNEL_ID = "autoalarm_ringing"
 
     private const val TAG = "Notifications"
     private const val NOTIF_SET_ID = 1001
     private const val NOTIF_SKIPPED_ID = 1002
     private const val NOTIF_WEEK_ID = 1003
     private const val NOTIF_REMINDER_ID = 1004
+    private const val NOTIF_RINGING_ID = 1005
 
     // форматтеры — функции, а не val: даты уведомлений должны следовать
     // языку приложения, выбранному в момент отправки
@@ -50,6 +53,18 @@ object Notifications {
             NotificationManager.IMPORTANCE_DEFAULT
         ).apply {
             description = LocaleHelper.string(context, R.string.notif_channel_desc)
+        }
+        notificationManager(context).createNotificationChannel(channel)
+    }
+
+    /** Канал звонка (IMPORTANCE_HIGH — heads-up до подъёма full-screen intent). */
+    fun ensureRingingChannel(context: Context) {
+        val channel = NotificationChannel(
+            RINGING_CHANNEL_ID,
+            LocaleHelper.string(context, R.string.ring_channel_name),
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = LocaleHelper.string(context, R.string.ring_channel_desc)
         }
         notificationManager(context).createNotificationChannel(channel)
     }
@@ -159,6 +174,59 @@ object Notifications {
             .setContentText(LocaleHelper.string(context, R.string.notif_sync_text))
             .setOngoing(true)
             .build()
+
+    // --- Звонок собственного будильника (движок «В приложении», 0.7.0) ---
+
+    /** Базовый строитель звонящего уведомления: FSI → RingActivity + действие «Отключить». */
+    private fun ringingBuilder(context: Context, label: String): NotificationCompat.Builder {
+        val ringIntent = Intent(context, RingActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val fullScreen = PendingIntent.getActivity(
+            context, 201, ringIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val stop = PendingIntent.getService(
+            context, 202,
+            InAppAlarmScheduler.stopRingingIntent(context),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        return NotificationCompat.Builder(context, RINGING_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(LocaleHelper.string(context, R.string.ring_title))
+            .setContentText(
+                label.ifBlank { LocaleHelper.string(context, R.string.home_title) }
+            )
+            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setOngoing(true)
+            .setContentIntent(fullScreen)
+            .setFullScreenIntent(fullScreen, true)
+            .addAction(0, LocaleHelper.string(context, R.string.ring_dismiss), stop)
+    }
+
+    /** Показать звонящее уведомление (приёмник срабатывания — до подъёма сервиса). */
+    fun postRinging(context: Context, label: String) {
+        ensureRingingChannel(context)
+        post(context, NOTIF_RINGING_ID, ringingBuilder(context, label).build())
+    }
+
+    /** Уведомление для startForeground сервиса звонка (перезаймёт то же NOTIF_RINGING_ID). */
+    fun ringing(context: Context, label: String): Notification {
+        ensureRingingChannel(context)
+        return ringingBuilder(context, label).build()
+    }
+
+    /** «Будильник пропущен» — автоглушение после 10 минут без ответа. */
+    fun alarmMissed(context: Context, label: String) {
+        val text = label.ifBlank { LocaleHelper.string(context, R.string.home_title) }
+        val notification = baseBuilder(context)
+            .setContentTitle(LocaleHelper.string(context, R.string.notif_missed_title))
+            .setContentText(text)
+            .setContentIntent(mainActivityIntent(context))
+            .setAutoCancel(true)
+            .build()
+        post(context, NOTIF_SKIPPED_ID, notification)
+    }
 
     // --- Внутреннее ---
 

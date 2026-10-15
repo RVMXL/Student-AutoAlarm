@@ -97,7 +97,7 @@
     <string name="lesson_at">clase a las %1$s</string>
     <string name="own_event_at">tu propio evento a las %1$s</string>
     <string name="home_auto_title">Autoalarma</string>
-    <string name="home_auto_subtitle">Pone una alarma en la app de reloj del teléfono antes de tu primera clase</string>
+    <string name="home_auto_subtitle">Pone una alarma antes de tu primera clase según el horario</string>
     <string name="home_week_title">Varios días por adelantado</string>
     <string name="home_week_desc">Alarmas repetitivas para cada día de la semana — un respaldo por si el sistema mata la app</string>
     <string name="btn_set_for_days">Programar por %1$d días</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">Sincronización del horario</string>
     <string name="notif_sync_text">Actualizando el horario de KGEU</string>
     <string name="notif_details_room">%1$s, aula %2$s</string>
+    <string name="notif_missed_title">Alarma perdida</string>
 
     <!-- ==== Motivos de omisión de la alarma (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">no hay clases</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Ajustes: alarma ==== -->
     <string name="set_auto_title">Autoalarma</string>
+    <string name="alarm_target_title">Dónde suena la alarma</string>
+    <string name="alarm_target_desc">«En el reloj» — la señal habitual del reloj del teléfono (la capa del sistema puede bloquear órdenes). «En la app» — la propia app suena a pantalla completa: el interruptor, la anulación y los cambios de horario están garantizados.</string>
+    <string name="alarm_target_clock">En el reloj</string>
+    <string name="alarm_target_app">En la app</string>
     <string name="set_show_clock">Mostrar el reloj al programar las alarmas</string>
     <string name="set_show_clock_desc">Actívalo si las alarmas no se programan solas (Realme, Oppo, Huawei): el reloj se abrirá con la alarma ya lista — confírmala con \"Guardar\".</string>
     <string name="set_wake_offset">Levantarte %1$s antes de la primera clase</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">Hora del recordatorio</string>
 
     <!-- ==== Ajustes: excepciones ==== -->
-    <string name="exceptions_title_desc">No se pone alarma antes de estas asignaturas — por nombre o por tipo de clase: teoría, práctica, laboratorio</string>
+    <string name="exceptions_title_desc">No se pone alarma antes de las clases cuyo nombre completo coincide exactamente — prefijo de tipo incluido: «л. материаловедение» excluye solo la teoría, «пр. материаловедение» solo la práctica</string>
     <string name="exceptions_empty">Aún no hay nada — agrega las materias antes de las cuales no quieras alarma</string>
     <string name="cd_delete_named">Eliminar \"%1$s\"</string>
     <string name="hint_subject_name">Nombre de la materia</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">Alarma automática desactivada; las alarmas de la app se quitaron del reloj</string>
     <string name="toggle_off_opened">Alarma automática desactivada. El reloj no admite la desactivación por comando (limitación de la capa del sistema) — se abrió la lista de alarmas: quita a mano las alarmas con la etiqueta \"Авто:\"</string>
     <string name="toggle_off_manual">Alarma automática desactivada. El reloj no admite la desactivación por comando (limitación de la capa del sistema) — abre las alarmas en la app de reloj y quita las etiquetas \"Авто:\" a mano</string>
+    <string name="toggle_off_app_cancelled">Alarma automática apagada, alarmas de la app eliminadas</string>
 
     <!-- ==== Ajustes: eventos propios ==== -->
     <string name="custom_events_desc">Eventos propios con su propia hora de alarma — clubes, ensayos, pendientes de un solo día</string>
@@ -276,6 +282,12 @@
     <string name="glass_active">Vidrio activado</string>
 
     <!-- ==== Ajustes: sistema ==== -->
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">¡Hora de levantarse!</string>
+    <string name="ring_dismiss">Apagar</string>
+    <string name="ring_channel_name">Sonido de la alarma</string>
+    <string name="ring_channel_desc">Sonido a pantalla completa de la alarma de la app</string>
+
     <string name="status_exact_allowed">Alarmas exactas permitidas</string>
     <string name="dialog_exact_off_title">El sistema desactivó las alarmas exactas</string>
     <string name="dialog_exact_off_desc">El programador nocturno solo podrá poner la alarma con una desviación de ±10 minutos.</string>

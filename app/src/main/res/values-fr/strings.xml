@@ -97,7 +97,7 @@
     <string name="lesson_at">cours à %1$s</string>
     <string name="own_event_at">ton activité à %1$s</string>
     <string name="home_auto_title">Auto-réveil</string>
-    <string name="home_auto_subtitle">Programme le réveil dans l\'horloge du téléphone avant le premier cours</string>
+    <string name="home_auto_subtitle">Programme le réveil avant le premier cours, selon l\'emploi du temps</string>
     <string name="home_week_title">Sur plusieurs jours</string>
     <string name="home_week_desc">Des réveils répétés par jour de la semaine — une sécurité si le système tue l\'appli</string>
     <string name="btn_set_for_days">Programmer pour %1$d jours</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">Synchronisation de l\'emploi du temps</string>
     <string name="notif_sync_text">Actualisation de l\'emploi du temps KGEU</string>
     <string name="notif_details_room">%1$s, salle %2$s</string>
+    <string name="notif_missed_title">Réveil manqué</string>
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">pas de cours</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Настройки: будильник ==== -->
     <string name="set_auto_title">Auto-réveil</string>
+    <string name="alarm_target_title">Où sonne l\'alarme</string>
+    <string name="alarm_target_desc">« Dans l\'horloge » — la sonnerie habituelle de l\'horloge du téléphone (la surcouche peut bloquer les commandes). « Dans l\'appli » — l\'appli sonne elle-même en plein écran : l\'interrupteur, l\'arrêt et les changements d\'emploi du temps sont garantis.</string>
+    <string name="alarm_target_clock">Dans l\'horloge</string>
+    <string name="alarm_target_app">Dans l\'appli</string>
     <string name="set_show_clock">Afficher l\'horloge lors de la programmation</string>
     <string name="set_show_clock_desc">Active-le si les réveils ne se programment pas tout seuls (Realme, Oppo, Huawei) : l\'horloge s\'ouvrira avec le réveil prêt — confirme avec « Enregistrer ».</string>
     <string name="set_wake_offset">Lever %1$s avant le premier cours</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">Heure du rappel</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Pas de réveil avant ces matières — par nom ou par type de séance : cours magistral, TD, TP</string>
+    <string name="exceptions_title_desc">Pas de réveil avant les séances dont le nom complet correspond exactement — préfixe de type inclus : « л. материаловедение » n\'exclut que le cours magistral, « пр. материаловедение » que le TD</string>
     <string name="exceptions_empty">Vide pour l\'instant — ajoute les matières avant lesquelles il ne faut pas te réveiller</string>
     <string name="cd_delete_named">Supprimer « %1$s »</string>
     <string name="hint_subject_name">Nom de la matière</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">Réveil auto désactivé — les alarmes de l\'appli ont été retirées de l\'horloge</string>
     <string name="toggle_off_opened">Réveil auto désactivé. L\'horloge ne prend pas en charge la désactivation par commande (limitation de la surcouche) — l\'appli a ouvert la liste des réveils : supprime manuellement les réveils libellés «Авто:»</string>
     <string name="toggle_off_manual">Réveil auto désactivé. L\'horloge ne prend pas en charge la désactivation par commande (limitation de la surcouche) — ouvre les réveils dans l\'appli Horloge et supprime les libellés «Авто:» manuellement</string>
+    <string name="toggle_off_app_cancelled">Réveil auto désactivé, alarmes de l\'appli supprimées</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Tes propres événements avec une heure de réveil séparée — clubs, répétitions, tâches ponctuelles</string>
@@ -274,6 +280,12 @@
     <string name="glass_intensity">Intensité de l\'effet verre</string>
     <string name="glass_tip">Astuce : l\'effet verre rend le mieux avec une image de fond (ci-dessus)</string>
     <string name="glass_active">Effet verre activé</string>
+
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">Il est temps de se lever !</string>
+    <string name="ring_dismiss">Arrêter</string>
+    <string name="ring_channel_name">Sonnerie du réveil</string>
+    <string name="ring_channel_desc">Sonnerie plein écran du réveil de l\'appli</string>
 
     <!-- ==== Настройки: система ==== -->
     <string name="status_exact_allowed">Alarmes exactes autorisées</string>

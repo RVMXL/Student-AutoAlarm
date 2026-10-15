@@ -97,7 +97,7 @@
     <string name="lesson_at">para %1$s da</string>
     <string name="own_event_at">oʻz mashgʻuloting %1$s da</string>
     <string name="home_auto_title">Avto-budilnik</string>
-    <string name="home_auto_subtitle">Birinchi paradan oldin standart soat ilovasiga budilnik qoʻyadi</string>
+    <string name="home_auto_subtitle">Jadval boʻyicha birinchi paradan oldin budilnik qoʻyadi</string>
     <string name="home_week_title">Bir necha kunga</string>
     <string name="home_week_desc">Hafta kunlari boʻyicha takrorlanadigan budilniklar — tizim ilovani oʻchirib yuborsa, ehtiyot chorasi</string>
     <string name="btn_set_for_days">%1$d kunga qoʻyish</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">Dars jadvalini sinxronlash</string>
     <string name="notif_sync_text">KGEU dars jadvalini yangilaymiz</string>
     <string name="notif_details_room">%1$s, xona %2$s</string>
+    <string name="notif_missed_title">Budilnik oʻtkazib yuborildi</string>
 
     <!-- ==== Alarm skip reasons (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">paralar yoʻq</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Settings: alarm ==== -->
     <string name="set_auto_title">Avto-budilnik</string>
+    <string name="alarm_target_title">Budilnik qayerda jiringlaydi</string>
+    <string name="alarm_target_desc">«Soatda» — telefon soatidagi odatiy signal (qobiqlar buyruqlarni bloklashi mumkin). «Ilovada» — ilova oʻzi toʻliq ekranda jiringlaydi: kalit, oʻchirish va jadval oʻzgarishlari kafolatlangan holda ishlaydi.</string>
+    <string name="alarm_target_clock">Soatda</string>
+    <string name="alarm_target_app">Ilovada</string>
     <string name="set_show_clock">Qoʻyishda soatni koʻrsatish</string>
     <string name="set_show_clock_desc">Budilniklar oʻzi qoʻyilmasa, yoqib qoʻy (Realme, Oppo, Huawei): soat tayyor budilnik bilan ochiladi — «Saqlash» tugmasi bilan tasdiqla.</string>
     <string name="set_wake_offset">Birinchi paradan %1$s oldin uygʻonish</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">Eslatma vaqti</string>
 
     <!-- ==== Settings: exceptions ==== -->
-    <string name="exceptions_title_desc">Bu fanlardan oldin budilnik qoʻyilmaydi — nomi yoki dars turi boʻyicha: maʼruza, amaliyot, laboratoriya</string>
+    <string name="exceptions_title_desc">Budilnik nomi toʻliq bir xil — tur prefiksi bilan — darslardan oldin qoʻyilmaydi: «л. материаловедение» faqat maʼruzani, «пр. материаловедение» faqat amaliyotni chiqarib tashlaydi</string>
     <string name="exceptions_empty">Hozircha boʻsh — oldindan uygʻotish shart boʻlmagan fanlarni qoʻsh</string>
     <string name="cd_delete_named">«%1$s» fanini oʻchirish</string>
     <string name="hint_subject_name">Fan nomi</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">Avobudilnik oʻchirildi, ilova budilniklari soatdan olib tashlandi</string>
     <string name="toggle_off_opened">Avobudilnik oʻchirildi. Soat buyruq orqali oʻchirishni qoʻllab-quvvatlamaydi (qobiq cheklovi) — budilniklar roʻyxati ochildi: «Авто:» yorlikli budilniklarni qoʻlda olib tashla</string>
     <string name="toggle_off_manual">Avobudilnik oʻchirildi. Soat buyruq orqali oʻchirishni qoʻllab-quvvatlamaydi (qobiq cheklovi) — soat ilovasida budilniklarni ochib, «Авто:» yorliqlarini qoʻlda olib tashla</string>
+    <string name="toggle_off_app_cancelled">Avobudilnik oʻchirildi, ilova budilniklari olib tashlandi</string>
 
     <!-- ==== Settings: custom events ==== -->
     <string name="custom_events_desc">Alohida budilnik vaqti bilan shaxsiy tadbirlar — toʻgaraklar, repetitsiyalar, bir martalik ishlar</string>
@@ -276,6 +282,12 @@
     <string name="glass_active">Shisha effekti yoqilgan</string>
 
     <!-- ==== Settings: system ==== -->
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">Turish vaqti!</string>
+    <string name="ring_dismiss">Oʻchirish</string>
+    <string name="ring_channel_name">Budilnik jiringashi</string>
+    <string name="ring_channel_desc">Ilova budilnigining toʻliq ekranli signali</string>
+
     <string name="status_exact_allowed">Aniq budilniklarga ruxsat berilgan</string>
     <string name="dialog_exact_off_title">Aniq budilniklar tizim tomonidan oʻchirilgan</string>
     <string name="dialog_exact_off_desc">Tungi rejalashtiruvchi budilnikni faqat ±10 daqiqa xatolik bilan qoʻya oladi.</string>

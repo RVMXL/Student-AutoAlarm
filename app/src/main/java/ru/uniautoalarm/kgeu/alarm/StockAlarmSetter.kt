@@ -19,7 +19,7 @@ import ru.uniautoalarm.kgeu.data.repository.SettingsRepository
 import ru.uniautoalarm.kgeu.domain.AlarmPlanner
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 
-/** Итог попытки снять будильники приложения в стоковых часах. */
+/** Итог попытки снять будильники приложения. */
 data class DismissResult(
     /** Сколько команд DISMISS_ALARM удалось отправить (startActivity не бросил). */
     val sent: Int,
@@ -27,6 +27,8 @@ data class DismissResult(
     val total: Int,
     /** Команды не приняты — открыт список будильников часов (SHOW_ALARMS) как фолбэк. */
     val openedList: Boolean,
+    /** Активен движок «В приложении» — собственные будильники сняты гарантированно (cancel). */
+    val inAppCancelled: Boolean = false,
 )
 
 /**
@@ -148,40 +150,6 @@ class StockAlarmSetter(
         }
 
     /**
-     * Мгновенная постановка: ближайшее ПРЕДСТОЯЩЕЕ пробуждение — сегодня, если время
-     * подъёма ещё не прошло, иначе завтра и далее в пределах кэша расписания.
-     * Вызывается при включении тумблера и смене режима: раньше будильник на ближайшее
-     * утро появлялся только после ночного тика 00:05 — при включении днём он «вообще не ставился».
-     * Повторная постановка того же момента блокируется маркером lastScheduledWakeEpochMinute:
-     * SET_ALARM каждый раз создаёт НОВЫЙ будильник, а не обновляет существующий.
-     * @return план, если будильник стоит (поставлен сейчас или уже стоял); null — пар нет / часы отказали.
-     */
-    suspend fun setNextUpcoming(notify: Boolean = true): AlarmPlan? {
-        val now = LocalDateTime.now()
-        val s = settings.current()
-        for (i in 0..13) { // две недели — горизонт кэша расписания
-            val date = now.toLocalDate().plusDays(i.toLong())
-            val plan = planner.planFor(date) ?: continue
-            if (!plan.wakeAt.isAfter(now)) continue
-            val wakeEpochMinute = plan.wakeAt.toLocalDate().toEpochDay() * 1440L +
-                plan.wakeAt.hour * 60L + plan.wakeAt.minute
-            if (wakeEpochMinute == s.lastScheduledWakeEpochMinute) {
-                // будильник на этот момент уже стоит — дубликат не плодим, только подтверждаем
-                if (notify) Notifications.alarmSet(context, plan)
-                return plan
-            }
-            return setForDate(date, notify)
-        }
-        if (notify) {
-            Notifications.alarmSkipped(
-                context, now.toLocalDate(),
-                LocaleHelper.string(context, R.string.skip_no_upcoming)
-            )
-        }
-        return null
-    }
-
-    /**
      * Режим «на несколько дней вперёд»: ПОВТОРЯЮЩИЕСЯ будильники по дням недели.
      *
      * Через ACTION_SET_ALARM нельзя поставить будильник «на дату»: интент всегда ставит
@@ -280,14 +248,16 @@ class StockAlarmSetter(
      * Ограничение системы: контракт не возвращает результат («сколько отключено»),
      * а часть OEM-часов (Realme UI/ColorOS, старые MIUI) интент DISMISS_ALARM вообще
      * не принимают — startActivity бросит исключение. Тогда честно открываем список
-     * будильников часов (SHOW_ALARMS), чтобы пользователь снял метки «Авто:» вручную.
+     * будильников часов (SHOW_ALARMS), чтобы пользователь снял метки «Авто:» вручную
+     * — кроме случая [openListOnUnsupported] = false (движок «В приложении»: будильники
+     * уже сняты cancel'ом, а выпрыгивать в часы не зачем).
      *
      * После успешной отправки команд маркеры постановки (эпоха-минута, метка, сигнатура
      * партии) сбрасываются: следующий тумблер/ночной тик поставит будильники заново,
      * а не «промолчит», считая их уже стоящими (баг 0.5.x: выключенный тумблер не
      * снимал будильники, а включённый заново — не ставил их после ручного удаления).
      */
-    suspend fun dismissAppAlarms(): DismissResult = withContext(Dispatchers.Default) {
+    suspend fun dismissAppAlarms(openListOnUnsupported: Boolean = true): DismissResult = withContext(Dispatchers.Default) {
         val s = settings.current()
         val clockPackage = detectClockPackage()
         val labels = buildList {
@@ -319,20 +289,25 @@ class StockAlarmSetter(
         val result = if (sent > 0) {
             DismissResult(sent, labels.size, openedList = false)
         } else {
-            // Часы не приняли ни одной команды — ограничение оболочки; открываем список вручную
-            val intents = buildList {
-                if (clockPackage != null) add(Intent(AlarmClock.ACTION_SHOW_ALARMS).setPackage(clockPackage))
-                add(Intent(AlarmClock.ACTION_SHOW_ALARMS))
-            }
-            val opened = intents.any { intent ->
-                try {
-                    context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                    true
-                } catch (_: Exception) {
-                    false
+            // Часы не приняли ни одной команды — ограничение оболочки. Фолбэк «открыть
+            // список будильников» — только когда он уместен (см. [openListOnUnsupported])
+            if (openListOnUnsupported) {
+                val intents = buildList {
+                    if (clockPackage != null) add(Intent(AlarmClock.ACTION_SHOW_ALARMS).setPackage(clockPackage))
+                    add(Intent(AlarmClock.ACTION_SHOW_ALARMS))
                 }
+                val opened = intents.any { intent ->
+                    try {
+                        context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                        true
+                    } catch (_: Exception) {
+                        false
+                    }
+                }
+                DismissResult(0, labels.size, openedList = opened)
+            } else {
+                DismissResult(0, labels.size, openedList = false)
             }
-            DismissResult(0, labels.size, openedList = opened)
         }
 
         // маркеры сбрасываем в любом исходе: после команды DISMISS (или после того, как
@@ -347,6 +322,32 @@ class StockAlarmSetter(
             )
         }
         result
+    }
+
+    /**
+     * Тихо снять ОДИН будильник по точной метке (ночная сверка 00:05: будильник
+     * на завтра отменили/перенесли замены — снимаем старый, не трогая маркеры партии).
+     * Никаких фолбэков и UI: ночью нельзя выскакивать на передний план.
+     * @return true, если интент принят часами (о фактическом снятии контракт не сообщает).
+     */
+    suspend fun dismissSingleLabel(label: String): Boolean = withContext(Dispatchers.Default) {
+        if (label.isBlank()) return@withContext false
+        val clockPackage = detectClockPackage()
+        try {
+            context.startActivity(
+                Intent(AlarmClock.ACTION_DISMISS_ALARM).apply {
+                    putExtra(AlarmClock.EXTRA_ALARM_SEARCH_MODE, AlarmClock.ALARM_SEARCH_MODE_LABEL)
+                    putExtra(AlarmClock.EXTRA_MESSAGE, label)
+                    putExtra(AlarmClock.EXTRA_SKIP_UI, true)
+                    if (clockPackage != null) setPackage(clockPackage)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+            )
+            true
+        } catch (e: Exception) {
+            Log.i(TAG, "DISMISS по метке не принят: ${e.message}")
+            false
+        }
     }
 
     /**

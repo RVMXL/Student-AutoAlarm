@@ -4,6 +4,8 @@ import android.content.Context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import ru.uniautoalarm.kgeu.alarm.AlarmGateway
+import ru.uniautoalarm.kgeu.alarm.InAppAlarmScheduler
 import ru.uniautoalarm.kgeu.alarm.StockAlarmSetter
 import ru.uniautoalarm.kgeu.data.db.AppDatabase
 import ru.uniautoalarm.kgeu.data.remote.KgeuApi
@@ -26,4 +28,8 @@ class AppContainer(context: Context) {
     val scheduleRepository by lazy { ScheduleRepository(database, kgeuApi, settings, appScope) }
     val planner by lazy { AlarmPlanner(settings, scheduleRepository, database.customEventDao(), database.exceptionDao()) }
     val stockAlarms by lazy { StockAlarmSetter(context.applicationContext, planner, settings) }
+    val inAppAlarms by lazy { InAppAlarmScheduler(appContext) }
+
+    /** Единая точка постановки/снятия: маршрутизирует по Settings.alarmTarget (0.7.0). */
+    val alarm by lazy { AlarmGateway(appContext, settings, stockAlarms, inAppAlarms, planner) }
 }

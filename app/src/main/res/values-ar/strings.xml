@@ -97,7 +97,7 @@
     <string name="lesson_at">الحصة في %1$s</string>
     <string name="own_event_at">نشاطك الخاص في %1$s</string>
     <string name="home_auto_title">المنبّه التلقائي</string>
-    <string name="home_auto_subtitle">يضبط المنبّه في تطبيق الساعة المدمج قبل الحصة الأولى</string>
+    <string name="home_auto_subtitle">يضبط المنبّه قبل الحصة الأولى حسب الجدول</string>
     <string name="home_week_title">لعدة أيام مقدمًا</string>
     <string name="home_week_desc">منبّهات متكررة بحسب أيام الأسبوع — كضمان إذا أنهى النظام التطبيق</string>
     <string name="btn_set_for_days">ضبط لمدة %1$d أيام</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">مزامنة الجدول الدراسي</string>
     <string name="notif_sync_text">جارٍ تحديث جدول جامعة قازان للطاقة</string>
     <string name="notif_details_room">%1$s، قاعة %2$s</string>
+    <string name="notif_missed_title">فُوّت المنبّه</string>
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">لا توجد حصص</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Настройки: будильник ==== -->
     <string name="set_auto_title">المنبّه التلقائي</string>
+    <string name="alarm_target_title">أين يرن المنبّه</string>
+    <string name="alarm_target_desc">«في الساعة» — الرنين المألوف في ساعة الهاتف (قد تحجب الواجهات الأوامر). «في التطبيق» — يرن التطبيق نفسه بملء الشاشة: المفتاح والإيقاف وتغييرات الجدول تعمل بشكل مضمون.</string>
+    <string name="alarm_target_clock">في الساعة</string>
+    <string name="alarm_target_app">في التطبيق</string>
     <string name="set_show_clock">إظهار الساعة عند الضبط</string>
     <string name="set_show_clock_desc">فعّله إذا كانت المنبّهات لا تُضبط تلقائيًا (Realme وOppo وHuawei): سيُفتح تطبيق الساعة ومنبّه جاهز — أكِّد بزر «حفظ».</string>
     <string name="set_wake_offset">الاستيقاظ قبل الحصة الأولى بـ %1$s</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">وقت التذكير</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">لا يُضبط المنبّه قبل هذه المواد — بالاسم أو حسب نوع الحصة: محاضرة أو تمرين عملي أو عمل معملي</string>
+    <string name="exceptions_title_desc">لا يُضبط المنبّه قبل الحصص التي يطابق اسمها الكامل تمامًا — مع بادئة النوع: «л. материаловедение» يستثني المحاضرة فقط، و«пр. материаловедение» التمرين العملي فقط</string>
     <string name="exceptions_empty">لا شيء بعد — أضف المواد التي لا تريد الاستيقاظ قبلها</string>
     <string name="cd_delete_named">حذف «%1$s»</string>
     <string name="hint_subject_name">اسم المادة</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">تم إيقاف المنبّه التلقائي وإزالة منبّهات التطبيق من الساعة</string>
     <string name="toggle_off_opened">تم إيقاف المنبّه التلقائي. لا تدعم الساعة التعطيل بالأمر (قيد من الواجهة) — فتح التطبيق قائمة المنبّهات: أزل المنبّهات ذات تسمية «Авто:» يدويًا</string>
     <string name="toggle_off_manual">تم إيقاف المنبّه التلقائي. لا تدعم الساعة التعطيل بالأمر (قيد من الواجهة) — افتح المنبّهات في تطبيق الساعة وأزل تسميات «Авто:» يدويًا</string>
+    <string name="toggle_off_app_cancelled">أُوقف المنبّه التلقائي وأُزيلت منبهات التطبيق</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">أحداثك الخاصة بوقت منبّه مستقل — أنشطة، تمارين، مهام لمرة واحدة</string>
@@ -274,6 +280,12 @@
     <string name="glass_intensity">شدة تأثير الزجاج</string>
     <string name="glass_tip">نصيحة: يبدو تأثير الزجاج في أفضل حالاته مع صورة خلفية (أعلاه)</string>
     <string name="glass_active">تأثير الزجاج مفعّل</string>
+
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">حان وقت الاستيقاظ!</string>
+    <string name="ring_dismiss">إيقاف</string>
+    <string name="ring_channel_name">رنين المنبّه</string>
+    <string name="ring_channel_desc">رنين منبّه التطبيق بملء الشاشة</string>
 
     <!-- ==== Настройки: система ==== -->
     <string name="status_exact_allowed">المنبّهات الدقيقة مسموح بها</string>

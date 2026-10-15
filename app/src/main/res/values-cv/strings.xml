@@ -97,7 +97,7 @@
     <string name="lesson_at">пара %1$s çинче</string>
     <string name="own_event_at">хӑвӑн ĕç %1$s çинче</string>
     <string name="home_auto_title">Авто-будильник</string>
-    <string name="home_auto_subtitle">Будильник пӗрремӗш пара умӗнче сток сехетсене лартать</string>
+    <string name="home_auto_subtitle">Будильник пӗрремӗш пара умӗнче кӑларӑм тӑрӑх лартать</string>
     <string name="home_week_title">Темиже кун малан</string>
     <string name="home_week_desc">Эрне кунӗсемпе повторланакан будильниксем — система программӑна вӗҫтерсе пӑрахсан те пулӑшаçҫӗ</string>
     <string name="btn_set_for_days">%1$d кун ларт</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">Расписание синхронизацийӗ</string>
     <string name="notif_sync_text">КГЭУ расписаниене çĕнетпӗр</string>
     <string name="notif_details_room">%1$s, ауд. %2$s</string>
+    <string name="notif_missed_title">Будильник каҫӑннӑ</string>
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">парасем çук</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Настройки: будильник ==== -->
     <string name="set_auto_title">Авто-будильник</string>
+    <string name="alarm_target_title">Будильник ӑҫта кӑвӑртать</string>
+    <string name="alarm_target_desc">«Сехетсенче» — телефон сехетӗсенчи яланги сигнал (оболочка хушӑвсене тытса тӑма пултарать). «Программӑра» — программа хӑй тулли экранра кӑвӑртать: тумблер, сунтарни тата кӑларӑм улшӑннисене йӗркелесси палӑртнӑ пек пулать.</string>
+    <string name="alarm_target_clock">Сехетсенче</string>
+    <string name="alarm_target_app">Программӑра</string>
     <string name="set_show_clock">Лартнӑ чух сехете кӑтарт</string>
     <string name="set_show_clock_desc">Будильниксем хӑйсем лартӑнмастӑр пулсан хушӑр (Realme, Oppo, Huawei): сехетсем хатӗр будильникпа уҫӑнаҫҫӗ — „Сыхла“ пӑшӑлпа çирӗплетӗр.</string>
     <string name="set_wake_offset">Пӗрремӗш пара умӗнчен %1$s вӑранса тӑни</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">Пӗлтерӳ вӑхӑчӗ</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Тема дисциплинсем умӗнчен будильник лартӑнмасть — ят е парин тӗсӗ тӑрӑх: лекци, практикӑ, лаборатори</string>
+    <string name="exceptions_title_desc">Будильник ятне тӗплӗн палӑртнӑ — тӗс префикспе — парсем умӗнчен лартӑнмасть: «л. материаловедение» кӑна лекцие, «пр. материаловедение» кӑна практикӑна кӑларса пӑрахать</string>
     <string name="exceptions_empty">Халӗ пушӑ — умӗнче вӑрантарма кирлӗ мар предметсене хушӑр</string>
     <string name="cd_delete_named">„%1$s“ кӑларса пӑрах</string>
     <string name="hint_subject_name">Дисциплина ячӗ</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">Автобудильник сунтарнӑ, будильниксене сехетрен кӑларса пӑрахнӑ</string>
     <string name="toggle_off_opened">Автобудильник сунтарнӑ. Сехетсем командӑпа сунтарма йышӑнмаҫҫӗ (оболочка чикӗленӗвӗ) — будильник йышӗне уҫрӑм: „Авто:“ ятлӑ будильниксене алӑпа сунтар</string>
     <string name="toggle_off_manual">Автобудильник сунтарнӑ. Сехетсем командӑпа сунтарма йышӑнмаҫҫӗ (оболочка чикӗленӗвӗ) — сехет программинче будильниксене уҫса „Авто:“ ятсене алӑпа сунтар</string>
+    <string name="toggle_off_app_cancelled">Автобудильник сунтарнӑ, программа будильникӗсене сунтарнӑ</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Хӑвӑн пулӑмсем уйрӑм будильник вӑхӑчӗпе — секцисем, репетицисем, пӗр хутлӑ ĕçсем</string>
@@ -274,6 +280,12 @@
     <string name="glass_intensity">Стекло вӑйӗ</string>
     <string name="glass_tip">Канаш: стекло фон ӳкерчӗкӗпе чи лайӑх курӑнать (çиертех)</string>
     <string name="glass_active">Стекло хастар</string>
+
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">Вӑхӑт вӑранма!</string>
+    <string name="ring_dismiss">Сунтар</string>
+    <string name="ring_channel_name">Будильник кӑвӑртӑвӗ</string>
+    <string name="ring_channel_desc">Программа будильникӗн тулли экранлӑ сигналы</string>
 
     <!-- ==== Настройки: система ==== -->
     <string name="status_exact_allowed">Тӗрӗс будильниксене ирӗк парнӑ</string>

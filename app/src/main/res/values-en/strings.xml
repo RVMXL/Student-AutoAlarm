@@ -97,7 +97,7 @@
     <string name="lesson_at">class at %1$s</string>
     <string name="own_event_at">your own event at %1$s</string>
     <string name="home_auto_title">Auto-Alarm</string>
-    <string name="home_auto_subtitle">Sets an alarm in the built-in Clock app before your first class</string>
+    <string name="home_auto_subtitle">Sets an alarm before your first class according to the schedule</string>
     <string name="home_week_title">Several days ahead</string>
     <string name="home_week_desc">Repeating alarms for each day of the week — a safety net in case the system kills the app</string>
     <string name="btn_set_for_days">Set for %1$d days</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">Schedule sync</string>
     <string name="notif_sync_text">Updating the KGEU schedule</string>
     <string name="notif_details_room">%1$s, room %2$s</string>
+    <string name="notif_missed_title">Alarm missed</string>
 
     <!-- ==== Alarm skip reasons (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">no classes</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Settings: alarm ==== -->
     <string name="set_auto_title">Auto-Alarm</string>
+    <string name="alarm_target_title">Where the alarm rings</string>
+    <string name="alarm_target_desc">«Clock app» — the familiar signal in the phone\'s clock (system shells may block commands). «In the app» — the app rings full-screen itself: the toggle, dismissing and schedule changes are guaranteed to work.</string>
+    <string name="alarm_target_clock">Clock app</string>
+    <string name="alarm_target_app">In the app</string>
     <string name="set_show_clock">Show the Clock app when setting alarms</string>
     <string name="set_show_clock_desc">Turn on if alarms aren\'t set on their own (Realme, Oppo, Huawei): the Clock app will open with the alarm ready — confirm it with \"Save\".</string>
     <string name="set_wake_offset">Wake up %1$s before your first class</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">Reminder time</string>
 
     <!-- ==== Settings: exceptions ==== -->
-    <string name="exceptions_title_desc">No alarm is set before these subjects — by name or by lesson type: lecture, practice, lab</string>
+    <string name="exceptions_title_desc">No alarm before classes whose full name matches exactly — type prefix included: «л. материаловедение» excludes only the lecture, «пр. материаловедение» only the practice session</string>
     <string name="exceptions_empty">Empty for now — add subjects you don\'t want to be woken up for</string>
     <string name="cd_delete_named">Delete \"%1$s\"</string>
     <string name="hint_subject_name">Subject name</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">Auto-alarm is off — the app\'s alarms have been removed from the Clock</string>
     <string name="toggle_off_opened">Auto-alarm is off. The Clock app doesn\'t support dismiss commands (system shell limitation) — the alarm list is open: turn off the \"Авто:\" alarms manually</string>
     <string name="toggle_off_manual">Auto-alarm is off. The Clock app doesn\'t support dismiss commands (system shell limitation) — open the alarms in the Clock app and remove the \"Авто:\" labels manually</string>
+    <string name="toggle_off_app_cancelled">Auto-alarm is off, the app\'s alarms have been dismissed</string>
 
     <!-- ==== Settings: custom events ==== -->
     <string name="custom_events_desc">Your own events with a separate alarm time — club sessions, rehearsals, one-off things</string>
@@ -276,6 +282,12 @@
     <string name="glass_active">Glass is on</string>
 
     <!-- ==== Settings: system ==== -->
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">Time to get up!</string>
+    <string name="ring_dismiss">Dismiss</string>
+    <string name="ring_channel_name">Alarm ringing</string>
+    <string name="ring_channel_desc">Full-screen ringing of the app alarm</string>
+
     <string name="status_exact_allowed">Exact alarms are allowed</string>
     <string name="dialog_exact_off_title">Exact alarms are disabled by the system</string>
     <string name="dialog_exact_off_desc">The overnight scheduler will only be able to set the alarm with a ±10 minute deviation.</string>

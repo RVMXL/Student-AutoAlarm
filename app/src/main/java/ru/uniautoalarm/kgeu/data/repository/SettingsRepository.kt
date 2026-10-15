@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import ru.uniautoalarm.kgeu.data.model.AlarmMode
+import ru.uniautoalarm.kgeu.data.model.AlarmTarget
 import ru.uniautoalarm.kgeu.data.model.CalendarStyle
 import ru.uniautoalarm.kgeu.data.model.Settings
 import ru.uniautoalarm.kgeu.data.model.TargetType
@@ -57,6 +58,7 @@ class SettingsRepository(private val context: Context) {
         val REMINDER_ENABLED = booleanPreferencesKey("reminder_enabled")
         val REMINDER_TIME = stringPreferencesKey("reminder_time")
         val ALARM_SHOW_CLOCK_UI = booleanPreferencesKey("alarm_show_clock_ui")
+        val ALARM_TARGET = stringPreferencesKey("alarm_target")
         val FIRST_LESSON_OFFSETS = stringPreferencesKey("first_lesson_offsets")
         val GLASS_ENABLED = booleanPreferencesKey("glass_enabled")
         val GLASS_INTENSITY = floatPreferencesKey("glass_intensity")
@@ -112,6 +114,7 @@ class SettingsRepository(private val context: Context) {
         reminderEnabled = this[Keys.REMINDER_ENABLED] ?: false,
         reminderTime = this[Keys.REMINDER_TIME]?.let { parseTime(it) } ?: LocalTime.of(21, 0),
         alarmShowClockUi = this[Keys.ALARM_SHOW_CLOCK_UI] ?: false,
+        alarmTarget = parseEnum(this[Keys.ALARM_TARGET], AlarmTarget.CLOCK),
         firstLessonOffsets = this[Keys.FIRST_LESSON_OFFSETS]?.let { parseOffsets(it) } ?: emptyMap(),
         glassEnabled = this[Keys.GLASS_ENABLED] ?: false,
         glassIntensity = this[Keys.GLASS_INTENSITY] ?: 0.5f,
@@ -156,6 +159,7 @@ class SettingsRepository(private val context: Context) {
         this[Keys.REMINDER_ENABLED] = s.reminderEnabled
         this[Keys.REMINDER_TIME] = s.reminderTime.toString()
         this[Keys.ALARM_SHOW_CLOCK_UI] = s.alarmShowClockUi
+        this[Keys.ALARM_TARGET] = s.alarmTarget.name
         this[Keys.FIRST_LESSON_OFFSETS] = serializeOffsets(s.firstLessonOffsets)
         this[Keys.GLASS_ENABLED] = s.glassEnabled
         this[Keys.GLASS_INTENSITY] = s.glassIntensity

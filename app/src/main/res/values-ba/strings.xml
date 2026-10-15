@@ -97,7 +97,7 @@
     <string name="lesson_at">пара сәғәт %1$s</string>
     <string name="own_event_at">үҙ ваҡиғаң сәғәт %1$s</string>
     <string name="home_auto_title">Авто-будильник</string>
-    <string name="home_auto_subtitle">Беренсе пара алдынан ҡәғәҙәтге сәғәттә будильник ҡуя</string>
+    <string name="home_auto_subtitle">Кестә буйынса беренсе пара алдынан будильник ҡуя</string>
     <string name="home_week_title">Бер нисә көнгә алдан</string>
     <string name="home_week_desc">Аҙна көндәре буйынса ҡабатланған будильниктар — система ҡушымтаны үлтерһә, страховка булып ҡала</string>
     <string name="btn_set_for_days">%1$d көнгә ҡуйырға</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">Расписание синхронизацияһы</string>
     <string name="notif_sync_text">КГЭУ расписаниеһын яңыртабыҙ</string>
     <string name="notif_details_room">%1$s, ауд. %2$s</string>
+    <string name="notif_missed_title">Будильник үткәрелде</string>
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">паралар юҡ</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Настройки: будильник ==== -->
     <string name="set_auto_title">Авто-будильник</string>
+    <string name="alarm_target_title">Будильник ҡайҙа шылтырай</string>
+    <string name="alarm_target_desc">«Сәғәттә» — телефон сәғәтендәге ғәҙати сигнал (оболочка бойороҡтарҙы блоклай ала). «Ҡушымтала» — ҡушымта үҙе тулы экранда шылтырай: күсереп ҡабыҙғысы, һүндереү һәм кестә үҙгәрештәре гарантиялы эшләй.</string>
+    <string name="alarm_target_clock">Сәғәттә</string>
+    <string name="alarm_target_app">Ҡушымтала</string>
     <string name="set_show_clock">Будильник ҡуйылғанда сәғәтте күрһәтеү</string>
     <string name="set_show_clock_desc">Будильниктар үҙҙәре ҡуйылмаһа, ҡабыҙ (Realme, Oppo, Huawei): сәғәт әҙер будильник менән асыласаҡ — «Һаҡлау» төймәһе менән раҫла.</string>
     <string name="set_wake_offset">Беренсе параға тиклем %1$s ҡалғас уяныу</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">Иҫкәрмә ваҡыты</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Бу дисциплиналар алдынан будильник ҡуйылмай — исем буйынса йәки пара төрө буйынса: лекция, практика, лаборатория</string>
+    <string name="exceptions_title_desc">Будильник исеме тулыһынса тап килгән — төр ҡушымтаһы менән — парҙар алдынан ҡуйылмай: «л. материаловедение» лекцияны ғына, «пр. материаловедение» практиканы ғына алып ташлай</string>
     <string name="exceptions_empty">Әлегә буш — уятырға кәрәкмәгән фәндәрҙе өҫтә</string>
     <string name="cd_delete_named">Бөтөрөргә: «%1$s»</string>
     <string name="hint_subject_name">Дисциплина исеме</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">Автобудильник һүндерелде, ҡушымта будильниктары сәғәттән алынды</string>
     <string name="toggle_off_opened">Автобудильник һүндерелде. Сәғәт бойороҡ менән һүндереүҙе хупламай (оболочка сикләүе) — будильниктар исемлеген астым: «Авто:» билдәле будильниктарҙы ҡул менән алып ташла</string>
     <string name="toggle_off_manual">Автобудильник һүндерелде. Сәғәт бойороҡ менән һүндереүҙе хупламай (оболочка сикләүе) — сәғәт ҡушымтаһында будильниктарҙы асып, «Авто:» билдәләрен ҡул менән алып ташла</string>
+    <string name="toggle_off_app_cancelled">Автобудильник һүндерелде, ҡушымта будильниктары алынды</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Будильник ваҡыты айырым булған үҙ ваҡиғаларың — секциялар, репетициялар, бер тапҡыр эштәр</string>
@@ -274,6 +280,12 @@
     <string name="glass_intensity">Быяла дәрәжәһе</string>
     <string name="glass_tip">Кәңәш: быяла фон рәсеме менән иң яҡшы күренә (өҫтәрәк)</string>
     <string name="glass_active">Быяла ҡабыҙылған</string>
+
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">Уяныр ваҡыт!</string>
+    <string name="ring_dismiss">Һүндереү</string>
+    <string name="ring_channel_name">Будильник шылтырауы</string>
+    <string name="ring_channel_desc">Ҡушымта будильнигының тулы экранлы сигналы</string>
 
     <!-- ==== Настройки: система ==== -->
     <string name="status_exact_allowed">Аныҡ будильниктар рөхсәт ителгән</string>

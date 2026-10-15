@@ -97,7 +97,7 @@
     <string name="lesson_at">sapak %1$s</string>
     <string name="own_event_at">şahsy waka %1$s</string>
     <string name="home_auto_title">Awtomatik ýatgyjy</string>
-    <string name="home_auto_subtitle">Birinji sapakdan öň deslapky sagada ýatgyjy goýýar</string>
+    <string name="home_auto_subtitle">Çeredece boýunça birinji sapagyň öňünden ýatgyjy goýýar</string>
     <string name="home_week_title">Birnäçe gün öňüne</string>
     <string name="home_week_desc">Hepdäniň günleri boýunça gaýtalanylýan ýatgyjylar — ulgam programmany öldürse, isygorta hökmünde</string>
     <string name="btn_set_for_days">%1$d günlük goý</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">Sabak çeredecesini utgaşdyrmak</string>
     <string name="notif_sync_text">KGEU sabak çeredecesini täzleýäris</string>
     <string name="notif_details_room">%1$s, aud. %2$s</string>
+    <string name="notif_missed_title">Ýatgyjy ýitirildi</string>
 
     <!-- ==== Ýatgyjy goýylmazlygynyň sebäpleri (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">sapak ýok</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Sazlamalar: ýatgyjy ==== -->
     <string name="set_auto_title">Awtomatik ýatgyjy</string>
+    <string name="alarm_target_title">Ýatgyjy niräk çalar</string>
+    <string name="alarm_target_desc">«Sagatda» — telefonyň sagatyndaky adaty signal (örtükler buýruklary bloklaýar). «Programmada» — programma özi doly ekranda çalar: geçegi, öçürmek we çeredece üýtgeşmeleri kepillikli işleýär.</string>
+    <string name="alarm_target_clock">Sagatda</string>
+    <string name="alarm_target_app">Programmada</string>
     <string name="set_show_clock">Ýatgyjy goýlanda sagady görkez</string>
     <string name="set_show_clock_desc">Ýatgyjylar öz-özünden goýulmasa, muny ýak (Realme, Oppo, Huawei): sagat taýýar ýatgyjy bilen açylar — «Sakla» düwmesi bilen tassykla.</string>
     <string name="set_wake_offset">Birinji sapakdan %1$s öň oýanmak</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">Ýada salyş wagty</string>
 
     <!-- ==== Sazlamalar: istisnalar ==== -->
-    <string name="exceptions_title_desc">Bu panlaryň öňünden ýatgyjy goýulmaýar — ady ýa-da sapagyň görnüşi boýunça: leksiýa, amalyýet, laboratoriýa</string>
+    <string name="exceptions_title_desc">Ýatgyjy ady takyk deň bolan — görnüşiniň goşundysy bilen — sapaklaryň öňünden goýulmaýar: «л. материаловедение» diňe leksiýany, «пр. материаловедение» diňe amalyýeti aýyrýar</string>
     <string name="exceptions_empty">Häzir boş — oýatmagyň gerek bolmajak dersleri goş</string>
     <string name="cd_delete_named">«%1$s» öçür</string>
     <string name="hint_subject_name">Dersiň ady</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">Awtobudýyjy öçürildi, programmanyň ýatgyjylary sagatdan alynardy</string>
     <string name="toggle_off_opened">Awtobudýyjy öçürildi. Sagat buýruk bilen öçürmegi goldamaýar (örtügiň çäklemesi) — ýatgyjylaryň sanawyny açdym: «Авто:» bellikli ýatgyjylary el bilen aýyr</string>
     <string name="toggle_off_manual">Awtobudýyjy öçürildi. Sagat buýruk bilen öçürmegi goldamaýar (örtügiň çäklemesi) — sagat programmasynda ýatgyjylary aç we «Авто:» belliklerini el bilen aýyr</string>
+    <string name="toggle_off_app_cancelled">Awtobudýyjy öçürildi, programmanyň ýatgyjylary aýryldy</string>
 
     <!-- ==== Sazlamalar: şahsy wakalar ==== -->
     <string name="custom_events_desc">Aýry ýatgyjy wagty bilen şahsy wakalaryň — sport dersleri, repetisiýalar, bir gezeklik işler</string>
@@ -276,6 +282,12 @@
     <string name="glass_active">Aýna effekt işleýär</string>
 
     <!-- ==== Sazlamalar: ulgam ==== -->
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">Oýanmagyň wagty!</string>
+    <string name="ring_dismiss">Öçürmek</string>
+    <string name="ring_channel_name">Ýatgyjy çalşy</string>
+    <string name="ring_channel_desc">Programmanyň ýatgyjysynyň doly ekranly signaly</string>
+
     <string name="status_exact_allowed">Anyk ýatgyjylara rugsat berilýär</string>
     <string name="dialog_exact_off_title">Anyk ýatgyjylary ulgam öçüren</string>
     <string name="dialog_exact_off_desc">Gijäki meýilnamaçy ýatgyjy diňe ±10 minut töweregi takyksyzlyk bilen goýup biler.</string>

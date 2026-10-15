@@ -97,7 +97,7 @@
     <string name="lesson_at">%1$s 有课</string>
     <string name="own_event_at">%1$s 有自定义活动</string>
     <string name="home_auto_title">自动闹钟</string>
-    <string name="home_auto_subtitle">第一节课前自动在系统时钟应用设置闹钟</string>
+    <string name="home_auto_subtitle">按课表在第一节课前设置闹钟</string>
     <string name="home_week_title">一次设置多天</string>
     <string name="home_week_desc">按星期几重复的闹钟 — 系统杀掉应用时的保险</string>
     <string name="btn_set_for_days">设置 %1$d 天的闹钟</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">正在同步课程表</string>
     <string name="notif_sync_text">正在更新喀山动力大学课程表</string>
     <string name="notif_details_room">%1$s，%2$s 教室</string>
+    <string name="notif_missed_title">闹钟已错过</string>
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">没有课</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Настройки: будильник ==== -->
     <string name="set_auto_title">自动闹钟</string>
+    <string name="alarm_target_title">闹钟在哪里响</string>
+    <string name="alarm_target_desc">「系统时钟」— 手机时钟里熟悉的铃声（系统外壳可能拦截指令）。「应用内」— 应用自己全屏响铃：开关、关闭和课表变动均有保障。</string>
+    <string name="alarm_target_clock">系统时钟</string>
+    <string name="alarm_target_app">应用内</string>
     <string name="set_show_clock">设置时显示时钟应用</string>
     <string name="set_show_clock_desc">如果闹钟无法自动设置（Realme、Oppo、Huawei），请开启：时钟应用会带着现成的闹钟打开 — 点“保存”确认即可。</string>
     <string name="set_wake_offset">第一节课前 %1$s 起床</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">提醒时间</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">这些课程之前不会设置闹钟 — 按名称或按课程类型：讲座、实践课、实验课</string>
+    <string name="exceptions_title_desc">闹钟不会在名称完全一致（含类型前缀）的课前提响：「л. материаловедение」只排除讲座课，「пр. материаловедение」只排除实践课</string>
     <string name="exceptions_empty">暂无内容 — 添加不想被叫醒的课程</string>
     <string name="cd_delete_named">删除“%1$s”</string>
     <string name="hint_subject_name">课程名称</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">自动闹钟已关闭，应用设置的闹钟已从系统时钟移除</string>
     <string name="toggle_off_opened">自动闹钟已关闭。时钟应用不支持通过命令关闭（系统界面限制）— 已为你打开闹钟列表：请手动移除«Авто:»标签的闹钟</string>
     <string name="toggle_off_manual">自动闹钟已关闭。时钟应用不支持通过命令关闭（系统界面限制）— 请在时钟应用中打开闹钟，手动移除«Авто:»标签</string>
+    <string name="toggle_off_app_cancelled">自动闹钟已关闭，应用内的闹钟已取消</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">为自己的活动单独设闹钟 — 社团、排练、临时事务</string>
@@ -274,6 +280,12 @@
     <string name="glass_intensity">玻璃效果强度</string>
     <string name="glass_tip">小贴士：搭配背景图片（上方设置）效果最佳</string>
     <string name="glass_active">玻璃效果已开启</string>
+
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">该起床了！</string>
+    <string name="ring_dismiss">关闭</string>
+    <string name="ring_channel_name">闹钟铃声</string>
+    <string name="ring_channel_desc">应用闹钟的全屏铃声</string>
 
     <!-- ==== Настройки: система ==== -->
     <string name="status_exact_allowed">已允许精确闹钟</string>

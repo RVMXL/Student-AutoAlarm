@@ -97,7 +97,7 @@
     <string name="lesson_at">Ders: %1$s</string>
     <string name="own_event_at">Kendi etkinliği: %1$s</string>
     <string name="home_auto_title">Otomatik alarm</string>
-    <string name="home_auto_subtitle">İlk dersten önce telefonun yerleşik Saat uygulamasına alarm kurar</string>
+    <string name="home_auto_subtitle">Programa göre ilk dersin öncesinde alarm kurar</string>
     <string name="home_week_title">Birkaç gün önceden</string>
     <string name="home_week_desc">Haftanın günlerine göre tekrarlayan alarmlar — sistem uygulamayı sonlandırırsa sigorta</string>
     <string name="btn_set_for_days">%1$d günlüğüne kur</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">Ders programı eşitleniyor</string>
     <string name="notif_sync_text">KGEU ders programı güncelleniyor</string>
     <string name="notif_details_room">%1$s, derslik %2$s</string>
+    <string name="notif_missed_title">Alarm kaçırıldı</string>
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">ders yok</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Настройки: будильник ==== -->
     <string name="set_auto_title">Otomatik alarm</string>
+    <string name="alarm_target_title">Alarm nerede çalar</string>
+    <string name="alarm_target_desc">«Saatta» — telefon saatindeki tanıdık zil (arayüz komutları engelleyebilir). «Uygulamada» — uygulamanın kendisi tam ekranda çalar: düğme, kapatma ve program değişiklikleri garantilidir.</string>
+    <string name="alarm_target_clock">Saatta</string>
+    <string name="alarm_target_app">Uygulamada</string>
     <string name="set_show_clock">Kurarken Saat uygulamasını göster</string>
     <string name="set_show_clock_desc">Alarmlar kendi kendine kurulmuyorsa aç (Realme, Oppo, Huawei): Saat uygulaması hazır alarmla açılır — “Kaydet” düğmesiyle onayla.</string>
     <string name="set_wake_offset">İlk dersten %1$s önce kalkma</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">Hatırlatma saati</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Bu derslerden önce alarm kurulmaz — isme veya ders türüne göre: ders, uygulama, laboratuvar</string>
+    <string name="exceptions_title_desc">Alarm, tam adı eşleşen — tür öneki dahil — derslerin öncesinde kurulmaz: «л. материаловедение» yalnızca teori dersini, «пр. материаловедение» yalnızca uygulama dersini hariç tutar</string>
     <string name="exceptions_empty">Şimdilik boş — öncesinde alarm kurulmasını istemediğin dersleri ekle</string>
     <string name="cd_delete_named">“%1$s” öğesini sil</string>
     <string name="hint_subject_name">Ders adı</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">Otomatik alarm kapatıldı, uygulamanın alarmları saatten kaldırıldı</string>
     <string name="toggle_off_opened">Otomatik alarm kapatıldı. Saat uygulaması komutla kapatmayı desteklemiyor (arayüz kısıtlaması) — alarm listesi açıldı: «Авто:» etiketli alarmları elle kaldır</string>
     <string name="toggle_off_manual">Otomatik alarm kapatıldı. Saat uygulaması komutla kapatmayı desteklemiyor (arayüz kısıtlaması) — alarmları Saat uygulamasında aç ve «Авто:» etiketlerini elle kaldır</string>
+    <string name="toggle_off_app_cancelled">Otomatik alarm kapatıldı, uygulamanın alarmları kaldırıldı</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Kendi etkinliklerin için ayrı alarm — kulüpler, provalar, tek seferlik işler</string>
@@ -274,6 +280,12 @@
     <string name="glass_intensity">Cam efekti yoğunluğu</string>
     <string name="glass_tip">İpucu: Cam efekti, arka plan resmiyle (yukarıda) en iyi görünümü verir</string>
     <string name="glass_active">Cam efekti açık</string>
+
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">Kalkma zamanı!</string>
+    <string name="ring_dismiss">Kapat</string>
+    <string name="ring_channel_name">Alarm zili</string>
+    <string name="ring_channel_desc">Uygulama alarminin tam ekran zili</string>
 
     <!-- ==== Настройки: система ==== -->
     <string name="status_exact_allowed">Kesin alarmlara izin verildi</string>

@@ -40,10 +40,10 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
             }
         }
 
-        // «На несколько дней вперёд»: партия повторяющихся будильников переставляется,
-        // только если расписание изменило времена подъёма (сигнатура отфильтрует повторы)
+        // «На несколько дней вперёд»: партия будильников переставляется по актуальному
+        // расписанию; часы — по сигнатуре (повторы), приложение — перезаписью слотов
         if (s.mode == AlarmMode.WEEK_AHEAD && s.autoAlarmEnabled) {
-            runCatching { container.stockAlarms.setWeekAhead(notify = false) }
+            runCatching { container.alarm.setWeekAhead(notify = false) }
         }
 
         return Result.success()

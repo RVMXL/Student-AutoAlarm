@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.uniautoalarm.kgeu.AutoAlarmApp
 import ru.uniautoalarm.kgeu.data.model.AlarmMode
+import ru.uniautoalarm.kgeu.data.model.AlarmTarget
 import ru.uniautoalarm.kgeu.work.WorkScheduler
 
 /**
@@ -34,11 +35,19 @@ class BootReceiver : BroadcastReceiver() {
 
                 // 2) страховка режима «на несколько дней вперёд»: повторяющиеся будильники
                 //    живут в часах сами, но если их снесли или сменилось расписание — ставим
-                //    заново (сигнатура в настройках отфильтрует дубликаты)
+                //    заново (сигнатура в настройках отфильтрует дубликаты). Движок приложения:
+                //    будильники AlarmManager перезагрузку НЕ переживают — восстанавливаем
+                //    партию/ближайшее пробуждение немедленно
                 val container = (appContext as AutoAlarmApp).container
                 val s = container.settings.current()
-                if (s.setupComplete && s.autoAlarmEnabled && s.mode == AlarmMode.WEEK_AHEAD) {
-                    container.stockAlarms.setWeekAhead(notify = false)
+                if (s.setupComplete && s.autoAlarmEnabled) {
+                    when (s.mode) {
+                        AlarmMode.WEEK_AHEAD ->
+                            container.alarm.setWeekAhead(notify = false)
+                        AlarmMode.STANDARD -> if (s.alarmTarget == AlarmTarget.APP) {
+                            container.alarm.setNextUpcoming(notify = false)
+                        }
+                    }
                 }
             } catch (e: Exception) {
                 Log.w(TAG, "Обработка загрузки не удалась: ${e.message}")

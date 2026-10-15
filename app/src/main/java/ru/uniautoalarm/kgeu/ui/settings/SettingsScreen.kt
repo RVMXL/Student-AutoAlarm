@@ -116,6 +116,7 @@ import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.alarm.StockAlarmSetter
 import ru.uniautoalarm.kgeu.data.local.LocaleStore
 import ru.uniautoalarm.kgeu.data.model.AlarmMode
+import ru.uniautoalarm.kgeu.data.model.AlarmTarget
 import ru.uniautoalarm.kgeu.data.model.CalendarStyle
 import ru.uniautoalarm.kgeu.data.model.CustomEvent
 import ru.uniautoalarm.kgeu.data.model.ExceptionRule
@@ -380,36 +381,66 @@ private fun AlarmSettingsCard(
             }
             HorizontalDivider()
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .toggleable(
-                        value = settings.alarmShowClockUi,
-                        role = Role.Switch,
-                        onValueChange = { vm.setAlarmShowClockUi(it) }
-                    ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    Icons.Rounded.TouchApp,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Spacer(Modifier.width(12.dp))
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        stringResource(R.string.set_show_clock),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Text(
-                        stringResource(R.string.set_show_clock_desc),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+            // --- Куда ставится будильник (0.7.0): часы телефона или приложение ---
+            Text(
+                stringResource(R.string.alarm_target_title),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+                SegmentedButton(
+                    selected = settings.alarmTarget == AlarmTarget.CLOCK,
+                    onClick = { vm.setAlarmTarget(AlarmTarget.CLOCK) },
+                    shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
+                ) {
+                    PillLabel(stringResource(R.string.alarm_target_clock))
                 }
-                Switch(checked = settings.alarmShowClockUi, onCheckedChange = null)
+                SegmentedButton(
+                    selected = settings.alarmTarget == AlarmTarget.APP,
+                    onClick = { vm.setAlarmTarget(AlarmTarget.APP) },
+                    shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
+                ) {
+                    PillLabel(stringResource(R.string.alarm_target_app))
+                }
             }
+            Text(
+                stringResource(R.string.alarm_target_desc),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
             HorizontalDivider()
+
+            if (settings.alarmTarget == AlarmTarget.CLOCK) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .toggleable(
+                            value = settings.alarmShowClockUi,
+                            role = Role.Switch,
+                            onValueChange = { vm.setAlarmShowClockUi(it) }
+                        ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Rounded.TouchApp,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(Modifier.width(12.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            stringResource(R.string.set_show_clock),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Text(
+                            stringResource(R.string.set_show_clock_desc),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Switch(checked = settings.alarmShowClockUi, onCheckedChange = null)
+                }
+                HorizontalDivider()
+            }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -891,31 +922,13 @@ private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
 }
 
 // --- 4. Исключения ---
-
-/** Тип пары для чипа исключения: null = все типы, иначе токен расписания («лек»/«пр»/«лаб»). */
-private val EXCEPTION_KINDS: List<Pair<String?, Int>> = listOf(
-    null to R.string.exc_kind_all,
-    "лек" to R.string.exc_kind_lec,
-    "пр" to R.string.exc_kind_pr,
-    "лаб" to R.string.exc_kind_lab
-)
-
-/** Локализованное имя типа пары для строки списка («Название · Лекции»). */
-@Composable
-private fun exceptionKindLabel(kind: String?): String? = when (kind) {
-    "лек" -> stringResource(R.string.exc_kind_lec)
-    "пр" -> stringResource(R.string.exc_kind_pr)
-    "лаб" -> stringResource(R.string.exc_kind_lab)
-    else -> null
-}
+// (с 0.7.0: правило = точное полное название пары, включая приставку типа
+// «л./пр./лаб.» — отдельные чипы типов убраны, т.к. тип уже написан в названии)
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewModel) {
     var newText by remember { mutableStateOf("") }
-    // тип применяемый к новому правилу: null = дисциплина целиком,
-    // иначе только пары выбранного типа (лекция/практика/лабораторная)
-    var selectedKind by remember { mutableStateOf<String?>(null) }
 
     // Автодополнение по дисциплинам из кэша расписания: ввёл «ма» — подсказывает
     // «материаловедение». Живёт только пока текст не совпадает с подсказкой.
@@ -953,16 +966,11 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column(Modifier.weight(1f)) {
-                        Text(rule.subject, style = MaterialTheme.typography.bodyLarge)
-                        exceptionKindLabel(rule.kind)?.let { kindLabel ->
-                            Text(
-                                kindLabel,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
+                    Text(
+                        rule.subject,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.weight(1f)
+                    )
                     Switch(
                         checked = rule.enabled,
                         onCheckedChange = { vm.setExceptionEnabled(rule, it) }
@@ -976,20 +984,6 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                 }
             }
             HorizontalDivider()
-            Text(
-                stringResource(R.string.exc_kind_filter),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                EXCEPTION_KINDS.forEach { (kind, labelRes) ->
-                    FilterChip(
-                        selected = selectedKind == kind,
-                        onClick = { selectedKind = kind },
-                        label = { Text(stringResource(labelRes)) }
-                    )
-                }
-            }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -1003,7 +997,7 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                 )
                 IconButton(
                     onClick = {
-                        vm.addException(newText, selectedKind)
+                        vm.addException(newText)
                         newText = ""
                     },
                     enabled = newText.isNotBlank()
@@ -1023,7 +1017,7 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                 suggestions.forEach { subject ->
                     TextButton(
                         onClick = {
-                            vm.addException(subject, selectedKind)
+                            vm.addException(subject)
                             newText = ""
                         },
                         modifier = Modifier.fillMaxWidth()

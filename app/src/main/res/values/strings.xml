@@ -97,7 +97,7 @@
     <string name="lesson_at">пара в %1$s</string>
     <string name="own_event_at">своё занятие в %1$s</string>
     <string name="home_auto_title">Авто-будильник</string>
-    <string name="home_auto_subtitle">Ставит будильник в стоковые часы перед первой парой</string>
+    <string name="home_auto_subtitle">Ставит будильник перед первой парой по расписанию</string>
     <string name="home_week_title">На несколько дней вперёд</string>
     <string name="home_week_desc">Повторяющиеся будильники по дням недели — страховка, если система убивает приложение</string>
     <string name="btn_set_for_days">Поставить на %1$d дней</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">Синхронизация расписания</string>
     <string name="notif_sync_text">Обновляем расписание КГЭУ</string>
     <string name="notif_details_room">%1$s, ауд. %2$s</string>
+    <string name="notif_missed_title">Будильник пропущен</string>
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">пар нет</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Настройки: будильник ==== -->
     <string name="set_auto_title">Авто-будильник</string>
+    <string name="alarm_target_title">Где звонит будильник</string>
+    <string name="alarm_target_desc">«В часах» — привычный сигнал в системных часах (оболочки могут блокировать команды). «В приложении» — приложение само звонит на весь экран: тумблер, снятие и изменения расписания работают гарантированно.</string>
+    <string name="alarm_target_clock">В часах</string>
+    <string name="alarm_target_app">В приложении</string>
     <string name="set_show_clock">Показывать часы при постановке</string>
     <string name="set_show_clock_desc">Включите, если будильники не ставятся сами (Realme, Oppo, Huawei): часы откроются с готовым будильником — подтвердите кнопкой «Сохранить».</string>
     <string name="set_wake_offset">Подъём за %1$s до первой пары</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">Время напоминания</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Будильник не ставится перед этими дисциплинами — по названию или по типу пары: лекция, практика, лабораторная</string>
+    <string name="exceptions_title_desc">Будильник не ставится перед парами с точно таким названием — вместе с приставкой типа: «л. материаловедение» исключит только лекцию, «пр. материаловедение» — только практику</string>
     <string name="exceptions_empty">Пока пусто — добавьте предметы, перед которыми будить не нужно</string>
     <string name="cd_delete_named">Удалить «%1$s»</string>
     <string name="hint_subject_name">Название дисциплины</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">Авто-будильник выключен, будильники приложения сняты в часах</string>
     <string name="toggle_off_opened">Авто-будильник выключен. Часы не приняли отключение (ограничение оболочки) — открыл список будильников: снимите метки «Авто:» вручную</string>
     <string name="toggle_off_manual">Авто-будильник выключен. Часы не приняли отключение (ограничение оболочки) — снимите будильники с меткой «Авто:» в часах вручную</string>
+    <string name="toggle_off_app_cancelled">Авто-будильник выключен, будильники приложения сняты</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Свои события с отдельным временем будильника — секции, репетиции, разовые дела</string>
@@ -274,6 +280,12 @@
     <string name="glass_intensity">Интенсивность стекла</string>
     <string name="glass_tip">Совет: стекло лучше всего смотрится с фоновой картинкой (выше)</string>
     <string name="glass_active">Стекло активно</string>
+
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">Пора вставать!</string>
+    <string name="ring_dismiss">Отключить</string>
+    <string name="ring_channel_name">Звонок будильника</string>
+    <string name="ring_channel_desc">Полноэкранный сигнал будильника приложения</string>
 
     <!-- ==== Настройки: система ==== -->
     <string name="status_exact_allowed">Точные будильники разрешены</string>

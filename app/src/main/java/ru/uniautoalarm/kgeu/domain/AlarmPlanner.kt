@@ -18,6 +18,10 @@ import ru.uniautoalarm.kgeu.data.repository.SettingsRepository
  *  1) первая НЕ исключённая пара дня (start − wakeOffsetMinutes из настроек);
  *  2) свои события этого дня (time − их offsetMinutes).
  *
+ * Исключения сопоставляются ТОЧНО по полному названию пары, вместе с приставкой типа:
+ * правило «л. материаловедение» исключает только лекцию, «пр. материаловедение» —
+ * только практику (тип уже написан в названии пары; отдельные «тумблеры типов» убраны).
+ *
  * Кандидатов нет (пар нет или все исключены, событий нет) → planFor вернёт null.
  */
 class AlarmPlanner(
@@ -35,23 +39,15 @@ class AlarmPlanner(
     suspend fun planFor(date: LocalDate, lessons: List<Lesson>): AlarmPlan? {
         val s = settings.current()
 
-        // (1) исключения: без типа — дисциплина целиком (нормализованное название);
-        //     с типом («лек»/«пр»/«лаб») — только пары этого типа той же дисциплины
-        //     (студенты нередко ходят на практику, но пропускают лекции)
-        val rules = exceptionDao.allOnce().filter { it.enabled }
-        val excludedAll = rules
-            .filter { it.kind == null }
-            .mapTo(HashSet()) { ScheduleRepository.normalizeSubject(it.subject) }
-        val excludedTyped = rules
-            .filter { it.kind != null }
-            .map { ScheduleRepository.normalizeSubject(it.subject) to it.kind!! }
+        // (1) исключения: точные полные названия (с приставкой «лек /пр /лаб »)
+        val excluded = exceptionDao.allOnce()
+            .filter { it.enabled }
+            .mapTo(HashSet()) { ScheduleRepository.normalizeForMatch(it.subject) }
 
         // (2) первая не-исключённая пара дня
         val first = lessons
-            .filter { lesson ->
-                val normalized = ScheduleRepository.normalizeSubject(lesson.subject)
-                if (normalized in excludedAll) return@filter false
-                excludedTyped.none { (subject, kind) -> subject == normalized && kind == lesson.kind }
+            .filter {
+                ScheduleRepository.normalizeForMatch(it.subject) !in excluded
             }
             .minByOrNull { it.start }
 

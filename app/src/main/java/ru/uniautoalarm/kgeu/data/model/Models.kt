@@ -26,14 +26,23 @@ data class CustomEvent(val id: Long = 0, val name: String,
 
 /**
  * Занятие-исключение: перед ним будильник не ставится.
- * [kind] — тип пары ("лек"/"пр"/"лаб" как в расписании КГЭУ) или null = все типы:
- * студенты нередко ходят на практику, но пропускают лекции той же дисциплины.
+ * Сопоставление — ТОЧНОЕ по полному названию пары, вместе с приставкой типа
+ * ("л. материаловедение" ≠ "пр. материаловедение"): тип уже написан в названии,
+ * отдельного поля типа у правила нет.
  */
-data class ExceptionRule(val id: Long = 0, val subject: String,
-    val kind: String? = null, val enabled: Boolean = true)
+data class ExceptionRule(val id: Long = 0, val subject: String, val enabled: Boolean = true)
 
 /** Режим авто-будильника: на завтра (Standard) или партия на неделю вперёд. */
 enum class AlarmMode { STANDARD, WEEK_AHEAD }
+
+/**
+ * Куда ставится будильник:
+ *  CLOCK — в стоковые часы через ACTION_SET_ALARM (привычный сигнал, но оболочки
+ *  вроде ColorOS/MIUI могут молча блокировать команды постановки и снятия);
+ *  APP — собственный будильник приложения (AlarmManager.setAlarmClock + полноэкранный
+ *  звонок): тумблер, исключения и снятие работают без капризов оболочки.
+ */
+enum class AlarmTarget { CLOCK, APP }
 
 /** Тема приложения. */
 enum class ThemeMode { SYSTEM, LIGHT, DARK }
@@ -57,6 +66,8 @@ data class Settings(val setupComplete: Boolean = false,
     /** Открывать экран часов при постановке (SKIP_UI=false) — для ColorOS/Realme UI,
      *  где фоновая постановка с SKIP_UI=true молча блокируется; пользователь подтверждает тапом. */
     val alarmShowClockUi: Boolean = false,
+    /** Куда ставится будильник: в стоковые часы или в приложение (с 0.7.0, по умолчанию — часы). */
+    val alarmTarget: AlarmTarget = AlarmTarget.CLOCK,
     /** Свой подъём для каждой первой пары: ключ — минуты от 00:00 начала пары,
      *  значение — запас на сборы. Пары без записи используют общий wakeOffsetMinutes. */
     val firstLessonOffsets: Map<Int, Int> = emptyMap(),

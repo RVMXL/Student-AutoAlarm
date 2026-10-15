@@ -97,7 +97,7 @@
     <string name="lesson_at">жұп сағат %1$s</string>
     <string name="own_event_at">өз сабағың сағат %1$s</string>
     <string name="home_auto_title">Автооятқыш</string>
-    <string name="home_auto_subtitle">Бірінші жұптың алдында жүйелік сағат қолданбасына оятқыш қояды</string>
+    <string name="home_auto_subtitle">Кесте бойынша бірінші жұптың алдында оятқыш қояды</string>
     <string name="home_week_title">Бірнеше күнге алдын ала</string>
     <string name="home_week_desc">Апта күндеріне қайталанатын оятқыштар — жүйе қолданбаны өшіріп қойған жағдайдағы сақтық шарасы</string>
     <string name="btn_set_for_days">%1$d күнге қою</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">Кестені синхрондау</string>
     <string name="notif_sync_text">КГЭУ кестесі жаңартылуда</string>
     <string name="notif_details_room">%1$s, ауд. %2$s</string>
+    <string name="notif_missed_title">Оятқыш өткізіп алынды</string>
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">жұп жоқ</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Настройки: будильник ==== -->
     <string name="set_auto_title">Автооятқыш</string>
+    <string name="alarm_target_title">Оятқыш қайда қоңырау соғады</string>
+    <string name="alarm_target_desc">«Сағатта» — телефон сағатындағы әдеттегі сигнал (оболочка пәрмендерді блоктауы мүмкін). «Қосымшада» — қосымша өзі толық экранда қоңырау соғады: ажыратқыш, өшіру және кесте өзгерістері кепілдікпен жұмыс істейді.</string>
+    <string name="alarm_target_clock">Сағатта</string>
+    <string name="alarm_target_app">Қосымшада</string>
     <string name="set_show_clock">Қою кезінде сағатты көрсету</string>
     <string name="set_show_clock_desc">Оятқыштар өзінен-өзі қойылмаса, қос (Realme, Oppo, Huawei): сағат дайын оятқышпен ашылады — «Сақтау» түймесімен раста.</string>
     <string name="set_wake_offset">Бірінші жұптан %1$s бұрын ояну</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">Ескерту уақыты</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Осы пәндерден бұрын оятқыш қойылмайды — аты немесе жұп түрі бойынша: дәріс, тәжірибе, зертханалық сабақ</string>
+    <string name="exceptions_title_desc">Оятқыш атауы толық сәйкес келген — түр жалғауымен — жұптардың алдында қойылмайды: «л. материаловедение» тек дәрісті, «пр. материаловедение» тек тәжірибені алып тастайды</string>
     <string name="exceptions_empty">Әзірге бос — алдында оятқыштың қажеті жоқ пәндерді қос</string>
     <string name="cd_delete_named">«%1$s» өшіру</string>
     <string name="hint_subject_name">Пән атауы</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">Автооятқыш өшірілді, қосымша оятқыштары сағаттан алынды</string>
     <string name="toggle_off_opened">Автооятқыш өшірілді. Сағат пәрменмен өшіруді қолдамайды (оболочка шектеуі) — оятқыштар тізімін аштым: «Авто:» белгісі бар оятқыштарды қолмен алып таста</string>
     <string name="toggle_off_manual">Автооятқыш өшірілді. Сағат пәрменмен өшіруді қолдамайды (оболочка шектеуі) — сағат қолданбасынан оятқыштарды ашып, «Авто:» белгілерін қолмен алып таста</string>
+    <string name="toggle_off_app_cancelled">Автооятқыш өшірілді, қосымша оятқыштары алынды</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Оятқыш уақыты бөлек өз іс-шаралары — секциялар, репетициялар, бір реттік істер</string>
@@ -274,6 +280,12 @@
     <string name="glass_intensity">Шыны эффектісінің күші</string>
     <string name="glass_tip">Кеңес: шыны эффектісі фон суретімен (жоғарыда) ең жақсы көрінеді</string>
     <string name="glass_active">Шыны эффектісі қосулы</string>
+
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">Тұру уақыты!</string>
+    <string name="ring_dismiss">Өшіру</string>
+    <string name="ring_channel_name">Оятқыш қоңырауы</string>
+    <string name="ring_channel_desc">Қосымша оятқышының толық экранды сигналы</string>
 
     <!-- ==== Настройки: система ==== -->
     <string name="status_exact_allowed">Дәл оятқыштарға рұқсат берілген</string>

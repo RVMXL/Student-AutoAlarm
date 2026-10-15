@@ -179,18 +179,31 @@ class ScheduleRepository(
             }
 
     /**
-     * Первая пара на [date] среди НЕ исключённых (нормализованное название дисциплины
-     * не входит в [excludedNormalized]). Пар нет или все исключены → null.
+     * Первая пара на [date] среди НЕ исключённых (точное совпадение полного названия
+     * с [excludedSubjects]). Пар нет или все исключены → null.
      */
-    suspend fun firstLessonOn(date: LocalDate, excludedNormalized: Set<String>): Lesson? =
+    suspend fun firstLessonOn(date: LocalDate, excludedSubjects: Set<String>): Lesson? =
         lessonsOn(date)
-            .filter { ScheduleRepository.normalizeSubject(it.subject) !in excludedNormalized }
+            .filter { ScheduleRepository.normalizeForMatch(it.subject) !in excludedSubjects }
             .minByOrNull { it.start }
 
     /** Полная очистка кэша расписания (свои занятия и исключения не трогаются). */
     suspend fun clearAll() {
         db.lessonDao().deleteAll()
         _syncState.value = SyncInfo()
+    }
+
+    /**
+     * Свежие данные для мгновенной постановки будильника: неделя сегодня и неделя
+     * через 7 дней — вместе покрывают двухнедельный горизонт планировщика при любом
+     * дне недели. Расписание вуза часто меняют ПОСЛЕ последней синхронизации (замены
+         * отменяют/переносят пары) — по устаревшему кэшу тумблер ставил будильник на день,
+     * где пар уже нет (баг 0.6.0). Ошибки сети глотаются: при сбое постановка идёт по кэшу.
+     */
+    suspend fun refreshAround(from: LocalDate = LocalDate.now()) {
+        val target = settings.current().toTargetOrNull() ?: return
+        runCatching { refreshWeek(target, from) }
+        runCatching { refreshWeek(target, from.plusDays(7)) }
     }
 
     // --- Маппинг DTO ↔ Entity ↔ домен ---
@@ -244,17 +257,16 @@ class ScheduleRepository(
 
     companion object {
         private val WHITESPACE = Regex("\\s+")
-        private val KIND_PREFIX = Regex("^(лек|пр|лаб)\\.?\\s+")
         private val KNOWN_KINDS = setOf("лек", "пр", "лаб", "кп", "ргр", "сем", "конс")
 
         /**
-         * Нормализация названия дисциплины для сопоставления с исключениями:
-         * нижний регистр, трим, схлопывание пробелов, срез типовых префиксов «лек /пр /лаб ».
+         * Нормализация для сопоставления ИСКЛЮЧЕНИЙ с парами: нижний регистр, трим,
+         * схлопывание пробелов. Приставку типа («лек /пр /лаб ») НЕ срезаем: она — часть
+         * названия пары, и «л. материаловедение» должно отличаться от
+         * «пр. материаловедение» (баг 0.6.0: срезанный префикс ловил все типы разом).
          */
-        fun normalizeSubject(s: String): String {
-            val collapsed = s.trim().lowercase().replace(WHITESPACE, " ")
-            return collapsed.replace(KIND_PREFIX, "").trim()
-        }
+        fun normalizeForMatch(s: String): String =
+            s.trim().lowercase().replace(WHITESPACE, " ")
 
         /** Минуты от 00:00 → LocalTime (coerce от «24:00» и прочего мусора). */
         fun minutesToTime(minutes: Int): LocalTime =

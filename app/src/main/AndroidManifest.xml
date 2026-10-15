@@ -20,6 +20,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- Тип dataSync обязателен с API 34 (на старых API игнорируется) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <!-- Звонок собственного будильника (движок «В приложении»): вибрация, полноэкранный
+         intent и тип mediaPlayback (обязателен с API 34) -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <!-- Android 11+ (package visibility): видимость стоковых часов для ACTION_SET_ALARM.
          Intent-запись покрывает часы с декларированным intent-filter; явные <package>
@@ -83,6 +88,26 @@
         <receiver
             android:name=".alarm.ReminderReceiver"
             android:exported="false" />
+
+        <!-- Срабатывание собственного будильника (движок «В приложении») -->
+        <receiver
+            android:name=".alarm.AlarmFireReceiver"
+            android:exported="false" />
+
+        <!-- Звонок собственного будильника: звук + вибрация (foreground mediaPlayback) -->
+        <service
+            android:name=".alarm.AlarmRingingService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
+        <!-- Полноэкранный звонок собственного будильника (поверх экрана блокировки) -->
+        <activity
+            android:name=".ui.ring.RingActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true" />
 
         <!--
             WorkManager: expedited-работы на Android < 12 исполняются как foreground-сервис.

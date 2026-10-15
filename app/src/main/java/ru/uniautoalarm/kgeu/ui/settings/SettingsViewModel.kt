@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.alarm.DismissResult
 import ru.uniautoalarm.kgeu.alarm.NightlyScheduler
@@ -19,6 +20,7 @@ import ru.uniautoalarm.kgeu.alarm.ReminderScheduler
 import ru.uniautoalarm.kgeu.data.db.CustomEventEntity
 import ru.uniautoalarm.kgeu.data.db.ExceptionEntity
 import ru.uniautoalarm.kgeu.data.model.AlarmMode
+import ru.uniautoalarm.kgeu.data.model.AlarmTarget
 import ru.uniautoalarm.kgeu.data.model.CalendarStyle
 import ru.uniautoalarm.kgeu.data.model.CustomEvent
 import ru.uniautoalarm.kgeu.data.model.ExceptionRule
@@ -45,7 +47,7 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     val exceptions: StateFlow<List<ExceptionRule>> = container.database.exceptionDao().all()
         .map { list ->
             list.map { e ->
-                ExceptionRule(id = e.id, subject = e.subject, kind = e.kind, enabled = e.enabled)
+                ExceptionRule(id = e.id, subject = e.subject, enabled = e.enabled)
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -119,15 +121,16 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch {
             // чистый лист: снимаем будильники прежнего режима (партия «Авто: Пн…Вс» и
             // разовый не должны сосуществовать — иначе двойной звонок), затем ставим новые
-            withContext(Dispatchers.Default) { container.stockAlarms.dismissAppAlarms() }
+            withContext(Dispatchers.Default) { container.alarm.dismissAll() }
             container.settings.update { it.copy(mode = mode) }
             // ночной тик нужен в обоих режимах (в «неделе вперёд» он не ставит дубликатов)
             NightlyScheduler.scheduleNext(container.appContext)
-            // мгновенное действие режима: не дожидаемся ночного тика 00:05
+            // мгновенное действие режима по свежему расписанию: не дожидаемся ночного тика 00:05
             withContext(Dispatchers.Default) {
+                withTimeoutOrNull(12_000) { container.scheduleRepository.refreshAround() }
                 when (mode) {
-                    AlarmMode.WEEK_AHEAD -> container.stockAlarms.setWeekAhead(notify = true)
-                    AlarmMode.STANDARD -> container.stockAlarms.setNextUpcoming()
+                    AlarmMode.WEEK_AHEAD -> container.alarm.setWeekAhead(notify = true)
+                    AlarmMode.STANDARD -> container.alarm.setNextUpcoming()
                 }
             }
         }
@@ -144,13 +147,11 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     /**
      * Тумблер авто-будильника.
      *
-     * Баг 0.5.x (исправлено в 0.6.0): выключение не снимало будильники в часах, а
-     * маркеры дедупликации оставались — включённый заново тумблер считал будильник
-     * «уже стоящим» и молча не ставил его после ручного удаления в часах (звонил
-     * только на следующий день на другую пару).
-     *
-     * Теперь в ОБА направления тумблера сначала идёт снятие наших будильников в часах
-     * (чистый лист, маркеры сбрасываются), затем при включении — свежая постановка.
+     * 0.7.0: в ОБА направления сначала снятие обоих движков (чистый лист, маркеры
+     * сбрасываются); при включении — свежее расписание (замены появляются после
+     * последнего синка: по устаревшему кэшу ставили будильник на отменённый день)
+     * и свежая постановка. Движок «В приложении» снимается гарантированно —
+     * PendingIntent.cancel; часы — DISMISS по меткам с честным фолбэком.
      * [onResult] — необязательный текст для снекбара (итог снятия при выключении).
      */
     fun toggleAuto(enabled: Boolean, onResult: (String?) -> Unit = {}) {
@@ -158,17 +159,17 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
             val mode = container.settings.current().mode
             container.settings.update { it.copy(autoAlarmEnabled = enabled) }
             val dismissed = withContext(Dispatchers.Default) {
-                container.stockAlarms.dismissAppAlarms()
+                container.alarm.dismissAll()
             }
             if (!enabled) {
                 // итог снятия — в снекбар: у выключения нет других уведомлений
                 onResult(dismissMessage(dismissed))
             }
             if (enabled) {
-                // будильник на ближайшее утро — сразу, а не после ночного тика 00:05
                 withContext(Dispatchers.Default) {
-                    if (mode == AlarmMode.WEEK_AHEAD) container.stockAlarms.setWeekAhead(notify = true)
-                    else container.stockAlarms.setNextUpcoming()
+                    withTimeoutOrNull(12_000) { container.scheduleRepository.refreshAround() }
+                    if (mode == AlarmMode.WEEK_AHEAD) container.alarm.setWeekAhead(notify = true)
+                    else container.alarm.setNextUpcoming()
                 }
             }
             NightlyScheduler.scheduleNext(container.appContext)
@@ -178,9 +179,12 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     /** Кнопка «Отключить будильники приложения»: тот же канал, что и у тумблера. */
     fun dismissAlarms(onResult: (String) -> Unit) {
         viewModelScope.launch {
-            val res = withContext(Dispatchers.Default) { container.stockAlarms.dismissAppAlarms() }
+            val res = withContext(Dispatchers.Default) { container.alarm.dismissAll() }
             onResult(
                 when {
+                    res.inAppCancelled -> LocaleHelper.string(
+                        container.appContext, R.string.toggle_off_app_cancelled
+                    )
                     res.sent > 0 -> LocaleHelper.string(
                         container.appContext, R.string.dismiss_alarms_sent, res.sent, res.total
                     )
@@ -195,6 +199,8 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
 
     /** Локализованный итог снятия будильников для снекбара тумблера. */
     private fun dismissMessage(res: DismissResult): String = when {
+        res.inAppCancelled ->
+            LocaleHelper.string(container.appContext, R.string.toggle_off_app_cancelled)
         res.sent > 0 -> LocaleHelper.string(container.appContext, R.string.toggle_off_dismissed)
         res.openedList -> LocaleHelper.string(container.appContext, R.string.toggle_off_opened)
         else -> LocaleHelper.string(container.appContext, R.string.toggle_off_manual)
@@ -235,6 +241,28 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
+    /**
+     * Куда ставится будильник: «В часах» (SET_ALARM, как раньше) или «В приложении»
+     * (собственный точный будильник — тумблер и снятие работают без капризов оболочки).
+     * Смена цели — чистый лист: снимаем оба движка, ставим заново активным.
+     */
+    fun setAlarmTarget(target: AlarmTarget) {
+        viewModelScope.launch {
+            val mode = container.settings.current().mode
+            withContext(Dispatchers.Default) {
+                container.alarm.dismissAll(openListOnUnsupported = false)
+            }
+            container.settings.update { it.copy(alarmTarget = target) }
+            if (container.settings.current().autoAlarmEnabled) {
+                withContext(Dispatchers.Default) {
+                    if (mode == AlarmMode.WEEK_AHEAD) container.alarm.setWeekAhead(notify = false)
+                    else container.alarm.setNextUpcoming(notify = false)
+                }
+            }
+            NightlyScheduler.scheduleNext(container.appContext)
+        }
+    }
+
     // --- Эффект стекла ---
 
     fun setGlassEnabled(enabled: Boolean) {
@@ -259,20 +287,20 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     // --- Исключения ---
 
     /**
-     * Добавить исключение: без пустых и дублей (сравнение по нормализованному названию
-     * И типу: «дисциплина целиком» и «только её лекции» — разные правила).
-     * [kind] — «лек»/«пр»/«лаб» или null (все типы).
+     * Добавить исключение: без пустых и дублей (сравнение по ТОЧНОМУ полному названию
+     * — вместе с приставкой типа: «л. материаловедение» и «пр. материаловедение» —
+     * разные правила).
      */
-    fun addException(subject: String, kind: String? = null) {
+    fun addException(subject: String) {
         val trimmed = subject.trim()
         if (trimmed.isEmpty()) return
         viewModelScope.launch {
             val dao = container.database.exceptionDao()
-            val normalized = ScheduleRepository.normalizeSubject(trimmed)
+            val normalized = ScheduleRepository.normalizeForMatch(trimmed)
             val exists = dao.allOnce().any {
-                ScheduleRepository.normalizeSubject(it.subject) == normalized && it.kind == kind
+                ScheduleRepository.normalizeForMatch(it.subject) == normalized
             }
-            if (!exists) dao.upsert(ExceptionEntity(subject = trimmed, kind = kind))
+            if (!exists) dao.upsert(ExceptionEntity(subject = trimmed))
         }
     }
 
@@ -280,7 +308,7 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     fun setExceptionEnabled(rule: ExceptionRule, enabled: Boolean) {
         viewModelScope.launch {
             container.database.exceptionDao().upsert(
-                ExceptionEntity(id = rule.id, subject = rule.subject, kind = rule.kind, enabled = enabled)
+                ExceptionEntity(id = rule.id, subject = rule.subject, enabled = enabled)
             )
         }
     }
@@ -362,16 +390,16 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
             // force = true: явное «Поставить сейчас» — пользователь мог вручную убрать
             // будильники в часах и просит поставить заново (сигнатура пропускается)
             val result = withContext(Dispatchers.Default) {
-                container.stockAlarms.setWeekAhead(force = true)
+                container.alarm.setWeekAhead(force = true)
             }
             onResult(result)
         }
     }
 
-    /** Тестовый будильник «через 2 минуты» — проверка, что часы принимают SET_ALARM. */
+    /** Тестовый будильник «через 2 минуты» — проверка активного движка. */
     fun setTestAlarm(onResult: (Boolean) -> Unit) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
-            onResult(container.stockAlarms.setTestAlarm())
+            onResult(container.alarm.setTestAlarm())
         }
     }
 

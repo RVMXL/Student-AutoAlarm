@@ -137,7 +137,7 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
                 runCatching { container.scheduleRepository.refreshWeek(target, LocalDate.now()) }
                 runCatching { container.scheduleRepository.refreshWeek(target, LocalDate.now().plusDays(1)) }
                 // будильник сразу после онбординга, не дожидаясь ночного тика 00:05
-                runCatching { container.stockAlarms.setNextUpcoming() }
+                runCatching { container.alarm.setNextUpcoming() }
                 NightlyScheduler.scheduleNext(container.appContext)
                 // полный семестр — фоном, без блокировки онбординга
                 runCatching { container.scheduleRepository.refreshFull(target) }

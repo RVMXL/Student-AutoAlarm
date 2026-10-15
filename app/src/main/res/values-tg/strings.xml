@@ -97,7 +97,7 @@
     <string name="lesson_at">пара соати %1$s</string>
     <string name="own_event_at">машғулияти худ соати %1$s</string>
     <string name="home_auto_title">Авто-будильник</string>
-    <string name="home_auto_subtitle">Пеш аз параи якум дар соати худи телефон будильник мегузорад</string>
+    <string name="home_auto_subtitle">Ба рӯи ҷадвал пеш аз параи якум будильник мегузорад</string>
     <string name="home_week_title">Ба чанд рӯз пеш</string>
     <string name="home_week_desc">Будильникҳои такроршаванда аз рӯи рӯзҳои ҳафта — кафолат барои ҳолате, ки система барномаро кушад</string>
     <string name="btn_set_for_days">Ба %1$d рӯз гузоштан</string>
@@ -158,6 +158,7 @@
     <string name="notif_sync_title">Ҳамоҳангсозии ҷадвали дарсҳо</string>
     <string name="notif_sync_text">Ҷадвали дарсҳои КГЭУ навсозӣ мешавад</string>
     <string name="notif_details_room">%1$s, ауд. %2$s</string>
+    <string name="notif_missed_title">Будильник гузашта шуд</string>
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">пара нест</string>
@@ -182,6 +183,10 @@
 
     <!-- ==== Настройки: будильник ==== -->
     <string name="set_auto_title">Авто-будильник</string>
+    <string name="alarm_target_title">Будильник дар куҷо занг мехӯрад</string>
+    <string name="alarm_target_desc">«Дар соат» — овози маъмулии соати телефон (интерфейсҳо фармонҳоро блок карда метавонанд). «Дар барнома» — барнома худаш дар тамоми экран занг мехӯрад: калид, хомӯшкунии барнома ва тағйироти ҷадвал кафолатшуда кор мекунанд.</string>
+    <string name="alarm_target_clock">Дар соат</string>
+    <string name="alarm_target_app">Дар барнома</string>
     <string name="set_show_clock">Ҳангоми гузоштан нишон додани соат</string>
     <string name="set_show_clock_desc">Фаъол кун, агар будильникҳо худашон гузошта нашаванд (Realme, Oppo, Huawei): соат бо будильники омода кушода мешавад — бо тугмаи «Нигоҳ доштан» тасдиқ кун.</string>
     <string name="set_wake_offset">Бедор шудан %1$s пеш аз параи якум</string>
@@ -221,7 +226,7 @@
     <string name="dialog_reminder_title">Вақти ёдоварӣ</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Пеш аз ин фанҳо будильник гузошта намешавад — аз рӯи ном ё намуди ҷуфт: лексия, амалия, лаборатория</string>
+    <string name="exceptions_title_desc">Будильник пеш аз ҷуфтҳое, ки номи пуррааш дақиқ мувофиқ аст — бо пешванди намуд — гузошта намешавад: «л. материаловедение» танҳо лексияро, «пр. материаловедение» танҳо амалиятро истисно мекунад</string>
     <string name="exceptions_empty">Ҳоло холист — фанҳое илова кун, ки пеш аз онҳо бедор кардан лозим нест</string>
     <string name="cd_delete_named">Нест кардани «%1$s»</string>
     <string name="hint_subject_name">Номи фан</string>
@@ -235,6 +240,7 @@
     <string name="toggle_off_dismissed">Автобудильник хомӯш шуд, будильникҳои барнома аз соат бароварда шуданд</string>
     <string name="toggle_off_opened">Автобудильник хомӯш шуд. Соат хомӯшкуниро бо фармон дастгирӣ намекунад (маҳдудияти интерфейс) — рӯйхати будильникҳоро кушодам: будильникҳои бо аломати «Авто:»-ро бо даст хомӯш кун</string>
     <string name="toggle_off_manual">Автобудильник хомӯш шуд. Соат хомӯшкуниро бо фармон дастгирӣ намекунад (маҳдудияти интерфейс) — будильникҳоро дар барномаи соат кушода, онҳои бо аломати «Авто:»-ро бо даст хомӯш кун</string>
+    <string name="toggle_off_app_cancelled">Автобудильник хомӯш шуд, будильникҳои барнома хомӯш карда шуданд</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Машғулиятҳои худат бо вақти алоҳидаи будильник — секцияҳо, репетицияҳо, корҳои яккарона</string>
@@ -274,6 +280,12 @@
     <string name="glass_intensity">Дараҷаи эффекти шиша</string>
     <string name="glass_tip">Маслиҳат: шиша бо сурати замина (дар боло) аз ҳама беҳтар намоён мешавад</string>
     <string name="glass_active">Шиша фаъол аст</string>
+
+    <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
+    <string name="ring_title">Вақти хестан!</string>
+    <string name="ring_dismiss">Хомӯш кардан</string>
+    <string name="ring_channel_name">Занги будильник</string>
+    <string name="ring_channel_desc">Овози тамоми экрани будильники барнома</string>
 
     <!-- ==== Настройки: система ==== -->
     <string name="status_exact_allowed">Будильникҳои дақиқ иҷозат дода шудаанд</string>
