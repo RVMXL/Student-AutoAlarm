@@ -63,6 +63,26 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
     }
 
     /**
+     * Подготовка к (повторному) входу в мастер — вызывается из SetupScreen при каждой
+     * композиции (UI-1). VM живёт в ViewModelStore активити ВСЮ сессию: после первого
+     * завершения completing остался true, и повторный мастер («Сменить группу»)
+     * наследовал мёртвый флаг — кнопка «Готово» была тихим no-op до смерти процесса.
+     * Сбрасываем ход мастера и заново подтягиваем сохранённый офсет.
+     */
+    fun prepareForRerun() {
+        completing = false
+        role.value = null
+        query.value = ""
+        error.value = null
+        loading.value = false
+        _selectedTarget.value = null
+        viewModelScope.launch {
+            val saved = container.settings.current().wakeOffsetMinutes
+            offsetMinutes.value = saved.coerceIn(MIN_OFFSET_MINUTES, MAX_OFFSET_MINUTES)
+        }
+    }
+
+    /**
      * Загрузить справочник для [role] (вызов перезаписывает this.role).
      * Повторный вызов при уже загруженном/грузящемся списке — no-op,
      * поэтому безопасен и из LaunchedEffect, и из кнопки «Повторить».
@@ -117,32 +137,42 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
      * в scope движка: неделя на ближайшие дни → будильник на ближайшее утро сразу
      * (не дожидаясь ночного тика 00:05) → ночной планировщик → полный семестр;
      * UI сеть не ждёт → onDone().
+     *
+     * UI-7: записи DataStore обёрнуты в try/catch — IOException больше не роняет
+     * мастер; при сбое completing сбрасывается (можно нажать «Готово» снова).
      */
     fun completeSetup(onDone: () -> Unit) {
         if (completing) return
         val target = _selectedTarget.value ?: return
         completing = true
         viewModelScope.launch {
-            val offset = offsetMinutes.value
-            container.settings.applyTarget(target.type, target.id, target.name)
-            container.settings.update {
-                it.copy(
-                    setupComplete = true,
-                    wakeOffsetMinutes = offset,
-                    autoAlarmEnabled = true
-                )
+            try {
+                val offset = offsetMinutes.value
+                container.settings.applyTarget(target.type, target.id, target.name)
+                container.settings.update {
+                    it.copy(
+                        setupComplete = true,
+                        wakeOffsetMinutes = offset,
+                        autoAlarmEnabled = true
+                    )
+                }
+                container.appScope.launch {
+                    // неделя на ближайшие дни — чтобы сразу поставить будильник на ближайшее утро
+                    runCatching { container.scheduleRepository.refreshWeek(target, LocalDate.now()) }
+                    runCatching { container.scheduleRepository.refreshWeek(target, LocalDate.now().plusDays(1)) }
+                    // будильник сразу после онбординга, не дожидаясь ночного тика 00:05
+                    runCatching { container.alarm.setNextUpcoming() }
+                    NightlyScheduler.scheduleNext(container.appContext)
+                    // полный семестр — фоном, без блокировки онбординга
+                    runCatching { container.scheduleRepository.refreshFull(target) }
+                }
+                onDone()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                // сбой записи настроек — не оставляем мастера «замёршим»: кнопка снова работает
+                completing = false
             }
-            container.appScope.launch {
-                // неделя на ближайшие дни — чтобы сразу поставить будильник на ближайшее утро
-                runCatching { container.scheduleRepository.refreshWeek(target, LocalDate.now()) }
-                runCatching { container.scheduleRepository.refreshWeek(target, LocalDate.now().plusDays(1)) }
-                // будильник сразу после онбординга, не дожидаясь ночного тика 00:05
-                runCatching { container.alarm.setNextUpcoming() }
-                NightlyScheduler.scheduleNext(container.appContext)
-                // полный семестр — фоном, без блокировки онбординга
-                runCatching { container.scheduleRepository.refreshFull(target) }
-            }
-            onDone()
         }
     }
 

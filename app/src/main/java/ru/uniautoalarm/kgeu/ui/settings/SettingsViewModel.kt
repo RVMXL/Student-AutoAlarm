@@ -6,8 +6,10 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -125,24 +127,43 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
      * Движок «В приложении» снимается гарантированно — PendingIntent.cancel;
      * часы — DISMISS по меткам с честным фолбэком.
      * [onResult] — необязательный текст для снекбара (итог снятия при выключении).
+     *
+     * 0.9.0 (AL-8): engine-работа — в appScope (переживает экраны); OFF — снятие до
+     * записи настройки. 0.9.0 (UI-11): [toggling] блокирует повторное переключение.
      */
+    private val _toggling = MutableStateFlow(false)
+
+    /** Тумблер/смена движка в работе (до 12 с) — переключатели заблокированы. */
+    val toggling: StateFlow<Boolean> = _toggling.asStateFlow()
+
     fun toggleAuto(enabled: Boolean, onResult: (String?) -> Unit = {}) {
+        if (!_toggling.compareAndSet(false, true)) return
+        var dismissed: DismissResult? = null
+        val engine = container.appScope.launch {
+            runCatching {
+                if (enabled) {
+                    container.alarm.dismissAll(openListOnUnsupported = false)
+                    container.settings.update { it.copy(autoAlarmEnabled = true) }
+                    withTimeoutOrNull(12_000) { container.scheduleRepository.refreshAround() }
+                    container.alarm.setNextUpcoming()
+                } else {
+                    // AL-8: сначала снимаем, потом пишем настройку
+                    dismissed = container.alarm.dismissAll()
+                    container.settings.update { it.copy(autoAlarmEnabled = false) }
+                }
+                NightlyScheduler.scheduleNext(container.appContext)
+            }
+        }
         viewModelScope.launch {
-            container.settings.update { it.copy(autoAlarmEnabled = enabled) }
-            val dismissed = withContext(Dispatchers.Default) {
-                container.alarm.dismissAll()
+            try {
+                engine.join()
+            } finally {
+                _toggling.value = false
             }
             if (!enabled) {
                 // итог снятия — в снекбар: у выключения нет других уведомлений
-                onResult(dismissMessage(dismissed))
+                dismissed?.let { onResult(dismissMessage(it)) }
             }
-            if (enabled) {
-                withContext(Dispatchers.Default) {
-                    withTimeoutOrNull(12_000) { container.scheduleRepository.refreshAround() }
-                    container.alarm.setNextUpcoming()
-                }
-            }
-            NightlyScheduler.scheduleNext(container.appContext)
         }
     }
 
@@ -215,19 +236,29 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
      * Куда ставится будильник: «В часах» (SET_ALARM, как раньше) или «В приложении»
      * (собственный точный будильник — тумблер и снятие работают без капризов оболочки).
      * Смена цели — чистый лист: снимаем оба движка, ставим заново активным.
+     *
+     * 0.9.0 (SET-7): dismissal/постановка сериализуются мьютексом AlarmGateway,
+     * а работа перенесена в appScope — быстрые переключения больше не могут
+     * снять только что поставленный будильник; повторный клик ждёт ([toggling]).
      */
     fun setAlarmTarget(target: AlarmTarget) {
-        viewModelScope.launch {
-            withContext(Dispatchers.Default) {
+        if (!_toggling.compareAndSet(false, true)) return
+        val engine = container.appScope.launch {
+            runCatching {
                 container.alarm.dismissAll(openListOnUnsupported = false)
-            }
-            container.settings.update { it.copy(alarmTarget = target) }
-            if (container.settings.current().autoAlarmEnabled) {
-                withContext(Dispatchers.Default) {
+                container.settings.update { it.copy(alarmTarget = target) }
+                if (container.settings.current().autoAlarmEnabled) {
                     container.alarm.setNextUpcoming(notify = false)
                 }
+                NightlyScheduler.scheduleNext(container.appContext)
             }
-            NightlyScheduler.scheduleNext(container.appContext)
+        }
+        viewModelScope.launch {
+            try {
+                engine.join()
+            } finally {
+                _toggling.value = false
+            }
         }
     }
 

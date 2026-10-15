@@ -55,6 +55,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.FilterChip
@@ -87,6 +88,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.SaverScope
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -136,6 +140,26 @@ import ru.uniautoalarm.kgeu.ui.theme.ACCENT_PALETTES
 
 /** Скругление карточек секций (по ТЗ — 20.dp). */
 private val CardShape = RoundedCornerShape(20.dp)
+
+// --- SET-2: сейверы для диалоговых стейтов (поворот не закрывает диалоги и не стирает ввод) ---
+
+/** Set<DayOfWeek> → List<Int> (для rememberSaveable в диалоге «Своё занятие»). */
+private val WeekDaysSaver = listSaver<Set<DayOfWeek>, Int>(
+    save = { days -> days.map { day -> day.value } },
+    restore = { values -> values.map { value -> DayOfWeek.of(value) }.toSet() },
+)
+
+/** LocalDate? → List<Long> (эпоха-день; null сохраняется пустым списком). */
+private val OptionalDateSaver = listSaver<LocalDate?, Long>(
+    save = { d -> if (d == null) emptyList() else listOf(d.toEpochDay()) },
+    restore = { list -> if (list.isEmpty()) null else LocalDate.ofEpochDay(list.first()) },
+)
+
+/** LocalTime → List<Int> (часы, минуты). */
+private val LocalTimeSaver = listSaver<LocalTime, Int>(
+    save = { t -> listOf(t.hour, t.minute) },
+    restore = { list -> LocalTime.of(list[0], list[1]) },
+)
 
 private val DATE: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM")
 
@@ -340,8 +364,10 @@ private fun AlarmSettingsCard(
     context: Context,
     onSnackbar: (String) -> Unit
 ) {
-    var showOffsetDialog by remember { mutableStateOf(false) }
-    var editPairStart by remember { mutableStateOf<Int?>(null) }
+    var showOffsetDialog by rememberSaveable { mutableStateOf(false) }
+    var editPairStart by rememberSaveable { mutableStateOf<Int?>(null) }
+    // UI-11: пока engine-работа тумблера/смены движка идёт, переключатели заблокированы
+    val toggling by vm.toggling.collectAsStateWithLifecycle()
 
     Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
         Column(
@@ -356,6 +382,7 @@ private fun AlarmSettingsCard(
                     .toggleable(
                         value = settings.autoAlarmEnabled,
                         role = Role.Switch,
+                        enabled = !toggling,
                         onValueChange = { enabled ->
                             vm.toggleAuto(enabled) { msg ->
                                 // выключение отчитывается снекбаром (у него нет уведомлений)
@@ -376,7 +403,11 @@ private fun AlarmSettingsCard(
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )
-                Switch(checked = settings.autoAlarmEnabled, onCheckedChange = null)
+                if (toggling) {
+                    CircularProgressIndicator(modifier = Modifier.size(22.dp), strokeWidth = 2.dp)
+                } else {
+                    Switch(checked = settings.autoAlarmEnabled, onCheckedChange = null)
+                }
             }
             HorizontalDivider()
 
@@ -389,6 +420,7 @@ private fun AlarmSettingsCard(
                 SegmentedButton(
                     selected = settings.alarmTarget == AlarmTarget.CLOCK,
                     onClick = { vm.setAlarmTarget(AlarmTarget.CLOCK) },
+                    enabled = !toggling,
                     shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
                 ) {
                     PillLabel(stringResource(R.string.alarm_target_clock))
@@ -396,6 +428,7 @@ private fun AlarmSettingsCard(
                 SegmentedButton(
                     selected = settings.alarmTarget == AlarmTarget.APP,
                     onClick = { vm.setAlarmTarget(AlarmTarget.APP) },
+                    enabled = !toggling,
                     shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
                 ) {
                     PillLabel(stringResource(R.string.alarm_target_app))
@@ -607,7 +640,8 @@ private fun OffsetDialog(
     onDismiss: () -> Unit,
     onConfirm: (Int) -> Unit
 ) {
-    var value by remember { mutableIntStateOf(initialMinutes) }
+    // SET-2: значение слайдера переживает поворот
+    var value by rememberSaveable { mutableIntStateOf(initialMinutes) }
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.dialog_offset_title)) },
@@ -667,7 +701,8 @@ private fun PairOffsetDialog(
     onSave: (Int) -> Unit,
     onReset: () -> Unit
 ) {
-    var value by remember { mutableIntStateOf(initialMinutes) }
+    // SET-2: значение слайдера переживает поворот
+    var value by rememberSaveable { mutableIntStateOf(initialMinutes) }
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.dialog_pair_title, pairStart.format(TIME))) },
@@ -731,7 +766,7 @@ private fun PairOffsetDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
-    var showTimePicker by remember { mutableStateOf(false) }
+    var showTimePicker by rememberSaveable { mutableStateOf(false) }
 
     Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
         Column(
@@ -829,7 +864,8 @@ private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewModel) {
-    var newText by remember { mutableStateOf("") }
+    // SET-2: переживает поворот — введённое название не стирается
+    var newText by rememberSaveable { mutableStateOf("") }
 
     // Автодополнение по дисциплинам из кэша расписания: ввёл «ма» — подсказывает
     // «материаловедение». Живёт только пока текст не совпадает с подсказкой.
@@ -940,7 +976,8 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
 
 @Composable
 private fun CustomEventsCard(events: List<CustomEvent>, vm: SettingsViewModel) {
-    var showAddDialog by remember { mutableStateOf(false) }
+    // SET-2: переживает поворот — открытый диалог не закрывается
+    var showAddDialog by rememberSaveable { mutableStateOf(false) }
 
     Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
         Column(
@@ -1014,14 +1051,15 @@ private fun AddEventDialog(
     onSaveWeekly: (String, Set<DayOfWeek>, LocalTime, Int) -> Unit,
     onSaveDated: (String, LocalDate, LocalTime, Int) -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
-    var weekly by remember { mutableStateOf(true) }
-    var days by remember { mutableStateOf(setOf<DayOfWeek>()) }
-    var date by remember { mutableStateOf<LocalDate?>(null) }
-    var time by remember { mutableStateOf(LocalTime.of(8, 0)) }
-    var offset by remember { mutableIntStateOf(45) }
-    var showDatePicker by remember { mutableStateOf(false) }
-    var showTimePicker by remember { mutableStateOf(false) }
+    // SET-2: весь стейт диалога — rememberSaveable (поворот сохраняет ввод)
+    var name by rememberSaveable { mutableStateOf("") }
+    var weekly by rememberSaveable { mutableStateOf(true) }
+    var days by rememberSaveable(stateSaver = WeekDaysSaver) { mutableStateOf(setOf<DayOfWeek>()) }
+    var date by rememberSaveable(stateSaver = OptionalDateSaver) { mutableStateOf<LocalDate?>(null) }
+    var time by rememberSaveable(stateSaver = LocalTimeSaver) { mutableStateOf(LocalTime.of(8, 0)) }
+    var offset by rememberSaveable { mutableIntStateOf(45) }
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
+    var showTimePicker by rememberSaveable { mutableStateOf(false) }
 
     val canSave = name.isNotBlank() && (if (weekly) days.isNotEmpty() else date != null)
 
@@ -1188,14 +1226,15 @@ private fun AddEventDialog(
 private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: Context) {
     val scope = rememberCoroutineScope()
     // --- Язык интерфейса (новое в 0.5.0): первая строка секции «Оформление» ---
-    var showLanguageDialog by remember { mutableStateOf(false) }
+    var showLanguageDialog by rememberSaveable { mutableStateOf(false) }
     // язык читаем один раз: выбор применяется через recreate() Activity
     val currentLanguageTag = remember { LocaleStore.language(context) }
     val currentLanguage = SUPPORTED_LANGUAGES.firstOrNull { it.tag == currentLanguageTag }
-    var opacity by remember(settings.backgroundOpacity) {
+    // SET-2: положение слайдеров переживает поворот (синхронизируется с настройками)
+    var opacity by rememberSaveable(settings.backgroundOpacity) {
         mutableFloatStateOf(settings.backgroundOpacity)
     }
-    var glassIntensity by remember(settings.glassIntensity) {
+    var glassIntensity by rememberSaveable(settings.glassIntensity) {
         mutableFloatStateOf(settings.glassIntensity)
     }
 

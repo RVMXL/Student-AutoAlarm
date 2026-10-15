@@ -103,6 +103,8 @@ fun HomeScreen() {
     val plan by vm.plan.collectAsStateWithLifecycle()
     val todayLessons by vm.todayLessons.collectAsStateWithLifecycle()
     val tomorrowLessons by vm.tomorrowLessons.collectAsStateWithLifecycle()
+    // UI-11: пока engine-работа тумблера идёт (до 12 с), переключатель заблокирован
+    val toggling by vm.toggling.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -178,6 +180,7 @@ fun HomeScreen() {
             item {
                 ToggleCard(
                     enabled = settings?.autoAlarmEnabled ?: false,
+                    busy = toggling,
                     onToggle = { enabled ->
                         vm.toggleAuto(enabled) { msg ->
                             // выключение отчитывается снекбаром (у него нет уведомлений)
@@ -420,7 +423,7 @@ private fun PlanContent(plan: AlarmPlan) {
 // --- Тумблер авто-будильника ---
 
 @Composable
-private fun ToggleCard(enabled: Boolean, onToggle: (Boolean) -> Unit) {
+private fun ToggleCard(enabled: Boolean, busy: Boolean, onToggle: (Boolean) -> Unit) {
     Card(
         shape = CardShape,
         colors = CardDefaults.cardColors(
@@ -437,7 +440,14 @@ private fun ToggleCard(enabled: Boolean, onToggle: (Boolean) -> Unit) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .toggleable(value = enabled, role = Role.Switch, onValueChange = onToggle),
+                    // UI-11: busy — тумблер нельзя щёлкать посреди включения/выключения,
+                    // иначе можно «выключить» будильник посреди ещё идущей постановки
+                    .toggleable(
+                        value = enabled,
+                        role = Role.Switch,
+                        enabled = !busy,
+                        onValueChange = onToggle
+                    ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -452,7 +462,14 @@ private fun ToggleCard(enabled: Boolean, onToggle: (Boolean) -> Unit) {
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.weight(1f)
                 )
-                Switch(checked = enabled, onCheckedChange = null)
+                if (busy) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(22.dp),
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Switch(checked = enabled, onCheckedChange = null)
+                }
             }
             Text(
                 stringResource(R.string.home_auto_subtitle),

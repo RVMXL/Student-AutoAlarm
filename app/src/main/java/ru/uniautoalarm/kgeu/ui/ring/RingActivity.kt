@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -85,6 +86,13 @@ class RingActivity : ComponentActivity() {
             val settings by container.settings.settings
                 .collectAsStateWithLifecycle(initialValue = null)
             AutoAlarmTheme(settings) {
+                // UI-3: системный «назад»/жест на звонке глушит звук и закрывает экран —
+                // иначе finish() без stopRinging оставлял звук играть без UI-выключения
+                // (при отказанных уведомлениях — вообще без способов, см. AL-10)
+                BackHandler {
+                    runCatching { startService(InAppAlarmScheduler.stopRingingIntent(this)) }
+                    finish()
+                }
                 RingScreen(
                     label = label,
                     wakeAt = wakeAt,

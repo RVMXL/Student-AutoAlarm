@@ -50,6 +50,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -108,7 +109,12 @@ fun SetupScreen(onFinished: () -> Unit) {
     val selectedTarget by vm.selectedTarget.collectAsStateWithLifecycle()
     val offsetMinutes by vm.offsetMinutes.collectAsStateWithLifecycle()
 
-    var step by remember { mutableIntStateOf(0) }
+    // UI-1: VM живёт всю сессию активити — каждый вход в мастер сбрасывает ход
+    // прошлого запуска (completing/выбор/поиск), иначе «Готово» — no-op
+    LaunchedEffect(Unit) { vm.prepareForRerun() }
+
+    // UI-2: rememberSaveable — поворот/смена темы в середине мастера не сбрасывают шаг
+    var step by rememberSaveable { mutableIntStateOf(0) }
 
     Column(
         modifier = Modifier

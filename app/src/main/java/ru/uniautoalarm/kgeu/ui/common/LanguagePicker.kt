@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.dp
  * настройки и в диалоге «Язык» на настройках. Названия — родное имя +
  * имя на текущем языке («English / Английский»).
  *
+ * SET-1: первой строкой идёт «язык системы» (пустой тег) — раньше после выбора
+ * конкретного языка вернуться к системному было невозможно, хотя README обещал.
+ *
  * @param selected текущий тег языка (пустая строка — язык системы).
  * @param onSelect вызывается с тегом выбранного языка (может быть пустым).
  */
@@ -30,10 +33,14 @@ fun LanguagePicker(
     onSelect: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val options = buildList {
+        add(LanguageOption("", "")) // «язык системы» (SET-1)
+        addAll(SUPPORTED_LANGUAGES)
+    }
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
     ) {
-        items(SUPPORTED_LANGUAGES, key = { it.tag.ifBlank { "system" } }) { option ->
+        items(options, key = { it.tag.ifBlank { "system" } }) { option ->
             val isSelected = option.tag == selected
             Row(
                 modifier = Modifier
@@ -49,7 +56,7 @@ fun LanguagePicker(
                         text = option.displayName(),
                         style = MaterialTheme.typography.bodyLarge
                     )
-                    if (isSelected) {
+                    if (isSelected && option.nativeName.isNotBlank()) {
                         Text(
                             text = option.nativeName,
                             style = MaterialTheme.typography.bodySmall,

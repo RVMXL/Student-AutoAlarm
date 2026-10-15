@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import java.time.LocalDate
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
@@ -69,28 +71,53 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
      * ставит заново — по СВЕЖЕМУ расписанию, максимум на завтра (логика 0.8.0:
      * «одна ночь вперёд», дальше — ночная сверка каждый день).
      * [onResult] — текст для снекбара (итог снятия при выключении).
+     *
+     * 0.9.0 (AL-8): engine-работа — в appScope, НЕ в viewModelScope: уход с экрана
+     * посреди переключения больше не отменяет снятие/постановку (раньше смерть VM
+     * в окне оставляла «выключено в настройках, но звонит»). Порядок OFF: СНАЧАЛА
+     * dismissAll, потом запись настройки — смерть процесса в окне не оставит
+     * «выключено, но звонит» (ночной тик выйдет по !autoAlarmEnabled до снятия).
+     * 0.9.0 (UI-11): [toggling] — UI блокирует переключение до конца engine-работы.
      */
+    private val _toggling = MutableStateFlow(false)
+
+    /** Тумблер в работе (снятие/постановка до 12 с) — тумблер заблокирован. */
+    val toggling: StateFlow<Boolean> = _toggling.asStateFlow()
+
     fun toggleAuto(enabled: Boolean, onResult: (String?) -> Unit = {}) {
-        viewModelScope.launch {
-            container.settings.update { it.copy(autoAlarmEnabled = enabled) }
-            val dismissed = withContext(Dispatchers.Default) {
-                container.alarm.dismissAll()
-            }
-            if (!enabled) {
-                // итог снятия — в снекбар: у выключения нет других уведомлений
-                onResult(dismissMessage(dismissed))
-            }
-            if (enabled) {
-                withContext(Dispatchers.Default) {
+        if (!_toggling.compareAndSet(false, true)) return
+        var dismissed: DismissResult? = null
+        // engine-работа переживает экраны (AL-8) и сериализуется мьютексом AlarmGateway
+        val engine = container.appScope.launch {
+            runCatching {
+                if (enabled) {
+                    // чистый лист от обоих движков; в чужие часы не выпрыгиваем
+                    container.alarm.dismissAll(openListOnUnsupported = false)
+                    container.settings.update { it.copy(autoAlarmEnabled = true) }
                     // свежее расписание ПЕРЕД постановкой: замены появляются после
                     // последнего синка — по устаревшему кэшу тумблер ставил будильник
                     // на отменённый день (баг 0.6.0). Бюджет 12 с, при сбое — кэш
                     withTimeoutOrNull(12_000) { container.scheduleRepository.refreshAround() }
                     // будильник на ближайшее утро (сегодня/завтра) — сразу, а не после сверки 00:05
                     container.alarm.setNextUpcoming()
+                } else {
+                    // AL-8: сначала снимаем, потом пишем настройку
+                    dismissed = container.alarm.dismissAll()
+                    container.settings.update { it.copy(autoAlarmEnabled = false) }
                 }
+                NightlyScheduler.scheduleNext(container.appContext)
             }
-            NightlyScheduler.scheduleNext(container.appContext)
+        }
+        viewModelScope.launch {
+            try {
+                engine.join()
+            } finally {
+                _toggling.value = false
+            }
+            if (!enabled) {
+                // итог снятия — в снекбар: у выключения нет других уведомлений
+                dismissed?.let { onResult(dismissMessage(it)) }
+            }
         }
     }
 
