@@ -45,6 +45,10 @@ interface LessonDao {
     @Query("SELECT DISTINCT subject FROM lessons ORDER BY subject ASC")
     fun distinctSubjects(): Flow<List<String>>
 
+    /** Одиночный срез уникальных названий — миграция правил-исключений 0.9.0 (DATA-3). */
+    @Query("SELECT DISTINCT subject FROM lessons")
+    suspend fun distinctSubjectsOnce(): List<String>
+
     /**
      * Уникальные времена НАЧАЛА первой пары каждого дня — список для настройки
      * «подъём под каждую пару». Подзапрос берёт MIN(startMinutes) по каждой дате,

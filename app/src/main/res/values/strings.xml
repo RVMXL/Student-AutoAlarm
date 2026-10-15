@@ -287,4 +287,8 @@
     <string name="about_version">Автобудильник КГЭУ · v%1$s</string>
     <string name="about_data">Данные расписания: официальный API kabinet.kgeu.ru. Приложение не аффилировано с КГЭУ.</string>
     <string name="btn_github">Репозиторий на GitHub</string>
+
+    <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
+    <string name="notif_group_check_title">Проверьте группу</string>
+    <string name="notif_group_check_text">Расписание приходит пустым — прежний кэш сохранён. Проверьте группу в настройках.</string>
 </resources>

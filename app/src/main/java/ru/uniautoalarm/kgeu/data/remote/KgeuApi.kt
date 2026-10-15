@@ -29,11 +29,7 @@ class KgeuApi {
         .readTimeout(15, TimeUnit.SECONDS)
         .build()
 
-    private val json = Json {
-        ignoreUnknownKeys = true
-        isLenient = true
-        coerceInputValues = true
-    }
+    private val json = JSON
 
     /** Список групп; [year] — учебный год «YYYY-YYYY», без него — текущий. */
     suspend fun groups(year: String? = null): List<KgeuGroup> = withContext(Dispatchers.IO) {
@@ -114,13 +110,35 @@ class KgeuApi {
     }
 
     /** Успех = state:1; иначе человекочитаемая ошибка сервера в msg. */
-    private fun requireState(state: Int, msg: String?) {
-        if (state != 1) throw KgeuApiException(msg ?: "KGEU API error (state=$state)")
-    }
+    private fun requireState(state: Int, msg: String?) = Companion.requireState(state, msg)
 
     companion object {
         const val BASE_URL = "https://kabinet.kgeu.ru"
         private const val USER_AGENT = "Mozilla/5.0 (Linux; Android) UniAutoAlarm/0.1.0"
+
+        /** Единая конфигурация JSON — и для сети, и для golden-тестов парсера. */
+        internal val JSON = Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+            coerceInputValues = true
+        }
+
+        /** Успех = state:1; иначе человекочитаемая ошибка сервера в msg. */
+        internal fun requireState(state: Int, msg: String?) {
+            if (state != 1) throw KgeuApiException(msg ?: "KGEU API error (state=$state)")
+        }
+
+        /**
+         * Парсинг ответа /api/Rasp (выделен для golden-тестов, см. KgeuApiParseTest).
+         * Контракт (живьём проверен, DATA-1): несуществующий idGroup отвечает
+         * state:1 + rasp:[] — ШТАТНО, без ошибки; data может быть null.
+         * «Пустой ответ ≠ успех-очистка» решается guard'ом в ScheduleRepository.
+         */
+        internal fun parseRaspResponse(raw: String): List<KgeuRaspItem> {
+            val env = JSON.decodeFromString<KgeuObjectEnvelope<KgeuRaspData>>(raw)
+            requireState(env.state, env.msg)
+            return env.data?.rasp ?: emptyList()
+        }
 
         /** «2026-10-12T08:00:00» → LocalDateTime; пустая/битая строка → null. */
         fun parseIsoDateTime(raw: String?): LocalDateTime? =

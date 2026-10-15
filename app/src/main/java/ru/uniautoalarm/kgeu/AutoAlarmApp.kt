@@ -42,6 +42,14 @@ class AutoAlarmApp : Application() {
                     }
                 }
             }
+            // 0.9.0 (DATA-3): правила-исключения из 0.6.0 без приставки типа после
+            // перехода на точную семантику молча сузились — расширяем их на все
+            // типы той же дисциплины по кэшу расписания (одноразово, атомарный флаг)
+            runCatching {
+                if (container.settings.claimRulesMigration090()) {
+                    container.scheduleRepository.migrateExceptionRulesToExactNames()
+                }
+            }
         }
         // Ночная сверка (00:05 + страховка 06:00), напоминание о будильнике и
         // периодический sync WorkManager (всё идемпотентно, планировщики сами читают настройки)

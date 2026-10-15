@@ -287,4 +287,8 @@
     <string name="about_version">Autoalarma KGEU · v%1$s</string>
     <string name="about_data">Datos del horario: API oficial de kabinet.kgeu.ru. La app no está afiliada a KGEU.</string>
     <string name="btn_github">Repositorio en GitHub</string>
+
+    <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
+    <string name="notif_group_check_title">Comprueba tu grupo</string>
+    <string name="notif_group_check_text">El horario llega vacío — la caché guardada se mantiene. Comprueba el grupo en Ajustes.</string>
 </resources>

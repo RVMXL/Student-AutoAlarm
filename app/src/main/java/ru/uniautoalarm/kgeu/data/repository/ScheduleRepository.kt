@@ -1,5 +1,7 @@
 package ru.uniautoalarm.kgeu.data.repository
 
+import android.content.Context
+import android.util.Log
 import androidx.room.withTransaction
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -17,7 +19,9 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import ru.uniautoalarm.kgeu.alarm.Notifications
 import ru.uniautoalarm.kgeu.data.db.AppDatabase
+import ru.uniautoalarm.kgeu.data.db.ExceptionEntity
 import ru.uniautoalarm.kgeu.data.db.LessonEntity
 import ru.uniautoalarm.kgeu.data.model.Lesson
 import ru.uniautoalarm.kgeu.data.model.Settings
@@ -37,6 +41,7 @@ class ScheduleRepository(
     private val api: KgeuApi,
     private val settings: SettingsRepository,
     private val appScope: CoroutineScope, // глобальный scope движка (fire-and-forget задачи)
+    private val appContext: Context, // уведомление «проверьте группу» при подозрительно пустых ответах (DATA-1)
 ) {
 
     private val _syncState = MutableStateFlow(SyncInfo())
@@ -46,6 +51,15 @@ class ScheduleRepository(
 
     /** Уникальные названия дисциплин в кэше — автодополнение исключений в настройках. */
     val subjects: Flow<List<String>> = db.lessonDao().distinctSubjects()
+
+    /**
+     * Подозрительно пустые ответы подряд (DATA-1): сервер КГЭУ на несуществующий/устаревший
+     * idGroup отвечает state:1 + rasp:[] — ШТАТНО, без ошибки. Смена учебного года
+     * меняет id групп при сохранённом в настройках targetId — без guard'а один такой
+     * ответ вытирал весь кэш, а ночная сверка снимала будильник как «фантом».
+     */
+    private var emptyResponseStreak = 0
+    private val emptyStreakLock = Any()
 
     /** Ключ цели в БД: «g:<id>» для группы/студента, «t:<id>» для преподавателя. */
     suspend fun targetKey(t: Target): String = when (t.type) {
@@ -69,14 +83,22 @@ class ScheduleRepository(
             val toDay = sunday.toEpochDay()
             val entities = items.mapNotNull { it.toEntity(key) }
                 .filter { it.dateEpochDay in fromDay..toDay }
+            // DATA-1: пустой ответ при непустом кэше — подозрение на устаревший idGroup
+            // (смена учебного года): кэш НЕ стираем, считаем серию пустых ответов
+            val suspiciousEmpty = entities.isEmpty() && db.lessonDao().countFor(key) > 0
             db.withTransaction {
-                db.lessonDao().deleteRange(key, fromDay, toDay)
-                db.lessonDao().insertAll(entities)
+                if (suspiciousEmpty) {
+                    Log.w(TAG, "Пустой ответ при непустом кэше (idGroup мог устареть) — кэш сохранён (DATA-1)")
+                } else {
+                    db.lessonDao().deleteRange(key, fromDay, toDay)
+                    db.lessonDao().insertAll(entities)
+                }
             }
+            updateEmptyStreak(suspiciousEmpty)
             _syncState.update {
                 it.copy(
                     busy = false,
-                    lastSyncEpochMs = System.currentTimeMillis(),
+                    lastSyncEpochMs = if (suspiciousEmpty) it.lastSyncEpochMs else System.currentTimeMillis(),
                     lastError = null,
                     lastSyncWeekCount = entities.size
                 )
@@ -103,10 +125,18 @@ class ScheduleRepository(
         return try {
             val items = api.rasp(target, null)
             val entities = items.mapNotNull { it.toEntity(key) }
+            // DATA-1: state:1 + пустой rasp при непустом кэше — НЕ успех-очистка:
+            // не стираем семестр, не штампуем свежесть и считаем серию (см. updateEmptyStreak)
+            val suspiciousEmpty = entities.isEmpty() && db.lessonDao().countFor(key) > 0
             db.withTransaction {
-                db.lessonDao().deleteAllFor(key)
-                db.lessonDao().insertAll(entities)
+                if (suspiciousEmpty) {
+                    Log.w(TAG, "Полный синк вернул пусто при непустом кэше — кэш сохранён (DATA-1)")
+                } else {
+                    db.lessonDao().deleteAllFor(key)
+                    db.lessonDao().insertAll(entities)
+                }
             }
+            updateEmptyStreak(suspiciousEmpty)
             // Границы семестра — вспомогательные: их сбой не должен валить синхронизацию
             runCatching {
                 val dates = api.raspDates(target)
@@ -117,7 +147,10 @@ class ScheduleRepository(
                         s.copy(
                             semesterMin = min ?: s.semesterMin,
                             semesterMax = max ?: s.semesterMax,
-                            lastFullSyncEpochMs = System.currentTimeMillis()
+                            // свежесть не штампуем при подозрительно пустом ответе:
+                            // иначе баннер «устарело» гаснет на пустом кэше (DATA-1)
+                            lastFullSyncEpochMs =
+                                if (suspiciousEmpty) s.lastFullSyncEpochMs else System.currentTimeMillis()
                         )
                     }
                 }
@@ -125,7 +158,7 @@ class ScheduleRepository(
             _syncState.update {
                 it.copy(
                     busy = false,
-                    lastSyncEpochMs = System.currentTimeMillis(),
+                    lastSyncEpochMs = if (suspiciousEmpty) it.lastSyncEpochMs else System.currentTimeMillis(),
                     lastError = null,
                     lastSyncWeekCount = entities.size
                 )
@@ -140,6 +173,68 @@ class ScheduleRepository(
             }
             Result.failure(e)
         }
+    }
+
+    /**
+     * Серия подозрительно пустых ответов (DATA-1). Несколько пустых синков подряд
+     * при сохранённом кэше — почти наверняка устаревший idGroup: уведомляем
+     * «проверьте группу». Один пустой ответ (каникулы, ещё не загруженная неделя)
+     * не спамит.
+     */
+    private fun updateEmptyStreak(suspiciousEmpty: Boolean) {
+        synchronized(emptyStreakLock) {
+            if (suspiciousEmpty) {
+                emptyResponseStreak += 1
+                if (emptyResponseStreak == EMPTY_STREAK_NOTIFY) {
+                    Log.w(TAG, "Цель не отдаёт пары $EMPTY_STREAK_NOTIFY синков подряд — уведомление «проверьте группу»")
+                    Notifications.groupCheck(appContext)
+                }
+            } else {
+                emptyResponseStreak = 0
+            }
+        }
+    }
+
+    /**
+     * Одноразовая миграция правил-исключений 0.6.0 → 0.9.0 (DATA-3).
+     *
+     * В 0.6.0 правило хранилось БЕЗ приставки типа, а сопоставление срезало префикс:
+     * «материаловедение» ловило и лекцию, и практику, и лабораторную. С 0.7.0 семантика
+     * точная — тип уже написан в названии («л. материаловедение» ≠ «пр. материаловедение»),
+     * и старые правила молча сузились: практики и лабы той же дисциплины снова звонили.
+     *
+     * Миграция расширяет каждое безпрефиксное правило на ВСЕ полные названия этой
+     * дисциплины из кэша: «материаловедение» → «л. материаловедение» + «пр. материаловедение» + …
+     * Правила, у которых тип уже прописан в названии, не трогаются; при пустом кэше
+     * правило остаётся как есть (расширять не из чего). @return были ли изменения.
+     */
+    suspend fun migrateExceptionRulesToExactNames(): Boolean {
+        val dao = db.exceptionDao()
+        val rules = dao.allOnce()
+        if (rules.isEmpty()) return false
+        // база (название без типа) → все полные названия дисциплины в кэше
+        val baseIndex = HashMap<String, HashSet<String>>()
+        for (subject in db.lessonDao().distinctSubjectsOnce()) {
+            val n = normalizeForMatch(subject)
+            baseIndex.getOrPut(stripKindPrefix(n)) { HashSet() }.add(n)
+        }
+        var changed = false
+        val existing = rules.mapTo(HashSet()) { normalizeForMatch(it.subject) }
+        for (rule in rules) {
+            val normalized = normalizeForMatch(rule.subject)
+            if (hasKindPrefix(normalized)) continue // правило уже нового образца
+            val fullNames = baseIndex[normalized] ?: continue // пар этой дисциплины в кэше нет
+            val targets = fullNames - normalized
+            if (targets.isEmpty()) continue
+            Log.i(TAG, "Миграция правила 0.6.0 «${rule.subject}» → ${targets.size} полных названий (DATA-3)")
+            dao.delete(rule.id)
+            existing.remove(normalized)
+            for (full in targets.sorted()) {
+                if (existing.add(full)) dao.upsert(ExceptionEntity(subject = full))
+            }
+            changed = true
+        }
+        return changed
     }
 
     /** Реактивные занятия на [date] по текущей цели из настроек. */
@@ -256,8 +351,21 @@ class ScheduleRepository(
     private fun LocalTime.minutesOfDay(): Int = hour * 60 + minute
 
     companion object {
+        private const val TAG = "ScheduleRepository"
+
+        /** Сколько подозрительно пустых синков подряд до уведомления «проверьте группу» (DATA-1). */
+        private const val EMPTY_STREAK_NOTIFY = 3
+
         private val WHITESPACE = Regex("\\s+")
         private val KNOWN_KINDS = setOf("лек", "пр", "лаб", "кп", "ргр", "сем", "конс")
+
+        /**
+         * Токены типов пар, встречающиеся ПЕРВЫМ словом названия (шире [KNOWN_KINDS]:
+         * API пишет и «л.» для лекций). Нужны для миграции правил 0.9.0 (DATA-3):
+         * отличить правило нового образца («пр. математика») от старого безпрефиксного
+         * («математика»).
+         */
+        private val KIND_TOKENS = KNOWN_KINDS + setOf("л", "лек", "лабор", "семин")
 
         /**
          * Нормализация для сопоставления ИСКЛЮЧЕНИЙ с парами: нижний регистр, трим,
@@ -267,6 +375,21 @@ class ScheduleRepository(
          */
         fun normalizeForMatch(s: String): String =
             s.trim().lowercase().replace(WHITESPACE, " ")
+
+        /** Первый токен нормализованного названия — приставка типа? («пр. математика» → true). */
+        fun hasKindPrefix(normalizedSubject: String): Boolean =
+            normalizedSubject.split(' ').firstOrNull()?.trimEnd('.') in KIND_TOKENS
+
+        /** Название без приставки типа («пр. математика» → «математика»; без типа — как есть). */
+        fun stripKindPrefix(normalizedSubject: String): String {
+            val parts = normalizedSubject.split(' ')
+            val first = parts.firstOrNull()?.trimEnd('.')
+            return if (first in KIND_TOKENS && parts.size > 1) {
+                parts.drop(1).joinToString(" ").trim()
+            } else {
+                normalizedSubject
+            }
+        }
 
         /** Минуты от 00:00 → LocalTime (coerce от «24:00» и прочего мусора). */
         fun minutesToTime(minutes: Int): LocalTime =

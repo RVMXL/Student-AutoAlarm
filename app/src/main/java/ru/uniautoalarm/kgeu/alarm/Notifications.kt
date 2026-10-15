@@ -35,6 +35,7 @@ object Notifications {
     private const val NOTIF_SKIPPED_ID = 1002
     private const val NOTIF_REMINDER_ID = 1004
     private const val NOTIF_RINGING_ID = 1005
+    private const val NOTIF_GROUP_CHECK_ID = 1006
 
     // форматтеры — функции, а не val: даты уведомлений должны следовать
     // языку приложения, выбранному в момент отправки
@@ -124,6 +125,22 @@ object Notifications {
             .setAutoCancel(true)
             .build()
         post(context, NOTIF_REMINDER_ID, notification)
+    }
+
+    /**
+     * «Проверьте группу» (DATA-1): сервер КГЭУ на несуществующий/устаревший idGroup
+     * отвечает state:1 + rasp:[] ШТАТНО — серия таких ответов почти наверняка значит,
+     * что группа сменила id (смена учебного года). Кэш при этом сохранён (guard),
+     * но двигаться расписанию неоткуда — зовём проверить цель в настройках.
+     */
+    fun groupCheck(context: Context) {
+        val notification = baseBuilder(context)
+            .setContentTitle(LocaleHelper.string(context, R.string.notif_group_check_title))
+            .setContentText(LocaleHelper.string(context, R.string.notif_group_check_text))
+            .setContentIntent(mainActivityIntent(context))
+            .setAutoCancel(true)
+            .build()
+        post(context, NOTIF_GROUP_CHECK_ID, notification)
     }
 
     /**

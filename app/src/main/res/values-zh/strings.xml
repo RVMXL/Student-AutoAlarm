@@ -287,4 +287,8 @@
     <string name="about_version">喀山动力大学自动闹钟 · v%1$s</string>
     <string name="about_data">课程表数据：kabinet.kgeu.ru 官方 API。本应用与喀山动力大学无隶属关系。</string>
     <string name="btn_github">GitHub 仓库</string>
+
+    <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
+    <string name="notif_group_check_title">请检查班级</string>
+    <string name="notif_group_check_text">课表返回为空 — 旧缓存已保留。请在设置中检查班级。</string>
 </resources>

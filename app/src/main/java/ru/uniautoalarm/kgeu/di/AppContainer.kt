@@ -25,7 +25,11 @@ class AppContainer(context: Context) {
     val database by lazy { AppDatabase.getInstance(context) }
     val settings by lazy { SettingsRepository(context) }
     val kgeuApi by lazy { KgeuApi() }
-    val scheduleRepository by lazy { ScheduleRepository(database, kgeuApi, settings, appScope) }
+
+    // appContext нужен репозиторию для уведомления «проверьте группу» (DATA-1)
+    val scheduleRepository by lazy {
+        ScheduleRepository(database, kgeuApi, settings, appScope, appContext)
+    }
     val planner by lazy { AlarmPlanner(settings, scheduleRepository, database.customEventDao(), database.exceptionDao()) }
     val stockAlarms by lazy { StockAlarmSetter(context.applicationContext, planner, settings) }
     val inAppAlarms by lazy { InAppAlarmScheduler(appContext) }

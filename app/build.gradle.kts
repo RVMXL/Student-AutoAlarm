@@ -49,6 +49,12 @@ android {
     }
 }
 
+// DATA-11: история схемы Room — JSON пишется в app/schemas и коммитится;
+// это позволяет MigrationTestHelper и честный diff при будущих миграциях
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 // Заполнение release-подписи из окружения (в CI — из Secrets GitHub Actions).
 // ВАЖНО: signingConfig назначается строго на фазе КОНФИГУРАЦИИ — packageRelease
 // захватывает подпись при конфигурировании, назначение в taskGraph.whenReady
@@ -118,4 +124,8 @@ dependencies {
 
     // Coil (своя картинка на фон)
     implementation(libs.coil.compose)
+
+    // Юнит-тесты (0.9.0: AlarmPlanner, правила доставки, парсер, паритет локалей)
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

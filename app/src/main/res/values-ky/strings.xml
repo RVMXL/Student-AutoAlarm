@@ -287,4 +287,8 @@
     <string name="about_version">КГЭУ автоояткычы · v%1$s</string>
     <string name="about_data">Кесте маалыматтары: kabinet.kgeu.ru расмий API. Колдонмо КГЭУ менен эч кандай байланышта эмес.</string>
     <string name="btn_github">GitHub-дагы репозиторий</string>
+
+    <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
+    <string name="notif_group_check_title">Топту текшер</string>
+    <string name="notif_group_check_text">Кесте бош келет — мурунку кеш сакталды. Параметрлерден топту текшер.</string>
 </resources>

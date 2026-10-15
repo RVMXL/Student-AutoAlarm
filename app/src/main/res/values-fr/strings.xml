@@ -287,4 +287,8 @@
     <string name="about_version">Auto-réveil KGEU · v%1$s</string>
     <string name="about_data">Données d\'emploi du temps : API officielle de kabinet.kgeu.ru. L\'appli n\'est pas affiliée au KGEU.</string>
     <string name="btn_github">Dépôt GitHub</string>
+
+    <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
+    <string name="notif_group_check_title">Vérifie ton groupe</string>
+    <string name="notif_group_check_text">L\'emploi du temps arrive vide — le cache enregistré est conservé. Vérifie le groupe dans les paramètres.</string>
 </resources>

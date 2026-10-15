@@ -11,7 +11,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 @Database(
     entities = [LessonEntity::class, CustomEventEntity::class, ExceptionEntity::class],
     version = 2,
-    exportSchema = false
+    // DATA-11: exportSchema=true — JSON схемы пишется в app/schemas (в git):
+    // история схемы позволяет MigrationTestHelper и честный review миграций
+    exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -44,7 +46,12 @@ abstract class AppDatabase : RoomDatabase() {
                     "uni_autoalarm.db"
                 )
                     .addMigrations(MIGRATION_1_2)
-                    .fallbackToDestructiveMigration()
+                    // DATA-2: fallbackToDestructiveMigration УБРАН. БД смешанная:
+                    // кэш расписания + пользовательские исключения и свои занятия.
+                    // Деструктивный fallback молча вытирал бы их при отсутствии
+                    // миграции (или откате на старый APK). Теперь недостающая
+                    // миграция — громкий IllegalStateException при старте, а не
+                    // тихая потеря данных пользователя.
                     .build()
                     .also { instance = it }
             }

@@ -287,4 +287,8 @@
     <string name="about_version">المنبّه التلقائي لجامعة قازان للطاقة · v%1$s</string>
     <string name="about_data">بيانات الجدول الدراسي: واجهة برمجة التطبيقات الرسمية لـ kabinet.kgeu.ru. التطبيق غير تابع لجامعة قازان للطاقة.</string>
     <string name="btn_github">المستودع على GitHub</string>
+
+    <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
+    <string name="notif_group_check_title">تحقق من المجموعة</string>
+    <string name="notif_group_check_text">يصل الجدول فارغًا — النسخة المحفوظة مؤقتًا باقية. تحقق من المجموعة في الإعدادات.</string>
 </resources>

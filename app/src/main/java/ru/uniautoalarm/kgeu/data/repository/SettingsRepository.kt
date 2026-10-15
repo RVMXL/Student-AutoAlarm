@@ -62,6 +62,7 @@ class SettingsRepository(private val context: Context) {
         val LAST_SCHEDULED_LABEL = stringPreferencesKey("last_scheduled_label")
         val MIGRATED_APP_ENGINE = booleanPreferencesKey("migrated_app_engine_071")
         val MIGRATED_SINGLE_NIGHT = booleanPreferencesKey("migrated_single_night_080")
+        val MIGRATED_RULES_090 = booleanPreferencesKey("migrated_exception_rules_090")
         // legacy-ключи режимов «на несколько дней вперёд» — читаются только миграцией 0.8.0
         val LEGACY_MODE = stringPreferencesKey("mode")
         val LEGACY_WEEK_ALARMS_SET_UNTIL = longPreferencesKey("week_alarms_set_until_epoch_day")
@@ -135,6 +136,23 @@ class SettingsRepository(private val context: Context) {
             }
         }
         return result
+    }
+
+    /**
+     * Одноразовый «захват» миграции правил-исключений 0.9.0 (DATA-3): 0.6.0-правила
+     * без приставки типа после перехода на точную семантику молча сузились.
+     * @return true — миграцию нужно выполнить (флаг взят атомарно, повторный запуск
+     * процесса миграцию не задублирует); false — уже выполнена.
+     */
+    suspend fun claimRulesMigration090(): Boolean {
+        var claim = false
+        context.dataStore.edit { prefs ->
+            if (prefs[Keys.MIGRATED_RULES_090] != true) {
+                prefs[Keys.MIGRATED_RULES_090] = true
+                claim = true
+            }
+        }
+        return claim
     }
 
     // --- Чтение ---
