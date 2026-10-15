@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.uniautoalarm.kgeu.R
+import ru.uniautoalarm.kgeu.alarm.DismissResult
 import ru.uniautoalarm.kgeu.alarm.NightlyScheduler
 import ru.uniautoalarm.kgeu.data.model.AlarmMode
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
@@ -63,11 +64,22 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
         else container.planner.planFor(tomorrow, lessons)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    /** Тумблер авто-будильника. */
-    fun toggleAuto(enabled: Boolean) {
+    /**
+     * Тумблер авто-будильника (как в настройках — см. SettingsViewModel.toggleAuto):
+     * выключение снимает будильники в часах и сбрасывает маркеры, включение ставит
+     * заново. [onResult] — текст для снекбара (итог снятия при выключении).
+     */
+    fun toggleAuto(enabled: Boolean, onResult: (String?) -> Unit = {}) {
         viewModelScope.launch {
             val mode = container.settings.current().mode
             container.settings.update { it.copy(autoAlarmEnabled = enabled) }
+            val dismissed = withContext(Dispatchers.Default) {
+                container.stockAlarms.dismissAppAlarms()
+            }
+            if (!enabled) {
+                // итог снятия — в снекбар: у выключения нет других уведомлений
+                onResult(dismissMessage(dismissed))
+            }
             if (enabled) {
                 // будильник на ближайшее утро — сразу, а не после ночного тика 00:05
                 withContext(Dispatchers.Default) {
@@ -77,6 +89,13 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
             }
             NightlyScheduler.scheduleNext(container.appContext)
         }
+    }
+
+    /** Локализованный итог снятия будильников для снекбара тумблера. */
+    private fun dismissMessage(res: DismissResult): String = when {
+        res.sent > 0 -> LocaleHelper.string(container.appContext, R.string.toggle_off_dismissed)
+        res.openedList -> LocaleHelper.string(container.appContext, R.string.toggle_off_opened)
+        else -> LocaleHelper.string(container.appContext, R.string.toggle_off_manual)
     }
 
     /**

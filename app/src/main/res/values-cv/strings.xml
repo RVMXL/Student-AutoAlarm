@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">Пӗлтерӳ вӑхӑчӗ</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Ку дисциплинсен умӗнче будильник лартӑнмасть</string>
+    <string name="exceptions_title_desc">Тема дисциплинсем умӗнчен будильник лартӑнмасть — ят е парин тӗсӗ тӑрӑх: лекци, практикӑ, лаборатори</string>
     <string name="exceptions_empty">Халӗ пушӑ — умӗнче вӑрантарма кирлӗ мар предметсене хушӑр</string>
     <string name="cd_delete_named">„%1$s“ кӑларса пӑрах</string>
     <string name="hint_subject_name">Дисциплина ячӗ</string>
     <string name="cd_add_exception">Исключени хуш</string>
     <string name="exceptions_found">Расписаниере тупӑнчӗ:</string>
+    <string name="exc_kind_all">Пур тӗс те</string>
+    <string name="exc_kind_lec">Лекцисем</string>
+    <string name="exc_kind_pr">Практикасем</string>
+    <string name="exc_kind_lab">Лабораторисем</string>
+    <string name="exc_kind_filter">Ҫӗнӗ кӑларӑм валли парин тӗсӗ</string>
+    <string name="toggle_off_dismissed">Автобудильник сунтарнӑ, будильниксене сехетрен кӑларса пӑрахнӑ</string>
+    <string name="toggle_off_opened">Автобудильник сунтарнӑ. Сехетсем командӑпа сунтарма йышӑнмаҫҫӗ (оболочка чикӗленӗвӗ) — будильник йышӗне уҫрӑм: „Авто:“ ятлӑ будильниксене алӑпа сунтар</string>
+    <string name="toggle_off_manual">Автобудильник сунтарнӑ. Сехетсем командӑпа сунтарма йышӑнмаҫҫӗ (оболочка чикӗленӗвӗ) — сехет программинче будильниксене уҫса „Авто:“ ятсене алӑпа сунтар</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Хӑвӑн пулӑмсем уйрӑм будильник вӑхӑчӗпе — секцисем, репетицисем, пӗр хутлӑ ĕçсем</string>

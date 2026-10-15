@@ -181,7 +181,12 @@ fun HomeScreen() {
             item {
                 ToggleCard(
                     enabled = settings?.autoAlarmEnabled ?: false,
-                    onToggle = { vm.toggleAuto(it) }
+                    onToggle = { enabled ->
+                        vm.toggleAuto(enabled) { msg ->
+                            // выключение отчитывается снекбаром (у него нет уведомлений)
+                            if (msg != null) scope.launch { snackbarHostState.showSnackbar(msg) }
+                        }
+                    }
                 )
             }
             item {

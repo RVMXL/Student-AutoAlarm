@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">提醒时间</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">这些课程前不会设置闹钟</string>
+    <string name="exceptions_title_desc">这些课程之前不会设置闹钟 — 按名称或按课程类型：讲座、实践课、实验课</string>
     <string name="exceptions_empty">暂无内容 — 添加不想被叫醒的课程</string>
     <string name="cd_delete_named">删除“%1$s”</string>
     <string name="hint_subject_name">课程名称</string>
     <string name="cd_add_exception">添加例外</string>
     <string name="exceptions_found">在课程表中找到：</string>
+    <string name="exc_kind_all">所有类型</string>
+    <string name="exc_kind_lec">讲座</string>
+    <string name="exc_kind_pr">实践课</string>
+    <string name="exc_kind_lab">实验课</string>
+    <string name="exc_kind_filter">新排除规则的课程类型</string>
+    <string name="toggle_off_dismissed">自动闹钟已关闭，应用设置的闹钟已从系统时钟移除</string>
+    <string name="toggle_off_opened">自动闹钟已关闭。时钟应用不支持通过命令关闭（系统界面限制）— 已为你打开闹钟列表：请手动移除«Авто:»标签的闹钟</string>
+    <string name="toggle_off_manual">自动闹钟已关闭。时钟应用不支持通过命令关闭（系统界面限制）— 请在时钟应用中打开闹钟，手动移除«Авто:»标签</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">为自己的活动单独设闹钟 — 社团、排练、临时事务</string>

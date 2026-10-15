@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.uniautoalarm.kgeu.R
+import ru.uniautoalarm.kgeu.alarm.DismissResult
 import ru.uniautoalarm.kgeu.alarm.NightlyScheduler
 import ru.uniautoalarm.kgeu.alarm.ReminderScheduler
 import ru.uniautoalarm.kgeu.data.db.CustomEventEntity
@@ -25,6 +27,7 @@ import ru.uniautoalarm.kgeu.data.model.ThemeMode
 import ru.uniautoalarm.kgeu.data.model.WeekAheadResult
 import ru.uniautoalarm.kgeu.data.repository.ScheduleRepository
 import ru.uniautoalarm.kgeu.di.AppContainer
+import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 import ru.uniautoalarm.kgeu.ui.theme.ACCENT_PALETTES
 
 /**
@@ -41,7 +44,9 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     /** Исключения (реактивно из Room). */
     val exceptions: StateFlow<List<ExceptionRule>> = container.database.exceptionDao().all()
         .map { list ->
-            list.map { e -> ExceptionRule(id = e.id, subject = e.subject, enabled = e.enabled) }
+            list.map { e ->
+                ExceptionRule(id = e.id, subject = e.subject, kind = e.kind, enabled = e.enabled)
+            }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
@@ -112,6 +117,9 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
 
     fun setMode(mode: AlarmMode) {
         viewModelScope.launch {
+            // чистый лист: снимаем будильники прежнего режима (партия «Авто: Пн…Вс» и
+            // разовый не должны сосуществовать — иначе двойной звонок), затем ставим новые
+            withContext(Dispatchers.Default) { container.stockAlarms.dismissAppAlarms() }
             container.settings.update { it.copy(mode = mode) }
             // ночной тик нужен в обоих режимах (в «неделе вперёд» он не ставит дубликатов)
             NightlyScheduler.scheduleNext(container.appContext)
@@ -133,10 +141,29 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
-    fun toggleAuto(enabled: Boolean) {
+    /**
+     * Тумблер авто-будильника.
+     *
+     * Баг 0.5.x (исправлено в 0.6.0): выключение не снимало будильники в часах, а
+     * маркеры дедупликации оставались — включённый заново тумблер считал будильник
+     * «уже стоящим» и молча не ставил его после ручного удаления в часах (звонил
+     * только на следующий день на другую пару).
+     *
+     * Теперь в ОБА направления тумблера сначала идёт снятие наших будильников в часах
+     * (чистый лист, маркеры сбрасываются), затем при включении — свежая постановка.
+     * [onResult] — необязательный текст для снекбара (итог снятия при выключении).
+     */
+    fun toggleAuto(enabled: Boolean, onResult: (String?) -> Unit = {}) {
         viewModelScope.launch {
             val mode = container.settings.current().mode
             container.settings.update { it.copy(autoAlarmEnabled = enabled) }
+            val dismissed = withContext(Dispatchers.Default) {
+                container.stockAlarms.dismissAppAlarms()
+            }
+            if (!enabled) {
+                // итог снятия — в снекбар: у выключения нет других уведомлений
+                onResult(dismissMessage(dismissed))
+            }
             if (enabled) {
                 // будильник на ближайшее утро — сразу, а не после ночного тика 00:05
                 withContext(Dispatchers.Default) {
@@ -146,6 +173,31 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
             }
             NightlyScheduler.scheduleNext(container.appContext)
         }
+    }
+
+    /** Кнопка «Отключить будильники приложения»: тот же канал, что и у тумблера. */
+    fun dismissAlarms(onResult: (String) -> Unit) {
+        viewModelScope.launch {
+            val res = withContext(Dispatchers.Default) { container.stockAlarms.dismissAppAlarms() }
+            onResult(
+                when {
+                    res.sent > 0 -> LocaleHelper.string(
+                        container.appContext, R.string.dismiss_alarms_sent, res.sent, res.total
+                    )
+                    res.openedList ->
+                        LocaleHelper.string(container.appContext, R.string.dismiss_unsupported_opened)
+                    else ->
+                        LocaleHelper.string(container.appContext, R.string.dismiss_unsupported_manual)
+                }
+            )
+        }
+    }
+
+    /** Локализованный итог снятия будильников для снекбара тумблера. */
+    private fun dismissMessage(res: DismissResult): String = when {
+        res.sent > 0 -> LocaleHelper.string(container.appContext, R.string.toggle_off_dismissed)
+        res.openedList -> LocaleHelper.string(container.appContext, R.string.toggle_off_opened)
+        else -> LocaleHelper.string(container.appContext, R.string.toggle_off_manual)
     }
 
     fun setBackground(path: String?) {
@@ -206,25 +258,30 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
 
     // --- Исключения ---
 
-    /** Добавить исключение: без пустых и дублей (сравнение по нормализованному названию). */
-    fun addException(subject: String) {
+    /**
+     * Добавить исключение: без пустых и дублей (сравнение по нормализованному названию
+     * И типу: «дисциплина целиком» и «только её лекции» — разные правила).
+     * [kind] — «лек»/«пр»/«лаб» или null (все типы).
+     */
+    fun addException(subject: String, kind: String? = null) {
         val trimmed = subject.trim()
         if (trimmed.isEmpty()) return
         viewModelScope.launch {
             val dao = container.database.exceptionDao()
             val normalized = ScheduleRepository.normalizeSubject(trimmed)
             val exists = dao.allOnce().any {
-                ScheduleRepository.normalizeSubject(it.subject) == normalized
+                ScheduleRepository.normalizeSubject(it.subject) == normalized && it.kind == kind
             }
-            if (!exists) dao.upsert(ExceptionEntity(subject = trimmed))
+            if (!exists) dao.upsert(ExceptionEntity(subject = trimmed, kind = kind))
         }
     }
 
     /** Включить/выключить правило (DAO не имеет setEnabled — переписываем строку целиком). */
     fun setExceptionEnabled(rule: ExceptionRule, enabled: Boolean) {
         viewModelScope.launch {
-            container.database.exceptionDao()
-                .upsert(ExceptionEntity(id = rule.id, subject = rule.subject, enabled = enabled))
+            container.database.exceptionDao().upsert(
+                ExceptionEntity(id = rule.id, subject = rule.subject, kind = rule.kind, enabled = enabled)
+            )
         }
     }
 

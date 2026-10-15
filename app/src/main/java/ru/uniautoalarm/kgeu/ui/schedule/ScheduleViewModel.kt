@@ -73,7 +73,11 @@ class ScheduleViewModel(private val container: AppContainer) : ViewModel() {
 
     /** Исключения (реактивно из Room). */
     val exceptions: StateFlow<List<ExceptionRule>> = container.database.exceptionDao().all()
-        .map { list -> list.map { e -> ExceptionRule(id = e.id, subject = e.subject, enabled = e.enabled) } }
+        .map { list ->
+            list.map { e ->
+                ExceptionRule(id = e.id, subject = e.subject, kind = e.kind, enabled = e.enabled)
+            }
+        }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     /** Выбрать день недели. */
@@ -130,18 +134,23 @@ class ScheduleViewModel(private val container: AppContainer) : ViewModel() {
     }
 
     /**
-     * Переключить исключение для дисциплины: если правило уже есть — удалить, иначе добавить.
+     * Переключить исключение для дисциплины (иконка в расписании).
+     *
+     * Иконка управляет дисциплиной ЦЕЛИКОМ и честно сосуществует с типовыми правилами
+     * из настроек («только лекции» и т.п.):
+     * — правила есть (любые) → все они удаляются (иконка гасла — исключений нет вовсе);
+     * — правил нет → добавляется правило на всю дисциплину (как раньше).
      * Сопоставление — по нормализованному названию (ScheduleRepository.normalizeSubject).
      */
     fun toggleException(subject: String) {
         viewModelScope.launch {
             val dao = container.database.exceptionDao()
             val normalized = ScheduleRepository.normalizeSubject(subject)
-            val existing = dao.allOnce().firstOrNull {
+            val matching = dao.allOnce().filter {
                 ScheduleRepository.normalizeSubject(it.subject) == normalized
             }
-            if (existing != null) {
-                dao.delete(existing.id)
+            if (matching.isNotEmpty()) {
+                matching.forEach { dao.delete(it.id) }
             } else {
                 dao.upsert(ExceptionEntity(subject = subject.trim()))
             }

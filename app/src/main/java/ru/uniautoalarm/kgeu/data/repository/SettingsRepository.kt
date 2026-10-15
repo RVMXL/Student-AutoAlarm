@@ -62,6 +62,7 @@ class SettingsRepository(private val context: Context) {
         val GLASS_INTENSITY = floatPreferencesKey("glass_intensity")
         val WEEK_ALARMS_SIGNATURE = stringPreferencesKey("week_alarms_signature")
         val LAST_SCHEDULED_WAKE = longPreferencesKey("last_scheduled_wake_epoch_minute")
+        val LAST_SCHEDULED_LABEL = stringPreferencesKey("last_scheduled_label")
     }
 
     /** Поток настроек: перевыпускается при каждом изменении; сбой чтения → значения по умолчанию. */
@@ -115,7 +116,8 @@ class SettingsRepository(private val context: Context) {
         glassEnabled = this[Keys.GLASS_ENABLED] ?: false,
         glassIntensity = this[Keys.GLASS_INTENSITY] ?: 0.5f,
         weekAlarmsSignature = this[Keys.WEEK_ALARMS_SIGNATURE] ?: "",
-        lastScheduledWakeEpochMinute = this[Keys.LAST_SCHEDULED_WAKE] ?: -1L
+        lastScheduledWakeEpochMinute = this[Keys.LAST_SCHEDULED_WAKE] ?: -1L,
+        lastScheduledLabel = this[Keys.LAST_SCHEDULED_LABEL] ?: ""
     )
 
     // --- Запись: setXxx для каждого поля Settings ---
@@ -159,6 +161,7 @@ class SettingsRepository(private val context: Context) {
         this[Keys.GLASS_INTENSITY] = s.glassIntensity
         this[Keys.WEEK_ALARMS_SIGNATURE] = s.weekAlarmsSignature
         this[Keys.LAST_SCHEDULED_WAKE] = s.lastScheduledWakeEpochMinute
+        this[Keys.LAST_SCHEDULED_LABEL] = s.lastScheduledLabel
     }
 
     // --- Утилиты парсинга (битые значения молча заменяются дефолтом) ---

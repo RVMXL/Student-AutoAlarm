@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">Вақти ёдоварӣ</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Пеш аз ин фанҳо будильник гузошта намешавад</string>
+    <string name="exceptions_title_desc">Пеш аз ин фанҳо будильник гузошта намешавад — аз рӯи ном ё намуди ҷуфт: лексия, амалия, лаборатория</string>
     <string name="exceptions_empty">Ҳоло холист — фанҳое илова кун, ки пеш аз онҳо бедор кардан лозим нест</string>
     <string name="cd_delete_named">Нест кардани «%1$s»</string>
     <string name="hint_subject_name">Номи фан</string>
     <string name="cd_add_exception">Илова кардани истисно</string>
     <string name="exceptions_found">Дар ҷадвал ёфт шуд:</string>
+    <string name="exc_kind_all">Ҳамаи намудҳо</string>
+    <string name="exc_kind_lec">Лексияҳо</string>
+    <string name="exc_kind_pr">Амалиҳо</string>
+    <string name="exc_kind_lab">Лабораторияҳо</string>
+    <string name="exc_kind_filter">Намуди ҷуфт барои истиснои нав</string>
+    <string name="toggle_off_dismissed">Автобудильник хомӯш шуд, будильникҳои барнома аз соат бароварда шуданд</string>
+    <string name="toggle_off_opened">Автобудильник хомӯш шуд. Соат хомӯшкуниро бо фармон дастгирӣ намекунад (маҳдудияти интерфейс) — рӯйхати будильникҳоро кушодам: будильникҳои бо аломати «Авто:»-ро бо даст хомӯш кун</string>
+    <string name="toggle_off_manual">Автобудильник хомӯш шуд. Соат хомӯшкуниро бо фармон дастгирӣ намекунад (маҳдудияти интерфейс) — будильникҳоро дар барномаи соат кушода, онҳои бо аломати «Авто:»-ро бо даст хомӯш кун</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Машғулиятҳои худат бо вақти алоҳидаи будильник — секцияҳо, репетицияҳо, корҳои яккарона</string>

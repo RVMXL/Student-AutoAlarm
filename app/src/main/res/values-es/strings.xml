@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">Hora del recordatorio</string>
 
     <!-- ==== Ajustes: excepciones ==== -->
-    <string name="exceptions_title_desc">No se programa alarma antes de estas materias</string>
+    <string name="exceptions_title_desc">No se pone alarma antes de estas asignaturas — por nombre o por tipo de clase: teoría, práctica, laboratorio</string>
     <string name="exceptions_empty">Aún no hay nada — agrega las materias antes de las cuales no quieras alarma</string>
     <string name="cd_delete_named">Eliminar \"%1$s\"</string>
     <string name="hint_subject_name">Nombre de la materia</string>
     <string name="cd_add_exception">Agregar excepción</string>
     <string name="exceptions_found">Encontradas en el horario:</string>
+    <string name="exc_kind_all">Todos los tipos</string>
+    <string name="exc_kind_lec">Clases teóricas</string>
+    <string name="exc_kind_pr">Prácticas</string>
+    <string name="exc_kind_lab">Laboratorios</string>
+    <string name="exc_kind_filter">Tipo de clase para la nueva exclusión</string>
+    <string name="toggle_off_dismissed">Alarma automática desactivada; las alarmas de la app se quitaron del reloj</string>
+    <string name="toggle_off_opened">Alarma automática desactivada. El reloj no admite la desactivación por comando (limitación de la capa del sistema) — se abrió la lista de alarmas: quita a mano las alarmas con la etiqueta \"Авто:\"</string>
+    <string name="toggle_off_manual">Alarma automática desactivada. El reloj no admite la desactivación por comando (limitación de la capa del sistema) — abre las alarmas en la app de reloj y quita las etiquetas \"Авто:\" a mano</string>
 
     <!-- ==== Ajustes: eventos propios ==== -->
     <string name="custom_events_desc">Eventos propios con su propia hora de alarma — clubes, ensayos, pendientes de un solo día</string>

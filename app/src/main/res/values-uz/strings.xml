@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">Eslatma vaqti</string>
 
     <!-- ==== Settings: exceptions ==== -->
-    <string name="exceptions_title_desc">Bu fanlardan oldin budilnik qoʻyilmaydi</string>
+    <string name="exceptions_title_desc">Bu fanlardan oldin budilnik qoʻyilmaydi — nomi yoki dars turi boʻyicha: maʼruza, amaliyot, laboratoriya</string>
     <string name="exceptions_empty">Hozircha boʻsh — oldindan uygʻotish shart boʻlmagan fanlarni qoʻsh</string>
     <string name="cd_delete_named">«%1$s» fanini oʻchirish</string>
     <string name="hint_subject_name">Fan nomi</string>
     <string name="cd_add_exception">Istisno qoʻshish</string>
     <string name="exceptions_found">Dars jadvalida topildi:</string>
+    <string name="exc_kind_all">Barcha turlar</string>
+    <string name="exc_kind_lec">Maʼruzalar</string>
+    <string name="exc_kind_pr">Amaliyotlar</string>
+    <string name="exc_kind_lab">Laboratoriyalar</string>
+    <string name="exc_kind_filter">Yangi istisno uchun dars turi</string>
+    <string name="toggle_off_dismissed">Avobudilnik oʻchirildi, ilova budilniklari soatdan olib tashlandi</string>
+    <string name="toggle_off_opened">Avobudilnik oʻchirildi. Soat buyruq orqali oʻchirishni qoʻllab-quvvatlamaydi (qobiq cheklovi) — budilniklar roʻyxati ochildi: «Авто:» yorlikli budilniklarni qoʻlda olib tashla</string>
+    <string name="toggle_off_manual">Avobudilnik oʻchirildi. Soat buyruq orqali oʻchirishni qoʻllab-quvvatlamaydi (qobiq cheklovi) — soat ilovasida budilniklarni ochib, «Авто:» yorliqlarini qoʻlda olib tashla</string>
 
     <!-- ==== Settings: custom events ==== -->
     <string name="custom_events_desc">Alohida budilnik vaqti bilan shaxsiy tadbirlar — toʻgaraklar, repetitsiyalar, bir martalik ishlar</string>
@@ -243,7 +251,7 @@
 
     <!-- ==== Settings: appearance ==== -->
     <string name="set_theme">Mavzu</string>
-    <string name="theme_system">Tizim boʻyicha</string>
+    <string name="theme_system">Tizim</string>
     <string name="theme_light">Yorugʻ</string>
     <string name="theme_dark">Tungi</string>
     <string name="dynamic_color">Material You (tizim rangi)</string>

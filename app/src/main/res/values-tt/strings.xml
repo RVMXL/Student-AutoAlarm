@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">Искәртү вакыты</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Будильник бу дисциплиналар алдыннан куелмый</string>
+    <string name="exceptions_title_desc">Будильник бу дисциплиналар алдыннан куелмый — исем яки пара төре буенча: лекция, практика, лаборатория</string>
     <string name="exceptions_empty">Әлегә буш — будильник куелмасын дигән предметларны өстә</string>
     <string name="cd_delete_named">Бетерү: «%1$s»</string>
     <string name="hint_subject_name">Дисциплина исеме</string>
     <string name="cd_add_exception">Искәрмә өстәү</string>
     <string name="exceptions_found">Расписаниеда табылды:</string>
+    <string name="exc_kind_all">Барлык төрләр</string>
+    <string name="exc_kind_lec">Лекцияләр</string>
+    <string name="exc_kind_pr">Практикалар</string>
+    <string name="exc_kind_lab">Лабораторияләр</string>
+    <string name="exc_kind_filter">Яңа искәрмә өчен пара төре</string>
+    <string name="toggle_off_dismissed">Автобудильник сүндерелде, кушымта будильниклары сәгатьтән алынды</string>
+    <string name="toggle_off_opened">Автобудильник сүндерелде. Сәгать боерыкны кабул итмәде (оболочка чикләмәсе) — будильниклар исемлеген ачтым: «Авто:» меткалы будильникларны кул белән сүндер</string>
+    <string name="toggle_off_manual">Автобудильник сүндерелде. Сәгать боерыкны кабул итмәде (оболочка чикләмәсе) — сәгать кушымтасында будильникларны ач һәм «Авто:» меткаларын кул белән алып ташла</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Аерым будильник вакыты булган үз чараларың — секцияләр, репетицияләр, бер тапкыр эшләр</string>
@@ -243,7 +251,7 @@
 
     <!-- ==== Настройки: оформление ==== -->
     <string name="set_theme">Тема</string>
-    <string name="theme_system">Система темасы</string>
+    <string name="theme_system">Система</string>
     <string name="theme_light">Якты</string>
     <string name="theme_dark">Караңгы</string>
     <string name="dynamic_color">Material You (система төсе)</string>

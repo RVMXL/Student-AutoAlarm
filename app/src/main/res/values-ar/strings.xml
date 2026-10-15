@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">وقت التذكير</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">لا يُضبط المنبّه قبل هذه المواد</string>
+    <string name="exceptions_title_desc">لا يُضبط المنبّه قبل هذه المواد — بالاسم أو حسب نوع الحصة: محاضرة أو تمرين عملي أو عمل معملي</string>
     <string name="exceptions_empty">لا شيء بعد — أضف المواد التي لا تريد الاستيقاظ قبلها</string>
     <string name="cd_delete_named">حذف «%1$s»</string>
     <string name="hint_subject_name">اسم المادة</string>
     <string name="cd_add_exception">إضافة استثناء</string>
     <string name="exceptions_found">موجود في الجدول الدراسي:</string>
+    <string name="exc_kind_all">كل الأنواع</string>
+    <string name="exc_kind_lec">محاضرات</string>
+    <string name="exc_kind_pr">تمارين عملية</string>
+    <string name="exc_kind_lab">أعمال معملية</string>
+    <string name="exc_kind_filter">نوع الحصة للاستثناء الجديد</string>
+    <string name="toggle_off_dismissed">تم إيقاف المنبّه التلقائي وإزالة منبّهات التطبيق من الساعة</string>
+    <string name="toggle_off_opened">تم إيقاف المنبّه التلقائي. لا تدعم الساعة التعطيل بالأمر (قيد من الواجهة) — فتح التطبيق قائمة المنبّهات: أزل المنبّهات ذات تسمية «Авто:» يدويًا</string>
+    <string name="toggle_off_manual">تم إيقاف المنبّه التلقائي. لا تدعم الساعة التعطيل بالأمر (قيد من الواجهة) — افتح المنبّهات في تطبيق الساعة وأزل تسميات «Авто:» يدويًا</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">أحداثك الخاصة بوقت منبّه مستقل — أنشطة، تمارين، مهام لمرة واحدة</string>

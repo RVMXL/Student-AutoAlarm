@@ -35,14 +35,24 @@ class AlarmPlanner(
     suspend fun planFor(date: LocalDate, lessons: List<Lesson>): AlarmPlan? {
         val s = settings.current()
 
-        // (1) исключённые дисциплины: нормализованные названия
-        val excluded = exceptionDao.allOnce()
-            .filter { it.enabled }
+        // (1) исключения: без типа — дисциплина целиком (нормализованное название);
+        //     с типом («лек»/«пр»/«лаб») — только пары этого типа той же дисциплины
+        //     (студенты нередко ходят на практику, но пропускают лекции)
+        val rules = exceptionDao.allOnce().filter { it.enabled }
+        val excludedAll = rules
+            .filter { it.kind == null }
             .mapTo(HashSet()) { ScheduleRepository.normalizeSubject(it.subject) }
+        val excludedTyped = rules
+            .filter { it.kind != null }
+            .map { ScheduleRepository.normalizeSubject(it.subject) to it.kind!! }
 
         // (2) первая не-исключённая пара дня
         val first = lessons
-            .filter { ScheduleRepository.normalizeSubject(it.subject) !in excluded }
+            .filter { lesson ->
+                val normalized = ScheduleRepository.normalizeSubject(lesson.subject)
+                if (normalized in excludedAll) return@filter false
+                excludedTyped.none { (subject, kind) -> subject == normalized && kind == lesson.kind }
+            }
             .minByOrNull { it.start }
 
         // (3) свои события, попадающие на дату: по дню недели ИЛИ по конкретной дате

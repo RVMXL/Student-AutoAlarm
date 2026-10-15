@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">Ескерту уақыты</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Осы пәндердің алдында оятқыш қойылмайды</string>
+    <string name="exceptions_title_desc">Осы пәндерден бұрын оятқыш қойылмайды — аты немесе жұп түрі бойынша: дәріс, тәжірибе, зертханалық сабақ</string>
     <string name="exceptions_empty">Әзірге бос — алдында оятқыштың қажеті жоқ пәндерді қос</string>
     <string name="cd_delete_named">«%1$s» өшіру</string>
     <string name="hint_subject_name">Пән атауы</string>
     <string name="cd_add_exception">Ерекшелік қосу</string>
     <string name="exceptions_found">Кестеден табылды:</string>
+    <string name="exc_kind_all">Барлық түрлері</string>
+    <string name="exc_kind_lec">Дәрістер</string>
+    <string name="exc_kind_pr">Тәжірибелер</string>
+    <string name="exc_kind_lab">Зертханалық сабақтар</string>
+    <string name="exc_kind_filter">Жаңа ерекшелік үшін жұп түрі</string>
+    <string name="toggle_off_dismissed">Автооятқыш өшірілді, қосымша оятқыштары сағаттан алынды</string>
+    <string name="toggle_off_opened">Автооятқыш өшірілді. Сағат пәрменмен өшіруді қолдамайды (оболочка шектеуі) — оятқыштар тізімін аштым: «Авто:» белгісі бар оятқыштарды қолмен алып таста</string>
+    <string name="toggle_off_manual">Автооятқыш өшірілді. Сағат пәрменмен өшіруді қолдамайды (оболочка шектеуі) — сағат қолданбасынан оятқыштарды ашып, «Авто:» белгілерін қолмен алып таста</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Оятқыш уақыты бөлек өз іс-шаралары — секциялар, репетициялар, бір реттік істер</string>

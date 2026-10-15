@@ -38,10 +38,14 @@ data class CustomEventEntity(
     val enabled: Boolean = true
 )
 
-/** Занятие-исключение: перед ним будильник не ставится. */
+/**
+ * Занятие-исключение: перед ним будильник не ставится.
+ * [kind] — тип пары («лек»/«пр»/«лаб») или null = все типы дисциплины.
+ */
 @Entity(tableName = "exceptions")
 data class ExceptionEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val subject: String,             // сопоставляется по нормализованному названию дисциплины
+    val kind: String? = null,        // тип пары; null = исключить дисциплину целиком
     val enabled: Boolean = true
 )

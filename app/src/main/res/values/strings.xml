@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">Время напоминания</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Будильник не ставится перед этими дисциплинами</string>
+    <string name="exceptions_title_desc">Будильник не ставится перед этими дисциплинами — по названию или по типу пары: лекция, практика, лабораторная</string>
     <string name="exceptions_empty">Пока пусто — добавьте предметы, перед которыми будить не нужно</string>
     <string name="cd_delete_named">Удалить «%1$s»</string>
     <string name="hint_subject_name">Название дисциплины</string>
     <string name="cd_add_exception">Добавить исключение</string>
     <string name="exceptions_found">Найдено в расписании:</string>
+    <string name="exc_kind_all">Все типы</string>
+    <string name="exc_kind_lec">Лекции</string>
+    <string name="exc_kind_pr">Практики</string>
+    <string name="exc_kind_lab">Лабораторные</string>
+    <string name="exc_kind_filter">Тип пары для нового исключения</string>
+    <string name="toggle_off_dismissed">Авто-будильник выключен, будильники приложения сняты в часах</string>
+    <string name="toggle_off_opened">Авто-будильник выключен. Часы не приняли отключение (ограничение оболочки) — открыл список будильников: снимите метки «Авто:» вручную</string>
+    <string name="toggle_off_manual">Авто-будильник выключен. Часы не приняли отключение (ограничение оболочки) — снимите будильники с меткой «Авто:» в часах вручную</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Свои события с отдельным временем будильника — секции, репетиции, разовые дела</string>

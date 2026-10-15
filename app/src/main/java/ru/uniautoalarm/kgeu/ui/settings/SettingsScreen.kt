@@ -96,6 +96,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -283,6 +284,22 @@ private fun SectionTitle(text: String) {
     )
 }
 
+/**
+ * Метка сегмента пилюли (SegmentedButton): строго одна строка с многоточием при
+ * переполнении. Баг 0.5.0: в языках с длинными словами («Системалы», «Tous les types»)
+ * метка переносилась на вторую строку — сегмент растал в высоту, пилюля становилась
+ * «кривой» (одна секция толще других). Одна строка держит все сегменты одной высоты.
+ */
+@Composable
+private fun PillLabel(text: String) {
+    Text(
+        text,
+        style = MaterialTheme.typography.labelLarge,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
+}
+
 // --- 1. Профиль ---
 
 @Composable
@@ -325,9 +342,6 @@ private fun AlarmSettingsCard(
 ) {
     var showOffsetDialog by remember { mutableStateOf(false) }
     var editPairStart by remember { mutableStateOf<Int?>(null) }
-    // пакет часов — для адресной отправки DISMISS_ALARM (см. dismissAppAlarms)
-    val alarmContainer = LocalAppContainer.current
-    val clockPackage = remember(alarmContainer) { alarmContainer.stockAlarms.detectClockPackage() }
 
     Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
         Column(
@@ -342,7 +356,12 @@ private fun AlarmSettingsCard(
                     .toggleable(
                         value = settings.autoAlarmEnabled,
                         role = Role.Switch,
-                        onValueChange = { vm.toggleAuto(it) }
+                        onValueChange = { enabled ->
+                            vm.toggleAuto(enabled) { msg ->
+                                // выключение отчитывается снекбаром (у него нет уведомлений)
+                                if (msg != null) onSnackbar(msg)
+                            }
+                        }
                     ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -580,7 +599,7 @@ private fun AlarmSettingsCard(
                         Text(stringResource(R.string.btn_set_now))
                     }
                     OutlinedButton(onClick = {
-                        dismissAppAlarms(context, clockPackage) { onSnackbar(it) }
+                        vm.dismissAlarms { onSnackbar(it) }
                     }) {
                         Text(stringResource(R.string.btn_disable_app_alarms))
                     }
@@ -873,9 +892,30 @@ private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
 
 // --- 4. Исключения ---
 
+/** Тип пары для чипа исключения: null = все типы, иначе токен расписания («лек»/«пр»/«лаб»). */
+private val EXCEPTION_KINDS: List<Pair<String?, Int>> = listOf(
+    null to R.string.exc_kind_all,
+    "лек" to R.string.exc_kind_lec,
+    "пр" to R.string.exc_kind_pr,
+    "лаб" to R.string.exc_kind_lab
+)
+
+/** Локализованное имя типа пары для строки списка («Название · Лекции»). */
+@Composable
+private fun exceptionKindLabel(kind: String?): String? = when (kind) {
+    "лек" -> stringResource(R.string.exc_kind_lec)
+    "пр" -> stringResource(R.string.exc_kind_pr)
+    "лаб" -> stringResource(R.string.exc_kind_lab)
+    else -> null
+}
+
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewModel) {
     var newText by remember { mutableStateOf("") }
+    // тип применяемый к новому правилу: null = дисциплина целиком,
+    // иначе только пары выбранного типа (лекция/практика/лабораторная)
+    var selectedKind by remember { mutableStateOf<String?>(null) }
 
     // Автодополнение по дисциплинам из кэша расписания: ввёл «ма» — подсказывает
     // «материаловедение». Живёт только пока текст не совпадает с подсказкой.
@@ -913,11 +953,16 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        rule.subject,
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.weight(1f)
-                    )
+                    Column(Modifier.weight(1f)) {
+                        Text(rule.subject, style = MaterialTheme.typography.bodyLarge)
+                        exceptionKindLabel(rule.kind)?.let { kindLabel ->
+                            Text(
+                                kindLabel,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
                     Switch(
                         checked = rule.enabled,
                         onCheckedChange = { vm.setExceptionEnabled(rule, it) }
@@ -931,6 +976,20 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                 }
             }
             HorizontalDivider()
+            Text(
+                stringResource(R.string.exc_kind_filter),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                EXCEPTION_KINDS.forEach { (kind, labelRes) ->
+                    FilterChip(
+                        selected = selectedKind == kind,
+                        onClick = { selectedKind = kind },
+                        label = { Text(stringResource(labelRes)) }
+                    )
+                }
+            }
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -944,7 +1003,7 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                 )
                 IconButton(
                     onClick = {
-                        vm.addException(newText)
+                        vm.addException(newText, selectedKind)
                         newText = ""
                     },
                     enabled = newText.isNotBlank()
@@ -964,7 +1023,7 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                 suggestions.forEach { subject ->
                     TextButton(
                         onClick = {
-                            vm.addException(subject)
+                            vm.addException(subject, selectedKind)
                             newText = ""
                         },
                         modifier = Modifier.fillMaxWidth()
@@ -1092,14 +1151,14 @@ private fun AddEventDialog(
                         onClick = { weekly = true },
                         shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
                     ) {
-                        Text(stringResource(R.string.event_days_mode))
+                        PillLabel(stringResource(R.string.event_days_mode))
                     }
                     SegmentedButton(
                         selected = !weekly,
                         onClick = { weekly = false },
                         shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
                     ) {
-                        Text(stringResource(R.string.event_date_mode))
+                        PillLabel(stringResource(R.string.event_date_mode))
                     }
                 }
                 if (weekly) {
@@ -1305,21 +1364,21 @@ private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: C
                     onClick = { vm.setThemeMode(ThemeMode.SYSTEM) },
                     shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3)
                 ) {
-                    Text(stringResource(R.string.theme_system))
+                    PillLabel(stringResource(R.string.theme_system))
                 }
                 SegmentedButton(
                     selected = settings.themeMode == ThemeMode.LIGHT,
                     onClick = { vm.setThemeMode(ThemeMode.LIGHT) },
                     shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3)
                 ) {
-                    Text(stringResource(R.string.theme_light))
+                    PillLabel(stringResource(R.string.theme_light))
                 }
                 SegmentedButton(
                     selected = settings.themeMode == ThemeMode.DARK,
                     onClick = { vm.setThemeMode(ThemeMode.DARK) },
                     shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3)
                 ) {
-                    Text(stringResource(R.string.theme_dark))
+                    PillLabel(stringResource(R.string.theme_dark))
                 }
             }
             Row(
@@ -1369,14 +1428,14 @@ private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: C
                     onClick = { vm.setCalendarStyle(CalendarStyle.STANDARD) },
                     shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
                 ) {
-                    Text(stringResource(R.string.style_standard))
+                    PillLabel(stringResource(R.string.style_standard))
                 }
                 SegmentedButton(
                     selected = settings.calendarStyle == CalendarStyle.PAPER,
                     onClick = { vm.setCalendarStyle(CalendarStyle.PAPER) },
                     shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
                 ) {
-                    Text(stringResource(R.string.style_paper))
+                    PillLabel(stringResource(R.string.style_paper))
                 }
             }
             HorizontalDivider()
@@ -1848,73 +1907,4 @@ private fun openStockAlarms(context: Context, onError: (String) -> Unit) {
     } catch (_: Exception) {
         onError(LocaleHelper.string(context, R.string.alarms_list_open_failed))
     }
-}
-
-/**
- * Отключить будильники, поставленные приложением: официальный канал DISMISS_ALARM.
- *
- * Баг 0.3.1 (исправлено в 0.4.0): раньше отправлялась метка «Авто», но поиск по метке
- * в часах — ТОЧНОЕ совпадение (не «начинается с»), а будильники помечены
- * «Авто: Пн»…«Авто: Вс» → совпадений ноль, часы молча ничего не делали.
- * Теперь DISMISS отправляется по каждой точной метке из StockAlarmSetter.WEEK_AHEAD_LABELS.
- *
- * Ограничение системы: контракт не возвращает результат («сколько отключено»), а часть
- * OEM-часов (Realme UI/ColorOS, старые MIUI) интент DISMISS_ALARM вообще не принимают —
- * startActivity бросит исключение. Тогда честно открываем список будильников часов
- * (SHOW_ALARMS), чтобы пользователь снял метки «Авто:» вручную.
- */
-private fun dismissAppAlarms(
-    context: Context,
-    clockPackage: String?,
-    onResult: (String) -> Unit,
-) {
-    var sent = 0
-    for (label in StockAlarmSetter.WEEK_AHEAD_LABELS) {
-        sent += try {
-            context.startActivity(
-                Intent(AlarmClock.ACTION_DISMISS_ALARM).apply {
-                    putExtra(AlarmClock.EXTRA_ALARM_SEARCH_MODE, AlarmClock.ALARM_SEARCH_MODE_LABEL)
-                    putExtra(AlarmClock.EXTRA_MESSAGE, label)
-                    // тихо, без UI на каждый будильник: пользователь нажал одну кнопку
-                    putExtra(AlarmClock.EXTRA_SKIP_UI, true)
-                    if (clockPackage != null) setPackage(clockPackage)
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
-            )
-            1
-        } catch (_: Exception) {
-            0
-        }
-    }
-    if (sent > 0) {
-        onResult(
-            LocaleHelper.string(
-                context, R.string.dismiss_alarms_sent,
-                sent, StockAlarmSetter.WEEK_AHEAD_LABELS.size
-            )
-        )
-        return
-    }
-    // Часы не приняли ни одной команды — ограничение оболочки; открываем список вручную
-    val intents = buildList {
-        if (clockPackage != null) {
-            add(Intent(AlarmClock.ACTION_SHOW_ALARMS).setPackage(clockPackage))
-        }
-        add(Intent(AlarmClock.ACTION_SHOW_ALARMS))
-    }
-    val opened = intents.any { intent ->
-        try {
-            context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            true
-        } catch (_: Exception) {
-            false
-        }
-    }
-    onResult(
-        if (opened) {
-            LocaleHelper.string(context, R.string.dismiss_unsupported_opened)
-        } else {
-            LocaleHelper.string(context, R.string.dismiss_unsupported_manual)
-        }
-    )
 }

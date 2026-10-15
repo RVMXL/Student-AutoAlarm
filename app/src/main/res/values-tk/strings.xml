@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">Ýada salyş wagty</string>
 
     <!-- ==== Sazlamalar: istisnalar ==== -->
-    <string name="exceptions_title_desc">Bu dersleriň öňünde ýatgyjy goýulmaýar</string>
+    <string name="exceptions_title_desc">Bu panlaryň öňünden ýatgyjy goýulmaýar — ady ýa-da sapagyň görnüşi boýunça: leksiýa, amalyýet, laboratoriýa</string>
     <string name="exceptions_empty">Häzir boş — oýatmagyň gerek bolmajak dersleri goş</string>
     <string name="cd_delete_named">«%1$s» öçür</string>
     <string name="hint_subject_name">Dersiň ady</string>
     <string name="cd_add_exception">Istisna goş</string>
     <string name="exceptions_found">Sabak çeredecesinde tapylan:</string>
+    <string name="exc_kind_all">Ähli görnüşler</string>
+    <string name="exc_kind_lec">Leksiýalar</string>
+    <string name="exc_kind_pr">Amalyýetler</string>
+    <string name="exc_kind_lab">Laboratoriýalar</string>
+    <string name="exc_kind_filter">Täze istisna üçin sapagyň görnüşi</string>
+    <string name="toggle_off_dismissed">Awtobudýyjy öçürildi, programmanyň ýatgyjylary sagatdan alynardy</string>
+    <string name="toggle_off_opened">Awtobudýyjy öçürildi. Sagat buýruk bilen öçürmegi goldamaýar (örtügiň çäklemesi) — ýatgyjylaryň sanawyny açdym: «Авто:» bellikli ýatgyjylary el bilen aýyr</string>
+    <string name="toggle_off_manual">Awtobudýyjy öçürildi. Sagat buýruk bilen öçürmegi goldamaýar (örtügiň çäklemesi) — sagat programmasynda ýatgyjylary aç we «Авто:» belliklerini el bilen aýyr</string>
 
     <!-- ==== Sazlamalar: şahsy wakalar ==== -->
     <string name="custom_events_desc">Aýry ýatgyjy wagty bilen şahsy wakalaryň — sport dersleri, repetisiýalar, bir gezeklik işler</string>

@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">Иҫкәрмә ваҡыты</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Был дисциплиналар алдында будильник ҡуйылмай</string>
+    <string name="exceptions_title_desc">Бу дисциплиналар алдынан будильник ҡуйылмай — исем буйынса йәки пара төрө буйынса: лекция, практика, лаборатория</string>
     <string name="exceptions_empty">Әлегә буш — уятырға кәрәкмәгән фәндәрҙе өҫтә</string>
     <string name="cd_delete_named">Бөтөрөргә: «%1$s»</string>
     <string name="hint_subject_name">Дисциплина исеме</string>
     <string name="cd_add_exception">Айырым осраҡ өҫтәү</string>
     <string name="exceptions_found">Расписаниела табылды:</string>
+    <string name="exc_kind_all">Бөтә төрҙәр</string>
+    <string name="exc_kind_lec">Лекциялар</string>
+    <string name="exc_kind_pr">Практикалар</string>
+    <string name="exc_kind_lab">Лабораториялар</string>
+    <string name="exc_kind_filter">Яңы айырым осраҡ өсөн пара төрө</string>
+    <string name="toggle_off_dismissed">Автобудильник һүндерелде, ҡушымта будильниктары сәғәттән алынды</string>
+    <string name="toggle_off_opened">Автобудильник һүндерелде. Сәғәт бойороҡ менән һүндереүҙе хупламай (оболочка сикләүе) — будильниктар исемлеген астым: «Авто:» билдәле будильниктарҙы ҡул менән алып ташла</string>
+    <string name="toggle_off_manual">Автобудильник һүндерелде. Сәғәт бойороҡ менән һүндереүҙе хупламай (оболочка сикләүе) — сәғәт ҡушымтаһында будильниктарҙы асып, «Авто:» билдәләрен ҡул менән алып ташла</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Будильник ваҡыты айырым булған үҙ ваҡиғаларың — секциялар, репетициялар, бер тапҡыр эштәр</string>
@@ -243,7 +251,7 @@
 
     <!-- ==== Настройки: оформление ==== -->
     <string name="set_theme">Тема</string>
-    <string name="theme_system">Система буйынса</string>
+    <string name="theme_system">Система</string>
     <string name="theme_light">Яҡты</string>
     <string name="theme_dark">Ҡараңғы</string>
     <string name="dynamic_color">Material You (система төҫө)</string>

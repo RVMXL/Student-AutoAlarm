@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">Reminder time</string>
 
     <!-- ==== Settings: exceptions ==== -->
-    <string name="exceptions_title_desc">No alarm is set before these subjects</string>
+    <string name="exceptions_title_desc">No alarm is set before these subjects — by name or by lesson type: lecture, practice, lab</string>
     <string name="exceptions_empty">Empty for now — add subjects you don\'t want to be woken up for</string>
     <string name="cd_delete_named">Delete \"%1$s\"</string>
     <string name="hint_subject_name">Subject name</string>
     <string name="cd_add_exception">Add exception</string>
     <string name="exceptions_found">Found in the schedule:</string>
+    <string name="exc_kind_all">All types</string>
+    <string name="exc_kind_lec">Lectures</string>
+    <string name="exc_kind_pr">Practice</string>
+    <string name="exc_kind_lab">Labs</string>
+    <string name="exc_kind_filter">Lesson type for the new exception</string>
+    <string name="toggle_off_dismissed">Auto-alarm is off — the app\'s alarms have been removed from the Clock</string>
+    <string name="toggle_off_opened">Auto-alarm is off. The Clock app doesn\'t support dismiss commands (system shell limitation) — the alarm list is open: turn off the \"Авто:\" alarms manually</string>
+    <string name="toggle_off_manual">Auto-alarm is off. The Clock app doesn\'t support dismiss commands (system shell limitation) — open the alarms in the Clock app and remove the \"Авто:\" labels manually</string>
 
     <!-- ==== Settings: custom events ==== -->
     <string name="custom_events_desc">Your own events with a separate alarm time — club sessions, rehearsals, one-off things</string>

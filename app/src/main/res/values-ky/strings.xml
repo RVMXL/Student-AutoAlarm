@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">Эскертүү убакыты</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Бул сабактардын алдында ояткыч коюлбайт</string>
+    <string name="exceptions_title_desc">Бул предметтердин алдында ояткыч коюлбайт — аталышы же жуптун түрү боюнча: лекция, практика, лаборатория</string>
     <string name="exceptions_empty">Азырынча бош — алдында ояткыч кереги жок предметтерди кош</string>
     <string name="cd_delete_named">«%1$s» өчүрүү</string>
     <string name="hint_subject_name">Сабактын аталышы</string>
     <string name="cd_add_exception">Өзгөчөлүк кошуу</string>
     <string name="exceptions_found">Кестеден табылды:</string>
+    <string name="exc_kind_all">Бардык түрлөрү</string>
+    <string name="exc_kind_lec">Лекциялар</string>
+    <string name="exc_kind_pr">Практикалар</string>
+    <string name="exc_kind_lab">Лабораториялар</string>
+    <string name="exc_kind_filter">Жаңы өзгөчө учур үчүн жуп түрү</string>
+    <string name="toggle_off_dismissed">Автоояткыч өчүрүлдү, тиркеменин ояткычтары сааттан алынды</string>
+    <string name="toggle_off_opened">Автоояткыч өчүрүлдү. Саат буйрук менен өчүрүүнү колдообойт (оболочка чектөөсү) — ояткычтар тизмесин ачтым: «Авто:» энбелгиси бар ояткычтарды кол менен алып сал</string>
+    <string name="toggle_off_manual">Автоояткыч өчүрүлдү. Саат буйрук менен өчүрүүнү колдообойт (оболочка чектөөсү) — саат колдонмосунан ояткычтарды ачып, «Авто:» энбелгилерин кол менен алып сал</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Ояткыч убакыты бөлөк өз иш-чараларың — секциялар, репетициялар, бир жолку иштер</string>

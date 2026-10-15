@@ -24,8 +24,13 @@ data class CustomEvent(val id: Long = 0, val name: String,
     val dayOfWeek: DayOfWeek? = null, val date: LocalDate? = null,
     val time: LocalTime, val offsetMinutes: Int, val enabled: Boolean = true)
 
-/** Занятие-исключение: перед ним будильник не ставится. */
-data class ExceptionRule(val id: Long = 0, val subject: String, val enabled: Boolean = true)
+/**
+ * Занятие-исключение: перед ним будильник не ставится.
+ * [kind] — тип пары ("лек"/"пр"/"лаб" как в расписании КГЭУ) или null = все типы:
+ * студенты нередко ходят на практику, но пропускают лекции той же дисциплины.
+ */
+data class ExceptionRule(val id: Long = 0, val subject: String,
+    val kind: String? = null, val enabled: Boolean = true)
 
 /** Режим авто-будильника: на завтра (Standard) или партия на неделю вперёд. */
 enum class AlarmMode { STANDARD, WEEK_AHEAD }
@@ -62,7 +67,10 @@ data class Settings(val setupComplete: Boolean = false,
     val weekAlarmsSignature: String = "",
     /** Эпоха-минута (день*1440 + минуты) последнего поставленного разового будильника —
      *  чтобы мгновенная постановка при включении тумблера не дублировала ночной тик 00:05. */
-    val lastScheduledWakeEpochMinute: Long = -1)
+    val lastScheduledWakeEpochMinute: Long = -1,
+    /** Метка последнего поставленного разового будильника — под DISMISS_ALARM по метке
+     *  при выключении тумблера (метки «Авто: …» ищутся в часах точным совпадением). */
+    val lastScheduledLabel: String = "")
 
 /** План пробуждения на дату: победивший кандидат (пара или своё событие). */
 data class AlarmPlan(val date: LocalDate, val wakeAt: LocalDateTime,

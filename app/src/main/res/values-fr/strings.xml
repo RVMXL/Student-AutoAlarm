@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">Heure du rappel</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Pas de réveil programmé avant ces matières</string>
+    <string name="exceptions_title_desc">Pas de réveil avant ces matières — par nom ou par type de séance : cours magistral, TD, TP</string>
     <string name="exceptions_empty">Vide pour l\'instant — ajoute les matières avant lesquelles il ne faut pas te réveiller</string>
     <string name="cd_delete_named">Supprimer « %1$s »</string>
     <string name="hint_subject_name">Nom de la matière</string>
     <string name="cd_add_exception">Ajouter une exception</string>
     <string name="exceptions_found">Trouvé dans l\'emploi du temps :</string>
+    <string name="exc_kind_all">Tous les types</string>
+    <string name="exc_kind_lec">Cours magistraux</string>
+    <string name="exc_kind_pr">Travaux dirigés</string>
+    <string name="exc_kind_lab">Travaux pratiques</string>
+    <string name="exc_kind_filter">Type de séance pour la nouvelle exception</string>
+    <string name="toggle_off_dismissed">Réveil auto désactivé — les alarmes de l\'appli ont été retirées de l\'horloge</string>
+    <string name="toggle_off_opened">Réveil auto désactivé. L\'horloge ne prend pas en charge la désactivation par commande (limitation de la surcouche) — l\'appli a ouvert la liste des réveils : supprime manuellement les réveils libellés «Авто:»</string>
+    <string name="toggle_off_manual">Réveil auto désactivé. L\'horloge ne prend pas en charge la désactivation par commande (limitation de la surcouche) — ouvre les réveils dans l\'appli Horloge et supprime les libellés «Авто:» manuellement</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Tes propres événements avec une heure de réveil séparée — clubs, répétitions, tâches ponctuelles</string>

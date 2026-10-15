@@ -221,12 +221,20 @@
     <string name="dialog_reminder_title">Hatırlatma saati</string>
 
     <!-- ==== Настройки: исключения ==== -->
-    <string name="exceptions_title_desc">Bu derslerden önce alarm kurulmaz</string>
+    <string name="exceptions_title_desc">Bu derslerden önce alarm kurulmaz — isme veya ders türüne göre: ders, uygulama, laboratuvar</string>
     <string name="exceptions_empty">Şimdilik boş — öncesinde alarm kurulmasını istemediğin dersleri ekle</string>
     <string name="cd_delete_named">“%1$s” öğesini sil</string>
     <string name="hint_subject_name">Ders adı</string>
     <string name="cd_add_exception">İstisna ekle</string>
     <string name="exceptions_found">Ders programında bulunanlar:</string>
+    <string name="exc_kind_all">Tüm türler</string>
+    <string name="exc_kind_lec">Teorik dersler</string>
+    <string name="exc_kind_pr">Uygulamalar</string>
+    <string name="exc_kind_lab">Laboratuvarlar</string>
+    <string name="exc_kind_filter">Yeni istisna için ders türü</string>
+    <string name="toggle_off_dismissed">Otomatik alarm kapatıldı, uygulamanın alarmları saatten kaldırıldı</string>
+    <string name="toggle_off_opened">Otomatik alarm kapatıldı. Saat uygulaması komutla kapatmayı desteklemiyor (arayüz kısıtlaması) — alarm listesi açıldı: «Авто:» etiketli alarmları elle kaldır</string>
+    <string name="toggle_off_manual">Otomatik alarm kapatıldı. Saat uygulaması komutla kapatmayı desteklemiyor (arayüz kısıtlaması) — alarmları Saat uygulamasında aç ve «Авто:» etiketlerini elle kaldır</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
     <string name="custom_events_desc">Kendi etkinliklerin için ayrı alarm — kulüpler, provalar, tek seferlik işler</string>

@@ -19,6 +19,16 @@ import ru.uniautoalarm.kgeu.data.repository.SettingsRepository
 import ru.uniautoalarm.kgeu.domain.AlarmPlanner
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 
+/** Итог попытки снять будильники приложения в стоковых часах. */
+data class DismissResult(
+    /** Сколько команд DISMISS_ALARM удалось отправить (startActivity не бросил). */
+    val sent: Int,
+    /** Общее число попыток (метки «Авто: Пн…Вс» + метка последнего разового). */
+    val total: Int,
+    /** Команды не приняты — открыт список будильников часов (SHOW_ALARMS) как фолбэк. */
+    val openedList: Boolean,
+)
+
 /**
  * Постановка будильника в СТОКОВОЕ приложение часов через публичный intent
  * android.intent.action.SET_ALARM. Своих будильников нет — сигнал звенит там,
@@ -114,13 +124,15 @@ class StockAlarmSetter(
 
             if (deliver(plan.wakeAt.hour, plan.wakeAt.minute, plan.label, s.alarmShowClockUi)) {
                 if (notify) Notifications.alarmSet(context, plan)
-                // маркер для дедупликации мгновенной постановки (см. setNextUpcoming):
-                // без него тумблер днём + ночной тик 00:05 ставили бы два одинаковых будильника
+                // маркеры для дедупликации мгновенной постановки (см. setNextUpcoming):
+                // без них тумблер днём + ночной тик 00:05 ставили бы два одинаковых будильника;
+                // метка нужна каналу DISMISS — снять разовый будильник по точному совпадению
                 settings.update {
                     it.copy(
                         lastScheduledWakeEpochMinute =
                             plan.wakeAt.toLocalDate().toEpochDay() * 1440L +
-                                plan.wakeAt.hour * 60L + plan.wakeAt.minute
+                                plan.wakeAt.hour * 60L + plan.wakeAt.minute,
+                        lastScheduledLabel = plan.label
                     )
                 }
                 plan
@@ -256,6 +268,86 @@ class StockAlarmSetter(
     /** java.time.DayOfWeek → константа java.util.Calendar для EXTRA_DAYS (Sun=1 .. Sat=7). */
     private fun calendarDayOf(dow: DayOfWeek): Int =
         if (dow == DayOfWeek.SUNDAY) Calendar.SUNDAY else dow.value + 1
+
+    /**
+     * Снять будильники приложения в стоковых часах: официальный канал DISMISS_ALARM
+     * по точным меткам — партия «Авто: Пн…Вс» и метка последнего разового («Авто: дисциплина»).
+     *
+     * Поиск по метке в часах — ТОЧНОЕ совпадение (AOSP DeskClock: WHERE label = ?),
+     * поэтому каждая метка отправляется отдельным интентом (баг 0.3.1: метка «Авто»
+     * не совпадала ни с чем; исправлено в 0.4.0, см. RELEASE-0.4.0).
+     *
+     * Ограничение системы: контракт не возвращает результат («сколько отключено»),
+     * а часть OEM-часов (Realme UI/ColorOS, старые MIUI) интент DISMISS_ALARM вообще
+     * не принимают — startActivity бросит исключение. Тогда честно открываем список
+     * будильников часов (SHOW_ALARMS), чтобы пользователь снял метки «Авто:» вручную.
+     *
+     * После успешной отправки команд маркеры постановки (эпоха-минута, метка, сигнатура
+     * партии) сбрасываются: следующий тумблер/ночной тик поставит будильники заново,
+     * а не «промолчит», считая их уже стоящими (баг 0.5.x: выключенный тумблер не
+     * снимал будильники, а включённый заново — не ставил их после ручного удаления).
+     */
+    suspend fun dismissAppAlarms(): DismissResult = withContext(Dispatchers.Default) {
+        val s = settings.current()
+        val clockPackage = detectClockPackage()
+        val labels = buildList {
+            addAll(WEEK_AHEAD_LABELS)
+            if (s.lastScheduledLabel.isNotBlank() && s.lastScheduledLabel !in this) {
+                add(s.lastScheduledLabel)
+            }
+        }
+
+        var sent = 0
+        for (label in labels) {
+            sent += try {
+                context.startActivity(
+                    Intent(AlarmClock.ACTION_DISMISS_ALARM).apply {
+                        putExtra(AlarmClock.EXTRA_ALARM_SEARCH_MODE, AlarmClock.ALARM_SEARCH_MODE_LABEL)
+                        putExtra(AlarmClock.EXTRA_MESSAGE, label)
+                        // тихо, без UI на каждый будильник: это фоновая гигиена, не кнопка
+                        putExtra(AlarmClock.EXTRA_SKIP_UI, true)
+                        if (clockPackage != null) setPackage(clockPackage)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                )
+                1
+            } catch (_: Exception) {
+                0
+            }
+        }
+
+        val result = if (sent > 0) {
+            DismissResult(sent, labels.size, openedList = false)
+        } else {
+            // Часы не приняли ни одной команды — ограничение оболочки; открываем список вручную
+            val intents = buildList {
+                if (clockPackage != null) add(Intent(AlarmClock.ACTION_SHOW_ALARMS).setPackage(clockPackage))
+                add(Intent(AlarmClock.ACTION_SHOW_ALARMS))
+            }
+            val opened = intents.any { intent ->
+                try {
+                    context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                    true
+                } catch (_: Exception) {
+                    false
+                }
+            }
+            DismissResult(0, labels.size, openedList = opened)
+        }
+
+        // маркеры сбрасываем в любом исходе: после команды DISMISS (или после того, как
+        // пользователь снял будильники в открытом списке) старые маркеры уже не соответствуют
+        // реальности, и «уже стоит» было бы ложью
+        settings.update {
+            it.copy(
+                lastScheduledWakeEpochMinute = -1L,
+                lastScheduledLabel = "",
+                weekAlarmsSignature = "",
+                weekAlarmsSetUntilEpochDay = -1L
+            )
+        }
+        result
+    }
 
     /**
      * Тестовый будильник через [minutesFromNow] минут (кнопка «Проверить будильник» в настройках).
