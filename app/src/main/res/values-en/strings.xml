@@ -29,7 +29,6 @@
     <string name="fmt_offset_m">%1$d min</string>
     <string name="fmt_offset_h">%1$d h</string>
     <string name="fmt_offset_hm">%1$d h %2$d min</string>
-    <string name="fmt_days_short">%1$d days</string>
     <string name="fmt_time_alarm_will_ring">alarm will ring at</string>
 
     <!-- ==== Days of the week (short, calendar chips) ==== -->
@@ -79,8 +78,7 @@
     <!-- ==== Home screen ==== -->
     <string name="home_title">Auto-Alarm</string>
     <string name="cd_refresh_schedule">Refresh the schedule</string>
-    <string name="mode_week_chip">For %1$d days</string>
-    <string name="mode_standard_chip">Standard</string>
+    <string name="mode_standard_chip">per schedule</string>
     <string name="loading_settings">Loading settings…</string>
     <string name="alarm_off_title">Alarm is off</string>
     <string name="alarm_off_subtitle">Turn it on with the toggle below</string>
@@ -98,19 +96,10 @@
     <string name="own_event_at">your own event at %1$s</string>
     <string name="home_auto_title">Auto-Alarm</string>
     <string name="home_auto_subtitle">Sets an alarm before your first class according to the schedule</string>
-    <string name="home_week_title">Several days ahead</string>
-    <string name="home_week_desc">Repeating alarms for each day of the week — a safety net in case the system kills the app</string>
-    <string name="btn_set_for_days">Set for %1$d days</string>
-    <string name="chip_weekly_repeat">Repeat weekly</string>
-    <string name="home_week_note">Alarms repeat weekly; turn off the extra ones in the built-in Clock app (\"Alarm list\" — in the app\'s settings)</string>
     <string name="home_upcoming_title">Upcoming classes</string>
     <string name="home_no_pairs">No classes</string>
 
     <!-- ==== Batch results (home + settings) ==== -->
-    <string name="week_result_delivered">Repeating alarms set: %1$d</string>
-    <string name="week_result_delivered_note">Repeating alarms set: %1$d (one per day of the week)</string>
-    <string name="week_result_uptodate">The alarms are already set — the schedule hasn\'t changed</string>
-    <string name="week_result_empty">No upcoming classes found</string>
 
     <!-- ==== Diagnostics on the home screen ==== -->
     <string name="dialog_exact_alarms_title">Exact alarms are not allowed</string>
@@ -148,11 +137,6 @@
     <string name="notif_channel_desc">Messages about alarms set and alarms skipped</string>
     <string name="notif_alarm_set">Alarm set for %1$s</string>
     <string name="notif_skipped_title">Alarm not set</string>
-    <string name="notif_week_one">1 repeating alarm set</string>
-    <string name="notif_week_many">Repeating alarms set: %1$d</string>
-    <string name="notif_week_text">on the days with classes (%1$s – %2$s), repeats weekly</string>
-    <string name="notif_week_already_title">Alarms for the week are already set</string>
-    <string name="notif_week_already_text">The schedule didn\'t change any wake-up times — no need to set them again</string>
     <string name="notif_reminder_title">Don\'t forget to set an alarm</string>
     <string name="notif_reminder_text">Tomorrow, %1$s: class at %2$s — %3$s. Don\'t forget to set an alarm.</string>
     <string name="notif_sync_title">Schedule sync</string>
@@ -162,7 +146,8 @@
 
     <!-- ==== Alarm skip reasons (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">no classes</string>
-    <string name="skip_no_upcoming">no upcoming classes found</string>
+    <string name="skip_no_upcoming">no classes today or tomorrow — the nightly check runs every day</string>
+    <string name="skip_deferred_to_night">class is tomorrow — the alarm will be set tonight at 00:05 (a one-shot set now would ring today)</string>
     <string name="skip_clock_refused">the Clock app didn\'t accept the command — turn on \"Alarm reminder\" in the app\'s settings</string>
     <string name="skip_too_far">the class is more than a week away — the alarm will be set automatically closer to it</string>
     <string name="test_alarm_label">Test: Auto-Alarm is working!</string>
@@ -198,13 +183,6 @@
     <string name="pair_at">Class at %1$s</string>
     <string name="pair_custom_offset">Wake-up %1$s before → alarm at %2$s</string>
     <string name="pair_common_offset">Common wake-up: %1$s before</string>
-    <string name="set_mode">Mode</string>
-    <string name="mode_standard_title">Standard — for tomorrow</string>
-    <string name="mode_standard_desc">Every night the alarm is rescheduled for tomorrow</string>
-    <string name="mode_week_title">Several days ahead</string>
-    <string name="mode_week_desc">A repeating alarm for every class day of the week — a safety net in case the system kills the app; the alarms repeat weekly based on the current schedule, and you can turn them off with the button below</string>
-    <string name="mode_week_window">Class search window: %1$s — alarms on every day of the week that has classes</string>
-    <string name="btn_set_now">Set now</string>
     <string name="btn_disable_app_alarms">Turn off the app\'s alarms</string>
     <string name="disable_alarms_desc">The button sends a dismiss command to the Clock app using the exact labels \"Авто: Пн\"…\"Авто: Вс\". If the system shell doesn\'t accept the command (some Realme UI/ColorOS versions — a system limitation), the app will open the alarm list itself — remove the \"Авто:\" alarms manually.</string>
     <string name="btn_test_alarm">Test the alarm</string>

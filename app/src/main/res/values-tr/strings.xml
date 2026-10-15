@@ -29,7 +29,6 @@
     <string name="fmt_offset_m">%1$d dk</string>
     <string name="fmt_offset_h">%1$d sa</string>
     <string name="fmt_offset_hm">%1$d sa %2$d dk</string>
-    <string name="fmt_days_short">%1$d gün</string>
     <string name="fmt_time_alarm_will_ring">Alarmın çalma saati</string>
 
     <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
@@ -79,8 +78,7 @@
     <!-- ==== Главный экран ==== -->
     <string name="home_title">Otomatik Alarm</string>
     <string name="cd_refresh_schedule">Ders programını yenile</string>
-    <string name="mode_week_chip">%1$d günlük</string>
-    <string name="mode_standard_chip">Standart</string>
+    <string name="mode_standard_chip">programa göre</string>
     <string name="loading_settings">Ayarlar yükleniyor…</string>
     <string name="alarm_off_title">Alarm kapalı</string>
     <string name="alarm_off_subtitle">Aşağıdaki düğmeyle aç</string>
@@ -98,19 +96,10 @@
     <string name="own_event_at">Kendi etkinliği: %1$s</string>
     <string name="home_auto_title">Otomatik alarm</string>
     <string name="home_auto_subtitle">Programa göre ilk dersin öncesinde alarm kurar</string>
-    <string name="home_week_title">Birkaç gün önceden</string>
-    <string name="home_week_desc">Haftanın günlerine göre tekrarlayan alarmlar — sistem uygulamayı sonlandırırsa sigorta</string>
-    <string name="btn_set_for_days">%1$d günlüğüne kur</string>
-    <string name="chip_weekly_repeat">Haftalık tekrar</string>
-    <string name="home_week_note">Alarmlar haftalık tekrarlanır; fazlalıklar telefonun yerleşik Saat uygulamasında kapatılır (“Alarm listesi” — uygulamanın ayarlarında)</string>
     <string name="home_upcoming_title">Yaklaşan dersler</string>
     <string name="home_no_pairs">Ders yok</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
-    <string name="week_result_delivered">Kurulan tekrarlayan alarm sayısı: %1$d</string>
-    <string name="week_result_delivered_note">Kurulan tekrarlayan alarm sayısı: %1$d (haftanın günlerine göre)</string>
-    <string name="week_result_uptodate">Alarmlar zaten kurulu — ders programı değişmedi</string>
-    <string name="week_result_empty">Yaklaşan ders bulunamadı</string>
 
     <!-- ==== Диагностика на главном ==== -->
     <string name="dialog_exact_alarms_title">Kesin alarmlara izin verilmiyor</string>
@@ -148,11 +137,6 @@
     <string name="notif_channel_desc">Kurulan ve atlanan alarmlarla ilgili bildirimler</string>
     <string name="notif_alarm_set">Alarm %1$s için kuruldu</string>
     <string name="notif_skipped_title">Alarm kurulmadı</string>
-    <string name="notif_week_one">1 tekrarlayan alarm kuruldu</string>
-    <string name="notif_week_many">Kurulan tekrarlayan alarm sayısı: %1$d</string>
-    <string name="notif_week_text">ders olan günler için (%1$s – %2$s), haftalık tekrarlar</string>
-    <string name="notif_week_already_title">Haftanın alarmları zaten kurulu</string>
-    <string name="notif_week_already_text">Ders programı kalkma saatlerini değiştirmedi — yeniden kurmaya gerek yok</string>
     <string name="notif_reminder_title">Alarm kurmayı unutma</string>
     <string name="notif_reminder_text">Yarın, %1$s: %2$s ders — %3$s. Alarm kurmayı unutma.</string>
     <string name="notif_sync_title">Ders programı eşitleniyor</string>
@@ -162,7 +146,8 @@
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">ders yok</string>
-    <string name="skip_no_upcoming">yaklaşan ders bulunamadı</string>
+    <string name="skip_no_upcoming">bugün de yarın da ders yok — gece kontrolü her gece yapılır</string>
+    <string name="skip_deferred_to_night">ders yarın — alarm gece 00:05\'te kurulacak (şimdi kurulsa bugün çalardı)</string>
     <string name="skip_clock_refused">telefonun Saat uygulaması komutu kabul etmedi — ayarlarda “Alarm hatırlatması” seçeneğini aç</string>
     <string name="skip_too_far">ders bir haftadan daha uzakta — alarm kendiliğinden öncesinde kurulacak</string>
     <string name="test_alarm_label">Test: Otomatik alarm çalışıyor!</string>
@@ -198,13 +183,6 @@
     <string name="pair_at">Ders: %1$s</string>
     <string name="pair_custom_offset">%1$s önce kalk → alarm %2$s</string>
     <string name="pair_common_offset">Ortak kalkma: %1$s önce</string>
-    <string name="set_mode">Mod</string>
-    <string name="mode_standard_title">Standart — yarın için</string>
-    <string name="mode_standard_desc">Her gece alarm yarına göre yeniden kurulur</string>
-    <string name="mode_week_title">Birkaç gün önceden</string>
-    <string name="mode_week_desc">Haftanın her ders günü için tekrarlayan alarm — uygulamanın sonlandırılmasına karşı sigorta; güncel ders programına göre haftalık tekrarlanır, aşağıdaki düğmeyle kapatılır</string>
-    <string name="mode_week_window">Ders arama aralığı: %1$s — ders olan tüm hafta günlerine alarm kurulur</string>
-    <string name="btn_set_now">Şimdi kur</string>
     <string name="btn_disable_app_alarms">Uygulamanın alarmlarını kapat</string>
     <string name="disable_alarms_desc">Düğme, «Авто: Пн»…«Авто: Вс» etiketlerine göre Saat uygulamasına kapatma komutu gönderir. Sistem komutu kabul etmezse (bazı Realme UI/ColorOS sürümlerinde sistem kısıtlaması) uygulama alarm listesini kendisi açar — «Авто:» etiketlerini elle kaldır.</string>
     <string name="btn_test_alarm">Alarmı test et</string>

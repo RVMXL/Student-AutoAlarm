@@ -19,14 +19,32 @@ class AutoAlarmApp : Application() {
     override fun onCreate() {
         super.onCreate()
         container = AppContainer(this)
-        // 0.7.1: одноразовый переезд на движок «В приложении» — SET_ALARM стоковых часов
-        // не умеет «на дату» (звенел завтра под пару послезавтра), DISMISS на части
-        // оболочек (ColorOS/Realme UI) молча игнорируется. См. SettingsRepository.
         CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
+            // 0.7.1: одноразовый переезд на движок «В приложении» — SET_ALARM стоковых
+            // часов не умеет «на дату», DISMISS на части оболочек молча игнорируется.
             runCatching { container.settings.migrate071AppEngine() }
+            // 0.8.0: единая логика «одна ночь вперёд». Одноразовая очистка наследия
+            // режима «на несколько дней вперёд»: недельные будильники «Авто: Пн…Вс»
+            // в часах (DISMISS по меткам, оболочка может проигнорировать — тогда
+            // остатки удаляются вручную) и слоты AlarmManager на даты партии.
+            runCatching {
+                val legacyUntil = container.settings.migrate080SingleNight()
+                if (legacyUntil != null) {
+                    if (legacyUntil >= 0) {
+                        container.inAppAlarms.cancelRange(legacyUntil - 20, legacyUntil + 20)
+                    }
+                    container.alarm.dismissAll(openListOnUnsupported = false)
+                    // после снятия наследия — ставим ближайшее пробуждение заново,
+                    // чтобы обновившийся пользователь без тумблера не остался без будильника
+                    val s = container.settings.current()
+                    if (s.setupComplete && s.autoAlarmEnabled) {
+                        container.alarm.setNextUpcoming(notify = false)
+                    }
+                }
+            }
         }
-        // Ночной тик на 00:05, напоминание о будильнике и периодический sync WorkManager
-        // (всё идемпотентно, планировщики сами читают настройки)
+        // Ночная сверка (00:05 + страховка 06:00), напоминание о будильнике и
+        // периодический sync WorkManager (всё идемпотентно, планировщики сами читают настройки)
         NightlyScheduler.scheduleNext(this)
         ReminderScheduler.scheduleNext(this)
         WorkScheduler.ensurePeriodic(this)

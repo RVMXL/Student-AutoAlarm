@@ -29,7 +29,6 @@
     <string name="fmt_offset_m">%1$d min</string>
     <string name="fmt_offset_h">%1$d sag</string>
     <string name="fmt_offset_hm">%1$d sag %2$d min</string>
-    <string name="fmt_days_short">%1$d gün</string>
     <string name="fmt_time_alarm_will_ring">ýatgyjy çalar</string>
 
     <!-- ==== Hepdäniň günleri (gysga, çipler) ==== -->
@@ -79,8 +78,7 @@
     <!-- ==== Baş ekran ==== -->
     <string name="home_title">Awtomatik ýatgyjy</string>
     <string name="cd_refresh_schedule">Sabak çeredecesini täzele</string>
-    <string name="mode_week_chip">%1$d günlük</string>
-    <string name="mode_standard_chip">Standart</string>
+    <string name="mode_standard_chip">meýilnama boýunça</string>
     <string name="loading_settings">Sazlamalar ýüklenýär…</string>
     <string name="alarm_off_title">Ýatgyjy öçük</string>
     <string name="alarm_off_subtitle">Aşakdaky düwme bilen ýak</string>
@@ -98,19 +96,10 @@
     <string name="own_event_at">şahsy waka %1$s</string>
     <string name="home_auto_title">Awtomatik ýatgyjy</string>
     <string name="home_auto_subtitle">Çeredece boýunça birinji sapagyň öňünden ýatgyjy goýýar</string>
-    <string name="home_week_title">Birnäçe gün öňüne</string>
-    <string name="home_week_desc">Hepdäniň günleri boýunça gaýtalanylýan ýatgyjylar — ulgam programmany öldürse, isygorta hökmünde</string>
-    <string name="btn_set_for_days">%1$d günlük goý</string>
-    <string name="chip_weekly_repeat">Hepdelik gaýtalanylýar</string>
-    <string name="home_week_note">Ýatgyjylar hepdelik gaýtalanylýar; artyklary deslapky sagatda öçürilýär («Ýatgyjylaryň sanawy» — programmanyň sazlamalarynda)</string>
     <string name="home_upcoming_title">Ýakyn sapaklar</string>
     <string name="home_no_pairs">Sapak ýok</string>
 
     <!-- ==== Topar goýmak netijeleri (baş + sazlamalar) ==== -->
-    <string name="week_result_delivered">Goýlan gaýtalanylýan ýatgyjylar: %1$d</string>
-    <string name="week_result_delivered_note">Goýlan gaýtalanylýan ýatgyjylar: %1$d (hepdäniň sapakly günleri boýunça)</string>
-    <string name="week_result_uptodate">Ýatgyjylar eýýäm goýlan — sabak çeredecesi üýtge medi</string>
-    <string name="week_result_empty">Geljekki sapak tapylmady</string>
 
     <!-- ==== Baş ekranda diagnostika ==== -->
     <string name="dialog_exact_alarms_title">Anyk ýatgyjylar gadagandy</string>
@@ -148,11 +137,6 @@
     <string name="notif_channel_desc">Goýlan we goýylmadyk ýatgyjylar barada bildirişler</string>
     <string name="notif_alarm_set">Ýatgyjy goýuldy: %1$s</string>
     <string name="notif_skipped_title">Ýatgyjy goýulmady</string>
-    <string name="notif_week_one">1 gaýtalanylýan ýatgyjy goýuldy</string>
-    <string name="notif_week_many">Goýlan gaýtalanylýan ýatgyjylar: %1$d</string>
-    <string name="notif_week_text">hepdäniň sapakly günleri boýunça (%1$s – %2$s), hepdelik gaýtalanylýar</string>
-    <string name="notif_week_already_title">Hepdä üçin ýatgyjylar eýýäm goýlan</string>
-    <string name="notif_week_already_text">Sabak çeredecesi oýanmak wagtalaryny üýtgetmedi — täzeden goýmak gerek däl</string>
     <string name="notif_reminder_title">Ýatgyjyny goýmagy unutma</string>
     <string name="notif_reminder_text">Ertir, %1$s: sapak %2$s — %3$s. Ýatgyjyny goýmagy unutma.</string>
     <string name="notif_sync_title">Sabak çeredecesini utgaşdyrmak</string>
@@ -162,7 +146,8 @@
 
     <!-- ==== Ýatgyjy goýylmazlygynyň sebäpleri (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">sapak ýok</string>
-    <string name="skip_no_upcoming">geljekki sapak tapylmady</string>
+    <string name="skip_no_upcoming">şu gün hem ertir hem sapak ýok — gije barlag her gije geçýär</string>
+    <string name="skip_deferred_to_night">sapak ertir — jaňawlyk gije 00:05-de goýulýar (häzir goýsa, şu gün çalpar)</string>
     <string name="skip_clock_refused">telefonuň sagady buýrugy kabul etmedi — sazlamalarda «Ýatgyjy ýada salyşy» bölümini ýak</string>
     <string name="skip_too_far">sapy hepdeden hem daşda — jaňawlyk awtomatiki onuň öňünden goýulýar</string>
     <string name="test_alarm_label">Synag: Awtomatik ýatgyjy işleýär!</string>
@@ -198,13 +183,6 @@
     <string name="pair_at">Sapak %1$s</string>
     <string name="pair_custom_offset">%1$s öň oýanmak → ýatgyjy %2$s</string>
     <string name="pair_common_offset">Umumy oýanmak: %1$s öň</string>
-    <string name="set_mode">Rejim</string>
-    <string name="mode_standard_title">Standart — ertire</string>
-    <string name="mode_standard_desc">Her gije ýatgyjy ertirki güne goýulýar</string>
-    <string name="mode_week_title">Birnäçe gün öňüne</string>
-    <string name="mode_week_desc">Hepdäniň her sapakly güni üçin gaýtalanylýan ýatgyjy — prozessleriň öldürilmegine garşy isygorta; häzirki sabak çeredecesi boýunça hepdelik gaýtalanylýar, aşakdaky düwme bilen öçürip bilersiň</string>
-    <string name="mode_week_window">Sapak gözleg aralygy: %1$s — sapakly günleriň ählisi üçin ýatgyjylar</string>
-    <string name="btn_set_now">Şu wagt goý</string>
     <string name="btn_disable_app_alarms">Programmanyň ýatgyjylaryny öçür</string>
     <string name="disable_alarms_desc">Düwme sagada «Авто: Пн»…«Авто: Вс» bellikli ýatgyjylary öçürmek buýrugyny ýollaýar. Eger örtük buýrugy kabul etmese (Realme UI/ColorOS-yň bir bölegi — ulgamyň çäklendirmesi), programma özi ýatgyjylaryň sanawyny açar — «Авто:» belliklerini el bilen aýyr.</string>
     <string name="btn_test_alarm">Ýatgyjy barla</string>

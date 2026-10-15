@@ -29,7 +29,6 @@
     <string name="fmt_offset_m">%1$d min</string>
     <string name="fmt_offset_h">%1$d h</string>
     <string name="fmt_offset_hm">%1$d h %2$d min</string>
-    <string name="fmt_days_short">%1$d días</string>
     <string name="fmt_time_alarm_will_ring">la alarma sonará a las</string>
 
     <!-- ==== Días de la semana (cortos, chips del calendario) ==== -->
@@ -79,8 +78,7 @@
     <!-- ==== Pantalla principal ==== -->
     <string name="home_title">Autoalarma</string>
     <string name="cd_refresh_schedule">Actualizar el horario</string>
-    <string name="mode_week_chip">Por %1$d días</string>
-    <string name="mode_standard_chip">Estándar</string>
+    <string name="mode_standard_chip">según el horario</string>
     <string name="loading_settings">Cargando ajustes…</string>
     <string name="alarm_off_title">La alarma está apagada</string>
     <string name="alarm_off_subtitle">Actívala con el interruptor de abajo</string>
@@ -98,19 +96,10 @@
     <string name="own_event_at">tu propio evento a las %1$s</string>
     <string name="home_auto_title">Autoalarma</string>
     <string name="home_auto_subtitle">Pone una alarma antes de tu primera clase según el horario</string>
-    <string name="home_week_title">Varios días por adelantado</string>
-    <string name="home_week_desc">Alarmas repetitivas para cada día de la semana — un respaldo por si el sistema mata la app</string>
-    <string name="btn_set_for_days">Programar por %1$d días</string>
-    <string name="chip_weekly_repeat">Se repiten semanalmente</string>
-    <string name="home_week_note">Las alarmas se repiten semanalmente; apaga las que sobren en la app de reloj del teléfono (\"Lista de alarmas\" — en los ajustes de la app)</string>
     <string name="home_upcoming_title">Próximas clases</string>
     <string name="home_no_pairs">No hay clases</string>
 
     <!-- ==== Resultados de la programación (principal + ajustes) ==== -->
-    <string name="week_result_delivered">Alarmas repetitivas programadas: %1$d</string>
-    <string name="week_result_delivered_note">Alarmas repetitivas programadas: %1$d (una por día de la semana)</string>
-    <string name="week_result_uptodate">Las alarmas ya están programadas — el horario no cambió</string>
-    <string name="week_result_empty">No se encontraron clases próximas</string>
 
     <!-- ==== Diagnóstico en la pantalla principal ==== -->
     <string name="dialog_exact_alarms_title">Alarmas exactas no permitidas</string>
@@ -148,11 +137,6 @@
     <string name="notif_channel_desc">Avisos sobre alarmas programadas y omitidas</string>
     <string name="notif_alarm_set">Alarma programada a las %1$s</string>
     <string name="notif_skipped_title">Alarma no programada</string>
-    <string name="notif_week_one">Se programó 1 alarma repetitiva</string>
-    <string name="notif_week_many">Alarmas repetitivas programadas: %1$d</string>
-    <string name="notif_week_text">en los días con clases (%1$s – %2$s), se repiten semanalmente</string>
-    <string name="notif_week_already_title">Las alarmas de la semana ya están programadas</string>
-    <string name="notif_week_already_text">El horario no cambió las horas de levantarse — no hace falta reprogramar nada</string>
     <string name="notif_reminder_title">No olvides programar la alarma</string>
     <string name="notif_reminder_text">Mañana, %1$s: clase a las %2$s — %3$s. No olvides programar la alarma.</string>
     <string name="notif_sync_title">Sincronización del horario</string>
@@ -162,7 +146,8 @@
 
     <!-- ==== Motivos de omisión de la alarma (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">no hay clases</string>
-    <string name="skip_no_upcoming">no se encontraron clases próximas</string>
+    <string name="skip_no_upcoming">no hay clases hoy ni mañana — la comprobación nocturna se ejecuta a diario</string>
+    <string name="skip_deferred_to_night">la clase es mañana — la alarma se programará esta noche a las 00:05 (si se pusiera ahora, sonaría hoy)</string>
     <string name="skip_clock_refused">la app de reloj del teléfono no aceptó el comando — activa \"Recordatorio de alarma\" en los ajustes</string>
     <string name="skip_too_far">la clase es a más de una semana — la alarma se activará automáticamente antes</string>
     <string name="test_alarm_label">¡Prueba: la Autoalarma funciona!</string>
@@ -198,13 +183,6 @@
     <string name="pair_at">Clase a las %1$s</string>
     <string name="pair_custom_offset">Levantarte %1$s antes → alarma a las %2$s</string>
     <string name="pair_common_offset">Levantarse general: %1$s antes</string>
-    <string name="set_mode">Modo</string>
-    <string name="mode_standard_title">Estándar — para mañana</string>
-    <string name="mode_standard_desc">Cada noche la alarma se reprograma para mañana</string>
-    <string name="mode_week_title">Varios días por adelantado</string>
-    <string name="mode_week_desc">Alarmas repetitivas para cada día de clases de la semana — un respaldo por si el sistema mata la app; se repiten semanalmente según el horario vigente y puedes apagarlas con el botón de abajo</string>
-    <string name="mode_week_window">Ventana de búsqueda de clases: %1$s — alarmas para todos los días de la semana con clases</string>
-    <string name="btn_set_now">Programar ahora</string>
     <string name="btn_disable_app_alarms">Desactivar las alarmas de la app</string>
     <string name="disable_alarms_desc">El botón envía al reloj un comando de desactivación con las etiquetas exactas \"Авто: Пн\"…\"Авто: Вс\". Si la capa del sistema no acepta el comando (en algunas versiones de Realme UI/ColorOS es una limitación del sistema), la app abrirá por sí misma la lista de alarmas — quita las etiquetas \"Авто:\" a mano.</string>
     <string name="btn_test_alarm">Probar la alarma</string>

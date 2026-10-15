@@ -6,22 +6,29 @@ import java.time.LocalDateTime
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
 import ru.uniautoalarm.kgeu.data.model.AlarmTarget
-import ru.uniautoalarm.kgeu.data.model.WeekAheadResult
 import ru.uniautoalarm.kgeu.data.repository.SettingsRepository
 import ru.uniautoalarm.kgeu.domain.AlarmPlanner
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 
 /**
- * Единая точка постановки/снятия будильников для UI и фоновых задач (0.7.0).
- * Маршрутизирует по Settings.alarmTarget:
+ * Единая точка постановки/снятия будильников для UI и фоновых задач (0.7.0; 0.8.0 —
+ * единая логика «одна ночь вперёд»). Маршрутизирует по Settings.alarmTarget:
  *  — CLOCK: стоковые часы через ACTION_SET_ALARM ([StockAlarmSetter]);
  *  — APP: собственный точный будильник ([InAppAlarmScheduler]) — тумблер, снятие
  *    и дедупликация работают без капризов оболочки.
  *
+ * ЛОГИКА 0.8.0 (предложена пользователем):
+ *  1) включение тумблера / смена цели / онбординг — будильник на БЛИЖАЙШЕЕ предстоящее
+ *     пробуждение в пределах СЕГОДНЯ и ЗАВТРА, больше — ничего;
+ *  2) ночная сверка 00:05 (+страховка 06:00) каждый день: есть пара сегодня — ставит
+ *     на ближайшее время, нет — снимает фантом; будильник «на день недели», который
+ *     потом пришлось бы выключать руками, не ставится НИКОГДА (программа
+ *     «на несколько дней вперёд» удалена в 0.8.0, наследие снято миграцией).
+ *
  * Снятие ([dismissAll]) всегда бьёт по ОБОИМ движкам: могли остаться будильники
  * от прежнего режима/цели, а SET_ALARM/DISMISS не позволяют «перечислить» свои.
- * Сверка состояния ([reconcileUpcoming]) сравнивает маркер с ближайшим ПРЕДСТОЯЩИМ
- * пробуждением — не с планом «на завтра» (баг 0.7.0: живой будильник снимался).
+ * Сверка ([reconcileUpcoming]) сравнивает маркер с ближайшим ПРЕДСТОЯЩИМ пробуждением
+ * — не с планом «на завтра» (баг 0.7.0: живой будильник снимался).
  */
 class AlarmGateway(
     private val context: Context,
@@ -40,10 +47,11 @@ class AlarmGateway(
 
     /**
      * Мгновенная постановка: ближайшее ПРЕДСТОЯЩЕЕ пробуждение — сегодня, если время
-     * подъёма ещё не прошло, иначе завтра и далее в пределах кэша расписания.
-     * Вызывается при включении тумблера, смене режима/цели и после онбординга.
-     * Повторная постановка того же момента блокируется маркером
-     * lastScheduledWakeEpochMinute (SET_ALARM создаёт НОВЫЙ будильник, не обновляет).
+     * подъёма ещё не прошло, иначе ЗАВТРА (дальше — не смотрим: за следующие дни
+     * отвечает ночная сверка 00:05, см. логику 0.8.0). Вызывается при включении
+     * тумблера, смене цели и после онбординга. Повторная постановка того же момента
+     * блокируется маркером lastScheduledWakeEpochMinute (SET_ALARM создаёт НОВЫЙ
+     * будильник, не обновляет).
      */
     suspend fun setNextUpcoming(notify: Boolean = true): AlarmPlan? {
         val s = settings.current()
@@ -67,10 +75,14 @@ class AlarmGateway(
         return setForDate(next.date, notify)
     }
 
-    /** Ближайшее ПРЕДСТОЯЩЕЕ пробуждение по кэшу расписания (сегодня…+13) или null. */
+    /**
+     * Ближайшее ПРЕДСТОЯЩЕЕ пробуждение по кэшу расписания или null.
+     * Горизонт 0.8.0 — СЕГОДНЯ и ЗАВТРА: поставленный заранее будильник на дату
+     * позже завтра превращался бы в «на день недели, который придётся выключать».
+     */
     private suspend fun findNextUpcoming(): AlarmPlan? {
         val now = LocalDateTime.now()
-        for (i in 0..13) { // две недели — горизонт кэша расписания
+        for (i in 0..1) {
             val date = now.toLocalDate().plusDays(i.toLong())
             val plan = planner.planFor(date) ?: continue
             if (!plan.wakeAt.isAfter(now)) continue
@@ -114,33 +126,6 @@ class AlarmGateway(
     }
 
     /**
-     * Партия «на несколько дней вперёд».
-     * CLOCK — повторяющиеся по дням недели (EXTRA_DAYS, как в 0.3.1+);
-     * APP — отдельный точный будильник на каждую дату окна (у AlarmManager нет
-     * недельных повторов; слоты по датам перезаписываются — идемпотентно, [force]
-     * не нужен).
-     */
-    suspend fun setWeekAhead(notify: Boolean = true, force: Boolean = false): WeekAheadResult {
-        if (target() != AlarmTarget.APP) {
-            return stock.setWeekAhead(notify = notify, force = force)
-        }
-        val s = settings.current()
-        val horizon = maxOf(s.weekAheadDays, 7)
-        val now = LocalDateTime.now()
-        var count = 0
-        for (i in 0 until horizon) {
-            val date = LocalDate.now().plusDays(i.toLong())
-            val plan = planner.planFor(date) ?: continue
-            if (!plan.wakeAt.isAfter(now)) continue
-            if (inApp.scheduleWeekDate(date.toEpochDay(), plan.wakeAt, plan.label)) count++
-        }
-        val until = LocalDate.now().plusDays(s.weekAheadDays.toLong())
-        settings.update { it.copy(weekAlarmsSetUntilEpochDay = until.toEpochDay()) }
-        if (notify) Notifications.weekSet(context, count, LocalDate.now(), until)
-        return WeekAheadResult(count, alreadyUpToDate = false)
-    }
-
-    /**
      * Снять все будильники приложения: собственный движок отменяется гарантированно
      * (PendingIntent.cancel), стоковые часы получают DISMISS по меткам; маркеры
      * постановки сбрасываются — следующий тумблер/тик ставит заново, а не «молчит».
@@ -152,10 +137,6 @@ class AlarmGateway(
         val appEngine = s.alarmTarget == AlarmTarget.APP
         inApp.cancelOneShot()
         inApp.cancelTest()
-        if (s.weekAlarmsSetUntilEpochDay > 0) {
-            // окно партии: конец известен, начало могло сместиться (меняли weekAheadDays)
-            inApp.cancelRange(s.weekAlarmsSetUntilEpochDay - 20, s.weekAlarmsSetUntilEpochDay + 20)
-        }
         // часы тоже чистим (могли остаться от прежнего режима/цели); при движке приложения
         // фолбэк «открыть список часов» лишний — выскакивать в чужое приложение не зачем
         val res = stock.dismissAppAlarms(openListOnUnsupported = openListOnUnsupported && !appEngine)
@@ -168,21 +149,22 @@ class AlarmGateway(
         else stock.setTestAlarm()
 
     /**
-     * Сверка будильника с ближайшим ПРЕДСТОЯЩИМ пробуждением (ночной тик 00:05 и фоновый
-     * sync; режим «Стандарт»).
+     * Сверка будильника с ближайшим ПРЕДСТОЯЩИМ пробуждением (ночная сверка 00:05,
+     * страховка 06:00 и фоновый sync).
      *
      * Ключ 0.7.1: маркер сравнивается не с планом «на завтра», а с ближайшим предстоящим
      * моментом. Сравнение с завтрашним планом снимало ЖИВОЙ будильник: поставленный во
      * вторник на четверг, он в четверг 00:05 «не совпадал» с планом на пятницу и удалялся
-     * за часы до звонка; движок приложения к тому же снимал слот и ставил только «на
-     * завтра», теряя пару послезавтра, когда завтра пусто.
+     * за часы до звонка. Горизонт 0.8.0 — сегодня+завтра (см. findNextUpcoming).
      *
      * APP: слот перезаписывается свежим планом ближайшего пробуждения (замены
      * самолечатся); совпавший с маркером момент не трогается; предстоящих пробуждений
      * нет — фантомный слот снимается.
      *
      * CLOCK: совпал — не трогаем; не совпал (замена/перенос/устарел) — старый снимаем
-     * по метке, новый ставим; предстоящих нет — фантомный снимаем.
+     * по метке, новый ставим; предстоящих нет — фантомный снимаем. Если часы не приняли
+     * постановку (в т.ч. «завтра» ночью — разовый зазвенел бы сегодня), маркер чистим:
+     * ночная сверка поставит будильник в 00:05.
      * Ограничение: если часы игнорируют DISMISS/SET в фоне (ColorOS), сверка бессильна —
      * для полной надёжности существует движок «В приложении» (цель по умолчанию с 0.7.1).
      */
@@ -225,17 +207,21 @@ class AlarmGateway(
                     clearLastScheduled()
                 }
             }
-            markerWake == null -> stock.setForDate(next.date, notify = true)
+            markerWake == null -> {
+                val plan = stock.setForDate(next.date, notify = true)
+                if (plan == null) clearLastScheduled() // часы отказались — не храним ложный маркер
+            }
             markerWake == next.wakeAt -> Unit // живой будильник на верный момент — не трогаем
             else -> {
                 // время/день изменились (замена/перенос) или маркер устарел
                 stock.dismissSingleLabel(s.lastScheduledLabel)
-                stock.setForDate(next.date, notify = true)
+                val plan = stock.setForDate(next.date, notify = true)
+                if (plan == null) clearLastScheduled()
             }
         }
     }
 
-    /** Ночная сверка (тик 00:05). */
+    /** Ночная сверка (тик 00:05 и страховка 06:00). */
     suspend fun nightlyReconcile() = reconcileUpcoming(notifyOnChange = true)
 
     private suspend fun updateLastScheduled(plan: AlarmPlan) {

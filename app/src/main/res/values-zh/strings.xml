@@ -29,7 +29,6 @@
     <string name="fmt_offset_m">%1$d 分钟</string>
     <string name="fmt_offset_h">%1$d 小时</string>
     <string name="fmt_offset_hm">%1$d 小时 %2$d 分钟</string>
-    <string name="fmt_days_short">%1$d 天</string>
     <string name="fmt_time_alarm_will_ring">闹钟响铃时间</string>
 
     <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
@@ -79,8 +78,7 @@
     <!-- ==== Главный экран ==== -->
     <string name="home_title">自动闹钟</string>
     <string name="cd_refresh_schedule">刷新课程表</string>
-    <string name="mode_week_chip">%1$d 天</string>
-    <string name="mode_standard_chip">标准</string>
+    <string name="mode_standard_chip">按课表</string>
     <string name="loading_settings">正在加载设置…</string>
     <string name="alarm_off_title">闹钟已关闭</string>
     <string name="alarm_off_subtitle">用下方开关开启</string>
@@ -98,19 +96,10 @@
     <string name="own_event_at">%1$s 有自定义活动</string>
     <string name="home_auto_title">自动闹钟</string>
     <string name="home_auto_subtitle">按课表在第一节课前设置闹钟</string>
-    <string name="home_week_title">一次设置多天</string>
-    <string name="home_week_desc">按星期几重复的闹钟 — 系统杀掉应用时的保险</string>
-    <string name="btn_set_for_days">设置 %1$d 天的闹钟</string>
-    <string name="chip_weekly_repeat">每周重复</string>
-    <string name="home_week_note">闹钟每周重复；多余的可在系统时钟应用中关闭（应用设置里有“闹钟列表”）</string>
     <string name="home_upcoming_title">接下来的课程</string>
     <string name="home_no_pairs">没有课</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
-    <string name="week_result_delivered">已设置重复闹钟：%1$d 个</string>
-    <string name="week_result_delivered_note">已设置重复闹钟：%1$d 个（按星期几）</string>
-    <string name="week_result_uptodate">闹钟已就位 — 课程表没有变化</string>
-    <string name="week_result_empty">没有找到即将到来的课程</string>
 
     <!-- ==== Диагностика на главном ==== -->
     <string name="dialog_exact_alarms_title">不允许精确闹钟</string>
@@ -148,11 +137,6 @@
     <string name="notif_channel_desc">关于已设置和已跳过闹钟的通知</string>
     <string name="notif_alarm_set">闹钟已设在 %1$s</string>
     <string name="notif_skipped_title">未设置闹钟</string>
-    <string name="notif_week_one">已设置 1 个重复闹钟</string>
-    <string name="notif_week_many">已设置重复闹钟：%1$d 个</string>
-    <string name="notif_week_text">覆盖有课的日子（%1$s – %2$s），每周重复</string>
-    <string name="notif_week_already_title">本周的闹钟已设置</string>
-    <string name="notif_week_already_text">课程表没有改动起床时间 — 无需重新设置</string>
     <string name="notif_reminder_title">别忘了设置闹钟</string>
     <string name="notif_reminder_text">明天，%1$s：%2$s 有课 — %3$s。别忘了设置闹钟。</string>
     <string name="notif_sync_title">正在同步课程表</string>
@@ -162,7 +146,8 @@
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">没有课</string>
-    <string name="skip_no_upcoming">没有找到即将到来的课程</string>
+    <string name="skip_no_upcoming">今明两天没有课 —— 每晚都会自动核对</string>
+    <string name="skip_deferred_to_night">课程在明天 —— 闹钟将在夜里 00:05 自动设置（现在设置的话今天就会响）</string>
     <string name="skip_clock_refused">手机时钟应用未接受命令 — 请在应用设置中开启“闹钟提醒”</string>
     <string name="skip_too_far">课程在一周之后 —— 闹钟会在临近时自动设置</string>
     <string name="test_alarm_label">测试：自动闹钟运行中！</string>
@@ -198,13 +183,6 @@
     <string name="pair_at">%1$s 有课</string>
     <string name="pair_custom_offset">提前 %1$s 起床 → %2$s 响铃</string>
     <string name="pair_common_offset">统一起床：提前 %1$s</string>
-    <string name="set_mode">模式</string>
-    <string name="mode_standard_title">标准 — 为明天设置</string>
-    <string name="mode_standard_desc">每晚自动把闹钟更新到明天</string>
-    <string name="mode_week_title">一次设置多天</string>
-    <string name="mode_week_desc">为一周内每个有课的日子设置重复闹钟 — 防止系统杀后台的保险；按最新课程表每周重复，可用下方按钮关闭</string>
-    <string name="mode_week_window">查课范围：%1$s — 一周内所有有课的日子都会设闹钟</string>
-    <string name="btn_set_now">立即设置</string>
     <string name="btn_disable_app_alarms">关闭应用设置的闹钟</string>
     <string name="disable_alarms_desc">此按钮会按精确标签«Авто: Пн»…«Авто: Вс»向时钟应用发送关闭命令。如果系统不接受该命令（部分 Realme UI/ColorOS 受系统限制），应用会自行打开闹钟列表 — 请手动移除«Авто:»标签。</string>
     <string name="btn_test_alarm">测试闹钟</string>

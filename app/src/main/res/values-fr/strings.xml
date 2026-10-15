@@ -29,7 +29,6 @@
     <string name="fmt_offset_m">%1$d min</string>
     <string name="fmt_offset_h">%1$d h</string>
     <string name="fmt_offset_hm">%1$d h %2$d min</string>
-    <string name="fmt_days_short">%1$d j</string>
     <string name="fmt_time_alarm_will_ring">le réveil sonnera à</string>
 
     <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
@@ -79,8 +78,7 @@
     <!-- ==== Главный экран ==== -->
     <string name="home_title">Auto-réveil</string>
     <string name="cd_refresh_schedule">Actualiser l\'emploi du temps</string>
-    <string name="mode_week_chip">Pour %1$d jours</string>
-    <string name="mode_standard_chip">Standard</string>
+    <string name="mode_standard_chip">selon l\'emploi du temps</string>
     <string name="loading_settings">Chargement des paramètres…</string>
     <string name="alarm_off_title">Le réveil est désactivé</string>
     <string name="alarm_off_subtitle">Active-le avec l\'interrupteur ci-dessous</string>
@@ -98,19 +96,10 @@
     <string name="own_event_at">ton activité à %1$s</string>
     <string name="home_auto_title">Auto-réveil</string>
     <string name="home_auto_subtitle">Programme le réveil avant le premier cours, selon l\'emploi du temps</string>
-    <string name="home_week_title">Sur plusieurs jours</string>
-    <string name="home_week_desc">Des réveils répétés par jour de la semaine — une sécurité si le système tue l\'appli</string>
-    <string name="btn_set_for_days">Programmer pour %1$d jours</string>
-    <string name="chip_weekly_repeat">Répétition hebdomadaire</string>
-    <string name="home_week_note">Les réveils se répètent chaque semaine ; les excédentaires se désactivent dans l\'horloge du téléphone (« Liste des réveils » — dans les paramètres de l\'appli)</string>
     <string name="home_upcoming_title">Prochains cours</string>
     <string name="home_no_pairs">Aucun cours</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
-    <string name="week_result_delivered">Réveils répétés programmés : %1$d</string>
-    <string name="week_result_delivered_note">Réveils répétés programmés : %1$d (par jour de la semaine)</string>
-    <string name="week_result_uptodate">Les réveils sont déjà programmés — l\'emploi du temps n\'a pas changé</string>
-    <string name="week_result_empty">Aucun cours à venir trouvé</string>
 
     <!-- ==== Диагностика на главном ==== -->
     <string name="dialog_exact_alarms_title">Alarmes exactes interdites</string>
@@ -148,11 +137,6 @@
     <string name="notif_channel_desc">Notifications des réveils programmés et ignorés</string>
     <string name="notif_alarm_set">Réveil programmé à %1$s</string>
     <string name="notif_skipped_title">Réveil non programmé</string>
-    <string name="notif_week_one">1 réveil répété programmé</string>
-    <string name="notif_week_many">Réveils répétés programmés : %1$d</string>
-    <string name="notif_week_text">pour les jours de la semaine avec cours (%1$s – %2$s), répétition hebdomadaire</string>
-    <string name="notif_week_already_title">Les réveils de la semaine sont déjà programmés</string>
-    <string name="notif_week_already_text">L\'emploi du temps n\'a pas modifié les heures de lever — inutile de reprogrammer</string>
     <string name="notif_reminder_title">N\'oublie pas de programmer le réveil</string>
     <string name="notif_reminder_text">Demain, %1$s : cours à %2$s — %3$s. N\'oublie pas de programmer le réveil.</string>
     <string name="notif_sync_title">Synchronisation de l\'emploi du temps</string>
@@ -162,7 +146,8 @@
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">pas de cours</string>
-    <string name="skip_no_upcoming">aucun cours à venir trouvé</string>
+    <string name="skip_no_upcoming">pas de cours aujourd\'hui ni demain — la vérification nocturne passe chaque jour</string>
+    <string name="skip_deferred_to_night">le cours est demain — le réveil sera programmé cette nuit à 00:05 (mis maintenant, il sonnerait aujourd\'hui)</string>
     <string name="skip_clock_refused">l\'horloge du téléphone n\'a pas accepté la commande — active le « Rappel du réveil » dans les paramètres</string>
     <string name="skip_too_far">le cours est dans plus d’une semaine — le réveil sera programmé automatiquement à l’approche</string>
     <string name="test_alarm_label">Test : l\'Auto-réveil fonctionne !</string>
@@ -198,13 +183,6 @@
     <string name="pair_at">Cours à %1$s</string>
     <string name="pair_custom_offset">Lever %1$s avant → réveil à %2$s</string>
     <string name="pair_common_offset">Lever général : %1$s avant</string>
-    <string name="set_mode">Mode</string>
-    <string name="mode_standard_title">Standard — pour demain</string>
-    <string name="mode_standard_desc">Chaque nuit, le réveil est reprogrammé pour le lendemain</string>
-    <string name="mode_week_title">Sur plusieurs jours</string>
-    <string name="mode_week_desc">Un réveil répété pour chaque jour de cours de la semaine — une protection contre la fermeture des processus ; ils se répètent chaque semaine selon l\'emploi du temps à jour, et tu peux les désactiver avec le bouton ci-dessous</string>
-    <string name="mode_week_window">Fenêtre de recherche des cours : %1$s — des réveils pour tous les jours de la semaine avec cours</string>
-    <string name="btn_set_now">Programmer maintenant</string>
     <string name="btn_disable_app_alarms">Désactiver les réveils de l\'appli</string>
     <string name="disable_alarms_desc">Le bouton envoie à l\'horloge une commande de désactivation par les libellés exacts «Авто: Пн»…«Авто: Вс». Si la surcouche n\'accepte pas la commande (une partie de Realme UI/ColorOS — limitation du système), l\'appli ouvrira elle-même la liste des réveils — supprime les libellés «Авто:» manuellement.</string>
     <string name="btn_test_alarm">Tester le réveil</string>

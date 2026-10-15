@@ -115,7 +115,6 @@ import kotlinx.coroutines.launch
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.alarm.StockAlarmSetter
 import ru.uniautoalarm.kgeu.data.local.LocaleStore
-import ru.uniautoalarm.kgeu.data.model.AlarmMode
 import ru.uniautoalarm.kgeu.data.model.AlarmTarget
 import ru.uniautoalarm.kgeu.data.model.CalendarStyle
 import ru.uniautoalarm.kgeu.data.model.CustomEvent
@@ -530,118 +529,20 @@ private fun AlarmSettingsCard(
             }
             HorizontalDivider()
 
-            Text(stringResource(R.string.set_mode), style = MaterialTheme.typography.bodyLarge)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .toggleable(
-                        value = settings.mode == AlarmMode.STANDARD,
-                        role = Role.RadioButton,
-                        onValueChange = { if (it) vm.setMode(AlarmMode.STANDARD) }
-                    ),
-                verticalAlignment = Alignment.CenterVertically
+            // Кнопка гигиены: снять будильники приложения в стоковых часах по меткам
+            // «Авто: …» (оболочка может проигнорировать DISMISS — тогда список часов
+            // откроется для ручного удаления; движок «В приложении» снимается cancel'ом)
+            OutlinedButton(
+                onClick = { vm.dismissAlarms { onSnackbar(it) } },
+                modifier = Modifier.fillMaxWidth()
             ) {
-                RadioButton(
-                    selected = settings.mode == AlarmMode.STANDARD,
-                    onClick = null
-                )
-                Spacer(Modifier.width(8.dp))
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        stringResource(R.string.mode_standard_title),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        stringResource(R.string.mode_standard_desc),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                Text(stringResource(R.string.btn_disable_app_alarms))
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .toggleable(
-                        value = settings.mode == AlarmMode.WEEK_AHEAD,
-                        role = Role.RadioButton,
-                        onValueChange = { if (it) vm.setMode(AlarmMode.WEEK_AHEAD) }
-                    ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RadioButton(
-                    selected = settings.mode == AlarmMode.WEEK_AHEAD,
-                    onClick = null
-                )
-                Spacer(Modifier.width(8.dp))
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        stringResource(R.string.mode_week_title),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        stringResource(R.string.mode_week_desc),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-
-            if (settings.mode == AlarmMode.WEEK_AHEAD) {
-                var days by remember(settings.weekAheadDays) {
-                    mutableIntStateOf(settings.weekAheadDays)
-                }
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 32.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Text(
-                        stringResource(
-                            R.string.mode_week_window,
-                            stringResource(R.string.fmt_days_short, days)
-                        ),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Slider(
-                        value = days.toFloat(),
-                        onValueChange = { days = it.roundToInt() },
-                        onValueChangeFinished = { vm.setWeekAheadDays(days) },
-                        valueRange = 3f..14f,
-                        steps = 10
-                    )
-                    Button(onClick = {
-                        // stringResource нельзя звать в колбэках кнопок — берём строки
-                        // через LocaleHelper (контекст Activity уже обёрнут в язык)
-                        vm.setWeekAhead(days) { res ->
-                            onSnackbar(
-                                when {
-                                    res.delivered > 0 -> LocaleHelper.string(
-                                        context, R.string.week_result_delivered_note, res.delivered
-                                    )
-                                    res.alreadyUpToDate ->
-                                        LocaleHelper.string(context, R.string.week_result_uptodate)
-                                    else ->
-                                        LocaleHelper.string(context, R.string.week_result_empty)
-                                }
-                            )
-                        }
-                    }) {
-                        Text(stringResource(R.string.btn_set_now))
-                    }
-                    OutlinedButton(onClick = {
-                        vm.dismissAlarms { onSnackbar(it) }
-                    }) {
-                        Text(stringResource(R.string.btn_disable_app_alarms))
-                    }
-                    Text(
-                        stringResource(R.string.disable_alarms_desc),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-            HorizontalDivider()
+            Text(
+                stringResource(R.string.disable_alarms_desc),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedButton(

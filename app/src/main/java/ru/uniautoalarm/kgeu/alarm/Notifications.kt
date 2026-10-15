@@ -33,7 +33,6 @@ object Notifications {
     private const val TAG = "Notifications"
     private const val NOTIF_SET_ID = 1001
     private const val NOTIF_SKIPPED_ID = 1002
-    private const val NOTIF_WEEK_ID = 1003
     private const val NOTIF_REMINDER_ID = 1004
     private const val NOTIF_RINGING_ID = 1005
 
@@ -41,9 +40,6 @@ object Notifications {
     // языку приложения, выбранному в момент отправки
     private fun ruDate(): DateTimeFormatter =
         DateTimeFormatter.ofPattern("EEEE dd MMMM", Locale.getDefault())
-
-    private fun ruDateShort(): DateTimeFormatter =
-        DateTimeFormatter.ofPattern("dd MMMM", Locale.getDefault())
 
     /** Канал создаётся идемпотентно перед любой отправкой (minSdk 26 — API доступен всегда). */
     fun ensureChannel(context: Context) {
@@ -99,40 +95,6 @@ object Notifications {
             .setAutoCancel(true)
             .build()
         post(context, NOTIF_SKIPPED_ID, notification)
-    }
-
-    /** Партия повторяющихся будильников «на несколько дней вперёд» поставлена. */
-    fun weekSet(context: Context, count: Int, from: LocalDate, to: LocalDate) {
-        val title = if (count == 1) {
-            LocaleHelper.string(context, R.string.notif_week_one)
-        } else {
-            LocaleHelper.string(context, R.string.notif_week_many, count)
-        }
-        val text = LocaleHelper.string(
-            context,
-            R.string.notif_week_text,
-            from.format(ruDateShort()),
-            to.format(ruDateShort())
-        )
-        val notification = baseBuilder(context)
-            .setContentTitle(title)
-            .setContentText(text)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
-            .setContentIntent(mainActivityIntent(context))
-            .setAutoCancel(true)
-            .build()
-        post(context, NOTIF_WEEK_ID, notification)
-    }
-
-    /** Партия «на несколько дней вперёд» уже стоит и актуальна — перестановка не нужна. */
-    fun weekAlreadySet(context: Context) {
-        val notification = baseBuilder(context)
-            .setContentTitle(LocaleHelper.string(context, R.string.notif_week_already_title))
-            .setContentText(LocaleHelper.string(context, R.string.notif_week_already_text))
-            .setContentIntent(mainActivityIntent(context))
-            .setAutoCancel(true)
-            .build()
-        post(context, NOTIF_WEEK_ID, notification)
     }
 
     /**

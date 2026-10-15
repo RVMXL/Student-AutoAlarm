@@ -29,7 +29,6 @@
     <string name="fmt_offset_m">%1$d мин</string>
     <string name="fmt_offset_h">%1$d саат</string>
     <string name="fmt_offset_hm">%1$d саат %2$d мин</string>
-    <string name="fmt_days_short">%1$d күн</string>
     <string name="fmt_time_alarm_will_ring">ояткыч согула турган убакыт</string>
 
     <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
@@ -79,8 +78,7 @@
     <!-- ==== Главный экран ==== -->
     <string name="home_title">Автоояткыч</string>
     <string name="cd_refresh_schedule">Кестени жаңыртуу</string>
-    <string name="mode_week_chip">%1$d күнгө</string>
-    <string name="mode_standard_chip">Стандарт</string>
+    <string name="mode_standard_chip">график боюнча</string>
     <string name="loading_settings">Параметрлер жүктөлүүдө…</string>
     <string name="alarm_off_title">Ояткыч өчүк</string>
     <string name="alarm_off_subtitle">Төмөнкү которгуч менен күйгүз</string>
@@ -98,19 +96,10 @@
     <string name="own_event_at">өз сабагың саат %1$s</string>
     <string name="home_auto_title">Автоояткыч</string>
     <string name="home_auto_subtitle">Кеште боюнча биринчи жуптун алдында ояткыч коёт</string>
-    <string name="home_week_title">Бир нече күнгө алдын ала</string>
-    <string name="home_week_desc">Апта күндөрүнө кайталануучу ояткычтар — система колдонмону өчүрүп койгон учурдагы сактык чарасы</string>
-    <string name="btn_set_for_days">%1$d күнгө коюу</string>
-    <string name="chip_weekly_repeat">Апта сайын кайталанат</string>
-    <string name="home_week_note">Ояткычтар апта сайын кайталанат; ашыкчалары системалык саат колдонмосунда өчүрүлөт («Ояткычтар тизмеси» — колдонмонун параметрлеринде)</string>
     <string name="home_upcoming_title">Алдагы сабактар</string>
     <string name="home_no_pairs">Жуп жок</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
-    <string name="week_result_delivered">Коюлган кайталануучу ояткычтар: %1$d</string>
-    <string name="week_result_delivered_note">Коюлган кайталануучу ояткычтар: %1$d (апта күндөрү боюнча)</string>
-    <string name="week_result_uptodate">Ояткычтар мурдатан эле коюлган — кесте өзгөргөн жок</string>
-    <string name="week_result_empty">Алдагы жуп табылган жок</string>
 
     <!-- ==== Диагностика на главном ==== -->
     <string name="dialog_exact_alarms_title">Так ояткычтарга тыюу салынган</string>
@@ -148,11 +137,6 @@
     <string name="notif_channel_desc">Коюлган жана өткөрүлүп жиберилген ояткычтар жөнүндө билдирүүлөр</string>
     <string name="notif_alarm_set">Ояткыч %1$s убакытына коюлду</string>
     <string name="notif_skipped_title">Ояткыч коюлган жок</string>
-    <string name="notif_week_one">1 кайталануучу ояткыч коюлду</string>
-    <string name="notif_week_many">Коюлган кайталануучу ояткычтар: %1$d</string>
-    <string name="notif_week_text">жуп бар апта күндөрү боюнча (%1$s – %2$s), апта сайын кайталанат</string>
-    <string name="notif_week_already_title">Аптага ояткычтар мурдатан эле коюлган</string>
-    <string name="notif_week_already_text">Кесте оянгу убакыттарын өзгөрткөн эмес — кайра коюу керек эмес</string>
     <string name="notif_reminder_title">Ояткыч коюуну унутпа</string>
     <string name="notif_reminder_text">Эртең, %1$s: жуп саат %2$s — %3$s. Ояткыч коюуну унутпа.</string>
     <string name="notif_sync_title">Кестени синхрондоштуруу</string>
@@ -162,7 +146,8 @@
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">жуп жок</string>
-    <string name="skip_no_upcoming">алдагы жуп табылган жок</string>
+    <string name="skip_no_upcoming">бүгүн да, эртең да жуп жок — түнкү текшерүү күн сайын өтөт</string>
+    <string name="skip_deferred_to_night">сабак эртең — ояткыч түндө 00:05-те коюлат (азыр койсо, бүгүн согот)</string>
     <string name="skip_clock_refused">Телефондун саат колдонмосу буйрукту кабыл албады — параметрлерден «Ояткыч эскертүүсүн» күйгүз</string>
     <string name="skip_too_far">сабак аптадан да алыс — оятуучу анын алдында автоматтык түрдө коюлат</string>
     <string name="test_alarm_label">Тест: Автоояткыч иштеп турат!</string>
@@ -198,13 +183,6 @@
     <string name="pair_at">Жуп саат %1$s</string>
     <string name="pair_custom_offset">Оянгу: %1$s мурун → ояткыч: %2$s</string>
     <string name="pair_common_offset">Жалпы оянгу: %1$s мурун</string>
-    <string name="set_mode">Режим</string>
-    <string name="mode_standard_title">Стандарт — эртеңге</string>
-    <string name="mode_standard_desc">Ар түнү ояткыч эртеңге кайра коюлат</string>
-    <string name="mode_week_title">Бир нече күнгө алдын ала</string>
-    <string name="mode_week_desc">Аптанын ар бир окуу күнүнө кайталануучу ояткыч — процесстерди өлтүрүүдөн сактык; учурдагы кесте боюнча апта сайын кайталанат, төмөнкү баскыч менен өчүрсө болот</string>
-    <string name="mode_week_window">Жуп издөө диапазону: %1$s — жуп бар аптанын бардык күндөрүнө ояткыч коюлат</string>
-    <string name="btn_set_now">Азыр коюу</string>
     <string name="btn_disable_app_alarms">Колдонмо ояткычтарын өчүрүү</string>
     <string name="disable_alarms_desc">Баскыч саатка «Авто: Пн»…«Авто: Вс» так энбелгилери боюнча өчүрүү буйругун жиберет. Оболочка буйрукту кабыл албаса (Realme UI/ColorOS-тун айрым нускалары — системалык чектөө), колдонмо ояткычтар тизмесин өзү ачат — «Авто:» энбелгилерин кол менен алып сал.</string>
     <string name="btn_test_alarm">Ояткычты текшерүү</string>

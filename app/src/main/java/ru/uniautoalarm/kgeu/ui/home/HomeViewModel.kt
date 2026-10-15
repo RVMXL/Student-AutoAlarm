@@ -15,13 +15,11 @@ import kotlinx.coroutines.withTimeoutOrNull
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.alarm.DismissResult
 import ru.uniautoalarm.kgeu.alarm.NightlyScheduler
-import ru.uniautoalarm.kgeu.data.model.AlarmMode
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
 import ru.uniautoalarm.kgeu.data.model.Lesson
 import ru.uniautoalarm.kgeu.data.model.Settings
 import ru.uniautoalarm.kgeu.data.model.SyncInfo
 import ru.uniautoalarm.kgeu.data.model.Target
-import ru.uniautoalarm.kgeu.data.model.WeekAheadResult
 import ru.uniautoalarm.kgeu.di.AppContainer
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 import ru.uniautoalarm.kgeu.ui.common.refreshErrorMessage
@@ -68,12 +66,12 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
     /**
      * Тумблер авто-будильника (как в настройках — см. SettingsViewModel.toggleAuto):
      * выключение снимает будильники (оба движка) и сбрасывает маркеры, включение
-     * ставит заново — по СВЕЖЕМУ расписанию. [onResult] — текст для снекбара
-     * (итог снятия при выключении).
+     * ставит заново — по СВЕЖЕМУ расписанию, максимум на завтра (логика 0.8.0:
+     * «одна ночь вперёд», дальше — ночная сверка каждый день).
+     * [onResult] — текст для снекбара (итог снятия при выключении).
      */
     fun toggleAuto(enabled: Boolean, onResult: (String?) -> Unit = {}) {
         viewModelScope.launch {
-            val mode = container.settings.current().mode
             container.settings.update { it.copy(autoAlarmEnabled = enabled) }
             val dismissed = withContext(Dispatchers.Default) {
                 container.alarm.dismissAll()
@@ -88,9 +86,8 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
                     // последнего синка — по устаревшему кэшу тумблер ставил будильник
                     // на отменённый день (баг 0.6.0). Бюджет 12 с, при сбое — кэш
                     withTimeoutOrNull(12_000) { container.scheduleRepository.refreshAround() }
-                    // будильник на ближайшее утро — сразу, а не после ночного тика 00:05
-                    if (mode == AlarmMode.WEEK_AHEAD) container.alarm.setWeekAhead(notify = true)
-                    else container.alarm.setNextUpcoming()
+                    // будильник на ближайшее утро (сегодня/завтра) — сразу, а не после сверки 00:05
+                    container.alarm.setNextUpcoming()
                 }
             }
             NightlyScheduler.scheduleNext(container.appContext)
@@ -132,25 +129,6 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
             )
         }
     }
-
-    /**
-     * Режим «на несколько дней вперёд»: партия повторяющихся будильников через StockAlarmSetter.
-     * Всю партию уводим с главного потока; onResult приходит уже на Main.
-     * force = true: явное «Поставить» — сигнатура пропускается (пользователь мог
-     * вручную убрать будильники в часах).
-     */
-    fun setWeekAhead(onResult: (WeekAheadResult) -> Unit) {
-        viewModelScope.launch(Dispatchers.Main.immediate) {
-            val result = withContext(Dispatchers.Default) {
-                container.alarm.setWeekAhead(force = true)
-            }
-            onResult(result)
-        }
-    }
-
-    /** Партия одноразовых будильников ещё активна (покрывает сегодня). */
-    fun weekAlarmsActive(s: Settings): Boolean =
-        s.weekAlarmsSetUntilEpochDay >= LocalDate.now().toEpochDay()
 
     /** Полная синхронизация не была ни разу или была дольше трёх суток назад. */
     fun dataStale(s: Settings): Boolean =

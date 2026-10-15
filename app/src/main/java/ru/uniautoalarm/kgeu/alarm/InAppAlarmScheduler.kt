@@ -22,11 +22,13 @@ import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
  * AlarmManager — капризов «поставилось, но не снимается» здесь нет по построению.
  *
  * Слоты (requestCode):
- *  — [REQ_ONE_SHOT]: разовый будильник ближайшего пробуждения (режим «Стандарт»);
- *  — [REQ_TEST]: тестовый звонок из настроек;
- *  — [REQ_WEEK_BASE + день]: отдельный слот на каждую дату партии «на несколько дней вперёд».
+ *  — [REQ_ONE_SHOT]: разовый будильник ближайшего пробуждения (логика «одна ночь вперёд»);
+ *  — [REQ_TEST]: тестовый звонок из настроек.
  * Повторная постановка с тем же кодом ПЕРЕЗАПИСЫВАЕТ будильник (FLAG_UPDATE_CURRENT) —
  * дедупликация получается сама собой, маркеры нужны только для UI и ночной сверки.
+ *
+ * Слоты партии прежнего режима «на несколько дней вперёд» (удалён в 0.8.0) больше
+ * не создаются; [cancelRange] остался для одноразовой очистки наследия при обновлении.
  */
 class InAppAlarmScheduler(private val context: Context) {
 
@@ -34,6 +36,8 @@ class InAppAlarmScheduler(private val context: Context) {
         private const val TAG = "InAppAlarmScheduler"
         private const val REQ_ONE_SHOT = 101
         private const val REQ_TEST = 102
+
+        /** Legacy: коды слотов партии прежнего режима «на несколько дней вперёд» (очистка). */
         private const val REQ_WEEK_BASE = 1000
 
         /** Стабильный код слота партии «на несколько дней вперёд» для даты. */
@@ -82,13 +86,9 @@ class InAppAlarmScheduler(private val context: Context) {
         }
     }
 
-    /** Разовый будильник ближайшего пробуждения (режим «Стандарт»). */
+    /** Разовый будильник ближайшего пробуждения (логика «одна ночь вперёд», 0.8.0). */
     fun scheduleOneShot(wakeAt: LocalDateTime, label: String): Boolean =
         schedule(REQ_ONE_SHOT, wakeAt, label)
-
-    /** Будильник партии «на несколько дней вперёд» на конкретную дату. */
-    fun scheduleWeekDate(epochDay: Long, wakeAt: LocalDateTime, label: String): Boolean =
-        schedule(weekRequestCode(epochDay), wakeAt, label)
 
     /** Тестовый звонок «через 2 минуты» с меткой «Тест» (проверка движка из настроек). */
     fun scheduleTest(minutesFromNow: Int = 2): Boolean =
@@ -113,7 +113,7 @@ class InAppAlarmScheduler(private val context: Context) {
 
     fun cancelTest() = cancel(REQ_TEST)
 
-    /** Снять партию «на несколько дней вперёд» в диапазоне дат (с запасом по краям). */
+    /** Legacy: снять слоты партии «на несколько дней вперёд» в диапазоне дат (с запасом по краям). */
     fun cancelRange(fromEpochDay: Long, toEpochDay: Long) {
         if (toEpochDay < fromEpochDay) return
         for (day in fromEpochDay..toEpochDay) cancel(weekRequestCode(day))

@@ -17,13 +17,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import ru.uniautoalarm.kgeu.AutoAlarmApp
-import ru.uniautoalarm.kgeu.data.model.AlarmMode
 import ru.uniautoalarm.kgeu.data.model.Target
 import ru.uniautoalarm.kgeu.work.SyncWorker
 
 /**
- * Ночной тик (00:05): обновить расписание на завтра, поставить будильник в стоковые часы,
- * перепланировать себя на следующую ночь и запустить досинхронизацию через WorkManager.
+ * Ночная сверка (00:05 и страховка 06:00): обновить расписание на день, поставить/снять
+ * будильник, перепланировать себя на следующий день и запустить досинхронизацию
+ * через WorkManager. Тумблер включён — сверка обязана проснуться каждый день (логика 0.8.0).
  */
 class NightlyAlarmReceiver : BroadcastReceiver() {
 
@@ -42,12 +42,10 @@ class NightlyAlarmReceiver : BroadcastReceiver() {
 
                 if (!s.autoAlarmEnabled) return@launch // тумблер автовключения выключен
 
-                val today = LocalDate.now()
-
                 // 2) свежее расписание на текущую неделю (+следующая внутри refreshWeek;
                 //    максимум 9 с; при ошибке остаёмся на кэше) — сверка берёт ближайшее
-                //    предстоящее пробуждение, оно может быть и СЕГОДНЯ (подъём позже 00:05),
-                //    поэтому освежаем от сегодня, а не от завтра
+                //    предстоящее пробуждение (сегодня или завтра)
+                val today = LocalDate.now()
                 val type = s.targetType
                 val id = s.targetId
                 if (type != null && id != null) {
@@ -64,15 +62,11 @@ class NightlyAlarmReceiver : BroadcastReceiver() {
                     }
                 }
 
-                // 3) сверка будильника с ближайшим ПРЕДСТОЯЩИМ пробуждением (сегодня/завтра/
-                //    позже — не только «на завтра») — только в «Стандарт»: в режиме «на
-                //    несколько дней вперёд» стоят повторяющиеся будильники, ночной одноразовый
-                //    звенел бы дубликатом. 0.7.1: сверка сравнивает маркер с ближайшим
-                //    предстоящим моментом — будильник на сегодня/послезавтра больше
-                //    не снимается за часы до звонка (баг 0.7.0, см. AlarmGateway)
-                if (s.mode == AlarmMode.STANDARD) {
-                    container.alarm.nightlyReconcile()
-                }
+                // 3) сверка будильника с ближайшим ПРЕДСТОЯЩИМ пробуждением (сегодня/завтра):
+                //    есть пара — ставит на ближайшее время, нет — снимает фантом.
+                //    0.7.1: сверка сравнивает маркер с ближайшим предстоящим моментом —
+                //    живой будильник не снимается; 0.8.0: режимов больше нет, сверка одна
+                container.alarm.nightlyReconcile()
 
                 // 4) фоновая досинхронизация: сегодня, неделя+7, полный семестр по графику
                 val syncRequest = OneTimeWorkRequestBuilder<SyncWorker>()

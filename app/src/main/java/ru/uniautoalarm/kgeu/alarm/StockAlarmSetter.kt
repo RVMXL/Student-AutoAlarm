@@ -6,16 +6,14 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.AlarmClock
 import android.util.Log
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.temporal.ChronoUnit
-import java.util.Calendar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
-import ru.uniautoalarm.kgeu.data.model.WeekAheadResult
 import ru.uniautoalarm.kgeu.data.repository.SettingsRepository
 import ru.uniautoalarm.kgeu.domain.AlarmPlanner
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
@@ -102,10 +100,19 @@ class StockAlarmSetter(
     }
 
     /**
-     * Поставить будильник на [date] по плану планировщика (0.7.1: доставка уважает ДАТУ —
-     * см. правило дней ниже; 0.6.0/0.7.0 ставили одноразовый, звеневший завтра).
-     * @return план, если будильник реально передан часам;
-     *         null — пар нет / пара дальше недели / часы не приняли команду / сбой запуска.
+     * Поставить будильник на [date] по плану планировщика.
+     *
+     * Логика 0.8.0 («одна ночь вперёд»): только РАЗОВЫЕ будильники (без EXTRA_DAYS) —
+     * никаких повторов на день недели, которые потом приходилось выключать руками.
+     * Одноразовый SET_ALARM звенит в ближайшее наступление времени подъёма, поэтому:
+     *  — сегодня (подъём ещё впереди): безопасно — сработает сегодня;
+     *  — завтра: безопасно только если время подъёма уже прошло сегодня (иначе
+     *    разовый зазвенел бы СЕГОДНЯ — баг 0.6.0/0.7.0); до наступления этого
+     *    времени постановку откладываем до ночной сверки 00:05 (skip_deferred_to_night);
+     *  — дальше завтра не ставим (горизонт задаёт AlarmGateway.findNextUpcoming).
+     *
+     * @return план, если будильник реально передан часам; null — пар нет / постановка
+     *         отложена до ночи / часы не приняли команду.
      */
     suspend fun setForDate(date: LocalDate, notify: Boolean = true): AlarmPlan? =
         withContext(Dispatchers.Default) {
@@ -126,44 +133,41 @@ class StockAlarmSetter(
                 return@withContext null
             }
 
+            val now = LocalDateTime.now()
+
             // защита от вызова с уже прошедшим моментом: одноразовый SET_ALARM зазвенел бы
             // в следующее наступление этого времени — завтра
-            if (!plan.wakeAt.isAfter(LocalDateTime.now())) return@withContext null
+            if (!plan.wakeAt.isAfter(now)) return@withContext null
 
-            // SET_ALARM не умеет «на дату»: одноразовый будильник (без EXTRA_DAYS) звенит
-            // в ближайшее наступление времени подъёма — при паре через два дня это ЗАВТРА
-            // (баг 0.6.0/0.7.0: «будильник на завтра под пару послезавтра», «раз через раз» —
-            // совпадение, когда пара и правда завтра). Правило доставки по удалённости:
-            //  — сегодня (подъём ещё впереди): одноразовый — сработает сегодня;
-            //  — завтра…+6 дней: недельный повтор на день недели пары — ближайшее
-            //    наступление этого дня недели и есть дата пары;
-            //  — дальше недели: контракт дату выразить не может — не ставим, ночная
-            //    сверка поставит накануне (AlarmGateway.reconcileUpcoming).
             val daysAhead = ChronoUnit.DAYS.between(LocalDate.now(), date)
-            if (daysAhead > 6) {
-                if (notify) {
-                    Notifications.alarmSkipped(
-                        context, date, LocaleHelper.string(context, R.string.skip_too_far)
-                    )
+            val delivered = when {
+                daysAhead > 1L -> {
+                    if (notify) {
+                        Notifications.alarmSkipped(
+                            context, date, LocaleHelper.string(context, R.string.skip_too_far)
+                        )
+                    }
+                    false
                 }
-                return@withContext null
-            }
-            val delivered = if (daysAhead <= 0) {
-                deliver(plan.wakeAt.hour, plan.wakeAt.minute, plan.label, s.alarmShowClockUi)
-            } else {
-                deliver(
-                    hour = plan.wakeAt.hour,
-                    minute = plan.wakeAt.minute,
-                    label = plan.label,
-                    showClockUi = s.alarmShowClockUi,
-                    repeatCalendarDays = listOf(calendarDayOf(date.dayOfWeek))
-                )
+                daysAhead == 1L && plan.wakeAt.toLocalTime().isAfter(now.toLocalTime()) -> {
+                    // разовый будильник на завтра, поставленный сейчас, зазвенел бы СЕГОДНЯ:
+                    // время подъёма ещё не наступило. Откладываем до ночной сверки 00:05 —
+                    // она поставит его в правильный день (логика 0.8.0)
+                    if (notify) {
+                        Notifications.alarmSkipped(
+                            context, date,
+                            LocaleHelper.string(context, R.string.skip_deferred_to_night)
+                        )
+                    }
+                    false
+                }
+                else -> deliver(plan.wakeAt.hour, plan.wakeAt.minute, plan.label, s.alarmShowClockUi)
             }
 
             if (delivered) {
                 if (notify) Notifications.alarmSet(context, plan)
                 // маркеры для дедупликации мгновенной постановки (см. setNextUpcoming):
-                // без них тумблер днём + ночной тик 00:05 ставили бы два одинаковых будильника;
+                // без них тумблер днём + ночная сверка 00:05 ставили бы два одинаковых будильника;
                 // метка нужна каналу DISMISS — снять разовый будильник по точному совпадению
                 settings.update {
                     it.copy(
@@ -175,107 +179,14 @@ class StockAlarmSetter(
                 }
                 plan
             } else {
-                if (notify) {
-                    Notifications.alarmSkipped(
-                        context, date,
-                        LocaleHelper.string(context, R.string.skip_clock_refused)
-                    )
-                }
                 null
             }
         }
 
     /**
-     * Режим «на несколько дней вперёд»: ПОВТОРЯЮЩИЕСЯ будильники по дням недели.
-     *
-     * Через ACTION_SET_ALARM нельзя поставить будильник «на дату»: интент всегда ставит
-     * на ближайшее срабатывание (все дни партии сваливались на завтра — баг 0.3.0).
-     * Единственный честный многодневный формат контракта — EXTRA_DAYS: один
-     * повторяющийся еженедельно будильник на каждый учебный день недели, время подъёма —
-     * из актуального расписания (с учётом «подъёма под каждую пару»).
-     *
-     * Дедупликация по сигнатуре «день:время» в настройках: фоновые перезапуски (синк,
-     * перезагрузка) не плодят дубликаты; изменение расписания переставляет партию.
-     * Метка «Авто: Пн» — под кнопку «Отключить будильники приложения» (DISMISS по метке).
-     *
-     * @param force — пропустить сигнатуру (кнопка «Поставить сейчас»: пользователь
-     *              мог вручную убрать будильники в часах и просит поставить заново).
-     */
-    suspend fun setWeekAhead(
-        fromDate: LocalDate = LocalDate.now(),
-        notify: Boolean = true,
-        force: Boolean = false,
-    ): WeekAheadResult {
-        val s = settings.current()
-        // окно не короче недели — иначе короткий горизонт теряет часть учебных дней
-        val horizon = maxOf(s.weekAheadDays, 7)
-
-        // 1) пробуждения по дням недели из актуального расписания (первый кандидат в окне)
-        data class DayWake(val dow: DayOfWeek, val wakeMinutes: Int)
-        val byDow = LinkedHashMap<Int, DayWake>()
-        for (i in 0 until horizon) {
-            val date = fromDate.plusDays(i.toLong())
-            val plan = planner.planFor(date) ?: continue
-            if (!plan.wakeAt.isAfter(LocalDateTime.now())) continue
-            byDow.putIfAbsent(
-                date.dayOfWeek.value,
-                DayWake(date.dayOfWeek, plan.wakeAt.hour * 60 + plan.wakeAt.minute)
-            )
-        }
-        val until = fromDate.plusDays(s.weekAheadDays.toLong())
-
-        if (byDow.isEmpty()) {
-            if (notify) {
-                Notifications.alarmSkipped(
-                    context, fromDate,
-                    LocaleHelper.string(context, R.string.skip_no_upcoming)
-                )
-            }
-            return WeekAheadResult(0, alreadyUpToDate = false)
-        }
-
-        // 2) сигнатура — защита от дубликатов при повторных запусках
-        val signature = byDow.entries.joinToString(";") { "${it.key}:${it.value.wakeMinutes}" }
-        if (!force && signature == s.weekAlarmsSignature) {
-            // уже стоят и актуальны; чип UI обновляем без переустановки
-            settings.update { it.copy(weekAlarmsSetUntilEpochDay = until.toEpochDay()) }
-            if (notify) Notifications.weekAlreadySet(context)
-            return WeekAheadResult(0, alreadyUpToDate = true)
-        }
-
-        // 3) повторяющийся будильник на каждый учебный день недели
-        var count = 0
-        for ((_, dw) in byDow) {
-            if (deliver(
-                    hour = dw.wakeMinutes / 60,
-                    minute = dw.wakeMinutes % 60,
-                    // метка из единого источника: DISMISS_ALARM по метке ищет ТОЧНОЕ
-                    // совпадение — метки SET и кнопки «Отключить» обязаны совпадать байт в байт
-                    label = WEEK_AHEAD_LABELS[dw.dow.value - 1],
-                    showClockUi = s.alarmShowClockUi,
-                    repeatCalendarDays = listOf(calendarDayOf(dw.dow))
-                )
-            ) count++
-        }
-        if (count > 0) {
-            settings.update {
-                it.copy(
-                    weekAlarmsSignature = signature,
-                    weekAlarmsSetUntilEpochDay = until.toEpochDay()
-                )
-            }
-        }
-        if (notify) Notifications.weekSet(context, count, fromDate, until)
-        return WeekAheadResult(count, alreadyUpToDate = false)
-    }
-
-    /** java.time.DayOfWeek → константа java.util.Calendar для EXTRA_DAYS (Sun=1 .. Sat=7). */
-    private fun calendarDayOf(dow: DayOfWeek): Int =
-        if (dow == DayOfWeek.SUNDAY) Calendar.SUNDAY else dow.value + 1
-
-    /**
      * Снять будильники приложения в стоковых часах: официальный канал DISMISS_ALARM
-     * по точным меткам — партия «Авто: Пн…Вс» и метка последнего разового («Авто: дисциплина»).
+     * по точным меткам — метка последнего разового («Авто: дисциплина») и, для очистки
+     * наследия 0.3.1…0.7.x, недельные «Авто: Пн…Вс» (режим «на несколько дней вперёд» удалён в 0.8.0).
      *
      * Поиск по метке в часах — ТОЧНОЕ совпадение (AOSP DeskClock: WHERE label = ?),
      * поэтому каждая метка отправляется отдельным интентом (баг 0.3.1: метка «Авто»
@@ -352,9 +263,7 @@ class StockAlarmSetter(
         settings.update {
             it.copy(
                 lastScheduledWakeEpochMinute = -1L,
-                lastScheduledLabel = "",
-                weekAlarmsSignature = "",
-                weekAlarmsSetUntilEpochDay = -1L
+                lastScheduledLabel = ""
             )
         }
         result
@@ -409,7 +318,6 @@ class StockAlarmSetter(
         minute: Int,
         label: String,
         showClockUi: Boolean,
-        repeatCalendarDays: List<Int>? = null,
     ): Boolean {
         val target = detectClockPackage()
         val base = Intent(AlarmClock.ACTION_SET_ALARM).apply {
@@ -418,10 +326,8 @@ class StockAlarmSetter(
             putExtra(AlarmClock.EXTRA_MINUTES, minute)
             putExtra(AlarmClock.EXTRA_MESSAGE, label)
             putExtra(AlarmClock.EXTRA_VIBRATE, true)
-            if (repeatCalendarDays != null) {
-                // повтор по дням недели: EXTRA_DAYS — ArrayList констант Calendar
-                putIntegerArrayListExtra(AlarmClock.EXTRA_DAYS, ArrayList(repeatCalendarDays))
-            }
+            // 0.8.0: EXTRA_DAYS (повтор по дням недели) больше не используется —
+            // только разовые будильники в пределах сегодня/завтра (логика «одна ночь вперёд»)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // контекст приложения — метка обязательна
         }
 
@@ -453,12 +359,12 @@ class StockAlarmSetter(
         private const val TAG = "StockAlarmSetter"
 
         /**
-         * Метки повторяющихся будильников режима «на несколько дней вперёд» —
-         * единый источник для SET_ALARM и кнопки «Отключить будильники приложения»
-         * (DISMISS_ALARM): поиск по метке в часах — ТОЧНОЕ совпадение (AOSP DeskClock:
-         * WHERE label = ?), а не «начинается с». В 0.3.1 кнопка отправляла метку
-         * «Авто», под которую не подходило ни «Авто: Пн», ни что-либо ещё — часы
-         * молча ничего не отключали (см. RELEASE-0.4.0).
+         * Метки недельных будильников прежнего режима «на несколько дней вперёд»
+         * (удалён в 0.8.0) — нужны ТОЛЬКО для очистки наследия при обновлении:
+         * единый источник с тем, что было поставлено в 0.3.1…0.7.x (DISMISS_ALARM
+         * ищет ТОЧНОЕ совпадение: AOSP DeskClock: WHERE label = ?). В 0.3.1 кнопка
+         * отправляла метку «Авто», под которую не подходило ни «Авто: Пн», ни
+         * что-либо ещё — часы молча ничего не отключали (см. RELEASE-0.4.0).
          *
          * Метки намеренно не локализуются: они пишутся в стоковые часы и
          * сопоставляются байт-в-байт при DISMISS — смена языка приложения

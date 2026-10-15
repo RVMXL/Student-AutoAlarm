@@ -29,7 +29,6 @@
     <string name="fmt_offset_m">%1$d мин</string>
     <string name="fmt_offset_h">%1$d сәғ</string>
     <string name="fmt_offset_hm">%1$d сәғ %2$d мин</string>
-    <string name="fmt_days_short">%1$d көн</string>
     <string name="fmt_time_alarm_will_ring">будильник шылтыратыр сәғәт</string>
 
     <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
@@ -79,8 +78,7 @@
     <!-- ==== Главный экран ==== -->
     <string name="home_title">Автобудильник</string>
     <string name="cd_refresh_schedule">Расписание яңыртыу</string>
-    <string name="mode_week_chip">%1$d көнгә</string>
-    <string name="mode_standard_chip">Стандарт</string>
+    <string name="mode_standard_chip">расписание буйынса</string>
     <string name="loading_settings">Көйләүҙәр тейәлә…</string>
     <string name="alarm_off_title">Будильник һүндерелгән</string>
     <string name="alarm_off_subtitle">Аҫтағы тумблер менән ҡабыҙ</string>
@@ -98,19 +96,10 @@
     <string name="own_event_at">үҙ ваҡиғаң сәғәт %1$s</string>
     <string name="home_auto_title">Авто-будильник</string>
     <string name="home_auto_subtitle">Кестә буйынса беренсе пара алдынан будильник ҡуя</string>
-    <string name="home_week_title">Бер нисә көнгә алдан</string>
-    <string name="home_week_desc">Аҙна көндәре буйынса ҡабатланған будильниктар — система ҡушымтаны үлтерһә, страховка булып ҡала</string>
-    <string name="btn_set_for_days">%1$d көнгә ҡуйырға</string>
-    <string name="chip_weekly_repeat">Һәр аҙнала ҡабатлана</string>
-    <string name="home_week_note">Будильниктар һәр аҙнала ҡабатлана; артыҡтары ҡәғәҙәтге сәғәттә һүндерелә («Будильниктар исемлеге» — ҡушымта көйләүҙәрендә)</string>
     <string name="home_upcoming_title">Алдағы дәрестәр</string>
     <string name="home_no_pairs">Паралар юҡ</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
-    <string name="week_result_delivered">Ҡабатланған будильниктар ҡуйылды: %1$d</string>
-    <string name="week_result_delivered_note">Ҡабатланған будильниктар ҡуйылды: %1$d (аҙна көндәре буйынса)</string>
-    <string name="week_result_uptodate">Будильниктар инде ҡуйылған — расписание үҙгәрмәгән</string>
-    <string name="week_result_empty">Алдағы паралар табылманы</string>
 
     <!-- ==== Диагностика на главном ==== -->
     <string name="dialog_exact_alarms_title">Аныҡ будильниктар тыйылған</string>
@@ -148,11 +137,6 @@
     <string name="notif_channel_desc">Ҡуйылған һәм ҡуйылмаған будильниктар тураһында хәбәрҙәр</string>
     <string name="notif_alarm_set">Будильник ҡуйылды: %1$s</string>
     <string name="notif_skipped_title">Будильник ҡуйылманы</string>
-    <string name="notif_week_one">1 ҡабатланған будильник ҡуйылды</string>
-    <string name="notif_week_many">Ҡабатланған будильниктар ҡуйылды: %1$d</string>
-    <string name="notif_week_text">паралар булған аҙна көндәрендә (%1$s – %2$s), һәр аҙнала ҡабатлана</string>
-    <string name="notif_week_already_title">Аҙнаға будильниктар инде ҡуйылған</string>
-    <string name="notif_week_already_text">Расписание уяныу ваҡыттарын үҙгәртмәгән — ҡабаттан ҡуйырға кәрәкмәй</string>
     <string name="notif_reminder_title">Будильник ҡуйырға онотма</string>
     <string name="notif_reminder_text">Иртәгә, %1$s: пара сәғәт %2$s — %3$s. Будильник ҡуйырға онотма.</string>
     <string name="notif_sync_title">Расписание синхронизацияһы</string>
@@ -162,7 +146,8 @@
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">паралар юҡ</string>
-    <string name="skip_no_upcoming">алдағы паралар табылманы</string>
+    <string name="skip_no_upcoming">бөгөн дә, иртәгә лә паралар юҡ — тикшереү һәр төндә үтә</string>
+    <string name="skip_deferred_to_night">пара иртәгә — будильник төндә 00:05-та ҡуйыласаҡ (хәҙер ҡуйһаң, бөгөн шылтырар ине)</string>
     <string name="skip_clock_refused">Телефон сәғәте бойороҡто ҡабул итмәне — көйләүҙәрҙә «Будильник иҫкәрмәһен» ҡабыҙ</string>
     <string name="skip_too_far">паралар аҙнанан һуңыраҡ — будильник уның алдында автоматик рәүештә ҡуйыласаҡ</string>
     <string name="test_alarm_label">Тест: Автобудильник эшләй!</string>
@@ -198,13 +183,6 @@
     <string name="pair_at">Пара сәғәт %1$s</string>
     <string name="pair_custom_offset">Уяныу: %1$s → будильник сәғәт %2$s</string>
     <string name="pair_common_offset">Дөйөм уяныу: %1$s</string>
-    <string name="set_mode">Режим</string>
-    <string name="mode_standard_title">Стандарт — иртәгәгә</string>
-    <string name="mode_standard_desc">Һәр төндә будильник иртәгәгә күсереп ҡуйыла</string>
-    <string name="mode_week_title">Бер нисә көнгә алдан</string>
-    <string name="mode_week_desc">Аҙнаның һәр уҡыу көнөнә ҡабатланған будильник — процестарҙы үлтереүҙән страховка; ағымдағы расписание буйынса һәр аҙнала ҡабатлана, аҫтағы төймә менән һүндерергә мөмкин</string>
-    <string name="mode_week_window">Паралар эҙләү осоро: %1$s — паралар булған аҙна көндәренең бөтәһенә будильниктар</string>
-    <string name="btn_set_now">Хәҙер ҡуйырға</string>
     <string name="btn_disable_app_alarms">Ҡушымта будильниктарын һүндереү</string>
     <string name="disable_alarms_desc">Төймә сәғәткә «Авто: Пн»…«Авто: Вс» теүәл билдәләре буйынса һүндереү бойороғон ебәрә. Оболочка бойороҡто ҡабул итмәһә (Realme UI/ColorOS-тың бер өлөшө — система сикләүе), ҡушымта будильниктар исемлеген үҙе асасаҡ — «Авто:» билдәләрен ҡул менән алып ташла.</string>
     <string name="btn_test_alarm">Будильникты тикшереү</string>

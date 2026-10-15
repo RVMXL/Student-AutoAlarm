@@ -9,12 +9,11 @@ import androidx.work.WorkerParameters
 import java.time.LocalDate
 import ru.uniautoalarm.kgeu.AutoAlarmApp
 import ru.uniautoalarm.kgeu.alarm.Notifications
-import ru.uniautoalarm.kgeu.data.model.AlarmMode
 import ru.uniautoalarm.kgeu.data.model.Target
 
 /**
  * Фоновая перепроверка расписания: сегодня, сегодня+7, раз в 7 дней — весь семестр,
- * плюс дособор партии будильников «на неделю вперёд».
+ * плюс сверка будильника с ближайшим предстоящим пробуждением (логика «одна ночь вперёд»).
  * Все ошибки глотаются (Result.success): подробности уже в ScheduleRepository.syncState.
  */
 class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
@@ -40,16 +39,10 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
             }
         }
 
-        // «На несколько дней вперёд»: партия будильников переставляется по актуальному
-        // расписанию; часы — по сигнатуре (повторы), приложение — перезаписью слотов
-        if (s.mode == AlarmMode.WEEK_AHEAD && s.autoAlarmEnabled) {
-            runCatching { container.alarm.setWeekAhead(notify = false) }
-        }
-
-        // «Стандарт» (0.7.1): сверка с ближайшим ПРЕДСТОЯЩИМ пробуждением по свежему
-        // расписанию — замена, опубликованная среди дня, переставляет будильник сразу,
-        // а не следующей ночью; верный будильник не трогается
-        if (s.mode == AlarmMode.STANDARD && s.autoAlarmEnabled) {
+        // Единая логика 0.8.0: сверка с ближайшим ПРЕДСТОЯЩИМ пробуждением (сегодня/завтра)
+        // по свежему расписанию — замена, опубликованная среди дня, переставляет будильник
+        // сразу, а не следующей ночью; верный будильник не трогается
+        if (s.autoAlarmEnabled) {
             runCatching { container.alarm.reconcileUpcoming(notifyOnChange = true) }
         }
 

@@ -16,7 +16,6 @@ import android.os.VibratorManager
 import android.util.Log
 import kotlinx.coroutines.launch
 import ru.uniautoalarm.kgeu.AutoAlarmApp
-import ru.uniautoalarm.kgeu.data.model.AlarmMode
 import ru.uniautoalarm.kgeu.data.model.AlarmTarget
 
 /**
@@ -118,17 +117,16 @@ class AlarmRingingService : Service() {
     }
 
     /**
-     * Сразу после звонка — следующий будильник: в «Стандарте» движка приложения
-     * больше не стоит ни одного слота, ночной тик 00:05 был бы слишком поздно.
+     * Сразу после звонка — следующий будильник: в движке приложения больше не стоит
+     * ни одного слота, ночная сверка 00:05 была бы слишком поздно — ставим ближайшее
+     * предстоящее (сегодня, если есть ещё, иначе завтра) сразу.
      */
     private fun rearmNext() {
         val container = (application as? AutoAlarmApp)?.container ?: return
         container.appScope.launch {
             runCatching {
                 val s = container.settings.current()
-                if (s.setupComplete && s.autoAlarmEnabled &&
-                    s.mode == AlarmMode.STANDARD && s.alarmTarget == AlarmTarget.APP
-                ) {
+                if (s.setupComplete && s.autoAlarmEnabled && s.alarmTarget == AlarmTarget.APP) {
                     container.alarm.setNextUpcoming(notify = false)
                 }
             }

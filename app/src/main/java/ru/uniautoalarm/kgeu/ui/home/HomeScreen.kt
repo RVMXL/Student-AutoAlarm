@@ -28,7 +28,6 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Alarm
-import androidx.compose.material.icons.rounded.AlarmAdd
 import androidx.compose.material.icons.rounded.AlarmOn
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Refresh
@@ -73,13 +72,11 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlinx.coroutines.launch
 import ru.uniautoalarm.kgeu.R
-import ru.uniautoalarm.kgeu.data.model.AlarmMode
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
 import ru.uniautoalarm.kgeu.data.model.Lesson
 import ru.uniautoalarm.kgeu.data.model.Settings
 import ru.uniautoalarm.kgeu.data.model.SyncInfo
 import ru.uniautoalarm.kgeu.ui.common.LocalAppContainer
-import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 import ru.uniautoalarm.kgeu.ui.common.TIME
 
 /** Скругления карточек (по ТЗ — 20.dp, статус-карточка крупнее). */
@@ -190,30 +187,6 @@ fun HomeScreen() {
                 )
             }
             item {
-                val s = settings
-                if (s != null) {
-                    WeekAheadCard(
-                        settings = s,
-                        active = vm.weekAlarmsActive(s),
-                        onSet = {
-                            vm.setWeekAhead { res ->
-                                // колбэк вне композиции — строки через LocaleHelper
-                                val message = when {
-                                    res.delivered > 0 -> LocaleHelper.string(
-                                        context, R.string.week_result_delivered, res.delivered
-                                    )
-                                    res.alreadyUpToDate ->
-                                        LocaleHelper.string(context, R.string.week_result_uptodate)
-                                    else ->
-                                        LocaleHelper.string(context, R.string.week_result_empty)
-                                }
-                                scope.launch { snackbarHostState.showSnackbar(message) }
-                            }
-                        }
-                    )
-                }
-            }
-            item {
                 UpcomingCard(todayLessons = todayLessons, tomorrowLessons = tomorrowLessons)
             }
             if (needsExactAlarmPermission) {
@@ -278,14 +251,8 @@ private fun HeaderRow(settings: Settings?, busy: Boolean, onRefresh: () -> Unit)
         AssistChip(
             onClick = { },
             label = {
-                val s = settings
-                Text(
-                    if (s?.mode == AlarmMode.WEEK_AHEAD) {
-                        stringResource(R.string.mode_week_chip, s.weekAheadDays)
-                    } else {
-                        stringResource(R.string.mode_standard_chip)
-                    }
-                )
+                // 0.8.0: режим один — «одна ночь вперёд» с ежедневной ночной сверкой
+                Text(stringResource(R.string.mode_standard_chip))
             },
             leadingIcon = {
                 Icon(
@@ -491,61 +458,6 @@ private fun ToggleCard(enabled: Boolean, onToggle: (Boolean) -> Unit) {
                 stringResource(R.string.home_auto_subtitle),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(start = 36.dp, bottom = 8.dp)
-            )
-        }
-    }
-}
-
-// --- «На неделю вперёд» ---
-
-@Composable
-private fun WeekAheadCard(settings: Settings, active: Boolean, onSet: () -> Unit) {
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    Icons.Rounded.AlarmAdd,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Spacer(Modifier.width(12.dp))
-                Text(stringResource(R.string.home_week_title), style = MaterialTheme.typography.titleMedium)
-            }
-            Text(
-                stringResource(R.string.home_week_desc),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Button(onClick = onSet) {
-                    Text(stringResource(R.string.btn_set_for_days, settings.weekAheadDays))
-                }
-                if (active) {
-                    AssistChip(
-                        onClick = { },
-                        label = { Text(stringResource(R.string.chip_weekly_repeat)) },
-                        leadingIcon = {
-                            Icon(
-                                Icons.Rounded.Check,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp)
-                            )
-                        }
-                    )
-                }
-            }
-            Text(
-                stringResource(R.string.home_week_note),
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
             )
         }
     }

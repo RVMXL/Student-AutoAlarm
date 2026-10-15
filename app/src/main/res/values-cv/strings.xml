@@ -29,7 +29,6 @@
     <string name="fmt_offset_m">%1$d мин</string>
     <string name="fmt_offset_h">%1$d сех</string>
     <string name="fmt_offset_hm">%1$d сех %2$d мин</string>
-    <string name="fmt_days_short">%1$d кун</string>
     <string name="fmt_time_alarm_will_ring">будильник çилĕклет</string>
 
     <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
@@ -79,8 +78,7 @@
     <!-- ==== Главный экран ==== -->
     <string name="home_title">Автобудильник</string>
     <string name="cd_refresh_schedule">Расписаниене çĕнет</string>
-    <string name="mode_week_chip">%1$d кун малан</string>
-    <string name="mode_standard_chip">Стандарт</string>
+    <string name="mode_standard_chip">расписание тăрăх</string>
     <string name="loading_settings">Йышӑнусене тиеслеҫҫӗ…</string>
     <string name="alarm_off_title">Будильник сунтарӑннӑ</string>
     <string name="alarm_off_subtitle">Аялти тумблерпа хушӑр</string>
@@ -98,19 +96,10 @@
     <string name="own_event_at">хӑвӑн ĕç %1$s çинче</string>
     <string name="home_auto_title">Авто-будильник</string>
     <string name="home_auto_subtitle">Будильник пӗрремӗш пара умӗнче кӑларӑм тӑрӑх лартать</string>
-    <string name="home_week_title">Темиже кун малан</string>
-    <string name="home_week_desc">Эрне кунӗсемпе повторланакан будильниксем — система программӑна вӗҫтерсе пӑрахсан те пулӑшаçҫӗ</string>
-    <string name="btn_set_for_days">%1$d кун ларт</string>
-    <string name="chip_weekly_repeat">Эрнере пӗрре повторланаççӗ</string>
-    <string name="home_week_note">Будильниксем эрнере пӗрре повторланаççӗ; лишнисене сток сехетсенче сунтармалла („Будильник йышӗ“ — программӑн йышӑнусенче)</string>
     <string name="home_upcoming_title">Çывӑх парасем</string>
     <string name="home_no_pairs">Пара çук</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
-    <string name="week_result_delivered">Повторланакан будильниксем лартӑннӑ: %1$d</string>
-    <string name="week_result_delivered_note">Повторланакан будильниксем лартӑннӑ: %1$d (эрне кунӗсемпе)</string>
-    <string name="week_result_uptodate">Будильниксем пурте лартӑннӑ — расписание улӑшман</string>
-    <string name="week_result_empty">Малти парасем тупӑнмарӗҫ</string>
 
     <!-- ==== Диагностика на главном ==== -->
     <string name="dialog_exact_alarms_title">Тӗрӗс будильниксем чарӑннӑ</string>
@@ -148,11 +137,6 @@
     <string name="notif_channel_desc">Лартнӑ тата лартӑнман будильниксем çинчен пӗлтерӳсем</string>
     <string name="notif_alarm_set">Будильник лартӑннӑ: %1$s</string>
     <string name="notif_skipped_title">Будильник лартӑнмарӗ</string>
-    <string name="notif_week_one">1 повторланакан будильник лартӑннӑ</string>
-    <string name="notif_week_many">Повторланакан будильниксем лартӑннӑ: %1$d</string>
-    <string name="notif_week_text">параллӑ эрне кунӗсемпе (%1$s – %2$s), эрнере пӗрре повторланаçҫӗ</string>
-    <string name="notif_week_already_title">Эрнене будильниксем пурте лартӑннӑ</string>
-    <string name="notif_week_already_text">Расписание вӑхӑтсене улӑшман — куçарма кирлӗ мар</string>
     <string name="notif_reminder_title">Будильник лартма ан ман</string>
     <string name="notif_reminder_text">Ыран, %1$s: пара %2$s çинче — %3$s. Будильник лартма ан ман.</string>
     <string name="notif_sync_title">Расписание синхронизацийӗ</string>
@@ -162,7 +146,8 @@
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">парасем çук</string>
-    <string name="skip_no_upcoming">малти парасем тупӑнмарӗҫ</string>
+    <string name="skip_no_upcoming">паян те, ыран та парасем çук — тĕпчени кашни каç иртет</string>
+    <string name="skip_deferred_to_night">пара ыран — будильник каçпа 00:05-ре лартӑна (халь лартсан, паян шӑнкаларӗ)</string>
     <string name="skip_clock_refused">телефон сехетӗсем команда йышӑнмарӗҫ — йышӑнусенче „Будильник çинчен асӑну“ хушӑр</string>
     <string name="skip_too_far">пара эрнерен те инҫет — будильник ӑна умӗнченех автоматик лартӑна</string>
     <string name="test_alarm_label">Тест: Автобудильник ĕçлет!</string>
@@ -198,13 +183,6 @@
     <string name="pair_at">Пара %1$s çинче</string>
     <string name="pair_custom_offset">%1$s малӑн вӑранса тӑни → будильник %2$s çинче</string>
     <string name="pair_common_offset">Пӗрлехи вӑранса тӑни: %1$s малӑн</string>
-    <string name="set_mode">Режим</string>
-    <string name="mode_standard_title">Стандарт — ыран кунне</string>
-    <string name="mode_standard_desc">Кашни каҫ будильник ыранне куçать</string>
-    <string name="mode_week_title">Темиже кун малан</string>
-    <string name="mode_week_desc">Эрнере кашни вӗренӳ кунне повторланакан будильник — процесс вӗҫтернисенчен хӑтару; актуаллӑ расписаниипе эрнере пӗрре повторланаççӗ, аялти пӑшӑлпа сунтарма пулать</string>
-    <string name="mode_week_window">Пара шырав тӑршшӗ: %1$s — будильниксем параллӑ пур эрне кунӗсене лартӑнаçҫӗ</string>
-    <string name="btn_set_now">Халь ларт</string>
     <string name="btn_disable_app_alarms">Программа будильникӗсене сунтар</string>
     <string name="disable_alarms_desc">Пӑшӑл сехетсене „Авто: Пн“…„Авто: Вс“ тӗплӗ ятсемпе сунтар командине парать. Оболочка командӑна йышӑнмасть пулсан (пӗр пайӗ Realme UI/ColorOS — системӑн чикӗленӗвӗ), программа хӑй будильник йышӗне уҫӗ — „Авто:“ ятсене алӑпа сунтар.</string>
     <string name="btn_test_alarm">Будильникне тӗрӗсле</string>

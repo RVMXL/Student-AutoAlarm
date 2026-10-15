@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import ru.uniautoalarm.kgeu.data.model.AlarmMode
 import ru.uniautoalarm.kgeu.data.model.AlarmTarget
 import ru.uniautoalarm.kgeu.data.model.CalendarStyle
 import ru.uniautoalarm.kgeu.data.model.Settings
@@ -43,8 +42,6 @@ class SettingsRepository(private val context: Context) {
         val TARGET_NAME = stringPreferencesKey("target_name")
         val WAKE_OFFSET_MINUTES = intPreferencesKey("wake_offset_minutes")
         val AUTO_ALARM_ENABLED = booleanPreferencesKey("auto_alarm_enabled")
-        val MODE = stringPreferencesKey("mode")
-        val WEEK_AHEAD_DAYS = intPreferencesKey("week_ahead_days")
         val SEMESTER_MIN = stringPreferencesKey("semester_min")
         val SEMESTER_MAX = stringPreferencesKey("semester_max")
         val LAST_FULL_SYNC_EPOCH_MS = longPreferencesKey("last_full_sync_epoch_ms")
@@ -54,7 +51,6 @@ class SettingsRepository(private val context: Context) {
         val CALENDAR_STYLE = stringPreferencesKey("calendar_style")
         val BACKGROUND_IMAGE_PATH = stringPreferencesKey("background_image_path")
         val BACKGROUND_OPACITY = floatPreferencesKey("background_opacity")
-        val WEEK_ALARMS_SET_UNTIL = longPreferencesKey("week_alarms_set_until_epoch_day")
         val REMINDER_ENABLED = booleanPreferencesKey("reminder_enabled")
         val REMINDER_TIME = stringPreferencesKey("reminder_time")
         val ALARM_SHOW_CLOCK_UI = booleanPreferencesKey("alarm_show_clock_ui")
@@ -62,10 +58,13 @@ class SettingsRepository(private val context: Context) {
         val FIRST_LESSON_OFFSETS = stringPreferencesKey("first_lesson_offsets")
         val GLASS_ENABLED = booleanPreferencesKey("glass_enabled")
         val GLASS_INTENSITY = floatPreferencesKey("glass_intensity")
-        val WEEK_ALARMS_SIGNATURE = stringPreferencesKey("week_alarms_signature")
         val LAST_SCHEDULED_WAKE = longPreferencesKey("last_scheduled_wake_epoch_minute")
         val LAST_SCHEDULED_LABEL = stringPreferencesKey("last_scheduled_label")
         val MIGRATED_APP_ENGINE = booleanPreferencesKey("migrated_app_engine_071")
+        val MIGRATED_SINGLE_NIGHT = booleanPreferencesKey("migrated_single_night_080")
+        // legacy-ключи режимов «на несколько дней вперёд» — читаются только миграцией 0.8.0
+        val LEGACY_MODE = stringPreferencesKey("mode")
+        val LEGACY_WEEK_ALARMS_SET_UNTIL = longPreferencesKey("week_alarms_set_until_epoch_day")
     }
 
     /** Поток настроек: перевыпускается при каждом изменении; сбой чтения → значения по умолчанию. */
@@ -112,6 +111,32 @@ class SettingsRepository(private val context: Context) {
         }
     }
 
+    /**
+     * Одноразовая миграция 0.7.x → 0.8.0: логика авто-будильника стала ОДНОЙ —
+     * «одна ночь вперёд» (тумблер ставит максимум на завтра; ночная сверка 00:05/06:00
+     * ставит/снимает по факту). Режим «на несколько дней вперёд» удалён: он ставил
+     * ПОВТОРЯЮЩИЕСЯ будильники на день недели (часы — EXTRA_DAYS, приложение — слот
+     * на каждую дату), которые при смене расписания/выключении тумблера приходилось
+     * выключать руками — ровно то, от чего ушла новая логика.
+     *
+     * @return эпоха-день конца прежней партии будильников (для снятия слотов AlarmManager),
+     *         или -1, если партий не было; null — миграция уже выполнялась.
+     */
+    suspend fun migrate080SingleNight(): Long? {
+        var result: Long? = null
+        context.dataStore.edit { prefs ->
+            if (prefs[Keys.MIGRATED_SINGLE_NIGHT] != true) {
+                // конец прежней партии слотов «на несколько дней вперёд» (для cancelRange);
+                // недельные будильники в часах снимает dismissAll при очистке в AutoAlarmApp
+                result = prefs[Keys.LEGACY_WEEK_ALARMS_SET_UNTIL] ?: -1L
+                prefs.remove(Keys.LEGACY_MODE)
+                prefs.remove(Keys.LEGACY_WEEK_ALARMS_SET_UNTIL)
+                prefs[Keys.MIGRATED_SINGLE_NIGHT] = true
+            }
+        }
+        return result
+    }
+
     // --- Чтение ---
 
     private fun Preferences.toSettings(): Settings = Settings(
@@ -121,8 +146,6 @@ class SettingsRepository(private val context: Context) {
         targetName = this[Keys.TARGET_NAME] ?: "",
         wakeOffsetMinutes = this[Keys.WAKE_OFFSET_MINUTES] ?: 90,
         autoAlarmEnabled = this[Keys.AUTO_ALARM_ENABLED] ?: true,
-        mode = parseEnum(this[Keys.MODE], AlarmMode.STANDARD),
-        weekAheadDays = this[Keys.WEEK_AHEAD_DAYS] ?: 7,
         semesterMin = this[Keys.SEMESTER_MIN]?.let { parseDate(it) },
         semesterMax = this[Keys.SEMESTER_MAX]?.let { parseDate(it) },
         lastFullSyncEpochMs = this[Keys.LAST_FULL_SYNC_EPOCH_MS] ?: 0L,
@@ -132,7 +155,6 @@ class SettingsRepository(private val context: Context) {
         calendarStyle = parseEnum(this[Keys.CALENDAR_STYLE], CalendarStyle.STANDARD),
         backgroundImagePath = this[Keys.BACKGROUND_IMAGE_PATH],
         backgroundOpacity = this[Keys.BACKGROUND_OPACITY] ?: 0.35f,
-        weekAlarmsSetUntilEpochDay = this[Keys.WEEK_ALARMS_SET_UNTIL] ?: -1L,
         reminderEnabled = this[Keys.REMINDER_ENABLED] ?: false,
         reminderTime = this[Keys.REMINDER_TIME]?.let { parseTime(it) } ?: LocalTime.of(21, 0),
         alarmShowClockUi = this[Keys.ALARM_SHOW_CLOCK_UI] ?: false,
@@ -140,7 +162,6 @@ class SettingsRepository(private val context: Context) {
         firstLessonOffsets = this[Keys.FIRST_LESSON_OFFSETS]?.let { parseOffsets(it) } ?: emptyMap(),
         glassEnabled = this[Keys.GLASS_ENABLED] ?: false,
         glassIntensity = this[Keys.GLASS_INTENSITY] ?: 0.5f,
-        weekAlarmsSignature = this[Keys.WEEK_ALARMS_SIGNATURE] ?: "",
         lastScheduledWakeEpochMinute = this[Keys.LAST_SCHEDULED_WAKE] ?: -1L,
         lastScheduledLabel = this[Keys.LAST_SCHEDULED_LABEL] ?: ""
     )
@@ -158,8 +179,6 @@ class SettingsRepository(private val context: Context) {
 
         this[Keys.WAKE_OFFSET_MINUTES] = s.wakeOffsetMinutes
         this[Keys.AUTO_ALARM_ENABLED] = s.autoAlarmEnabled
-        this[Keys.MODE] = s.mode.name
-        this[Keys.WEEK_AHEAD_DAYS] = s.weekAheadDays
 
         val min = s.semesterMin
         if (min != null) this[Keys.SEMESTER_MIN] = min.toString() else remove(Keys.SEMESTER_MIN)
@@ -176,7 +195,6 @@ class SettingsRepository(private val context: Context) {
         val path = s.backgroundImagePath
         if (path != null) this[Keys.BACKGROUND_IMAGE_PATH] = path else remove(Keys.BACKGROUND_IMAGE_PATH)
         this[Keys.BACKGROUND_OPACITY] = s.backgroundOpacity
-        this[Keys.WEEK_ALARMS_SET_UNTIL] = s.weekAlarmsSetUntilEpochDay
 
         this[Keys.REMINDER_ENABLED] = s.reminderEnabled
         this[Keys.REMINDER_TIME] = s.reminderTime.toString()
@@ -185,7 +203,6 @@ class SettingsRepository(private val context: Context) {
         this[Keys.FIRST_LESSON_OFFSETS] = serializeOffsets(s.firstLessonOffsets)
         this[Keys.GLASS_ENABLED] = s.glassEnabled
         this[Keys.GLASS_INTENSITY] = s.glassIntensity
-        this[Keys.WEEK_ALARMS_SIGNATURE] = s.weekAlarmsSignature
         this[Keys.LAST_SCHEDULED_WAKE] = s.lastScheduledWakeEpochMinute
         this[Keys.LAST_SCHEDULED_LABEL] = s.lastScheduledLabel
     }

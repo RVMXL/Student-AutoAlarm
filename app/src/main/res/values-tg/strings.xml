@@ -29,7 +29,6 @@
     <string name="fmt_offset_m">%1$d дақ</string>
     <string name="fmt_offset_h">%1$d соат</string>
     <string name="fmt_offset_hm">%1$d соат %2$d дақ</string>
-    <string name="fmt_days_short">%1$d рӯз</string>
     <string name="fmt_time_alarm_will_ring">будильник зан мезанад дар</string>
 
     <!-- ==== Дни недели (короткие, чипы календаря) ==== -->
@@ -79,8 +78,7 @@
     <!-- ==== Главный экран ==== -->
     <string name="home_title">Автобудильник</string>
     <string name="cd_refresh_schedule">Навсозии ҷадвали дарсҳо</string>
-    <string name="mode_week_chip">Ба %1$d рӯз</string>
-    <string name="mode_standard_chip">Стандарт</string>
+    <string name="mode_standard_chip">мувофиқи ҷадвал</string>
     <string name="loading_settings">Танзимот бор мешаванд…</string>
     <string name="alarm_off_title">Будильник хомӯш аст</string>
     <string name="alarm_off_subtitle">Бо калидаки дар поён фаъол кун</string>
@@ -98,19 +96,10 @@
     <string name="own_event_at">машғулияти худ соати %1$s</string>
     <string name="home_auto_title">Авто-будильник</string>
     <string name="home_auto_subtitle">Ба рӯи ҷадвал пеш аз параи якум будильник мегузорад</string>
-    <string name="home_week_title">Ба чанд рӯз пеш</string>
-    <string name="home_week_desc">Будильникҳои такроршаванда аз рӯи рӯзҳои ҳафта — кафолат барои ҳолате, ки система барномаро кушад</string>
-    <string name="btn_set_for_days">Ба %1$d рӯз гузоштан</string>
-    <string name="chip_weekly_repeat">Ҳар ҳафта такрор мешаванд</string>
-    <string name="home_week_note">Будильникҳо ҳар ҳафта такрор мешаванд; будильникҳои изофӣ дар соати худи телефон хомӯш карда мешаванд («Рӯйхати будильникҳо» — дар танзимоти барнома)</string>
     <string name="home_upcoming_title">Машғулиятҳои наздик</string>
     <string name="home_no_pairs">Пара нест</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
-    <string name="week_result_delivered">Будильникҳои такроршаванда гузошта шуданд: %1$d</string>
-    <string name="week_result_delivered_note">Будильникҳои такроршаванда гузошта шуданд: %1$d (аз рӯи рӯзҳои ҳафта)</string>
-    <string name="week_result_uptodate">Будильникҳо аллакай гузошта шудаанд — ҷадвали дарсҳо тағйир наёфтааст</string>
-    <string name="week_result_empty">Параҳои оянда ёфт нашуданд</string>
 
     <!-- ==== Диагностика на главном ==== -->
     <string name="dialog_exact_alarms_title">Будильникҳои дақиқ манъ карда шудаанд</string>
@@ -148,11 +137,6 @@
     <string name="notif_channel_desc">Огоҳиномаҳо оид ба будильникҳои гузошташуда ва аз даст рафта</string>
     <string name="notif_alarm_set">Будильник ба соати %1$s гузошта шуд</string>
     <string name="notif_skipped_title">Будильник гузошта нашуд</string>
-    <string name="notif_week_one">1 будильники такроршаванда гузошта шуд</string>
-    <string name="notif_week_many">Будильникҳои такроршаванда гузошта шуданд: %1$d</string>
-    <string name="notif_week_text">рӯзҳои ҳафтае, ки пара доранд (%1$s – %2$s), такрор ҳар ҳафта</string>
-    <string name="notif_week_already_title">Будильникҳо барои ҳафта аллакай гузошта шудаанд</string>
-    <string name="notif_week_already_text">Ҷадвали дарсҳо вақтҳои бедор шуданро тағйир надодааст — азнав гузоштан лозим нест</string>
     <string name="notif_reminder_title">Будильник гузоштанро фаромӯш накун</string>
     <string name="notif_reminder_text">Фардо, %1$s: пара соати %2$s — %3$s. Будильник гузоштанро фаромӯш накун.</string>
     <string name="notif_sync_title">Ҳамоҳангсозии ҷадвали дарсҳо</string>
@@ -162,7 +146,8 @@
 
     <!-- ==== Причины пропуска будильника (StockAlarmSetter) ==== -->
     <string name="skip_no_lessons">пара нест</string>
-    <string name="skip_no_upcoming">параҳои оянда ёфт нашуданд</string>
+    <string name="skip_no_upcoming">имрӯз ва фардо пара нест — тафтиши шабона ҳар шаб гузашта мешавад</string>
+    <string name="skip_deferred_to_night">дарс фардо — зангчӣ шабона соати 00:05 гузошта мешавад (агар ҳоло гузошта шавад, имрӯз менозад)</string>
     <string name="skip_clock_refused">Соати телефон фармонро қабул накард — дар танзимот «Ёдоварии будильник»-ро фаъол кун</string>
     <string name="skip_too_far">дарс беш аз як ҳаффа дур аст — зангчӣ худкор пеш аз он гузошта мешавад</string>
     <string name="test_alarm_label">Санҷиш: Автобудильник кор мекунад!</string>
@@ -198,13 +183,6 @@
     <string name="pair_at">Пара соати %1$s</string>
     <string name="pair_custom_offset">Бедор шудан %1$s пеш → будильник соати %2$s</string>
     <string name="pair_common_offset">Бедор шудани умумӣ: %1$s пеш</string>
-    <string name="set_mode">Реҷа</string>
-    <string name="mode_standard_title">Стандарт — барои фардо</string>
-    <string name="mode_standard_desc">Ҳар шаб будильник барои фардо азнав гузошта мешавад</string>
-    <string name="mode_week_title">Ба чанд рӯз пеш</string>
-    <string name="mode_week_desc">Будильники такроршаванда барои ҳар рӯзи дарсии ҳафта — кафолат алайҳи куштани равандҳо; мувофиқи ҷадвали амалкунанда ҳар ҳафта такрор мешаванд, бо тугмаи дар поён хомӯш кардан мумкин аст</string>
-    <string name="mode_week_window">Диапазони ҷустуҷӯи параҳо: %1$s — будильникҳо барои ҳамаи рӯзҳои ҳафтае, ки пара доранд</string>
-    <string name="btn_set_now">Ҳозир гузоштан</string>
     <string name="btn_disable_app_alarms">Хомӯш кардани будильникҳои барнома</string>
     <string name="disable_alarms_desc">Тугма ба соат фармони хомӯш кардан мефиристад — тибқи аломатҳои дақиқи «Авто: Пн»…«Авто: Вс». Агар интерфейс фармонро қабул накунад (баъзе Realme UI/ColorOS — маҳдудияти система), барнома худаш рӯйхати будильникҳоро мекушояд — будильникҳои бо аломати «Авто:»-ро бо даст хомӯш кун.</string>
     <string name="btn_test_alarm">Санҷиши будильник</string>
