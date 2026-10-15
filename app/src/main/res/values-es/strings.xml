@@ -164,6 +164,7 @@
     <string name="skip_no_lessons">no hay clases</string>
     <string name="skip_no_upcoming">no se encontraron clases próximas</string>
     <string name="skip_clock_refused">la app de reloj del teléfono no aceptó el comando — activa \"Recordatorio de alarma\" en los ajustes</string>
+    <string name="skip_too_far">la clase es a más de una semana — la alarma se activará automáticamente antes</string>
     <string name="test_alarm_label">¡Prueba: la Autoalarma funciona!</string>
     <string name="test_alarm_ok">Alarma programada para dentro de 2 minutos — revisa el reloj</string>
     <string name="test_alarm_fail">No se pudo programar la alarma de prueba — el reloj no responde</string>

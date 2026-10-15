@@ -1,6 +1,10 @@
 package ru.uniautoalarm.kgeu
 
 import android.app.Application
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import ru.uniautoalarm.kgeu.alarm.NightlyScheduler
 import ru.uniautoalarm.kgeu.alarm.ReminderScheduler
 import ru.uniautoalarm.kgeu.di.AppContainer
@@ -15,6 +19,12 @@ class AutoAlarmApp : Application() {
     override fun onCreate() {
         super.onCreate()
         container = AppContainer(this)
+        // 0.7.1: одноразовый переезд на движок «В приложении» — SET_ALARM стоковых часов
+        // не умеет «на дату» (звенел завтра под пару послезавтра), DISMISS на части
+        // оболочек (ColorOS/Realme UI) молча игнорируется. См. SettingsRepository.
+        CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
+            runCatching { container.settings.migrate071AppEngine() }
+        }
         // Ночной тик на 00:05, напоминание о будильнике и периодический sync WorkManager
         // (всё идемпотентно, планировщики сами читают настройки)
         NightlyScheduler.scheduleNext(this)

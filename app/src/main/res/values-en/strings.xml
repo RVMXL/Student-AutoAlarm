@@ -164,6 +164,7 @@
     <string name="skip_no_lessons">no classes</string>
     <string name="skip_no_upcoming">no upcoming classes found</string>
     <string name="skip_clock_refused">the Clock app didn\'t accept the command — turn on \"Alarm reminder\" in the app\'s settings</string>
+    <string name="skip_too_far">the class is more than a week away — the alarm will be set automatically closer to it</string>
     <string name="test_alarm_label">Test: Auto-Alarm is working!</string>
     <string name="test_alarm_ok">Alarm set for 2 minutes from now — check the Clock app</string>
     <string name="test_alarm_fail">Couldn\'t set the test alarm — the Clock app isn\'t responding</string>

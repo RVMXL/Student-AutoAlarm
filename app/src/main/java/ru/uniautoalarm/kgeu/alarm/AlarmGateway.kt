@@ -20,6 +20,8 @@ import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
  *
  * Снятие ([dismissAll]) всегда бьёт по ОБОИМ движкам: могли остаться будильники
  * от прежнего режима/цели, а SET_ALARM/DISMISS не позволяют «перечислить» свои.
+ * Сверка состояния ([reconcileUpcoming]) сравнивает маркер с ближайшим ПРЕДСТОЯЩИМ
+ * пробуждением — не с планом «на завтра» (баг 0.7.0: живой будильник снимался).
  */
 class AlarmGateway(
     private val context: Context,
@@ -44,26 +46,35 @@ class AlarmGateway(
      * lastScheduledWakeEpochMinute (SET_ALARM создаёт НОВЫЙ будильник, не обновляет).
      */
     suspend fun setNextUpcoming(notify: Boolean = true): AlarmPlan? {
-        val now = LocalDateTime.now()
         val s = settings.current()
+        val next = findNextUpcoming()
+        if (next == null) {
+            if (notify) {
+                Notifications.alarmSkipped(
+                    context, LocalDate.now(),
+                    LocaleHelper.string(context, R.string.skip_no_upcoming)
+                )
+            }
+            return null
+        }
+        val wakeEpochMinute = next.wakeAt.toLocalDate().toEpochDay() * 1440L +
+            next.wakeAt.hour * 60L + next.wakeAt.minute
+        if (wakeEpochMinute == s.lastScheduledWakeEpochMinute) {
+            // будильник на этот момент уже стоит — дубликат не плодим, только подтверждаем
+            if (notify) Notifications.alarmSet(context, next)
+            return next
+        }
+        return setForDate(next.date, notify)
+    }
+
+    /** Ближайшее ПРЕДСТОЯЩЕЕ пробуждение по кэшу расписания (сегодня…+13) или null. */
+    private suspend fun findNextUpcoming(): AlarmPlan? {
+        val now = LocalDateTime.now()
         for (i in 0..13) { // две недели — горизонт кэша расписания
             val date = now.toLocalDate().plusDays(i.toLong())
             val plan = planner.planFor(date) ?: continue
             if (!plan.wakeAt.isAfter(now)) continue
-            val wakeEpochMinute = plan.wakeAt.toLocalDate().toEpochDay() * 1440L +
-                plan.wakeAt.hour * 60L + plan.wakeAt.minute
-            if (wakeEpochMinute == s.lastScheduledWakeEpochMinute) {
-                // будильник на этот момент уже стоит — дубликат не плодим, только подтверждаем
-                if (notify) Notifications.alarmSet(context, plan)
-                return plan
-            }
-            return setForDate(date, notify)
-        }
-        if (notify) {
-            Notifications.alarmSkipped(
-                context, now.toLocalDate(),
-                LocaleHelper.string(context, R.string.skip_no_upcoming)
-            )
+            return plan
         }
         return null
     }
@@ -157,42 +168,90 @@ class AlarmGateway(
         else stock.setTestAlarm()
 
     /**
-     * Ночная сверка (тик 00:05, режим «Стандарт»).
+     * Сверка будильника с ближайшим ПРЕДСТОЯЩИМ пробуждением (ночной тик 00:05 и фоновый
+     * sync; режим «Стандарт»).
      *
-     * APP: слот всегда перезаписывается свежим планом (после ночного обновления
-     * расписания) — фантомные будильники отменённого дня и сдвинутые заменной
-     * времена самолечатся.
+     * Ключ 0.7.1: маркер сравнивается не с планом «на завтра», а с ближайшим предстоящим
+     * моментом. Сравнение с завтрашним планом снимало ЖИВОЙ будильник: поставленный во
+     * вторник на четверг, он в четверг 00:05 «не совпадал» с планом на пятницу и удалялся
+     * за часы до звонка; движок приложения к тому же снимал слот и ставил только «на
+     * завтра», теряя пару послезавтра, когда завтра пусто.
      *
-     * CLOCK: сверяем маркер последней постановки с планом на завтра:
-     *  — план исчез (пары отменили), а будильник на завтра стоит → снять старый по метке;
-     *  — время подъёма изменилось → снять старый, поставить новый;
-     *  — совпал → не дублируем.
-     *  Ограничение: если часы игнорируют DISMISS/SET в фоне (ColorOS), сверка бессильна —
-     *  для полной надёжности существует движок «В приложении».
+     * APP: слот перезаписывается свежим планом ближайшего пробуждения (замены
+     * самолечатся); совпавший с маркером момент не трогается; предстоящих пробуждений
+     * нет — фантомный слот снимается.
+     *
+     * CLOCK: совпал — не трогаем; не совпал (замена/перенос/устарел) — старый снимаем
+     * по метке, новый ставим; предстоящих нет — фантомный снимаем.
+     * Ограничение: если часы игнорируют DISMISS/SET в фоне (ColorOS), сверка бессильна —
+     * для полной надёжности существует движок «В приложении» (цель по умолчанию с 0.7.1).
      */
-    suspend fun nightlySetForDate(date: LocalDate) {
-        if (target() == AlarmTarget.APP) {
-            inApp.cancelOneShot()
-            setForDate(date, notify = true)
-            return
-        }
+    suspend fun reconcileUpcoming(notifyOnChange: Boolean = true) {
         val s = settings.current()
-        val plan = planner.planFor(date)
+        val next = findNextUpcoming()
         val markerWake = markerToLocalDateTime(s.lastScheduledWakeEpochMinute)
-        when {
-            plan == null && markerWake != null && markerWake.toLocalDate() == date -> {
-                // завтра пар не стало (замены) — стоящий будильник фантомный
-                stock.dismissSingleLabel(s.lastScheduledLabel)
-                settings.update {
-                    it.copy(lastScheduledWakeEpochMinute = -1L, lastScheduledLabel = "")
+
+        if (target() == AlarmTarget.APP) {
+            when {
+                next == null -> {
+                    if (markerWake != null) {
+                        // предстоящих пробуждений в кэше нет — слот фантомный
+                        inApp.cancelOneShot()
+                        clearLastScheduled()
+                        if (notifyOnChange) {
+                            Notifications.alarmSkipped(
+                                context, LocalDate.now(),
+                                LocaleHelper.string(context, R.string.skip_no_upcoming)
+                            )
+                        }
+                    }
+                }
+                markerWake == next.wakeAt -> Unit // слот уже стоит на верный момент
+                else -> {
+                    // замена/перенос/устаревший маркер — перезаписываем слот свежим планом
+                    inApp.scheduleOneShot(next.wakeAt, next.label)
+                    updateLastScheduled(next)
+                    if (notifyOnChange) Notifications.alarmSet(context, next)
                 }
             }
-            plan != null && (markerWake == null || markerWake != plan.wakeAt) -> {
-                // время подъёма изменилось (замена/перенос) или будильника ещё не было
-                if (markerWake != null) stock.dismissSingleLabel(s.lastScheduledLabel)
-                stock.setForDate(date, notify = true)
+            return
+        }
+
+        // CLOCK
+        when {
+            next == null -> {
+                if (markerWake != null) {
+                    stock.dismissSingleLabel(s.lastScheduledLabel)
+                    clearLastScheduled()
+                }
             }
-            else -> Unit // план совпал с маркером (или пар нет и маркера нет) — ничего не делаем
+            markerWake == null -> stock.setForDate(next.date, notify = true)
+            markerWake == next.wakeAt -> Unit // живой будильник на верный момент — не трогаем
+            else -> {
+                // время/день изменились (замена/перенос) или маркер устарел
+                stock.dismissSingleLabel(s.lastScheduledLabel)
+                stock.setForDate(next.date, notify = true)
+            }
+        }
+    }
+
+    /** Ночная сверка (тик 00:05). */
+    suspend fun nightlyReconcile() = reconcileUpcoming(notifyOnChange = true)
+
+    private suspend fun updateLastScheduled(plan: AlarmPlan) {
+        settings.update {
+            it.copy(
+                lastScheduledWakeEpochMinute =
+                    plan.wakeAt.toLocalDate().toEpochDay() * 1440L +
+                        plan.wakeAt.hour * 60L + plan.wakeAt.minute,
+                lastScheduledLabel = plan.label
+            )
+        }
+    }
+
+    private suspend fun clearLastScheduled() {
+        settings.update {
+            it.copy(lastScheduledWakeEpochMinute = -1L, lastScheduledLabel = "")
         }
     }
 

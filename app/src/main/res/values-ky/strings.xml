@@ -164,6 +164,7 @@
     <string name="skip_no_lessons">жуп жок</string>
     <string name="skip_no_upcoming">алдагы жуп табылган жок</string>
     <string name="skip_clock_refused">Телефондун саат колдонмосу буйрукту кабыл албады — параметрлерден «Ояткыч эскертүүсүн» күйгүз</string>
+    <string name="skip_too_far">сабак аптадан да алыс — оятуучу анын алдында автоматтык түрдө коюлат</string>
     <string name="test_alarm_label">Тест: Автоояткыч иштеп турат!</string>
     <string name="test_alarm_ok">2 минутка ояткыч коюлду — саатты текшер</string>
     <string name="test_alarm_fail">Сыноо ояткычын коюу мүмкүн болбоду — саат жооп бербейт</string>

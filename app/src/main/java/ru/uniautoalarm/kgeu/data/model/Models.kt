@@ -66,8 +66,10 @@ data class Settings(val setupComplete: Boolean = false,
     /** Открывать экран часов при постановке (SKIP_UI=false) — для ColorOS/Realme UI,
      *  где фоновая постановка с SKIP_UI=true молча блокируется; пользователь подтверждает тапом. */
     val alarmShowClockUi: Boolean = false,
-    /** Куда ставится будильник: в стоковые часы или в приложение (с 0.7.0, по умолчанию — часы). */
-    val alarmTarget: AlarmTarget = AlarmTarget.CLOCK,
+    /** Куда ставится будильник: в стоковые часы или в приложение. С 0.7.1 по умолчанию —
+     *  приложение: SET_ALARM часов не умеет «на дату» (звонил завтра под пару послезавтра),
+     *  а DISMISS на части оболочек молча игнорируется (тумблер не снимал будильники). */
+    val alarmTarget: AlarmTarget = AlarmTarget.APP,
     /** Свой подъём для каждой первой пары: ключ — минуты от 00:00 начала пары,
      *  значение — запас на сборы. Пары без записи используют общий wakeOffsetMinutes. */
     val firstLessonOffsets: Map<Int, Int> = emptyMap(),

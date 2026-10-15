@@ -164,6 +164,7 @@
     <string name="skip_no_lessons">sapak ýok</string>
     <string name="skip_no_upcoming">geljekki sapak tapylmady</string>
     <string name="skip_clock_refused">telefonuň sagady buýrugy kabul etmedi — sazlamalarda «Ýatgyjy ýada salyşy» bölümini ýak</string>
+    <string name="skip_too_far">sapy hepdeden hem daşda — jaňawlyk awtomatiki onuň öňünden goýulýar</string>
     <string name="test_alarm_label">Synag: Awtomatik ýatgyjy işleýär!</string>
     <string name="test_alarm_ok">2 minutlyk ýatgyjy goýuldy — sagady barla</string>
     <string name="test_alarm_fail">Synag ýatgyjysyny goýmak başartmady — sagat jogap bermeýär</string>

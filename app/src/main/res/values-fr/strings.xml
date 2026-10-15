@@ -164,6 +164,7 @@
     <string name="skip_no_lessons">pas de cours</string>
     <string name="skip_no_upcoming">aucun cours à venir trouvé</string>
     <string name="skip_clock_refused">l\'horloge du téléphone n\'a pas accepté la commande — active le « Rappel du réveil » dans les paramètres</string>
+    <string name="skip_too_far">le cours est dans plus d’une semaine — le réveil sera programmé automatiquement à l’approche</string>
     <string name="test_alarm_label">Test : l\'Auto-réveil fonctionne !</string>
     <string name="test_alarm_ok">Réveil programmé dans 2 minutes — vérifie l\'horloge</string>
     <string name="test_alarm_fail">Impossible de programmer le réveil de test — l\'horloge ne répond pas</string>

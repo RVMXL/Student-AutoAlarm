@@ -164,6 +164,7 @@
     <string name="skip_no_lessons">паралар юҡ</string>
     <string name="skip_no_upcoming">алдағы паралар табылманы</string>
     <string name="skip_clock_refused">Телефон сәғәте бойороҡто ҡабул итмәне — көйләүҙәрҙә «Будильник иҫкәрмәһен» ҡабыҙ</string>
+    <string name="skip_too_far">паралар аҙнанан һуңыраҡ — будильник уның алдында автоматик рәүештә ҡуйыласаҡ</string>
     <string name="test_alarm_label">Тест: Автобудильник эшләй!</string>
     <string name="test_alarm_ok">2 минутҡа будильник ҡуйылды — сәғәтте тикшер</string>
     <string name="test_alarm_fail">Тест будильнигын ҡуйып булманы — сәғәт яуап бирмәй</string>

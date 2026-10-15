@@ -164,6 +164,7 @@
     <string name="skip_no_lessons">пара нест</string>
     <string name="skip_no_upcoming">параҳои оянда ёфт нашуданд</string>
     <string name="skip_clock_refused">Соати телефон фармонро қабул накард — дар танзимот «Ёдоварии будильник»-ро фаъол кун</string>
+    <string name="skip_too_far">дарс беш аз як ҳаффа дур аст — зангчӣ худкор пеш аз он гузошта мешавад</string>
     <string name="test_alarm_label">Санҷиш: Автобудильник кор мекунад!</string>
     <string name="test_alarm_ok">Будильник ба 2 дақиқа дигар гузошта шуд — соатро санҷ</string>
     <string name="test_alarm_fail">Будильники санҷишӣ гузошта нашуд — соат ҷавоб намедиҳад</string>

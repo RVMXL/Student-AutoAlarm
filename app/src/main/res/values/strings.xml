@@ -164,6 +164,7 @@
     <string name="skip_no_lessons">пар нет</string>
     <string name="skip_no_upcoming">предстоящих пар не нашлось</string>
     <string name="skip_clock_refused">часы телефона не приняли команду — включите «Напоминание о будильнике» в настройках</string>
+    <string name="skip_too_far">пара дальше недели — будильник установится автоматически ближе к ней</string>
     <string name="test_alarm_label">Тест: Автобудильник работает!</string>
     <string name="test_alarm_ok">Будильник на 2 минуты поставлен — проверь часы</string>
     <string name="test_alarm_fail">Не удалось поставить тестовый будильник — часы не отвечают</string>

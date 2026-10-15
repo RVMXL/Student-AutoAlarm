@@ -164,6 +164,7 @@
     <string name="skip_no_lessons">жұп жоқ</string>
     <string name="skip_no_upcoming">алдағы жұп табылмады</string>
     <string name="skip_clock_refused">Телефонның сағат қолданбасы пәрменді қабылдамады — параметрлерден «Оятқыш ескертуін» қос</string>
+    <string name="skip_too_far">сабақ аптадан да алыс — оятқыш оның алдында автоматты түрде қойылады</string>
     <string name="test_alarm_label">Тест: Автооятқыш жұмыс істеп тұр!</string>
     <string name="test_alarm_ok">2 минутқа оятқыш қойылды — сағатты тексер</string>
     <string name="test_alarm_fail">Сынақ оятқышын қою мүмкін болмады — сағат жауап бермейді</string>

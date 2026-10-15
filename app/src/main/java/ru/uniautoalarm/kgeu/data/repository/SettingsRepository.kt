@@ -65,6 +65,7 @@ class SettingsRepository(private val context: Context) {
         val WEEK_ALARMS_SIGNATURE = stringPreferencesKey("week_alarms_signature")
         val LAST_SCHEDULED_WAKE = longPreferencesKey("last_scheduled_wake_epoch_minute")
         val LAST_SCHEDULED_LABEL = stringPreferencesKey("last_scheduled_label")
+        val MIGRATED_APP_ENGINE = booleanPreferencesKey("migrated_app_engine_071")
     }
 
     /** Поток настроек: перевыпускается при каждом изменении; сбой чтения → значения по умолчанию. */
@@ -88,6 +89,27 @@ class SettingsRepository(private val context: Context) {
     /** Цель расписания (группа/преподаватель) пишется одним блоком — три поля не должны разъехаться. */
     suspend fun applyTarget(type: TargetType, id: Int, name: String) {
         update { it.copy(targetType = type, targetId = id, targetName = name) }
+    }
+
+    /**
+     * Одноразовая миграция 0.7.0 → 0.7.1: движком будильника по умолчанию становится
+     * «В приложении». Причины:
+     *  1) SET_ALARM стоковых часов не умеет «на дату»: одноразовый будильник звенит
+     *     в ближайшее наступление времени подъёма — при паре через два дня звенел
+     *     ЗАВТРА («раз через раз» — совпадение, когда пара и правда завтра);
+     *  2) DISMISS_ALARM на части оболочек (ColorOS/Realme UI) молча игнорируется —
+     *     выключение тумблера не снимало будильники.
+     * Собственный AlarmManager.setAlarmClock лишён обеих проблем (точная дата,
+     * гарантированный cancel). Пользователь может вернуть часы в настройках;
+     * миграция применяется ровно один раз (флаг MIGRATED_APP_ENGINE).
+     */
+    suspend fun migrate071AppEngine() {
+        context.dataStore.edit { prefs ->
+            if (prefs[Keys.MIGRATED_APP_ENGINE] != true) {
+                prefs[Keys.ALARM_TARGET] = AlarmTarget.APP.name
+                prefs[Keys.MIGRATED_APP_ENGINE] = true
+            }
+        }
     }
 
     // --- Чтение ---
@@ -114,7 +136,7 @@ class SettingsRepository(private val context: Context) {
         reminderEnabled = this[Keys.REMINDER_ENABLED] ?: false,
         reminderTime = this[Keys.REMINDER_TIME]?.let { parseTime(it) } ?: LocalTime.of(21, 0),
         alarmShowClockUi = this[Keys.ALARM_SHOW_CLOCK_UI] ?: false,
-        alarmTarget = parseEnum(this[Keys.ALARM_TARGET], AlarmTarget.CLOCK),
+        alarmTarget = parseEnum(this[Keys.ALARM_TARGET], AlarmTarget.APP),
         firstLessonOffsets = this[Keys.FIRST_LESSON_OFFSETS]?.let { parseOffsets(it) } ?: emptyMap(),
         glassEnabled = this[Keys.GLASS_ENABLED] ?: false,
         glassIntensity = this[Keys.GLASS_INTENSITY] ?: 0.5f,

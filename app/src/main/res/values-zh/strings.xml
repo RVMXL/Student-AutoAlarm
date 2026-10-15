@@ -164,6 +164,7 @@
     <string name="skip_no_lessons">没有课</string>
     <string name="skip_no_upcoming">没有找到即将到来的课程</string>
     <string name="skip_clock_refused">手机时钟应用未接受命令 — 请在应用设置中开启“闹钟提醒”</string>
+    <string name="skip_too_far">课程在一周之后 —— 闹钟会在临近时自动设置</string>
     <string name="test_alarm_label">测试：自动闹钟运行中！</string>
     <string name="test_alarm_ok">已设置 2 分钟后的闹钟 — 去时钟应用里看看</string>
     <string name="test_alarm_fail">测试闹钟设置失败 — 时钟应用没有响应</string>

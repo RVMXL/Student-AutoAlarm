@@ -9,6 +9,7 @@ import android.util.Log
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -101,9 +102,10 @@ class StockAlarmSetter(
     }
 
     /**
-     * Поставить будильник на [date] по плану планировщика.
+     * Поставить будильник на [date] по плану планировщика (0.7.1: доставка уважает ДАТУ —
+     * см. правило дней ниже; 0.6.0/0.7.0 ставили одноразовый, звеневший завтра).
      * @return план, если будильник реально передан часам;
-     *         null — пар нет / часы не приняли команду / сбой запуска.
+     *         null — пар нет / пара дальше недели / часы не приняли команду / сбой запуска.
      */
     suspend fun setForDate(date: LocalDate, notify: Boolean = true): AlarmPlan? =
         withContext(Dispatchers.Default) {
@@ -124,7 +126,41 @@ class StockAlarmSetter(
                 return@withContext null
             }
 
-            if (deliver(plan.wakeAt.hour, plan.wakeAt.minute, plan.label, s.alarmShowClockUi)) {
+            // защита от вызова с уже прошедшим моментом: одноразовый SET_ALARM зазвенел бы
+            // в следующее наступление этого времени — завтра
+            if (!plan.wakeAt.isAfter(LocalDateTime.now())) return@withContext null
+
+            // SET_ALARM не умеет «на дату»: одноразовый будильник (без EXTRA_DAYS) звенит
+            // в ближайшее наступление времени подъёма — при паре через два дня это ЗАВТРА
+            // (баг 0.6.0/0.7.0: «будильник на завтра под пару послезавтра», «раз через раз» —
+            // совпадение, когда пара и правда завтра). Правило доставки по удалённости:
+            //  — сегодня (подъём ещё впереди): одноразовый — сработает сегодня;
+            //  — завтра…+6 дней: недельный повтор на день недели пары — ближайшее
+            //    наступление этого дня недели и есть дата пары;
+            //  — дальше недели: контракт дату выразить не может — не ставим, ночная
+            //    сверка поставит накануне (AlarmGateway.reconcileUpcoming).
+            val daysAhead = ChronoUnit.DAYS.between(LocalDate.now(), date)
+            if (daysAhead > 6) {
+                if (notify) {
+                    Notifications.alarmSkipped(
+                        context, date, LocaleHelper.string(context, R.string.skip_too_far)
+                    )
+                }
+                return@withContext null
+            }
+            val delivered = if (daysAhead <= 0) {
+                deliver(plan.wakeAt.hour, plan.wakeAt.minute, plan.label, s.alarmShowClockUi)
+            } else {
+                deliver(
+                    hour = plan.wakeAt.hour,
+                    minute = plan.wakeAt.minute,
+                    label = plan.label,
+                    showClockUi = s.alarmShowClockUi,
+                    repeatCalendarDays = listOf(calendarDayOf(date.dayOfWeek))
+                )
+            }
+
+            if (delivered) {
                 if (notify) Notifications.alarmSet(context, plan)
                 // маркеры для дедупликации мгновенной постановки (см. setNextUpcoming):
                 // без них тумблер днём + ночной тик 00:05 ставили бы два одинаковых будильника;

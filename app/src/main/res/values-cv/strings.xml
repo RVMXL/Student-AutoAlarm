@@ -164,6 +164,7 @@
     <string name="skip_no_lessons">парасем çук</string>
     <string name="skip_no_upcoming">малти парасем тупӑнмарӗҫ</string>
     <string name="skip_clock_refused">телефон сехетӗсем команда йышӑнмарӗҫ — йышӑнусенче „Будильник çинчен асӑну“ хушӑр</string>
+    <string name="skip_too_far">пара эрнерен те инҫет — будильник ӑна умӗнченех автоматик лартӑна</string>
     <string name="test_alarm_label">Тест: Автобудильник ĕçлет!</string>
     <string name="test_alarm_ok">2 минутран будильник лартӑннӑ — сехетсене пӑх</string>
     <string name="test_alarm_fail">Тест будильникне ларта пулмарӗ — сехетсем йышӑнмаҫҫӗ</string>

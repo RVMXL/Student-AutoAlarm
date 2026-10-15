@@ -46,6 +46,13 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
             runCatching { container.alarm.setWeekAhead(notify = false) }
         }
 
+        // «Стандарт» (0.7.1): сверка с ближайшим ПРЕДСТОЯЩИМ пробуждением по свежему
+        // расписанию — замена, опубликованная среди дня, переставляет будильник сразу,
+        // а не следующей ночью; верный будильник не трогается
+        if (s.mode == AlarmMode.STANDARD && s.autoAlarmEnabled) {
+            runCatching { container.alarm.reconcileUpcoming(notifyOnChange = true) }
+        }
+
         return Result.success()
     }
 
