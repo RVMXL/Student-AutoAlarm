@@ -1,9 +1,6 @@
 package ru.uniautoalarm.kgeu
 
 import android.app.Application
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import ru.uniautoalarm.kgeu.alarm.NightlyScheduler
 import ru.uniautoalarm.kgeu.alarm.ReminderScheduler
@@ -19,7 +16,9 @@ class AutoAlarmApp : Application() {
     override fun onCreate() {
         super.onCreate()
         container = AppContainer(this)
-        CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
+        // DATA-14 (0.10.0): миграции — в appScope контейнера, а не в ad-hoc scope:
+        // общий SupervisorJob, и нет гонки отмирания анонимного scope с SyncWorker
+        container.appScope.launch {
             // 0.7.1: одноразовый переезд на движок «В приложении» — SET_ALARM стоковых
             // часов не умеет «на дату», DISMISS на части оболочек молча игнорируется.
             runCatching { container.settings.migrate071AppEngine() }
@@ -33,7 +32,7 @@ class AutoAlarmApp : Application() {
                     if (legacyUntil >= 0) {
                         container.inAppAlarms.cancelRange(legacyUntil - 20, legacyUntil + 20)
                     }
-                    container.alarm.dismissAll(openListOnUnsupported = false)
+                    container.alarm.dismissAll()
                     // после снятия наследия — ставим ближайшее пробуждение заново,
                     // чтобы обновившийся пользователь без тумблера не остался без будильника
                     val s = container.settings.current()

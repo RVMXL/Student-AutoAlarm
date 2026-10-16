@@ -1,6 +1,7 @@
 package ru.uniautoalarm.kgeu.di
 
 import android.content.Context
+import java.io.File
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -24,7 +25,8 @@ class AppContainer(context: Context) {
 
     val database by lazy { AppDatabase.getInstance(context) }
     val settings by lazy { SettingsRepository(context) }
-    val kgeuApi by lazy { KgeuApi() }
+    // DATA-17: OkHttp-кэш в cacheDir приложения
+    val kgeuApi by lazy { KgeuApi(File(appContext.cacheDir, "http")) }
 
     // appContext нужен репозиторию для уведомления «проверьте группу» (DATA-1)
     val scheduleRepository by lazy {

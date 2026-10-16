@@ -35,6 +35,13 @@ interface LessonDao {
     @Query("DELETE FROM lessons WHERE targetKey = :targetKey")
     suspend fun deleteAllFor(targetKey: String)
 
+    /**
+     * Кэш прежних целей не нужен (DATA-5, 0.10.0): после успешного полного синка
+     * оставляем только строки текущей цели — таблица не растёт от смен групп/преподавателей.
+     */
+    @Query("DELETE FROM lessons WHERE targetKey != :keepTargetKey")
+    suspend fun deleteOtherTargets(keepTargetKey: String)
+
     @Query("DELETE FROM lessons")
     suspend fun deleteAll()
 
@@ -44,6 +51,13 @@ interface LessonDao {
     /** Уникальные названия дисциплин в кэше — для автодополнения исключений. */
     @Query("SELECT DISTINCT subject FROM lessons ORDER BY subject ASC")
     fun distinctSubjects(): Flow<List<String>>
+
+    /** Уникальные названия дисциплин ЦЕЛИ — автодополнение без чужих предметов (DATA-5). */
+    @Query(
+        "SELECT DISTINCT subject FROM lessons WHERE targetKey = :targetKey " +
+            "ORDER BY subject ASC"
+    )
+    fun observeDistinctSubjects(targetKey: String): Flow<List<String>>
 
     /** Одиночный срез уникальных названий — миграция правил-исключений 0.9.0 (DATA-3). */
     @Query("SELECT DISTINCT subject FROM lessons")

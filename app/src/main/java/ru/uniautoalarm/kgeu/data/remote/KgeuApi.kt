@@ -1,13 +1,16 @@
 package ru.uniautoalarm.kgeu.data.remote
 
+import java.io.File
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeParseException
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
+import okhttp3.Cache
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -21,12 +24,17 @@ class KgeuApiException(message: String) : Exception(message)
  * Клиент публичного JSON-API расписания КГЭУ (kabinet.kgeu.ru, платформа DSTU WebApp).
  * Все запросы — синхронный OkHttp внутри withContext(Dispatchers.IO).
  * Контракт задокументирован в docs/research/kgeu-api.md; поля ответов на русском.
+ *
+ * 0.10.0: HTTP-кэш OkHttp (DATA-17 — повторные запросы ночного графика дешевле);
+ * лимит тела ответа (SEC-4 — враждебный/побитый сервер больше не может уложить
+ * приложение OOM'ом); времена парсятся в МСК и переводятся в системную зону (DATA-13).
  */
-class KgeuApi {
+class KgeuApi(cacheDir: File? = null) {
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
+        .apply { if (cacheDir != null) cache(Cache(cacheDir, MAX_CACHE_BYTES)) }
         .build()
 
     private val json = JSON
@@ -96,10 +104,19 @@ class KgeuApi {
             .build()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) throw KgeuApiException("HTTP ${response.code} ${response.message}")
+            // SEC-4: тело больше лимита — не читаем вовсе (OOM-защита от враждебного сервера)
+            val declared = response.body?.contentLength() ?: -1L
+            if (declared > MAX_BODY_BYTES) {
+                throw KgeuApiException("Response too large: $declared bytes")
+            }
             // Технические тексты здесь на английском: они попадают в снекбар
             // «Ошибка обновления: …» при ЛЮБОМ языке интерфейса (i18n 0.5.0)
-            return response.body?.string()
+            val bytes = response.body?.source()?.readByteArray()
                 ?: throw KgeuApiException("Empty response from server")
+            if (bytes.size > MAX_BODY_BYTES) {
+                throw KgeuApiException("Response too large: ${bytes.size} bytes")
+            }
+            return String(bytes, Charsets.UTF_8)
         }
     }
 
@@ -114,7 +131,17 @@ class KgeuApi {
 
     companion object {
         const val BASE_URL = "https://kabinet.kgeu.ru"
-        private const val USER_AGENT = "Mozilla/5.0 (Linux; Android) UniAutoAlarm/0.1.0"
+        // DATA-16 (0.10.0): User-Agent больше не вечно 0.1.0 — сервер видит фактическую версию
+        private const val USER_AGENT = "Mozilla/5.0 (Linux; Android) UniAutoAlarm/0.10.0"
+
+        /** SEC-4: максимум тела ответа (полный семестр ~300 КБ — запас ×16). */
+        private const val MAX_BODY_BYTES = 5L * 1024 * 1024
+
+        /** DATA-17: объём HTTP-кэша OkHttp. */
+        private const val MAX_CACHE_BYTES = 5L * 1024 * 1024
+
+        /** Зона расписания КГЭУ (Казань) — сервер присылает стенку-время БЕЗ смещения (DATA-13). */
+        private val SCHEDULE_ZONE = ZoneId.of("Europe/Moscow")
 
         /** Единая конфигурация JSON — и для сети, и для golden-тестов парсера. */
         internal val JSON = Json {
@@ -140,11 +167,21 @@ class KgeuApi {
             return env.data?.rasp ?: emptyList()
         }
 
-        /** «2026-10-12T08:00:00» → LocalDateTime; пустая/битая строка → null. */
+        /**
+         * «2026-10-12T08:00:00» → LocalDateTime в СИСТЕМНОЙ зоне; пустая/битая строка → null.
+         *
+         * DATA-13 (0.10.0): сервер КГЭУ пишет стенку-время Казани (UTC+3) без смещения.
+         * Раньше строка парсилась как локальная — вне UTC+3 будильник сдвигался на
+         * разницу зон. Теперь момент привязывается к МСК и переводится в системную
+         * зону (для всей европейской части России, включая Казань, — без изменений).
+         */
         fun parseIsoDateTime(raw: String?): LocalDateTime? =
             if (raw.isNullOrBlank()) null
             else try {
                 LocalDateTime.parse(raw)
+                    .atZone(SCHEDULE_ZONE)
+                    .withZoneSameInstant(ZoneId.systemDefault())
+                    .toLocalDateTime()
             } catch (e: DateTimeParseException) {
                 null
             }

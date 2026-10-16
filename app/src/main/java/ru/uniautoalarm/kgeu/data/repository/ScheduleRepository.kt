@@ -19,6 +19,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import ru.uniautoalarm.kgeu.alarm.Notifications
 import ru.uniautoalarm.kgeu.data.db.AppDatabase
 import ru.uniautoalarm.kgeu.data.db.ExceptionEntity
@@ -49,8 +51,26 @@ class ScheduleRepository(
     /** Состояние синхронизации для UI: занятость, время, ошибка, число записей за неделю. */
     val syncState: StateFlow<SyncInfo> = _syncState.asStateFlow()
 
-    /** Уникальные названия дисциплин в кэше — автодополнение исключений в настройках. */
-    val subjects: Flow<List<String>> = db.lessonDao().distinctSubjects()
+    /**
+     * Single-flight синхронизации (DATA-8, 0.10.0): ночной тик + periodic WorkManager +
+     * ручное обновление могут сойтись в один момент — без мьютекса это дубли сетевых
+     * запросов и перетираемый busy; теперь запросы выполняются строго по одному.
+     */
+    private val syncGate = Mutex()
+
+    /**
+     * Уникальные названия дисциплин в кэше СЕКУЩЕЙ цели — автодополнение исключений
+     * (DATA-5, 0.10.0): раньше подтягивались предметы ВСЕХ целей, когда-либо
+     * попадавших в кэш, включая давно сменённые группы.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val subjects: Flow<List<String>> = settings.settings
+        .map { s -> s.toTargetOrNull() }
+        .distinctUntilChanged()
+        .flatMapLatest { target ->
+            if (target == null) flowOf(emptyList())
+            else db.lessonDao().observeDistinctSubjects(targetKey(target))
+        }
 
     /**
      * Подозрительно пустые ответы подряд (DATA-1): сервер КГЭУ на несуществующий/устаревший
@@ -72,57 +92,63 @@ class ScheduleRepository(
      * Ошибки сети/парсинга наружу не бросаются: Result.failure + запись в syncState
      * (кэш при этом остаётся — движок продолжит работать на старых данных).
      */
-    suspend fun refreshWeek(target: Target, onDate: LocalDate): Result<Int> {
-        val key = targetKey(target)
-        val monday = onDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
-        val sunday = monday.plusDays(6)
-        _syncState.update { it.copy(busy = true) }
-        return try {
-            val items = api.rasp(target, monday)
-            val fromDay = monday.toEpochDay()
-            val toDay = sunday.toEpochDay()
-            val entities = items.mapNotNull { it.toEntity(key) }
-                .filter { it.dateEpochDay in fromDay..toDay }
-            // DATA-1: пустой ответ при непустом кэше — подозрение на устаревший idGroup
-            // (смена учебного года): кэш НЕ стираем, считаем серию пустых ответов
-            val suspiciousEmpty = entities.isEmpty() && db.lessonDao().countFor(key) > 0
-            db.withTransaction {
-                if (suspiciousEmpty) {
-                    Log.w(TAG, "Пустой ответ при непустом кэше (idGroup мог устареть) — кэш сохранён (DATA-1)")
-                } else {
-                    db.lessonDao().deleteRange(key, fromDay, toDay)
-                    db.lessonDao().insertAll(entities)
+    suspend fun refreshWeek(target: Target, onDate: LocalDate): Result<Int> =
+        syncGate.withLock {
+            val key = targetKey(target)
+            val monday = onDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+            val sunday = monday.plusDays(6)
+            _syncState.update { it.copy(busy = true) }
+            try {
+                val items = api.rasp(target, monday)
+                val fromDay = monday.toEpochDay()
+                val toDay = sunday.toEpochDay()
+                val entities = items.mapNotNull { it.toEntity(key) }
+                    .filter { it.dateEpochDay in fromDay..toDay }
+                // DATA-1: пустой ответ при непустом кэше — подозрение на устаревший idGroup
+                // (смена учебного года): кэш НЕ стираем, считаем серию пустых ответов
+                val suspiciousEmpty = entities.isEmpty() && db.lessonDao().countFor(key) > 0
+                db.withTransaction {
+                    if (suspiciousEmpty) {
+                        Log.w(TAG, "Пустой ответ при непустом кэше (idGroup мог устареть) — кэш сохранён (DATA-1)")
+                    } else {
+                        db.lessonDao().deleteRange(key, fromDay, toDay)
+                        db.lessonDao().insertAll(entities)
+                    }
                 }
+                updateEmptyStreak(suspiciousEmpty)
+                _syncState.update {
+                    it.copy(
+                        busy = false,
+                        lastSyncEpochMs = if (suspiciousEmpty) it.lastSyncEpochMs else System.currentTimeMillis(),
+                        lastError = null,
+                        lastSyncWeekCount = entities.size
+                    )
+                }
+                Result.success(entities.size)
+            } catch (e: CancellationException) {
+                _syncState.update { it.copy(busy = false) } // отмену не глотаем, но busy сбрасываем
+                throw e
+            } catch (e: Exception) {
+                _syncState.update {
+                    it.copy(busy = false, lastError = e.message ?: "Ошибка обновления расписания")
+                }
+                Result.failure(e)
             }
-            updateEmptyStreak(suspiciousEmpty)
-            _syncState.update {
-                it.copy(
-                    busy = false,
-                    lastSyncEpochMs = if (suspiciousEmpty) it.lastSyncEpochMs else System.currentTimeMillis(),
-                    lastError = null,
-                    lastSyncWeekCount = entities.size
-                )
-            }
-            Result.success(entities.size)
-        } catch (e: CancellationException) {
-            _syncState.update { it.copy(busy = false) } // отмену не глотаем, но busy сбрасываем
-            throw e
-        } catch (e: Exception) {
-            _syncState.update {
-                it.copy(busy = false, lastError = e.message ?: "Ошибка обновления расписания")
-            }
-            Result.failure(e)
         }
-    }
 
     /**
      * Полная синхронизация: запрос без sdate (весь семестр одним ответом ~200–300 КБ)
-     * + границы семестра (GetRaspDates → semesterMin/Max) + отметка lastFullSyncEpochMs.
+     * + границы семестра (GetRaspDates → semesterMin/Max).
+     *
+     * DATA-4 (0.10.0): штамп свежести lastFullSyncEpochMs ставится по успеху ГЛАВНОГО
+     * запроса /api/Rasp. Раньше он ставился только внутри блока GetRaspDates — сбой
+     * вспомогательного запроса означал вечный full-sync каждые 12 часов и вечный
+     * ложный баннер «расписание устарело».
      */
-    suspend fun refreshFull(target: Target): Result<Int> {
+    suspend fun refreshFull(target: Target): Result<Int> = syncGate.withLock {
         val key = targetKey(target)
         _syncState.update { it.copy(busy = true) }
-        return try {
+        try {
             val items = api.rasp(target, null)
             val entities = items.mapNotNull { it.toEntity(key) }
             // DATA-1: state:1 + пустой rasp при непустом кэше — НЕ успех-очистка:
@@ -134,10 +160,16 @@ class ScheduleRepository(
                 } else {
                     db.lessonDao().deleteAllFor(key)
                     db.lessonDao().insertAll(entities)
+                    // DATA-5: кэш прежних целей больше не нужен — таблица не растёт
+                    db.lessonDao().deleteOtherTargets(key)
                 }
             }
             updateEmptyStreak(suspiciousEmpty)
-            // Границы семестра — вспомогательные: их сбой не должен валить синхронизацию
+            if (!suspiciousEmpty) {
+                // DATA-4: свежесть — от успеха основного запроса расписания
+                settings.update { s -> s.copy(lastFullSyncEpochMs = System.currentTimeMillis()) }
+            }
+            // Границы семестра — вспомогательные: их сбой НЕ влияет на свежесть (DATA-4)
             runCatching {
                 val dates = api.raspDates(target)
                 val min = dates.minDate?.let { parseDate(it) }
@@ -146,11 +178,7 @@ class ScheduleRepository(
                     settings.update { s ->
                         s.copy(
                             semesterMin = min ?: s.semesterMin,
-                            semesterMax = max ?: s.semesterMax,
-                            // свежесть не штампуем при подозрительно пустом ответе:
-                            // иначе баннер «устарело» гаснет на пустом кэше (DATA-1)
-                            lastFullSyncEpochMs =
-                                if (suspiciousEmpty) s.lastFullSyncEpochMs else System.currentTimeMillis()
+                            semesterMax = max ?: s.semesterMax
                         )
                     }
                 }

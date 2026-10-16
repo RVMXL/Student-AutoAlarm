@@ -1,6 +1,7 @@
 package ru.uniautoalarm.kgeu.work
 
 import android.content.Context
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -18,6 +19,7 @@ object WorkScheduler {
     fun enqueueSyncNow(context: Context) {
         val request = OneTimeWorkRequestBuilder<SyncWorker>()
             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, BACKOFF_DELAY_MS, TimeUnit.MILLISECONDS)
             .setConstraints(
                 Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -31,9 +33,15 @@ object WorkScheduler {
         )
     }
 
-    /** Периодическая синхронизация каждые 12 часов при наличии сети (KEEP — не перетирать график). */
+    /**
+     * Периодическая синхронизация каждые 12 часов при наличии сети.
+     * DATA-12 (0.10.0): политика UPDATE вместо KEEP — при изменении запроса
+     * (например, будущая смена периода/ограничений) новая спецификация ДОЙДЁТ
+     * до уже установленных копий приложения, а не заморозится навсегда.
+     */
     fun ensurePeriodic(context: Context) {
         val request = PeriodicWorkRequestBuilder<SyncWorker>(12, TimeUnit.HOURS)
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, BACKOFF_DELAY_MS, TimeUnit.MILLISECONDS)
             .setConstraints(
                 Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -42,8 +50,11 @@ object WorkScheduler {
             .build()
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             SyncWorker.WORK_NAME_PERIODIC,
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.UPDATE,
             request
         )
     }
+
+    /** Экспоненциальный backoff для retry-попыток SyncWorker (DATA-9). */
+    private const val BACKOFF_DELAY_MS = 10L * 60 * 1000
 }

@@ -7,6 +7,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import java.time.LocalDate
+import kotlinx.coroutines.CancellationException
 import ru.uniautoalarm.kgeu.AutoAlarmApp
 import ru.uniautoalarm.kgeu.alarm.Notifications
 import ru.uniautoalarm.kgeu.data.model.Target
@@ -14,7 +15,10 @@ import ru.uniautoalarm.kgeu.data.model.Target
 /**
  * Фоновая перепроверка расписания: сегодня, сегодня+7, раз в 7 дней — весь семестр,
  * плюс сверка будильника с ближайшим предстоящим пробуждением (логика «одна ночь вперёд»).
- * Все ошибки глотаются (Result.success): подробности уже в ScheduleRepository.syncState.
+ *
+ * DATA-9 (0.10.0): сетевые сбои больше не глотаются в Result.success — воркер вернёт
+ * Result.retry() (экспоненциальный backoff задан на запросах в WorkScheduler);
+ * после MAX_ATTEMPTS попыток сдаёмся и выходим с успехом, чтобы периодика не зависала.
  */
 class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
@@ -23,19 +27,39 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
         val s = container.settings.current()
         if (!s.setupComplete) return Result.success() // онбординг не пройден
 
+        var failed = false
         val type = s.targetType
         val id = s.targetId
         if (type != null && id != null) {
             val target = Target(type, id, s.targetName)
 
-            // Неделя сейчас и через 7 дней — дёшево (~15 КБ каждый запрос)
-            runCatching { container.scheduleRepository.refreshWeek(target, LocalDate.now()) }
-            runCatching { container.scheduleRepository.refreshWeek(target, LocalDate.now().plusDays(7)) }
+            // Неделя сейчас и через 7 дней — дёшево (~15 КБ каждый запрос).
+            // DATA-10: CancellationException не глотается — отмену воркера отдаём системе
+            try {
+                container.scheduleRepository.refreshWeek(target, LocalDate.now())
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                failed = true
+            }
+            try {
+                container.scheduleRepository.refreshWeek(target, LocalDate.now().plusDays(7))
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                failed = true
+            }
 
             // Полный семестр — не чаще раза в 7 дней
             val now = System.currentTimeMillis()
             if (now - s.lastFullSyncEpochMs > FULL_SYNC_INTERVAL_MS) {
-                runCatching { container.scheduleRepository.refreshFull(target) }
+                try {
+                    container.scheduleRepository.refreshFull(target)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Exception) {
+                    failed = true
+                }
             }
         }
 
@@ -44,8 +68,8 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
         // сразу, а не следующей ночью; верный будильник не трогается.
         // AL-2: allowClockDelivery=false — из фона SET_ALARM часам не отправляем:
         // startActivity вне allowlist может быть молча заблокирован (BAL, Android 10+),
-        // а «исключение не брошено» ≠ «будильник поставлен» — ложный маркер делал бы
-        // ночную сверку no-op ровно в тот день, когда она и нужна. APP-слот правится
+        // а «исключение не брошено» ≠ «будильник поставлен» — запись маркера
+        // по ложной доставке превращала ночную сверку в no-op. APP-слот правится
         // отсюда безопасно (AlarmManager, без BAL).
         if (s.autoAlarmEnabled) {
             runCatching {
@@ -53,7 +77,9 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
             }
         }
 
-        return Result.success()
+        // DATA-9: сеть падала — просим retry с backoff (не чаще MAX_ATTEMPTS раз)
+        return if (failed && runAttemptCount < MAX_ATTEMPTS) Result.retry()
+        else Result.success()
     }
 
     /**
@@ -79,6 +105,9 @@ class SyncWorker(context: Context, params: WorkerParameters) : CoroutineWorker(c
 
         /** Уникальное имя разовой expedited-синхронизации. */
         const val WORK_NAME_ONESHOT = "syncNow"
+
+        /** DATA-9: максимум retry-попыток, после — сдаёмся до следующего графика. */
+        const val MAX_ATTEMPTS = 3
 
         private const val FULL_SYNC_INTERVAL_MS = 7L * 24 * 60 * 60 * 1000
         private const val FOREGROUND_NOTIFICATION_ID = 2001

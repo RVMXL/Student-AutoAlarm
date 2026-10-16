@@ -1,6 +1,7 @@
 package ru.uniautoalarm.kgeu.data.repository
 
 import android.content.Context
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
@@ -25,8 +26,16 @@ import ru.uniautoalarm.kgeu.data.model.Settings
 import ru.uniautoalarm.kgeu.data.model.TargetType
 import ru.uniautoalarm.kgeu.data.model.ThemeMode
 
-/** Единый DataStore настроек приложения (синглтон на процесс по имени файла). */
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "uni_autoalarm_settings")
+/** Единый DataStore настроек приложения (синглтон на процесс по имени файла).
+ *
+ * DATA-6 (0.10.0): повреждённый файл настроек (побитый сектор, прерванная запись)
+ * больше не крашит приложение на первом edit() — corruption handler заменяет
+ * файл пустым снимком (настройки сбрасываются в дефолт, кэш расписания в Room не тронут).
+ */
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    name = "uni_autoalarm_settings",
+    corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() },
+)
 
 /**
  * Хранилище настроек на DataStore-preferences.
