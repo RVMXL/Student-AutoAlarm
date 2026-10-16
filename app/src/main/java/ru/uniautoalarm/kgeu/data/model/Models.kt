@@ -44,8 +44,12 @@ enum class AlarmTarget { CLOCK, APP }
 /** Тема приложения. */
 enum class ThemeMode { SYSTEM, LIGHT, DARK }
 
-/** Стиль экрана расписания. */
-enum class CalendarStyle { STANDARD, PAPER }
+/**
+ * Стиль экрана расписания. 0.14.0: кроме «Стандарта» и «Бумажного календаря» —
+ * пять оформительских скинов (Мел и доска, Неон, Терминал, Акварель, Ретро-печать),
+ * каждый — своя палитра/шрифт в ui.theme.CalendarSkins.
+ */
+enum class CalendarStyle { STANDARD, PAPER, CHALK, NEON, TERMINAL, AQUA, RETRO }
 
 /**
  * Полный снимок настроек (хранится в DataStore, см. SettingsRepository).
@@ -64,6 +68,9 @@ data class Settings(val setupComplete: Boolean = false,
     val themeMode: ThemeMode = ThemeMode.SYSTEM, val dynamicColor: Boolean = true,
     val accentIndex: Int = 0, val calendarStyle: CalendarStyle = CalendarStyle.STANDARD,
     val backgroundImagePath: String? = null, val backgroundOpacity: Float = 0.35f,
+    /** Свой акцентный цвет (0xAARRGGBB): используется при accentIndex == CUSTOM_ACCENT_INDEX.
+     *  null — свой цвет ещё не выбран (тогда работает дефолтная палитра). */
+    val customAccentColor: Int? = null,
     /** Напоминание о будильнике: своё уведомление — фолбэк, когда стоковые часы не принимают SET_ALARM. */
     val reminderEnabled: Boolean = false, val reminderTime: LocalTime = LocalTime.of(21, 0),
     /** Открывать экран часов при постановке (SKIP_UI=false) — для ColorOS/Realme UI,
@@ -76,8 +83,16 @@ data class Settings(val setupComplete: Boolean = false,
     /** Свой подъём для каждой первой пары: ключ — минуты от 00:00 начала пары,
      *  значение — запас на сборы. Пары без записи используют общий wakeOffsetMinutes. */
     val firstLessonOffsets: Map<Int, Int> = emptyMap(),
-    /** Эффект стекла: полупрозрачные карточки + размытие фоновой картинки. */
-    val glassEnabled: Boolean = false, val glassIntensity: Float = 0.5f,
+    /**
+     * Эффект стекла (0.14.0, переработка): полупрозрачные карточки, за которыми виден
+     * фрагмент фоновой картинки, размытый и искажённый — РОВНО за стеклом, сама картинка
+     * остаётся резкой. Матóвость [glassBlur] (0..1) — сила размытия и плотность морозной
+     * заливки; искажение [glassDistortion] (0..1) — «линзовое» искривление пространства
+     * за стеклом. Ползунки видны только при включённом стекле.
+     * Миграция: старый glassIntensity (0.9.0–0.13.0) читается как начальная матовость.
+     */
+    val glassEnabled: Boolean = false, val glassBlur: Float = 0.5f,
+    val glassDistortion: Float = 0.25f,
     /** Эпоха-минута (день*1440 + минуты) последнего поставленного разового будильника —
      *  дедупликация: мгновенная постановка при включении тумблера не дублирует
      *  ночную сверку 00:05, а сверка не снимает живой будильник. */

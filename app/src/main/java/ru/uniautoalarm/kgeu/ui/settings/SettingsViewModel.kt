@@ -33,7 +33,7 @@ import ru.uniautoalarm.kgeu.data.repository.ScheduleRepository
 import ru.uniautoalarm.kgeu.di.AppContainer
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 import ru.uniautoalarm.kgeu.ui.common.OffsetBounds
-import ru.uniautoalarm.kgeu.ui.theme.ACCENT_PALETTES
+import ru.uniautoalarm.kgeu.ui.theme.CUSTOM_ACCENT_INDEX
 
 /**
  * ViewModel экрана настроек: настройки (DataStore), исключения и свои занятия (Room).
@@ -86,7 +86,18 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     fun setAccent(index: Int) {
         viewModelScope.launch {
             container.settings.update {
-                it.copy(accentIndex = index.coerceIn(0, ACCENT_PALETTES.lastIndex))
+                // 0..5 — готовые палитры, 6 (CUSTOM_ACCENT_INDEX) — «свой цвет»;
+                // при 6 без выбранного цвета тема даёт безопасный фолбэк на дефолт
+                it.copy(accentIndex = index.coerceIn(0, CUSTOM_ACCENT_INDEX))
+            }
+        }
+    }
+
+    /** Свой акцентный цвет из палитры выбора: сохраняет цвет и сразу включает его. */
+    fun setCustomAccent(argb: Int) {
+        viewModelScope.launch {
+            container.settings.update {
+                it.copy(customAccentColor = argb or 0xFF000000.toInt(), accentIndex = CUSTOM_ACCENT_INDEX)
             }
         }
     }
@@ -271,9 +282,17 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
-    fun setGlassIntensity(value: Float) {
+    /** Матóвость стекла (0..1): сила размытия и плотность морозной заливки. */
+    fun setGlassBlur(value: Float) {
         viewModelScope.launch {
-            container.settings.update { it.copy(glassIntensity = value.coerceIn(0.05f, 0.9f)) }
+            container.settings.update { it.copy(glassBlur = value.coerceIn(0f, 1f)) }
+        }
+    }
+
+    /** Искажение стекла (0..1): «линзовое» искривление пространства за стеклом. */
+    fun setGlassDistortion(value: Float) {
+        viewModelScope.launch {
+            container.settings.update { it.copy(glassDistortion = value.coerceIn(0f, 1f)) }
         }
     }
 

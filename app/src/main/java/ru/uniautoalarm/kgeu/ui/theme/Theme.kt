@@ -52,23 +52,29 @@ fun AutoAlarmTheme(settings: Settings?, content: @Composable () -> Unit) {
             if (darkTheme) NeutralWarmDark else NeutralWarmLight
 
         else -> {
-            val palette = ACCENT_PALETTES[settings.accentIndex.coerceIn(0, ACCENT_PALETTES.lastIndex)]
+            // 0.14.0: accentIndex == CUSTOM_ACCENT_INDEX — схема собирается из
+            // своего цвета пользователя (customAccentPalette из одного ARGB);
+            // если цвет ещё не выбран — безопасный фолбэк на дефолтную палитру.
+            val palette = if (settings.accentIndex == CUSTOM_ACCENT_INDEX &&
+                settings.customAccentColor != null
+            ) {
+                customAccentPalette(settings.customAccentColor)
+            } else {
+                ACCENT_PALETTES[settings.accentIndex.coerceIn(0, ACCENT_PALETTES.lastIndex)]
+            }
             if (darkTheme) palette.toDarkScheme() else palette.toLightScheme()
         }
     }
 
-    // Эффект стекла: все поверхности/карточки становятся полупрозрачными, под ними
-    // просвечивает фоновая картинка. Интенсивность — ползунок в настройках (0..1):
-    // чем больше, тем прозрачнее.
-    // UI-20 (0.11.0): нижний порог альфы поднят 0.15 → 0.55 — при 0.15 текст поверх
-    // яркой картинки сливался (контраст ~1.8:1, WCAG требует 4.5:1 для мелкого);
-    // 0.55 держит фон читаемым, оставляя картинку видимой.
-    // ВАЖНО: стекло применяется ТОЛЬКО при заданной фоновой картинке. Без картинки
-    // полупрозрачные поверхности композитились бы с windowBackground — при тёмной
-    // системе и светлой теме это давало серую кашу («текст сливается»); без картинки
-    // в стекле нет смысла, поэтому схема остаётся плотной и контрастной.
+    // Эффект стекла (0.14.0): поверхности полупрозрачны, под ними — фрагмент фоновой
+    // картинки, размытый и искажённый РОВНО за стеклом (ui.theme.GlassBackdrop:
+    // каждая стеклянная поверхность рисует свой размытый кусок фона, сама картинка
+    // остаётся резкой). Матóвость [glassBlur] задаёт силу размытия и плотность
+    // морозной заливки; искажение [glassDistortion] — «линзовое» искривление.
+    // UI-20 (0.11.0): нижний порог альфы 0.55 — контраст текста (WCAG 4.5:1).
+    // ВАЖНО: стекло применяется ТОЛЬКО при заданной фоновой картинке (см. 0.11.0).
     if (settings?.glassEnabled == true && settings.backgroundImagePath != null) {
-        val glassAlpha = (1f - settings.glassIntensity * 0.85f).coerceIn(0.55f, 1f)
+        val glassAlpha = (1f - settings.glassBlur * 0.85f).coerceIn(0.55f, 1f)
         colorScheme = colorScheme.copy(
             background = colorScheme.background.copy(alpha = glassAlpha),
             surface = colorScheme.surface.copy(alpha = glassAlpha),

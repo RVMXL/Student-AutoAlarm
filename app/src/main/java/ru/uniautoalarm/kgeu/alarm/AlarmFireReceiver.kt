@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.PowerManager
 import android.util.Log
 import androidx.core.content.ContextCompat
 import ru.uniautoalarm.kgeu.ui.ring.RingActivity
@@ -23,6 +24,11 @@ import ru.uniautoalarm.kgeu.ui.ring.RingActivity
  *    держит USE_EXACT_ALARM (Android 14 BAL-exemption для будильников).
  *    Раньше при отказанных уведомлениях звонок шёл 10 минут без единого способа
  *    выключить — теперь экран звонка открывается всегда.
+ * 4) 0.14.0 (локскрин-отключение): страховочно ВКЛЮЧАЕМ экран wake-lock'ом
+ *    (ACQUIRE_CAUSES_WAKEUP): оболочки, игнорирующие FSI, оставляли экран погашенным —
+ *    будильник звенел «в темноту», а снять его можно было только через шторку после
+ *    разблокировки. Теперь экран загорается, на локскрине видно звонящее уведомление
+ *    (VISIBILITY_PUBLIC) с кнопкой «Отключить» — снятие без разблокировки устройства.
  */
 class AlarmFireReceiver : BroadcastReceiver() {
 
@@ -30,6 +36,11 @@ class AlarmFireReceiver : BroadcastReceiver() {
         val label = intent.getStringExtra(EXTRA_LABEL) ?: ""
         val triggerAtMs = intent.getLongExtra(EXTRA_TRIGGER_MS, System.currentTimeMillis())
         val appContext = context.applicationContext
+
+        // 0) страховочное включение экрана (0.14.0): если FSI не отработает (оболочка
+        //    игнорирует) — экран всё равно загорится с уведомлением и кнопкой «Отключить»
+        runCatching { wakeScreenUp(appContext) }
+            .onFailure { Log.w(TAG, "Экран не включён wake-lock'ом: ${it.message}") }
 
         // 1) уведомление сразу — ещё до подъёма сервиса (задержка FSI минимальна)
         runCatching { Notifications.postRinging(appContext, label) }
@@ -57,6 +68,24 @@ class AlarmFireReceiver : BroadcastReceiver() {
                 )
             }.onFailure { Log.w(TAG, "Экран звонка не поднят (фолбэк): ${it.message}") }
         }
+    }
+
+    /**
+     * Включить экран на несколько секунд (0.14.0): deprecated-флаги FULL_WAKE_LOCK +
+     * ACQUIRE_CAUSES_WAKEUP — единственный надёжный способ «зажечь» экран из приёмника;
+     * RingActivity при этом тоже имеет turnScreenOn (путь FSI). Таймаут короткий —
+     * экран не держим насильно, дальше его держит RingActivity (FLAG_KEEP_SCREEN_ON).
+     */
+    private fun wakeScreenUp(context: Context) {
+        val pm = context.getSystemService(Context.POWER_SERVICE) as? PowerManager ?: return
+        @Suppress("DEPRECATION")
+        val wakeLock = pm.newWakeLock(
+            PowerManager.FULL_WAKE_LOCK or
+                PowerManager.ACQUIRE_CAUSES_WAKEUP or
+                PowerManager.ON_AFTER_RELEASE,
+            "uniautoalarm:alarm_fire_wake"
+        )
+        wakeLock.acquire(10_000L)
     }
 
     /**

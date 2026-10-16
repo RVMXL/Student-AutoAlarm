@@ -66,7 +66,13 @@ class SettingsRepository(private val context: Context) {
         val ALARM_TARGET = stringPreferencesKey("alarm_target")
         val FIRST_LESSON_OFFSETS = stringPreferencesKey("first_lesson_offsets")
         val GLASS_ENABLED = booleanPreferencesKey("glass_enabled")
-        val GLASS_INTENSITY = floatPreferencesKey("glass_intensity")
+        // 0.14.0: стекло переехало с одного ползунка «интенсивность» на два —
+        // «матовость» и «искажение». Старый glass_intensity читается МИГРАЦИЕЙ
+        // (матовость = прежняя интенсивность) и больше не пишется.
+        val GLASS_BLUR = floatPreferencesKey("glass_blur")
+        val GLASS_DISTORTION = floatPreferencesKey("glass_distortion")
+        val GLASS_INTENSITY_LEGACY = floatPreferencesKey("glass_intensity")
+        val CUSTOM_ACCENT_COLOR = intPreferencesKey("custom_accent_color")
         val LAST_SCHEDULED_WAKE = longPreferencesKey("last_scheduled_wake_epoch_minute")
         val LAST_SCHEDULED_LABEL = stringPreferencesKey("last_scheduled_label")
         val TEST_ALARM_EPOCH_MS = longPreferencesKey("test_alarm_epoch_ms")
@@ -189,7 +195,13 @@ class SettingsRepository(private val context: Context) {
         alarmTarget = parseEnum(this[Keys.ALARM_TARGET], AlarmTarget.APP),
         firstLessonOffsets = this[Keys.FIRST_LESSON_OFFSETS]?.let { parseOffsets(it) } ?: emptyMap(),
         glassEnabled = this[Keys.GLASS_ENABLED] ?: false,
-        glassIntensity = this[Keys.GLASS_INTENSITY] ?: 0.5f,
+        // Миграция 0.13.0 → 0.14.0: glass_blur ещё не записан, но есть старый
+        // glass_intensity — прежняя «интенсивность» становится начальной матовостью.
+        glassBlur = this[Keys.GLASS_BLUR]
+            ?: this[Keys.GLASS_INTENSITY_LEGACY]
+            ?: 0.5f,
+        glassDistortion = this[Keys.GLASS_DISTORTION] ?: 0.25f,
+        customAccentColor = if (contains(Keys.CUSTOM_ACCENT_COLOR)) this[Keys.CUSTOM_ACCENT_COLOR] else null,
         lastScheduledWakeEpochMinute = this[Keys.LAST_SCHEDULED_WAKE] ?: -1L,
         lastScheduledLabel = this[Keys.LAST_SCHEDULED_LABEL] ?: "",
         testAlarmEpochMs = this[Keys.TEST_ALARM_EPOCH_MS] ?: 0L
@@ -231,7 +243,11 @@ class SettingsRepository(private val context: Context) {
         this[Keys.ALARM_TARGET] = s.alarmTarget.name
         this[Keys.FIRST_LESSON_OFFSETS] = serializeOffsets(s.firstLessonOffsets)
         this[Keys.GLASS_ENABLED] = s.glassEnabled
-        this[Keys.GLASS_INTENSITY] = s.glassIntensity
+        this[Keys.GLASS_BLUR] = s.glassBlur.coerceIn(0f, 1f)
+        this[Keys.GLASS_DISTORTION] = s.glassDistortion.coerceIn(0f, 1f)
+        val customAccent = s.customAccentColor
+        if (customAccent != null) this[Keys.CUSTOM_ACCENT_COLOR] = customAccent
+        else remove(Keys.CUSTOM_ACCENT_COLOR)
         this[Keys.LAST_SCHEDULED_WAKE] = s.lastScheduledWakeEpochMinute
         this[Keys.LAST_SCHEDULED_LABEL] = s.lastScheduledLabel
         this[Keys.TEST_ALARM_EPOCH_MS] = s.testAlarmEpochMs

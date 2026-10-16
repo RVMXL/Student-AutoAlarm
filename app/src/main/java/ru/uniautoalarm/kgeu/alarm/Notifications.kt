@@ -182,6 +182,9 @@ object Notifications {
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setOngoing(true)
+            // 0.14.0: уведомление полностью видно НА заблокированном экране (приватность
+            // локскрина его не прячет) — кнопка «Отключить» доступна без разблокировки
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(fullScreen)
             .setFullScreenIntent(fullScreen, true)
             .addAction(0, LocaleHelper.string(context, R.string.ring_dismiss), stop)

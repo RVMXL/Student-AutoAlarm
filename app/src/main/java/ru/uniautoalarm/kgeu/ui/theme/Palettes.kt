@@ -214,6 +214,118 @@ val ACCENT_PALETTES: List<AccentPalette> = listOf(
 )
 
 /**
+ * Индекс «своего цвета» в выборе акцента: Settings.accentIndex == CUSTOM_ACCENT_INDEX
+ * означает, что акцент берётся из Settings.customAccentColor (ARGB), а не из
+ * [ACCENT_PALETTES]. Кружок «свой цвет» в настройках рисуется радужным градиентом
+ * с иконкой пипетки и открывает палитру выбора (квадрат S/V + ползунок тона).
+ */
+const val CUSTOM_ACCENT_INDEX = 6
+
+/**
+ * Собирает полную [AccentPalette] из ОДНОГО базового цвета (0xAARRGGBB) —
+ * для «своего цвета» пользователя. Производные роли вычисляются в HSV
+ * по приближённым тонам Material 3:
+ *  светлая схема: primary — темнее базы (контраст на светлом), container — светлый тон того же тона;
+ *  тёмная схема: primary — светлее базы, container — тёмный тон.
+ * Вторичный — обесцвеченный, третичный — со сдвигом тона (+40°).
+ * Чистые функции без android.graphics — покрыты юнит-тестом CustomAccentTest.
+ */
+fun customAccentPalette(argb: Int): AccentPalette {
+    val base = argbToHsv(argb)
+    val (h, s, v) = Triple(base[0], base[1], base[2])
+
+    // --- Светлая схема ---
+    val primary = hsvToArgb(h, s, v * 0.62f)
+    val primaryContainer = hsvToArgb(h, s * 0.55f, (v * 0.95f).coerceAtLeast(0.88f))
+    val onPrimaryContainer = hsvToArgb(h, s, v * 0.22f)
+    val secondary = hsvToArgb(h, s * 0.45f, v * 0.55f)
+    val secondaryContainer = hsvToArgb(h, s * 0.40f, (v * 0.92f).coerceAtLeast(0.86f))
+    val onSecondaryContainer = hsvToArgb(h, s * 0.8f, 0.20f)
+    val tHue = (h + 40f) % 360f
+    val tertiary = hsvToArgb(tHue, s * 0.70f, v * 0.60f)
+    val tertiaryContainer = hsvToArgb(tHue, s * 0.45f, (v * 0.94f).coerceAtLeast(0.86f))
+    val onTertiaryContainer = hsvToArgb(tHue, s * 0.9f, 0.18f)
+
+    // --- Тёмная схема ---
+    val primaryDark = hsvToArgb(h, s * 0.85f, (v * 1.25f).coerceIn(0f, 1f))
+    val onPrimaryDark = hsvToArgb(h, s, v * 0.18f)
+    val primaryContainerDark = hsvToArgb(h, s, (v * 0.48f).coerceAtLeast(0.30f))
+    val onPrimaryContainerDark = hsvToArgb(h, s * 0.50f, (v * 0.95f).coerceAtLeast(0.88f))
+    val secondaryDark = hsvToArgb(h, s * 0.40f, (v * 1.15f).coerceIn(0f, 1f))
+    val onSecondaryDark = hsvToArgb(h, s * 0.9f, 0.16f)
+    val secondaryContainerDark = hsvToArgb(h, s * 0.55f, (v * 0.45f).coerceAtLeast(0.32f))
+    val onSecondaryContainerDark = hsvToArgb(h, s * 0.35f, (v * 0.92f).coerceAtLeast(0.86f))
+    val tertiaryDark = hsvToArgb(tHue, s * 0.60f, (v * 1.20f).coerceIn(0f, 1f))
+    val onTertiaryDark = hsvToArgb(tHue, s * 0.9f, 0.16f)
+    val tertiaryContainerDark = hsvToArgb(tHue, s * 0.60f, (v * 0.46f).coerceAtLeast(0.30f))
+    val onTertiaryContainerDark = hsvToArgb(tHue, s * 0.40f, (v * 0.94f).coerceAtLeast(0.86f))
+
+    return AccentPalette(
+        id = CUSTOM_ACCENT_INDEX,
+        primary = primary,
+        primaryContainer = primaryContainer,
+        onPrimaryContainer = onPrimaryContainer,
+        primaryDark = primaryDark,
+        onPrimaryDark = onPrimaryDark,
+        primaryContainerDark = primaryContainerDark,
+        onPrimaryContainerDark = onPrimaryContainerDark,
+        secondary = secondary,
+        secondaryContainer = secondaryContainer,
+        onSecondaryContainer = onSecondaryContainer,
+        secondaryDark = secondaryDark,
+        onSecondaryDark = onSecondaryDark,
+        secondaryContainerDark = secondaryContainerDark,
+        onSecondaryContainerDark = onSecondaryContainerDark,
+        tertiary = tertiary,
+        tertiaryContainer = tertiaryContainer,
+        onTertiaryContainer = onTertiaryContainer,
+        tertiaryDark = tertiaryDark,
+        onTertiaryDark = onTertiaryDark,
+        tertiaryContainerDark = tertiaryContainerDark,
+        onTertiaryContainerDark = onTertiaryContainerDark
+    )
+}
+
+/** 0xAARRGGBB → HSV (h 0..360, s/v 0..1). Без android.graphics — чистая функция. */
+fun argbToHsv(argb: Int): FloatArray {
+    val r = (argb shr 16 and 0xFF) / 255f
+    val g = (argb shr 8 and 0xFF) / 255f
+    val b = (argb and 0xFF) / 255f
+    val max = maxOf(r, g, b)
+    val min = minOf(r, g, b)
+    val delta = max - min
+    val h = when {
+        delta == 0f -> 0f
+        max == r -> 60f * (((g - b) / delta) % 6f)
+        max == g -> 60f * ((b - r) / delta + 2f)
+        else -> 60f * ((r - g) / delta + 4f)
+    }.let { if (it < 0f) it + 360f else it }
+    val s = if (max == 0f) 0f else delta / max
+    return floatArrayOf(h, s, max)
+}
+
+/** HSV (h 0..360, s/v 0..1) → 0xFFRRGGBB (альфа 255, Long — формат полей AccentPalette). */
+fun hsvToArgb(h: Float, s: Float, v: Float): Long {
+    val hh = ((h % 360f) + 360f) % 360f
+    val c = v * s
+    val x = c * (1f - ((hh / 60f) % 2f - 1f).let { if (it < 0) -it else it })
+    val m = v - c
+    val (r1, g1, b1) = when {
+        hh < 60f -> Triple(c, x, 0f)
+        hh < 120f -> Triple(x, c, 0f)
+        hh < 180f -> Triple(0f, c, x)
+        hh < 240f -> Triple(0f, x, c)
+        hh < 300f -> Triple(x, 0f, c)
+        else -> Triple(c, 0f, x)
+    }
+    fun channel(f: Float): Int = ((f + m).coerceIn(0f, 1f) * 255f + 0.5f).toInt()
+    return 0xFF000000L or
+        (channel(r1).toLong() shl 16) or
+        (channel(g1).toLong() shl 8) or
+        channel(b1).toLong()
+}
+
+/**
  * Фиксированные цвета темы «Бумажный календарь» (экран расписания, CalendarStyle.PAPER).
  * Не зависят от акцента и системной темы — «бумага» выглядит одинаково всегда.
  */

@@ -32,6 +32,10 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <!-- 0.14.0: страховочное включение экрана при срабатывании (если оболочка
+         игнорирует full-screen intent — экран всё равно загорится, и кнопка
+         «Отключить» будет доступна прямо с заблокированного экрана) -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- Android 11+ (package visibility): видимость стоковых часов для ACTION_SET_ALARM.
          Intent-запись покрывает часы с декларированным intent-filter; явные <package>

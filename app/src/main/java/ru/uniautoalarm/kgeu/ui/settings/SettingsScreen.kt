@@ -2,6 +2,7 @@ package ru.uniautoalarm.kgeu.ui.settings
 
 import android.app.Activity
 import android.app.AlarmManager
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -14,9 +15,12 @@ import android.provider.Settings as AndroidSettings
 import android.text.format.DateFormat as AndroidDateFormat
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,10 +31,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
@@ -45,7 +51,9 @@ import androidx.compose.material.icons.rounded.BatteryAlert
 import androidx.compose.material.icons.rounded.Bedtime
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.ColorLens
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Fullscreen
 import androidx.compose.material.icons.rounded.Event
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Language
@@ -98,13 +106,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
@@ -143,6 +160,13 @@ import ru.uniautoalarm.kgeu.ui.common.exampleWakeTime
 import ru.uniautoalarm.kgeu.ui.common.formatOffset
 import ru.uniautoalarm.kgeu.ui.common.hhmm
 import ru.uniautoalarm.kgeu.ui.theme.ACCENT_PALETTES
+import ru.uniautoalarm.kgeu.ui.theme.CUSTOM_ACCENT_INDEX
+import ru.uniautoalarm.kgeu.ui.theme.argbToHsv
+import ru.uniautoalarm.kgeu.ui.theme.customAccentPalette
+import ru.uniautoalarm.kgeu.ui.theme.glassSurface
+import ru.uniautoalarm.kgeu.ui.theme.hsvToArgb
+import ru.uniautoalarm.kgeu.ui.theme.resolveDarkTheme
+import ru.uniautoalarm.kgeu.ui.theme.skin
 
 /** Скругление карточек секций (по ТЗ — 20.dp). */
 private val CardShape = RoundedCornerShape(20.dp)
@@ -340,7 +364,7 @@ private fun PillLabel(text: String) {
 
 @Composable
 private fun ProfileCard(settings: Settings, onChangeTarget: () -> Unit) {
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
+    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -381,7 +405,7 @@ private fun AlarmSettingsCard(
     // UI-11: пока engine-работа тумблера/смены движка идёт, переключатели заблокированы
     val toggling by vm.toggling.collectAsStateWithLifecycle()
 
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
+    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -452,6 +476,61 @@ private fun AlarmSettingsCard(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             HorizontalDivider()
+
+            // 0.14.0: если движку «В приложении» не выдан full-screen intent (Android 14+,
+            // пользователь мог отозвать) — звонок не включает экран и не разворачивается
+            // поверх блокировки. Честная подсказка с кнопкой в настройки разрешения.
+            if (Build.VERSION.SDK_INT >= 34) {
+                val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+                val fsiGranted = nm?.canUseFullScreenIntent() ?: true
+                if (!fsiGranted) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                runCatching {
+                                    context.startActivity(
+                                        Intent(
+                                            AndroidSettings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT
+                                        ).setData(
+                                            Uri.fromParts("package", context.packageName, null)
+                                        ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    )
+                                }.onFailure {
+                                    // редкие оболочки без этой активности — общие настройки приложения
+                                    runCatching {
+                                        context.startActivity(
+                                            Intent(AndroidSettings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                                .setData(Uri.fromParts("package", context.packageName, null))
+                                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        )
+                                    }
+                                }
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Rounded.Fullscreen,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                        Spacer(Modifier.width(12.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text(
+                                stringResource(R.string.set_fsi_title),
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                            Text(
+                                stringResource(R.string.set_fsi_desc),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                    HorizontalDivider()
+                }
+            }
 
             if (settings.alarmTarget == AlarmTarget.CLOCK) {
                 Row(
@@ -789,7 +868,7 @@ private fun PairOffsetDialog(
 private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
     var showTimePicker by rememberSaveable { mutableStateOf(false) }
 
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
+    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -904,7 +983,7 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
             .take(5)
     }
 
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
+    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1004,7 +1083,7 @@ private fun CustomEventsCard(events: List<CustomEvent>, vm: SettingsViewModel) {
     // SET-2: переживает поворот — открытый диалог не закрывается
     var showAddDialog by rememberSaveable { mutableStateOf(false) }
 
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
+    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1269,9 +1348,19 @@ private fun AppearanceCard(
     var opacity by rememberSaveable(settings.backgroundOpacity) {
         mutableFloatStateOf(settings.backgroundOpacity)
     }
-    var glassIntensity by rememberSaveable(settings.glassIntensity) {
-        mutableFloatStateOf(settings.glassIntensity)
+    // Стекло 2.0 (0.14.0): два ползунка — матовость (размытие + плотность заливки)
+    // и искажение («линзовое» искривление за стеклом). Видны только при включённом стекле.
+    var glassBlur by rememberSaveable(settings.glassBlur) {
+        mutableFloatStateOf(settings.glassBlur)
     }
+    var glassDistortion by rememberSaveable(settings.glassDistortion) {
+        mutableFloatStateOf(settings.glassDistortion)
+    }
+    var showColorPicker by rememberSaveable { mutableStateOf(false) }
+    // FIX 0.14.0: кружки акцентов показывали только светлое primary всех палитр —
+    // в тёмной теме реальный акцент другой (primaryDark), и цвет кружка не совпадал
+    // с фактическим. Теперь кружок — тот цвет, который реально применён темой.
+    val darkTheme = resolveDarkTheme(settings)
 
     val imagePicker = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenDocument()
@@ -1295,7 +1384,7 @@ private fun AppearanceCard(
         }
     }
 
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
+    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1378,7 +1467,8 @@ private fun AppearanceCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 ACCENT_PALETTES.forEachIndexed { index, palette ->
-                    val color = Color(palette.primary)
+                    // кружок = реальный акцент текущей темы (в тёмной — primaryDark)
+                    val color = if (darkTheme) Color(palette.primaryDark) else Color(palette.primary)
                     val selected = settings.accentIndex == index
                     AccentDot(
                         color = color,
@@ -1389,26 +1479,41 @@ private fun AppearanceCard(
                         description = accentName(palette.id)
                     )
                 }
+                // «Свой цвет»: радужный кружок с пипеткой, открывает палитру выбора
+                AccentDot(
+                    color = settings.customAccentColor?.let { Color(it) }
+                        ?: MaterialTheme.colorScheme.primary,
+                    selected = settings.accentIndex == CUSTOM_ACCENT_INDEX &&
+                        settings.customAccentColor != null,
+                    borderColor = MaterialTheme.colorScheme.primary,
+                    outlineColor = MaterialTheme.colorScheme.outlineVariant,
+                    brush = Brush.sweepGradient(
+                        listOf(
+                            Color(0xFFE53935), Color(0xFFFDD835), Color(0xFF43A047),
+                            Color(0xFF00ACC1), Color(0xFF8E24AA), Color(0xFFE53935)
+                        )
+                    ),
+                    icon = Icons.Rounded.ColorLens,
+                    onSelect = { showColorPicker = true },
+                    description = stringResource(R.string.accent_custom)
+                )
             }
 
             Text(
                 stringResource(R.string.schedule_style),
                 style = MaterialTheme.typography.bodyLarge
             )
-            SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-                SegmentedButton(
-                    selected = settings.calendarStyle == CalendarStyle.STANDARD,
-                    onClick = { vm.setCalendarStyle(CalendarStyle.STANDARD) },
-                    shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
-                ) {
-                    PillLabel(stringResource(R.string.style_standard))
-                }
-                SegmentedButton(
-                    selected = settings.calendarStyle == CalendarStyle.PAPER,
-                    onClick = { vm.setCalendarStyle(CalendarStyle.PAPER) },
-                    shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
-                ) {
-                    PillLabel(stringResource(R.string.style_paper))
+            // 0.14.0: стилей стало 7 — горизонтальная лента плиток-миниатюр
+            // вместо сегментных кнопок (туда больше не влезть)
+            val styles = remember { CalendarStyle.entries }
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(styles.size) { i ->
+                    val style = styles[i]
+                    StyleTile(
+                        style = style,
+                        selected = settings.calendarStyle == style,
+                        onSelect = { vm.setCalendarStyle(style) }
+                    )
                 }
             }
             HorizontalDivider()
@@ -1472,15 +1577,26 @@ private fun AppearanceCard(
             }
             if (settings.glassEnabled) {
                 Text(
-                    stringResource(R.string.glass_intensity),
+                    stringResource(R.string.glass_matteness),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Slider(
-                    value = glassIntensity,
-                    onValueChange = { glassIntensity = it },
-                    onValueChangeFinished = { vm.setGlassIntensity(glassIntensity) },
-                    valueRange = 0.05f..0.9f
+                    value = glassBlur,
+                    onValueChange = { glassBlur = it },
+                    onValueChangeFinished = { vm.setGlassBlur(glassBlur) },
+                    valueRange = 0f..1f
+                )
+                Text(
+                    stringResource(R.string.glass_distortion),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Slider(
+                    value = glassDistortion,
+                    onValueChange = { glassDistortion = it },
+                    onValueChangeFinished = { vm.setGlassDistortion(glassDistortion) },
+                    valueRange = 0f..1f
                 )
                 Text(
                     if (settings.backgroundImagePath == null) {
@@ -1517,6 +1633,19 @@ private fun AppearanceCard(
             }
         )
     }
+
+    // Палитра «своего цвета» (0.14.0): квадрат насыщенность/яркость + ползунок тона
+    if (showColorPicker) {
+        AccentColorPickerDialog(
+            initialColor = settings.customAccentColor?.let { Color(it) }
+                ?: Color(0xFFB45309),
+            onConfirm = { argb ->
+                vm.setCustomAccent(argb)
+                showColorPicker = false
+            },
+            onDismiss = { showColorPicker = false }
+        )
+    }
 }
 
 @Composable
@@ -1526,7 +1655,9 @@ private fun AccentDot(
     borderColor: Color,
     outlineColor: Color,
     onSelect: () -> Unit,
-    description: String
+    description: String,
+    brush: Brush? = null,
+    icon: ImageVector? = null
 ) {
     val shape = CircleShape
     // SET-15 (0.11.0): визуальный кружок 36dp внутри тач-таргета 48dp (было 36dp
@@ -1546,7 +1677,7 @@ private fun AccentDot(
             modifier = Modifier
                 .size(36.dp)
                 .clip(shape)
-                .background(color)
+                .background(brush = brush ?: SolidColor(color))
                 .then(
                     if (selected) {
                         Modifier.border(2.dp, borderColor, shape)
@@ -1556,8 +1687,19 @@ private fun AccentDot(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            if (selected) {
-                Icon(
+            when {
+                // кружок «свой цвет»: интуитивный значок пипетки поверх радуги
+                icon != null -> Icon(
+                    icon,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(18.dp)
+                        // тень под иконкой, чтобы читалась на любом цвете радуги
+                        .background(Color.Black.copy(alpha = 0.35f), CircleShape)
+                        .padding(3.dp)
+                )
+                selected -> Icon(
                     Icons.Rounded.Check,
                     contentDescription = null,
                     tint = Color.White,
@@ -1566,6 +1708,195 @@ private fun AccentDot(
             }
         }
     }
+}
+
+/** Миниатюра стиля расписания в ленте выбора (0.14.0). */
+@Composable
+private fun StyleTile(style: CalendarStyle, selected: Boolean, onSelect: () -> Unit) {
+    val skin = style.skin()
+    val bg = skin?.background ?: MaterialTheme.colorScheme.surfaceVariant
+    val ink = skin?.ink ?: MaterialTheme.colorScheme.onSurface
+    val accent = skin?.accent ?: MaterialTheme.colorScheme.primary
+    val name = stringResource(
+        when (style) {
+            CalendarStyle.STANDARD -> R.string.style_standard
+            CalendarStyle.PAPER -> R.string.style_paper
+            CalendarStyle.CHALK -> R.string.style_chalk
+            CalendarStyle.NEON -> R.string.style_neon
+            CalendarStyle.TERMINAL -> R.string.style_terminal
+            CalendarStyle.AQUA -> R.string.style_aqua
+            CalendarStyle.RETRO -> R.string.style_retro
+        }
+    )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.width(84.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(width = 76.dp, height = 56.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(bg)
+                .border(
+                    if (selected) 2.dp else 1.dp,
+                    if (selected) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.outlineVariant,
+                    RoundedCornerShape(12.dp)
+                )
+                .clickable(onClickLabel = name, role = Role.RadioButton, onClick = onSelect)
+                .padding(8.dp)
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                Box(Modifier.size(10.dp).background(accent, CircleShape))
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(4.dp)
+                        .background(ink.copy(alpha = 0.85f), RoundedCornerShape(2.dp))
+                )
+                Box(
+                    Modifier
+                        .fillMaxWidth(0.6f)
+                        .height(4.dp)
+                        .background(ink.copy(alpha = 0.35f), RoundedCornerShape(2.dp))
+                )
+            }
+        }
+        Text(
+            name,
+            style = MaterialTheme.typography.labelSmall,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+/**
+ * Палитра «своего цвета» (0.14.0): квадрат насыщенность (X) / яркость (Y),
+ * ползунок тона (радуга) и превью результата. Подтверждение — «Готово».
+ */
+@Composable
+private fun AccentColorPickerDialog(
+    initialColor: Color,
+    onConfirm: (Int) -> Unit,
+    onDismiss: () -> Unit
+) {
+    // стартовые HSV — из текущего цвета (или дефолта), чтобы диалог открывался «на месте»
+    val initialHsv = remember(initialColor) { argbToHsv(initialColor.toArgb()) }
+    var hue by rememberSaveable(initialColor) { mutableFloatStateOf(initialHsv[0]) }
+    var sat by rememberSaveable(initialColor) { mutableFloatStateOf(initialHsv[1]) }
+    var value by rememberSaveable(initialColor) { mutableFloatStateOf(initialHsv[2]) }
+    val preview = Color(hsvToArgb(hue, sat, value))
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.accent_custom)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                // --- квадрат S/V ---
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .pointerInput(hue) {
+                            detectTapGestures { off ->
+                                sat = (off.x / size.width).coerceIn(0f, 1f)
+                                value = 1f - (off.y / size.height).coerceIn(0f, 1f)
+                            }
+                        }
+                        .pointerInput(hue) {
+                            detectDragGestures { change, _ ->
+                                change.consume()
+                                sat = (change.position.x / size.width).coerceIn(0f, 1f)
+                                value = 1f - (change.position.y / size.height).coerceIn(0f, 1f)
+                            }
+                        }
+                ) {
+                    val hueColor = Color(hsvToArgb(hue, 1f, 1f))
+                    drawRect(brush = Brush.horizontalGradient(listOf(Color.White, hueColor)))
+                    drawRect(brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Black)))
+                    // маркер выбора
+                    drawCircle(
+                        color = Color.White,
+                        radius = 9.dp.toPx(),
+                        center = Offset(sat * size.width, (1f - value) * size.height),
+                        style = Stroke(width = 2.5.dp.toPx())
+                    )
+                    drawCircle(
+                        color = Color.Black.copy(alpha = 0.5f),
+                        radius = 9.dp.toPx(),
+                        center = Offset(sat * size.width, (1f - value) * size.height),
+                        style = Stroke(width = 1.dp.toPx())
+                    )
+                }
+                // --- ползунок тона ---
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(28.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                        .pointerInput(Unit) {
+                            detectTapGestures { off ->
+                                hue = (off.x / size.width).coerceIn(0f, 1f) * 360f
+                            }
+                        }
+                        .pointerInput(Unit) {
+                            detectDragGestures { change, _ ->
+                                change.consume()
+                                hue = (change.position.x / size.width).coerceIn(0f, 1f) * 360f
+                            }
+                        }
+                ) {
+                    drawRoundRect(
+                        brush = Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFFFF0000), Color(0xFFFFFF00), Color(0xFF00FF00),
+                                Color(0xFF00FFFF), Color(0xFF0000FF), Color(0xFFFF00FF),
+                                Color(0xFFFF0000)
+                            )
+                        ),
+                        cornerRadius = CornerRadius(14.dp.toPx())
+                    )
+                    drawCircle(
+                        color = Color.White,
+                        radius = 11.dp.toPx(),
+                        center = Offset(hue / 360f * size.width, size.height / 2f),
+                        style = Stroke(width = 2.5.dp.toPx())
+                    )
+                }
+                // --- превью ---
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(CircleShape)
+                            .background(preview)
+                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
+                    )
+                    Text(
+                        stringResource(R.string.accent_custom_preview),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onConfirm(preview.toArgb()) }) {
+                Text(stringResource(R.string.action_done))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.action_cancel))
+            }
+        }
+    )
 }
 
 /** Локализованное имя палитры акцента (метка клика для скринридеров). */
@@ -1592,7 +1923,7 @@ private fun SystemCard(
     onFixBattery: () -> Unit,
     onAutostart: () -> Unit
 ) {
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
+    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1764,7 +2095,7 @@ private fun AutostartDialog(onDismiss: () -> Unit) {
 
 @Composable
 private fun AboutCard(versionName: String?, context: Context) {
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {
+    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

@@ -51,6 +51,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -70,10 +72,12 @@ import kotlinx.coroutines.launch
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.model.CalendarStyle
 import ru.uniautoalarm.kgeu.data.model.Lesson
+import ru.uniautoalarm.kgeu.domain.DayMarkers
 import ru.uniautoalarm.kgeu.ui.common.LocalAppContainer
 import ru.uniautoalarm.kgeu.ui.common.dayShortName
 import ru.uniautoalarm.kgeu.ui.common.timeFormat
-import ru.uniautoalarm.kgeu.ui.theme.PaperColors
+import ru.uniautoalarm.kgeu.ui.theme.CalendarSkin
+import ru.uniautoalarm.kgeu.ui.theme.skin
 
 private val CardShape = RoundedCornerShape(20.dp)
 private val ChipShape = RoundedCornerShape(8.dp)
@@ -82,18 +86,22 @@ private val ChipShape = RoundedCornerShape(8.dp)
 private fun monthDay(): DateTimeFormatter =
     DateTimeFormatter.ofPattern("d MMMM", Locale.getDefault())
 
-/** Бумажная палитра как Color (константы PaperColors — Long). */
-private val PaperBackground = Color(PaperColors.paperBackground)
-private val PaperCard = Color(PaperColors.paperCard)
-private val PaperInk = Color(PaperColors.paperInk)
-private val PaperInkSoft = Color(PaperColors.paperInkSoft)
-private val PaperAccent = Color(PaperColors.paperAccent)
-private val PaperLine = Color(PaperColors.paperLine)
-private val PaperOnAccent = Color(0xFFFFFDF4)
+/** Шрифт скина: моно (Терминал/Неон) → антиква (Бумага/Ретро) → обычный. */
+private fun CalendarSkin?.fontFamily(): FontFamily = when {
+    this?.mono == true -> FontFamily.Monospace
+    this?.serif == true -> FontFamily.Serif
+    else -> FontFamily.Default
+}
 
 /**
  * Экран расписания: неделя «12 – 18 октября», чипы дней, карточки пар.
- * Стиль STANDARD — обычная Material3; PAPER — «бумажный календарь» на PaperColors.
+ * Стиль STANDARD — обычная Material3; остальные — скины [CalendarSkin]
+ * (Бумажный календарь, Мел и доска, Неон, Терминал, Акварель, Ретро-печать).
+ *
+ * 0.14.0: чипы дней помечаются маркерами — серая точка «в этот день есть пары»,
+ * цветная точка с числом «столько обозначенных (исключённых) секций». Точка
+ * «сегодня» — акцентная, как раньше; маркеры рисуются другими цветами,
+ * чтобы их нельзя было спутать с ней.
  */
 @Composable
 fun ScheduleScreen() {
@@ -112,7 +120,8 @@ fun ScheduleScreen() {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    val paper = settings?.calendarStyle == CalendarStyle.PAPER
+    // Скин стиля: null — стандартная Material-схема
+    val skin = settings?.calendarStyle?.skin()
     val dayLessons = weekLessons[selectedDate].orEmpty()
     // UI-13 (0.11.0): «сегодня» — состояние, обновляемое на каждом возврате экрана на
     // передний план, а не замороженное на входе в композицию: приложение, висевшее
@@ -125,7 +134,8 @@ fun ScheduleScreen() {
     val currentWeekMonday =
         remember(today) { today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)) }
     val isCurrentWeek = weekMonday == currentWeekMonday
-    val accent = if (paper) PaperAccent else MaterialTheme.colorScheme.primary
+    val accent = skin?.accent ?: MaterialTheme.colorScheme.primary
+    val onAccent = skin?.onAccent ?: MaterialTheme.colorScheme.onPrimary
     val monthTitle = remember(weekMonday) {
         val month = weekMonday.month
             .getDisplayName(java.time.format.TextStyle.FULL, Locale.getDefault())
@@ -142,29 +152,29 @@ fun ScheduleScreen() {
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            if (paper) {
-                // Лист настенного календаря (фон): выбранная пользователем картинка/фон видны ВОКРУГ него
+            if (skin?.background != null) {
+                // Лист стиля (фон): выбранная пользователем картинка/фон видны ВОКРУГ него
                 Box(
                     modifier = Modifier
                         .matchParentSize()
                         .padding(horizontal = 12.dp, vertical = 8.dp)
-                        .background(PaperBackground, shape = RoundedCornerShape(18.dp))
-                        .border(1.dp, PaperLine, shape = RoundedCornerShape(18.dp))
+                        .background(skin.background, shape = RoundedCornerShape(18.dp))
+                        .border(1.dp, skin.line, shape = RoundedCornerShape(18.dp))
                 )
             }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .then(
-                        if (paper) {
+                        if (skin?.background != null) {
                             Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
                         } else {
                             Modifier
                         }
                     )
             ) {
-                if (paper) {
-                    PaperCalendarHeader(monthTitle)
+                if (skin != null) {
+                    SkinCalendarHeader(skin, monthTitle)
                 }
                 Row(
                 modifier = Modifier
@@ -189,13 +199,13 @@ fun ScheduleScreen() {
                         textAlign = TextAlign.Center,
                         // текущая неделя выделена акцентом — из неё чаще всего и «уезжают»
                         color = if (isCurrentWeek) accent
-                            else if (paper) PaperInk else MaterialTheme.colorScheme.onSurface
+                            else skin?.ink ?: MaterialTheme.colorScheme.onSurface
                     )
                     if (isCurrentWeek) {
                         SmallBadge(
                             text = stringResource(R.string.badge_this_week),
                             container = accent,
-                            content = PaperOnAccent
+                            content = onAccent
                         )
                     }
                 }
@@ -217,7 +227,7 @@ fun ScheduleScreen() {
                         contentDescription = stringResource(R.string.cd_go_today),
                         // подсвечена, пока пользователь «уехал» с текущей недели
                         tint = if (!isCurrentWeek) accent
-                            else if (paper) PaperInkSoft else MaterialTheme.colorScheme.onSurfaceVariant
+                            else skin?.inkSoft ?: MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 IconButton(onClick = {
@@ -246,11 +256,14 @@ fun ScheduleScreen() {
             ) {
                 items((0..6).toList(), key = { it }) { offset -> // UI-12: key — переиспользование состояния чипов
                     val date = weekMonday.plusDays(offset.toLong())
+                    val dateLessons = weekLessons[date].orEmpty()
                     DayChip(
                         date = date,
                         selected = date == selectedDate,
                         isToday = date == today,
-                        paper = paper,
+                        skin = skin,
+                        hasLessons = dateLessons.isNotEmpty(),
+                        markedCount = DayMarkers.countMarked(dateLessons, exceptions),
                         onClick = { vm.selectDate(date) }
                     )
                 }
@@ -271,12 +284,12 @@ fun ScheduleScreen() {
                         Text(
                             stringResource(R.string.refreshing),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = if (paper) PaperInkSoft else MaterialTheme.colorScheme.onSurfaceVariant
+                            color = skin?.inkSoft ?: MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 } else {
                     EmptyDayCard(
-                        paper = paper,
+                        skin = skin,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
@@ -302,7 +315,7 @@ fun ScheduleScreen() {
                         val msgExcludedOff = stringResource(R.string.snackbar_excluded_off)
                         LessonCard(
                             lesson = lesson,
-                            paper = paper,
+                            skin = skin,
                             excluded = vm.isExceptional(lesson.subject, exceptions),
                             onToggleException = {
                                 val willExclude =
@@ -323,10 +336,10 @@ fun ScheduleScreen() {
 }
 }
 
-// --- Шапка настенного календаря: кольца-пружина + месяц/год ---
+// --- Шапка скина: кольца-пружина + месяц/год ---
 
 @Composable
-private fun PaperCalendarHeader(monthTitle: String) {
+private fun SkinCalendarHeader(skin: CalendarSkin, monthTitle: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(20.dp),
@@ -337,24 +350,24 @@ private fun PaperCalendarHeader(monthTitle: String) {
                 Box(
                     modifier = Modifier
                         .size(10.dp)
-                        .background(PaperCard, shape = CircleShape)
-                        .border(1.5.dp, PaperInkSoft, shape = CircleShape)
+                        .background(skin.card, shape = CircleShape)
+                        .border(1.5.dp, skin.inkSoft, shape = CircleShape)
                 )
             }
         }
         Text(
             monthTitle,
             style = MaterialTheme.typography.titleLarge.copy(
-                fontFamily = FontFamily.Serif,
+                fontFamily = skin.fontFamily(),
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.5.sp
             ),
-            color = PaperInk,
+            color = skin.ink,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
         androidx.compose.material3.HorizontalDivider(
-            color = PaperLine,
+            color = skin.line,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp)
@@ -362,52 +375,100 @@ private fun PaperCalendarHeader(monthTitle: String) {
     }
 }
 
-// --- Чип дня недели ---
+// --- Чип дня недели с маркерами ---
 
 @Composable
 private fun DayChip(
     date: LocalDate,
     selected: Boolean,
     isToday: Boolean,
-    paper: Boolean,
+    skin: CalendarSkin?,
+    hasLessons: Boolean,
+    markedCount: Int,
     onClick: () -> Unit
 ) {
-    val accent = if (paper) PaperAccent else MaterialTheme.colorScheme.primary
+    val accent = skin?.accent ?: MaterialTheme.colorScheme.primary
+    val neutralMark = skin?.inkSoft ?: MaterialTheme.colorScheme.onSurfaceVariant
+    val sectionMark = skin?.mark ?: MaterialTheme.colorScheme.tertiary
     val label = "${dayShortName(date.dayOfWeek)} ${date.dayOfMonth}"
-    // сегодняшний день: жирный + точка-акцент под числом (как в настенных календарях)
+    // 0.14.0: маркеры под числом — акцентная точка «сегодня» (как в настенных
+    // календарях), серая «есть пары», цветная с числом «исключённых секций».
+    // Маркеры скрываются у выбранного дня — чип и так залит акцентом.
     @Composable
-    fun todayLabel() {
+    fun dayLabel() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(label, fontWeight = if (isToday) FontWeight.Bold else null)
-            if (isToday && !selected) {
-                Box(
-                    modifier = Modifier
-                        .padding(top = 1.dp)
-                        .size(4.dp)
-                        .background(accent, CircleShape)
-                )
+            if (!selected && (isToday || hasLessons || markedCount > 0)) {
+                Row(
+                    modifier = Modifier.padding(top = 1.dp),
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (isToday) {
+                        Box(
+                            modifier = Modifier
+                                .size(4.dp)
+                                .background(accent, CircleShape)
+                        )
+                    }
+                    if (hasLessons) {
+                        Box(
+                            modifier = Modifier
+                                .size(4.dp)
+                                .background(neutralMark, CircleShape)
+                        )
+                    }
+                    if (markedCount > 0) {
+                        Box(
+                            modifier = Modifier
+                                .size(4.dp)
+                                .background(sectionMark, CircleShape)
+                        )
+                        Text(
+                            markedCount.toString(),
+                            style = MaterialTheme.typography.labelSmall,
+                            fontSize = 9.sp,
+                            color = sectionMark
+                        )
+                    }
+                }
             }
         }
     }
-    if (paper) {
+    val description = buildString {
+        append(label)
+        if (hasLessons) append(". ").append(stringResource(R.string.cd_day_lessons))
+        if (markedCount > 0) {
+            append(". ").append(stringResource(R.string.cd_day_marked, markedCount))
+        }
+    }
+    val chipModifier = Modifier.semantics { contentDescription = description }
+    if (skin != null) {
         FilterChip(
             selected = selected,
             onClick = onClick,
-            label = { todayLabel() },
+            label = { dayLabel() },
             shape = ChipShape,
+            modifier = chipModifier,
+            border = if (selected) {
+                BorderStroke(1.5.dp, skin.accent)
+            } else {
+                BorderStroke(1.dp, skin.line)
+            },
             colors = FilterChipDefaults.filterChipColors(
-                containerColor = PaperCard,
-                labelColor = PaperInkSoft,
-                selectedContainerColor = PaperAccent,
-                selectedLabelColor = PaperOnAccent
+                containerColor = skin.card,
+                labelColor = skin.inkSoft,
+                selectedContainerColor = skin.accent,
+                selectedLabelColor = skin.onAccent
             )
         )
     } else {
         FilterChip(
             selected = selected,
             onClick = onClick,
-            label = { todayLabel() },
-            shape = ChipShape
+            label = { dayLabel() },
+            shape = ChipShape,
+            modifier = chipModifier
         )
     }
 }
@@ -417,14 +478,15 @@ private fun DayChip(
 @Composable
 private fun LessonCard(
     lesson: Lesson,
-    paper: Boolean,
+    skin: CalendarSkin?,
     excluded: Boolean,
     onToggleException: () -> Unit
 ) {
-    val containerColor = if (paper) PaperCard else MaterialTheme.colorScheme.surface
-    val contentColor = if (paper) PaperInk else MaterialTheme.colorScheme.onSurface
-    val softColor = if (paper) PaperInkSoft else MaterialTheme.colorScheme.onSurfaceVariant
-    val accentColor = if (paper) PaperAccent else MaterialTheme.colorScheme.primary
+    val containerColor = skin?.card ?: MaterialTheme.colorScheme.surface
+    val contentColor = skin?.ink ?: MaterialTheme.colorScheme.onSurface
+    val softColor = skin?.inkSoft ?: MaterialTheme.colorScheme.onSurfaceVariant
+    val accentColor = skin?.accent ?: MaterialTheme.colorScheme.primary
+    val onAccentColor = skin?.onAccent ?: MaterialTheme.colorScheme.onPrimary
 
     Card(
         shape = CardShape,
@@ -432,7 +494,11 @@ private fun LessonCard(
             containerColor = containerColor,
             contentColor = contentColor
         ),
-        border = if (paper) BorderStroke(1.dp, PaperLine) else null,
+        border = when {
+            skin?.glow == true -> BorderStroke(1.5.dp, accentColor) // неоновая обводка
+            skin != null -> BorderStroke(1.dp, skin.line)
+            else -> null
+        },
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -445,13 +511,13 @@ private fun LessonCard(
                 Text(
                     lesson.start.format(timeFormat()),
                     style = MaterialTheme.typography.titleLarge
-                        .copy(fontFeatureSettings = "tnum"),
+                        .copy(fontFeatureSettings = "tnum", fontFamily = skin.fontFamily()),
                     color = contentColor
                 )
                 Text(
                     lesson.end.format(timeFormat()),
                     style = MaterialTheme.typography.labelMedium
-                        .copy(fontFeatureSettings = "tnum"),
+                        .copy(fontFeatureSettings = "tnum", fontFamily = skin.fontFamily()),
                     color = softColor
                 )
             }
@@ -460,7 +526,7 @@ private fun LessonCard(
                 Text(
                     lesson.subject,
                     style = MaterialTheme.typography.titleMedium.copy(
-                        fontFamily = if (paper) FontFamily.Serif else FontFamily.Default
+                        fontFamily = skin.fontFamily()
                     ),
                     color = contentColor
                 )
@@ -473,7 +539,7 @@ private fun LessonCard(
                             SmallBadge(
                                 text = lesson.kind,
                                 container = accentColor,
-                                content = PaperOnAccent
+                                content = onAccentColor
                             )
                         }
                         if (lesson.isReplacement) {
@@ -531,10 +597,10 @@ private fun SmallBadge(text: String, container: Color, content: Color) {
 // --- Пустой день ---
 
 @Composable
-private fun EmptyDayCard(paper: Boolean, modifier: Modifier = Modifier) {
-    val containerColor = if (paper) PaperCard else MaterialTheme.colorScheme.surfaceVariant
-    val contentColor = if (paper) PaperInk else MaterialTheme.colorScheme.onSurfaceVariant
-    val softColor = if (paper) PaperInkSoft else MaterialTheme.colorScheme.onSurfaceVariant
+private fun EmptyDayCard(skin: CalendarSkin?, modifier: Modifier = Modifier) {
+    val containerColor = skin?.card ?: MaterialTheme.colorScheme.surfaceVariant
+    val contentColor = skin?.ink ?: MaterialTheme.colorScheme.onSurfaceVariant
+    val softColor = skin?.inkSoft ?: MaterialTheme.colorScheme.onSurfaceVariant
 
     Card(
         shape = CardShape,
@@ -542,7 +608,11 @@ private fun EmptyDayCard(paper: Boolean, modifier: Modifier = Modifier) {
             containerColor = containerColor,
             contentColor = contentColor
         ),
-        border = if (paper) BorderStroke(1.dp, PaperLine) else null,
+        border = when {
+            skin?.glow == true -> BorderStroke(1.5.dp, skin.accent)
+            skin != null -> BorderStroke(1.dp, skin.line)
+            else -> null
+        },
         modifier = modifier
     ) {
         Column(
