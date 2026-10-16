@@ -66,8 +66,8 @@ import ru.uniautoalarm.kgeu.ui.settings.SettingsScreen
 import ru.uniautoalarm.kgeu.ui.setup.SetupScreen
 import ru.uniautoalarm.kgeu.ui.theme.AutoAlarmTheme
 import ru.uniautoalarm.kgeu.ui.theme.GlassBackdropState
-import ru.uniautoalarm.kgeu.ui.theme.GlassMath
 import ru.uniautoalarm.kgeu.ui.theme.LocalGlassBackdrop
+import ru.uniautoalarm.kgeu.ui.theme.glassCardColor
 import ru.uniautoalarm.kgeu.ui.theme.glassSurface
 import ru.uniautoalarm.kgeu.ui.theme.resolveDarkTheme
 
@@ -171,11 +171,10 @@ private val TOP_DESTINATIONS = listOf(
  * Своя фоновая картинка: если задана — Scaffold рисуется прозрачным,
  * а картинка (файл из filesDir) кладётся под NavHost с пользовательской прозрачностью.
  *
- * Стекло 2.0 (0.14.0): фоновая картинка ВСЕГДА резкая (глобальное размытие убрано —
- * раньше размывался весь рисунок даже там, где перед ним нет стекла); размытие и
- * искажение применяются ровно за стеклянными поверхностями — [LocalGlassBackdrop]
- * поставляет размытый кэш фона, [glassSurface] на карточках/нижней панели рисует
- * под ними их фрагменты (см. ui.theme.GlassBackdrop).
+ * Стекло 2.1 (0.15.0): фоновая картинка ВСЕГДА резкая; [LocalGlassBackdrop]
+ * поставляет пары копий (резкая + сильно размытая), [glassSurface] на карточках/
+ * нижней панели рисует под ними точные фрагменты: мáтовость 0 — стекло прозрачное,
+ * 1 — мутный блёр; искажение — AGSL на Android 13+ (см. ui.theme.GlassBackdrop).
  *
  * @param settings снимок настроек — фоновая картинка и её прозрачность.
  */
@@ -197,18 +196,18 @@ private fun MainScaffold(settings: Settings) {
     val glassState = remember { GlassBackdropState() }
     val glassActive = settings.glassEnabled && backgroundFile != null
 
-    // Кэш размытого фона: перегенерация только при смене файла или квантованной
-    // матовости (шаг 0.05 — ползунок не штормит декодированием на каждом тике)
-    val blurKey = remember(settings.glassBlur) { (settings.glassBlur * 20f).roundToInt() }
-    LaunchedEffect(backgroundFile, blurKey) {
+    // 0.15.0: пара копий фона (резкая ~1600px + сильно размытая 720px) строится
+    // один раз на файл — мáтовость больше НЕ влияет на кэш (смешение идёт по альфе
+    // при отрисовке), ползунок не перезапускает декодирование
+    LaunchedEffect(backgroundFile) {
         val file = backgroundFile
         if (file == null) {
-            glassState.bitmap = null
+            glassState.sharpBitmap = null
+            glassState.blurBitmap = null
         } else {
-            val bitmap = withContext(Dispatchers.IO) {
-                produceBlurredBackdrop(file, GlassMath.blurScale(blurKey / 20f))
-            }
-            glassState.bitmap = bitmap?.asImageBitmap()
+            val pair = withContext(Dispatchers.IO) { produceBackdrop(file) }
+            glassState.sharpBitmap = pair?.first?.asImageBitmap()
+            glassState.blurBitmap = pair?.second?.asImageBitmap()
         }
     }
     SideEffect {
@@ -225,7 +224,9 @@ private fun MainScaffold(settings: Settings) {
         },
         bottomBar = {
             NavigationBar(
-                // стекло 2.0: нижняя панель — тоже стеклянная поверхность
+                // стекло 2.1: нижняя панель — стеклянная поверхность; заливка прозрачная,
+                // фрагмент фона и подложка рисует glassSurface
+                containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
                 modifier = Modifier.glassSurface(RectangleShape)
             ) {
                 for (destination in TOP_DESTINATIONS) {
@@ -298,36 +299,35 @@ private fun MainScaffold(settings: Settings) {
 }
 
 /**
- * Размытая копия фоновой картинки для кэша стекла: декод с прореживанием до ~720px
- * по ширине + боковое размытие двумя проходами downscale→upscale
- * (коэффициент [blurScale] из GlassMath). null — файл не читается (тогда
- * стеклянные поверхности рисуют только морозную заливку без фрагментов).
+ * Пара копий фоновой картинки для стекла (0.15.0):
+ * 1) резкая — декод с прореживанием до ~1600px по большей стороне (нужна, чтобы
+ *    стекло при мáтовости 0 показывало фон «один в один» — настоящая прозрачность);
+ * 2) размытая — 720px, три прохода downscale→upscale ×10 (максимально мутный блёр).
+ * null — файл не читается (стеклянные поверхности рисуют плотную заглушку).
  */
-private fun produceBlurredBackdrop(file: File, blurScale: Int): Bitmap? = runCatching {
+private fun produceBackdrop(file: File): Pair<Bitmap, Bitmap>? = runCatching {
     val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
     BitmapFactory.decodeFile(file.absolutePath, bounds)
     if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return@runCatching null
     var sample = 1
-    while (bounds.outWidth / (sample * 2) >= 720) sample *= 2
-    val src = BitmapFactory.decodeFile(
+    while (maxOf(bounds.outWidth, bounds.outHeight) / (sample * 2) >= 1600) sample *= 2
+    val sharp = BitmapFactory.decodeFile(
         file.absolutePath,
         BitmapFactory.Options().apply { inSampleSize = sample }
     ) ?: return@runCatching null
-    val base = if (src.width > 720) {
-        val scaled = Bitmap.createScaledBitmap(
-            src, 720, (src.height * 720f / src.width).roundToInt(), true
+    val base = if (sharp.width > 720) {
+        Bitmap.createScaledBitmap(
+            sharp, 720, (sharp.height * 720f / sharp.width).roundToInt(), true
         )
-        scaled
     } else {
-        src
+        sharp
     }
-    val factor = blurScale.coerceIn(2, 16)
     var result = base
-    repeat(2) {
+    repeat(3) {
         val small = Bitmap.createScaledBitmap(
-            result, maxOf(1, result.width / factor), maxOf(1, result.height / factor), true
+            result, maxOf(1, result.width / 10), maxOf(1, result.height / 10), true
         )
         result = Bitmap.createScaledBitmap(small, base.width, base.height, true)
     }
-    result
+    sharp to result
 }.getOrNull()

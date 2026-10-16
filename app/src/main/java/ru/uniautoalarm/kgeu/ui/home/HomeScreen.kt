@@ -83,6 +83,7 @@ import ru.uniautoalarm.kgeu.data.model.SyncInfo
 import ru.uniautoalarm.kgeu.ui.common.LocalAppContainer
 import ru.uniautoalarm.kgeu.ui.common.longDate
 import ru.uniautoalarm.kgeu.ui.common.timeFormat
+import ru.uniautoalarm.kgeu.ui.theme.glassCardColor
 import ru.uniautoalarm.kgeu.ui.theme.glassSurface
 
 /** Скругления карточек (по ТЗ — 20.dp, статус-карточка крупнее). */
@@ -326,7 +327,7 @@ private fun StatusCard(
     Card(
         shape = StatusCardShape,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            containerColor = glassCardColor(MaterialTheme.colorScheme.primaryContainer),
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         ),
         modifier = Modifier.fillMaxWidth().glassSurface(StatusCardShape)
@@ -472,7 +473,7 @@ private fun ToggleCard(enabled: Boolean, busy: Boolean, onToggle: (Boolean) -> U
     Card(
         shape = CardShape,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            containerColor = glassCardColor(MaterialTheme.colorScheme.surfaceVariant),
             contentColor = MaterialTheme.colorScheme.onSurfaceVariant
         ),
         modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
@@ -546,7 +547,7 @@ private fun AlarmsCard(
     Card(
         shape = CardShape,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            containerColor = glassCardColor(MaterialTheme.colorScheme.surfaceVariant),
             contentColor = MaterialTheme.colorScheme.onSurfaceVariant
         ),
         modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
@@ -689,7 +690,14 @@ private fun UpcomingCard(todayLessons: List<Lesson>, tomorrowLessons: List<Lesso
     }
     val todayUpcoming = todayLessons.filter { it.end > now }
 
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
+    Card(
+        shape = CardShape,
+        colors = CardDefaults.cardColors(
+            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -773,7 +781,10 @@ private fun WarningCard(
     }
     Card(
         shape = CardShape,
-        colors = CardDefaults.cardColors(containerColor = container, contentColor = content),
+        colors = CardDefaults.cardColors(
+            containerColor = glassCardColor(container),
+            contentColor = content
+        ),
         modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
     ) {
         Column(

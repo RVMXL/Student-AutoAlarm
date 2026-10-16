@@ -66,28 +66,13 @@ fun AutoAlarmTheme(settings: Settings?, content: @Composable () -> Unit) {
         }
     }
 
-    // Эффект стекла (0.14.0): поверхности полупрозрачны, под ними — фрагмент фоновой
-    // картинки, размытый и искажённый РОВНО за стеклом (ui.theme.GlassBackdrop:
-    // каждая стеклянная поверхность рисует свой размытый кусок фона, сама картинка
-    // остаётся резкой). Матóвость [glassBlur] задаёт силу размытия и плотность
-    // морозной заливки; искажение [glassDistortion] — «линзовое» искривление.
-    // UI-20 (0.11.0): нижний порог альфы 0.55 — контраст текста (WCAG 4.5:1).
-    // ВАЖНО: стекло применяется ТОЛЬКО при заданной фоновой картинке (см. 0.11.0).
-    if (settings?.glassEnabled == true && settings.backgroundImagePath != null) {
-        val glassAlpha = (1f - settings.glassBlur * 0.85f).coerceIn(0.55f, 1f)
-        colorScheme = colorScheme.copy(
-            background = colorScheme.background.copy(alpha = glassAlpha),
-            surface = colorScheme.surface.copy(alpha = glassAlpha),
-            surfaceVariant = colorScheme.surfaceVariant.copy(alpha = glassAlpha),
-            surfaceContainerLowest = colorScheme.surfaceContainerLowest.copy(alpha = glassAlpha),
-            surfaceContainerLow = colorScheme.surfaceContainerLow.copy(alpha = glassAlpha),
-            surfaceContainer = colorScheme.surfaceContainer.copy(alpha = glassAlpha),
-            surfaceContainerHigh = colorScheme.surfaceContainerHigh.copy(alpha = glassAlpha),
-            surfaceContainerHighest = colorScheme.surfaceContainerHighest.copy(alpha = glassAlpha),
-            surfaceDim = colorScheme.surfaceDim.copy(alpha = glassAlpha),
-            surfaceBright = colorScheme.surfaceBright.copy(alpha = glassAlpha)
-        )
-    }
+    // Стекло (0.15.0): глобальная полупрозрачность поверхностей УДАЛЕНА.
+    // В 0.14.0 все surface-краски получали альфу по мáтовости — при малой мáтовости
+    // альфа = 1 (плотная карточка поверх фрагмента фона = «отпечаток»), а поверхности
+    // БЕЗ glassSurface выглядели «старым» полупрозрачным стеклом. Теперь поверхности
+    // остаются непрозрачными; стеклянные (Modifier.glassSurface) получают прозрачную
+    // заливку через glassCardColor() и рисуют фрагмент фона под содержимым
+    // (ui.theme.GlassBackdrop). Диалоги/меню/снекбары не стеклянны — им нужна плотность.
 
     MaterialTheme(
         colorScheme = colorScheme,

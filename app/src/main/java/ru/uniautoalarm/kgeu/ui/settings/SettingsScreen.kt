@@ -21,6 +21,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -163,6 +164,7 @@ import ru.uniautoalarm.kgeu.ui.theme.ACCENT_PALETTES
 import ru.uniautoalarm.kgeu.ui.theme.CUSTOM_ACCENT_INDEX
 import ru.uniautoalarm.kgeu.ui.theme.argbToHsv
 import ru.uniautoalarm.kgeu.ui.theme.customAccentPalette
+import ru.uniautoalarm.kgeu.ui.theme.glassCardColor
 import ru.uniautoalarm.kgeu.ui.theme.glassSurface
 import ru.uniautoalarm.kgeu.ui.theme.hsvToArgb
 import ru.uniautoalarm.kgeu.ui.theme.resolveDarkTheme
@@ -364,7 +366,15 @@ private fun PillLabel(text: String) {
 
 @Composable
 private fun ProfileCard(settings: Settings, onChangeTarget: () -> Unit) {
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
+    Card(
+        shape = CardShape,
+        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
+        colors = CardDefaults.cardColors(
+            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -405,7 +415,15 @@ private fun AlarmSettingsCard(
     // UI-11: пока engine-работа тумблера/смены движка идёт, переключатели заблокированы
     val toggling by vm.toggling.collectAsStateWithLifecycle()
 
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
+    Card(
+        shape = CardShape,
+        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
+        colors = CardDefaults.cardColors(
+            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -868,7 +886,15 @@ private fun PairOffsetDialog(
 private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
     var showTimePicker by rememberSaveable { mutableStateOf(false) }
 
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
+    Card(
+        shape = CardShape,
+        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
+        colors = CardDefaults.cardColors(
+            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -983,7 +1009,15 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
             .take(5)
     }
 
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
+    Card(
+        shape = CardShape,
+        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
+        colors = CardDefaults.cardColors(
+            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1083,7 +1117,15 @@ private fun CustomEventsCard(events: List<CustomEvent>, vm: SettingsViewModel) {
     // SET-2: переживает поворот — открытый диалог не закрывается
     var showAddDialog by rememberSaveable { mutableStateOf(false) }
 
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
+    Card(
+        shape = CardShape,
+        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
+        colors = CardDefaults.cardColors(
+            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1384,7 +1426,15 @@ private fun AppearanceCard(
         }
     }
 
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
+    Card(
+        shape = CardShape,
+        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
+        colors = CardDefaults.cardColors(
+            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1462,9 +1512,14 @@ private fun AppearanceCard(
             }
 
             Text(stringResource(R.string.set_accent), style = MaterialTheme.typography.bodyLarge)
+            // FIX 0.15.0: 7 кружков по 48dp не влезали в строку — «свой цвет» уезжал за
+            // экран; ряд скроллится по горизонтали
             Row(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState())
             ) {
                 ACCENT_PALETTES.forEachIndexed { index, palette ->
                     // кружок = реальный акцент текущей темы (в тёмной — primaryDark)
@@ -1923,7 +1978,15 @@ private fun SystemCard(
     onFixBattery: () -> Unit,
     onAutostart: () -> Unit
 ) {
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
+    Card(
+        shape = CardShape,
+        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
+        colors = CardDefaults.cardColors(
+            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -2095,7 +2158,15 @@ private fun AutostartDialog(onDismiss: () -> Unit) {
 
 @Composable
 private fun AboutCard(versionName: String?, context: Context) {
-    Card(shape = CardShape, modifier = Modifier.fillMaxWidth().glassSurface(CardShape)) {
+    Card(
+        shape = CardShape,
+        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
+        colors = CardDefaults.cardColors(
+            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

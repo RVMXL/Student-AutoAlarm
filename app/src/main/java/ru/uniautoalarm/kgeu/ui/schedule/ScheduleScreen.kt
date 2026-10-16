@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -49,6 +50,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -76,7 +78,10 @@ import ru.uniautoalarm.kgeu.domain.DayMarkers
 import ru.uniautoalarm.kgeu.ui.common.LocalAppContainer
 import ru.uniautoalarm.kgeu.ui.common.dayShortName
 import ru.uniautoalarm.kgeu.ui.common.timeFormat
+import ru.uniautoalarm.kgeu.ui.theme.CalendarDecor
 import ru.uniautoalarm.kgeu.ui.theme.CalendarSkin
+import ru.uniautoalarm.kgeu.ui.theme.glassCardColor
+import ru.uniautoalarm.kgeu.ui.theme.glassSurface
 import ru.uniautoalarm.kgeu.ui.theme.skin
 
 private val CardShape = RoundedCornerShape(20.dp)
@@ -86,22 +91,33 @@ private val ChipShape = RoundedCornerShape(8.dp)
 private fun monthDay(): DateTimeFormatter =
     DateTimeFormatter.ofPattern("d MMMM", Locale.getDefault())
 
-/** Шрифт скина: моно (Терминал/Неон) → антиква (Бумага/Ретро) → обычный. */
+/** Шрифт скина: моно (Терминал/Неон) → рукописный (Мел) → антиква (Бумага/Ретро) → обычный. */
 private fun CalendarSkin?.fontFamily(): FontFamily = when {
     this?.mono == true -> FontFamily.Monospace
+    this?.cursive == true -> FontFamily.Cursive
     this?.serif == true -> FontFamily.Serif
     else -> FontFamily.Default
+}
+
+/** Ширина рамки оформления (внутренний отступ содержимого листа), 0.15.0. */
+private fun CalendarSkin.frameInsetDp(): androidx.compose.ui.unit.Dp = when (decor) {
+    CalendarDecor.SPRINGS -> 0.dp
+    CalendarDecor.WOOD -> 7.dp
+    CalendarDecor.MONITOR -> 12.dp
+    CalendarDecor.GLOW -> 5.dp
+    CalendarDecor.WASH -> 6.dp
+    CalendarDecor.PRESS -> 4.dp
 }
 
 /**
  * Экран расписания: неделя «12 – 18 октября», чипы дней, карточки пар.
  * Стиль STANDARD — обычная Material3; остальные — скины [CalendarSkin]
- * (Бумажный календарь, Мел и доска, Неон, Терминал, Акварель, Ретро-печать).
+ * (Бумажный календарь, Мел и доска, Неон, Терминал, Акварель, Ретро-печать),
+ * у каждого своё оформление листа [CalendarDecor] (0.15.0).
  *
- * 0.14.0: чипы дней помечаются маркерами — серая точка «в этот день есть пары»,
- * цветная точка с числом «столько обозначенных (исключённых) секций». Точка
- * «сегодня» — акцентная, как раньше; маркеры рисуются другими цветами,
- * чтобы их нельзя было спутать с ней.
+ * 0.15.0: «сегодня» — скруглённая полоска НАД названием дня (акцентный цвет,
+ * толщина точки); точки под числом — только про расписание: серая «есть пары»,
+ * цветная с числом «обозначенных (исключённых) секций».
  */
 @Composable
 fun ScheduleScreen() {
@@ -153,21 +169,21 @@ fun ScheduleScreen() {
                 .padding(padding)
         ) {
             if (skin?.background != null) {
-                // Лист стиля (фон): выбранная пользователем картинка/фон видны ВОКРУГ него
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
-                        .background(skin.background, shape = RoundedCornerShape(18.dp))
-                        .border(1.dp, skin.line, shape = RoundedCornerShape(18.dp))
-                )
+                // Лист стиля (фон) с собственным оформлением стиля — 0.15.0:
+                // у каждого скина своя рамка (дерево/монитор/свечение/кайма/линейки)
+                SkinSheet(skin!!, Modifier.matchParentSize())
             }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .then(
                         if (skin?.background != null) {
-                            Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+                            // контент живёт ВНУТРИ листа: внешние поля + рамка декора
+                            val inset = skin!!.frameInsetDp()
+                            Modifier.padding(
+                                horizontal = 12.dp + inset,
+                                vertical = 8.dp + inset
+                            )
                         } else {
                             Modifier
                         }
@@ -176,10 +192,31 @@ fun ScheduleScreen() {
                 if (skin != null) {
                     SkinCalendarHeader(skin, monthTitle)
                 }
+                // FIX 0.15.0: в стандартном стиле шапка жила прямо на фоне — с картинкой
+                // текст мог слиться. Теперь это поверхность surfaceContainer; при активном
+                // стекле — стеклянная (glassCardColor возвращает прозрачный + glassSurface
+                // рисует фрагмент фона). В скинах шапка живёт на листе скина — как было.
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 2.dp)
+                        .then(
+                            if (skin == null) {
+                                Modifier
+                                    .background(
+                                        glassCardColor(MaterialTheme.colorScheme.surfaceContainer),
+                                        RoundedCornerShape(16.dp)
+                                    )
+                                    .glassSurface(RoundedCornerShape(16.dp))
+                            } else {
+                                Modifier
+                            }
+                        )
+                ) {
                 Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
+                    .padding(horizontal = 8.dp, vertical = 2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = { vm.prevWeek() }) {
@@ -241,6 +278,7 @@ fun ScheduleScreen() {
                     )
                 }
             }
+                }
 
             if (sync.busy && dayLessons.isEmpty()) {
                 LinearProgressIndicator(
@@ -336,24 +374,161 @@ fun ScheduleScreen() {
 }
 }
 
-// --- Шапка скина: кольца-пружина + месяц/год ---
+// --- Лист стиля: рамка по декору скина (0.15.0) ---
+
+/**
+ * Лист расписания с СОБСТВЕННЫМ оформлением стиля (0.15.0): у бумаги — кольца-пружина,
+ * у доски — деревянная рама, у терминала — корпус лампового монитора (бежевый кожух,
+ * тёмный безель), у неона — светящаяся кайма, у акварели — акварельные пятна, у
+ * ретро — газетные линейки. Раньше кольца-пружина рисовались у всех стилей подряд.
+ */
+@Composable
+private fun SkinSheet(skin: CalendarSkin, modifier: Modifier = Modifier) {
+    val bg = skin.background ?: return
+    val sheetShape = RoundedCornerShape(14.dp)
+    val frameShape = RoundedCornerShape(22.dp)
+    when (skin.decor) {
+        CalendarDecor.SPRINGS -> Box(
+            modifier
+                .background(bg, shape = sheetShape)
+                .border(1.dp, skin.line, shape = sheetShape)
+        )
+
+        // деревянная school-рама: вертикальный градиент дерева + тёмная кромка
+        CalendarDecor.WOOD -> Box(
+            modifier
+                .background(
+                    brush = Brush.verticalGradient(
+                        listOf(Color(0xFF8A5A33), Color(0xFF5F3D1F), Color(0xFF8A5A33))
+                    ),
+                    shape = frameShape
+                )
+                .border(1.dp, Color(0xFF3B2A1A), shape = frameShape)
+                .padding(7.dp)
+        ) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(bg, shape = sheetShape)
+                    .border(1.dp, skin.line, shape = sheetShape)
+            )
+        }
+
+        // ламповый монитор: бежевый кожух → тёмный безель → экран скина
+        CalendarDecor.MONITOR -> Box(
+            modifier
+                .background(Color(0xFFD8D0BC), shape = frameShape)
+                .border(1.dp, Color(0xFFB2A78D), shape = frameShape)
+                .padding(9.dp)
+        ) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF12160F), RoundedCornerShape(10.dp))
+                    .padding(3.dp)
+            ) {
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .background(bg, RoundedCornerShape(7.dp))
+                        .border(1.dp, skin.line, RoundedCornerShape(7.dp))
+                )
+            }
+        }
+
+        // неоновая кайма: цветной ореол вокруг листа + акцентная обводка
+        CalendarDecor.GLOW -> Box(
+            modifier
+                .background(skin.accent.copy(alpha = 0.16f), shape = frameShape)
+                .padding(5.dp)
+        ) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(bg, shape = sheetShape)
+                    .border(1.5.dp, skin.accent, shape = sheetShape)
+            )
+        }
+
+        // акварельная кайма: мягкие пастельные пятна по периметру
+        CalendarDecor.WASH -> Box(
+            modifier
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(Color(0xFFF9E2E0), Color(0xFFE0ECF6), Color(0xFFE8F3E4))
+                    ),
+                    shape = frameShape
+                )
+                .padding(6.dp)
+        ) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(bg, shape = sheetShape)
+                    .border(1.dp, skin.line, shape = sheetShape)
+            )
+        }
+
+        // газета: двойная типографская рамка (жирная снаружи, тонкая внутри)
+        CalendarDecor.PRESS -> Box(
+            modifier
+                .background(Color(0xFFE9E0C9), RoundedCornerShape(10.dp))
+                .border(1.5.dp, skin.ink, RoundedCornerShape(10.dp))
+                .padding(4.dp)
+        ) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(bg, RoundedCornerShape(6.dp))
+                    .border(0.5.dp, skin.ink.copy(alpha = 0.55f), RoundedCornerShape(6.dp))
+            )
+        }
+    }
+}
+
+// --- Шапка скина: декор по стилю + месяц/год ---
 
 @Composable
 private fun SkinCalendarHeader(skin: CalendarSkin, monthTitle: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(20.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(top = 8.dp, bottom = 6.dp)
-        ) {
-            repeat(7) {
+        // верхний декор шапки — у каждого стиля свой (кольца — только у бумаги)
+        when (skin.decor) {
+            CalendarDecor.SPRINGS -> Row(
+                horizontalArrangement = Arrangement.spacedBy(20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 8.dp, bottom = 6.dp)
+            ) {
+                repeat(7) {
+                    Box(
+                        modifier = Modifier
+                            .size(10.dp)
+                            .background(skin.card, shape = CircleShape)
+                            .border(1.5.dp, skin.inkSoft, shape = CircleShape)
+                    )
+                }
+            }
+
+            // ламповый монитор: светодиод питания + «решётка динамика»
+            CalendarDecor.MONITOR -> Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+            ) {
                 Box(
                     modifier = Modifier
-                        .size(10.dp)
-                        .background(skin.card, shape = CircleShape)
-                        .border(1.5.dp, skin.inkSoft, shape = CircleShape)
+                        .size(8.dp)
+                        .background(skin.accent, shape = CircleShape)
+                        .border(1.dp, skin.mark, shape = CircleShape)
+                )
+                Box(
+                    modifier = Modifier
+                        .width(52.dp)
+                        .height(4.dp)
+                        .background(skin.inkSoft.copy(alpha = 0.45f), RoundedCornerShape(2.dp))
                 )
             }
+
+            else -> {}
         }
         Text(
             monthTitle,
@@ -366,12 +541,72 @@ private fun SkinCalendarHeader(skin: CalendarSkin, monthTitle: String) {
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
-        androidx.compose.material3.HorizontalDivider(
-            color = skin.line,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
-        )
+        // разделитель под заголовком — тоже по стилю
+        when (skin.decor) {
+            // газета: двойная линейка (толстая + тонкая)
+            CalendarDecor.PRESS -> Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            ) {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(2.dp)
+                        .background(skin.ink)
+                )
+                Spacer(Modifier.height(2.dp))
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(skin.ink.copy(alpha = 0.7f))
+                )
+            }
+
+            // неон: светящаяся акцентная линия (ореол + ядро)
+            CalendarDecor.GLOW -> Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(5.dp)
+                        .background(skin.accent.copy(alpha = 0.22f), RoundedCornerShape(2.dp))
+                )
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(1.5.dp)
+                        .background(skin.accent, RoundedCornerShape(1.dp))
+                )
+            }
+
+            // доска: деревянная планка
+            CalendarDecor.WOOD -> Box(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                    .height(5.dp)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            listOf(Color(0xFF8A5A33), Color(0xFF5F3D1F))
+                        ),
+                        shape = RoundedCornerShape(2.dp)
+                    )
+            )
+
+            // бумага / монитор / акварель — тонкая линия цвета стиля
+            else -> androidx.compose.material3.HorizontalDivider(
+                color = skin.line,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            )
+        }
     }
 }
 
@@ -388,29 +623,36 @@ private fun DayChip(
     onClick: () -> Unit
 ) {
     val accent = skin?.accent ?: MaterialTheme.colorScheme.primary
+    val onAccentColor = skin?.onAccent ?: MaterialTheme.colorScheme.onPrimary
     val neutralMark = skin?.inkSoft ?: MaterialTheme.colorScheme.onSurfaceVariant
     val sectionMark = skin?.mark ?: MaterialTheme.colorScheme.tertiary
     val label = "${dayShortName(date.dayOfWeek)} ${date.dayOfMonth}"
-    // 0.14.0: маркеры под числом — акцентная точка «сегодня» (как в настенных
-    // календарях), серая «есть пары», цветная с числом «исключённых секций».
+    // 0.15.0: «сегодня» — скруглённая полоска (толщиной в точку) НАД названием дня
+    // внутри кнопки; раньше точка «сегодня» стояла в ряду маркеров и сливалась
+    // с точкой «есть пары». Ряд маркеров под числом теперь только про расписание:
+    // серая точка «есть пары», цветная с числом «исключённых секций».
     // Маркеры скрываются у выбранного дня — чип и так залит акцентом.
     @Composable
     fun dayLabel() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            if (isToday) {
+                Box(
+                    modifier = Modifier
+                        .padding(bottom = 2.dp)
+                        .size(width = 16.dp, height = 4.dp)
+                        .background(
+                            if (selected) onAccentColor else accent,
+                            RoundedCornerShape(2.dp)
+                        )
+                )
+            }
             Text(label, fontWeight = if (isToday) FontWeight.Bold else null)
-            if (!selected && (isToday || hasLessons || markedCount > 0)) {
+            if (!selected && (hasLessons || markedCount > 0)) {
                 Row(
                     modifier = Modifier.padding(top = 1.dp),
                     horizontalArrangement = Arrangement.spacedBy(2.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (isToday) {
-                        Box(
-                            modifier = Modifier
-                                .size(4.dp)
-                                .background(accent, CircleShape)
-                        )
-                    }
                     if (hasLessons) {
                         Box(
                             modifier = Modifier
