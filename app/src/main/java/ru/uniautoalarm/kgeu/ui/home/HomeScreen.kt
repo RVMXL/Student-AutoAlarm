@@ -308,7 +308,7 @@ private fun HeaderRow(settings: Settings?, busy: Boolean, onRefresh: () -> Unit)
             }
         }
         // UI-19 (0.11.0): мёртвый AssistChip «Стандарт» удалён (onClick = {} ни на что
-        // не реагировал; режим один — «одна ночь вперёд», см. RELEASE-0.8.0),
+        // не реагировал; режим один — «одна ночь вперёд», см. CHANGELOG 0.8.0),
         // ключ mode_standard_chip вычищен из всех 15 локалей (SET-8-хвост)
     }
 }

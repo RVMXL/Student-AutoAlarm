@@ -48,14 +48,17 @@ jobs:
           cache: gradle
 
       # ── ГЕЙТ: релиз не уедет при незаполненных версии/заметках/тестах ──
-      - name: "1. Гейт: версия в gradle равна тегу, заметки и CHANGELOG на месте"
+      # 0.18.0: заметки релиза — секция CHANGELOG этой версии (файлы RELEASE-*.md
+      # удалены из репозитория по решению пользователя — корень чище)
+      - name: "1. Гейт: версия в gradle равна тегу, непустая секция CHANGELOG"
         run: |
           set -euo pipefail
           GV=$(grep -oP 'versionName\s*=\s*"\K[0-9]+\.[0-9]+\.[0-9]+' app/build.gradle.kts | head -1)
           echo "versionName=$GV, тег=$VER"
           test "$GV" = "$VER" || { echo "✗ версия в app/build.gradle.kts ($GV) != тегу ($VER) — бампни и переправь тег"; exit 1; }
-          test -f "RELEASE-$VER.md" || { echo "✗ нет RELEASE-$VER.md — заметки релиза обязательны"; exit 1; }
-          grep -q "## \[$VER\]" CHANGELOG.md || { echo "✗ в CHANGELOG.md нет секции [$VER]"; exit 1; }
+          grep -q "^## \[$VER\]" CHANGELOG.md || { echo "✗ в CHANGELOG.md нет секции [$VER] — заметки релиза обязательны"; exit 1; }
+          NOTES=$(awk -v ver="$VER" 'index($0,"## [" ver "]")==1{f=1;next} f&&/^## \[/{exit} f' CHANGELOG.md)
+          test -n "$(printf '%s' "$NOTES" | sed '/./,$!d')" || { echo "✗ секция [$VER] в CHANGELOG.md пуста — заметки релиза обязательны"; exit 1; }
 
       - name: "2. Unit-тесты"
         run: ./gradlew --no-daemon :app:testDebugUnitTest
@@ -138,11 +141,11 @@ jobs:
           ls -la download/
 
       # ── ПУБЛИКАЦИЯ ──
-      - name: "7. Заметки: RELEASE-$VER.md + SHA-таблица + сертификат"
+      - name: "7. Заметки: CHANGELOG [$VER] + SHA-таблица + сертификат"
         run: |
           set -euo pipefail
           {
-            cat "RELEASE-$VER.md"
+            awk -v ver="$VER" 'index($0,"## [" ver "]")==1{f=1;next} f&&/^## \[/{exit} f' CHANGELOG.md | sed '/./,$!d'
             echo
             echo "## Артефакты (SHA-256, собрано CI для тега $TAG)"
             echo
