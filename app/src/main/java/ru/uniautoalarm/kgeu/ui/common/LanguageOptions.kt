@@ -16,7 +16,9 @@ data class LanguageOption(
 
 /**
  * Поддерживаемые языки. Сверху — самые востребованные в КГЭУ
- * (русский, татарский, английский), дальше — по алфавиту родных имён.
+ * (русский, татарский, английский), дальше — по алфавиту родных имён
+ * (SET-11, 0.11.0: «Oʻzbekcha» на «O» стояла после «Тоҷикӣ»/«Türkçe» — порядок
+ * приведён к заявленному в комментарии).
  */
 val SUPPORTED_LANGUAGES: List<LanguageOption> = listOf(
     LanguageOption("ru", "Русский"),
@@ -28,10 +30,10 @@ val SUPPORTED_LANGUAGES: List<LanguageOption> = listOf(
     LanguageOption("fr", "Français"),
     LanguageOption("kk", "Қазақша"),
     LanguageOption("ky", "Кыргызча"),
+    LanguageOption("uz", "Oʻzbekcha"),
     LanguageOption("tg", "Тоҷикӣ"),
     LanguageOption("tr", "Türkçe"),
     LanguageOption("tk", "Türkmençe"),
-    LanguageOption("uz", "Oʻzbekcha"),
     LanguageOption("cv", "Чӑвашла"),
     LanguageOption("zh", "中文"),
 )
@@ -52,6 +54,8 @@ fun LanguageOption.displayName(): String {
         nativeName
     } else {
         val capitalized = localized.replaceFirstChar { it.uppercase(current) }
-        "$nativeName / $capitalized"
+        // SET-14 (0.11.0): сегменты в bidi-изолятах — «English / Английский» при
+        // арабском интерфейсе рендерился с плавающим разделителем
+        "${bidiSegment(nativeName)} / ${bidiSegment(capitalized)}"
     }
 }

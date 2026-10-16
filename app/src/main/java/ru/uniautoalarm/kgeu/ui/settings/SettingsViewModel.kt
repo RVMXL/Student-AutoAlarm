@@ -32,6 +32,7 @@ import ru.uniautoalarm.kgeu.data.model.ThemeMode
 import ru.uniautoalarm.kgeu.data.repository.ScheduleRepository
 import ru.uniautoalarm.kgeu.di.AppContainer
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
+import ru.uniautoalarm.kgeu.ui.common.OffsetBounds
 import ru.uniautoalarm.kgeu.ui.theme.ACCENT_PALETTES
 
 /**
@@ -398,9 +399,10 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     )
 
     private companion object {
-        const val MIN_OFFSET = 15
-        const val MAX_OFFSET = 240
-        const val MIN_EVENT_OFFSET = 15
-        const val MAX_EVENT_OFFSET = 180
+        // SET-13 (0.11.0): границы — из единого источника ui.common.OffsetBounds
+        const val MIN_OFFSET = OffsetBounds.WAKE_MIN
+        const val MAX_OFFSET = OffsetBounds.WAKE_MAX
+        const val MIN_EVENT_OFFSET = OffsetBounds.EVENT_MIN
+        const val MAX_EVENT_OFFSET = OffsetBounds.EVENT_MAX
     }
 }

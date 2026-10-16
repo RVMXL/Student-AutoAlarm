@@ -4,11 +4,14 @@ import android.app.Activity
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
 import android.provider.AlarmClock
 import android.provider.Settings as AndroidSettings
+import android.text.format.DateFormat as AndroidDateFormat
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -112,10 +115,10 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.alarm.StockAlarmSetter
 import ru.uniautoalarm.kgeu.data.local.LocaleStore
@@ -129,7 +132,10 @@ import ru.uniautoalarm.kgeu.data.model.ThemeMode
 import ru.uniautoalarm.kgeu.ui.common.LanguagePicker
 import ru.uniautoalarm.kgeu.ui.common.LocalAppContainer
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
+import ru.uniautoalarm.kgeu.ui.common.OffsetBounds
 import ru.uniautoalarm.kgeu.ui.common.SUPPORTED_LANGUAGES
+import ru.uniautoalarm.kgeu.ui.common.bidiSegment
+import ru.uniautoalarm.kgeu.ui.common.shortDate
 import ru.uniautoalarm.kgeu.ui.common.timeFormat
 import ru.uniautoalarm.kgeu.ui.common.dayShortName
 import ru.uniautoalarm.kgeu.ui.common.displayName
@@ -160,8 +166,6 @@ private val LocalTimeSaver = listSaver<LocalTime, Int>(
     save = { t -> listOf(t.hour, t.minute) },
     restore = { list -> LocalTime.of(list[0], list[1]) },
 )
-
-private val DATE: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM")
 
 private val WEEK_DAYS: List<DayOfWeek> = listOf(
     DayOfWeek.MONDAY,
@@ -268,7 +272,15 @@ fun SettingsScreen() {
             item {
                 val s = settings
                 if (s != null) {
-                    AppearanceCard(settings = s, vm = vm, context = context)
+                    val bgRejected = stringResource(R.string.bg_image_rejected)
+                    AppearanceCard(
+                        settings = s,
+                        vm = vm,
+                        context = context,
+                        // SEC-11: некондиционный файл — снекбар с локализованной причиной
+                        // (строка берётся в композиции — stringResource недоступен в лямбде)
+                        onRejected = { showMessage(bgRejected) }
+                    )
                 }
             }
 
@@ -633,6 +645,47 @@ private fun AlarmSettingsCard(
     }
 }
 
+/**
+ * SET-10 (0.11.0): общее тело диалогов смещения — крупное значение, слайдер,
+ * пресеты. Раньше OffsetDialog и PairOffsetDialog дублировали эти ~55 строк —
+ * при смене границ/пресетов править приходилось в двух местах (SET-13).
+ */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun OffsetSliderBody(
+    value: Int,
+    onValueChange: (Int) -> Unit,
+    valueRange: ClosedFloatingPointRange<Float>,
+    example: @Composable () -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text(
+            formatOffset(value),
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Slider(
+            value = value.toFloat(),
+            onValueChange = { onValueChange(it.roundToInt()) },
+            valueRange = valueRange,
+            steps = (valueRange.endInclusive - valueRange.start).toInt() /
+                OffsetBounds.STEP - 1
+        )
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            OFFSET_PRESETS.forEach { preset ->
+                FilterChip(
+                    selected = value == preset,
+                    onClick = { onValueChange(preset) },
+                    label = { Text(formatOffset(preset)) }
+                )
+            }
+        }
+        example()
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun OffsetDialog(
@@ -646,35 +699,19 @@ private fun OffsetDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.dialog_offset_title)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text(
-                    formatOffset(value),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Slider(
-                    value = value.toFloat(),
-                    onValueChange = { value = it.roundToInt() },
-                    valueRange = 15f..240f,
-                    steps = 14
-                )
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    OFFSET_PRESETS.forEach { preset ->
-                        FilterChip(
-                            selected = value == preset,
-                            onClick = { value = preset },
-                            label = { Text(formatOffset(preset)) }
-                        )
-                    }
+            // SET-10: тело слайдера/пресетов — общее с PairOffsetDialog
+            OffsetSliderBody(
+                value = value,
+                onValueChange = { value = it },
+                valueRange = OffsetBounds.WAKE_RANGE,
+                example = {
+                    Text(
+                        stringResource(R.string.dialog_offset_example, exampleWakeTime(value).hhmm()),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
-                Text(
-                    stringResource(R.string.dialog_offset_example, exampleWakeTime(value).hhmm()),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            )
         },
         confirmButton = {
             TextButton(onClick = { onConfirm(value) }) {
@@ -707,39 +744,23 @@ private fun PairOffsetDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.dialog_pair_title, pairStart.format(timeFormat()))) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text(
-                    formatOffset(value),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Slider(
-                    value = value.toFloat(),
-                    onValueChange = { value = it.roundToInt() },
-                    valueRange = 15f..240f,
-                    steps = 14
-                )
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    OFFSET_PRESETS.forEach { preset ->
-                        FilterChip(
-                            selected = value == preset,
-                            onClick = { value = preset },
-                            label = { Text(formatOffset(preset)) }
-                        )
-                    }
+            // SET-10: тело слайдера/пресетов — общее с OffsetDialog
+            OffsetSliderBody(
+                value = value,
+                onValueChange = { value = it },
+                valueRange = OffsetBounds.WAKE_RANGE,
+                example = {
+                    Text(
+                        stringResource(
+                            R.string.dialog_pair_example,
+                            pairStart.format(timeFormat()),
+                            pairStart.minusMinutes(value.toLong()).hhmm()
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
-                Text(
-                    stringResource(
-                        R.string.dialog_pair_example,
-                        pairStart.format(timeFormat()),
-                        pairStart.minusMinutes(value.toLong()).hhmm()
-                    ),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            )
         },
         confirmButton = {
             TextButton(onClick = { onSave(value) }) {
@@ -827,10 +848,14 @@ private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
     }
 
     if (showTimePicker) {
+        // SET-14 (0.11.0): 12/24-часовой пикер — по системной настройке пользователя,
+        // а не «всегда 24»: en-US видел пикер 24h, а слайдер примеров — AM/PM
+        val context = LocalContext.current
+        val is24h = AndroidDateFormat.is24HourFormat(context)
         val timeState = rememberTimePickerState(
             initialHour = settings.reminderTime.hour,
             initialMinute = settings.reminderTime.minute,
-            is24Hour = true
+            is24Hour = is24h
         )
         AlertDialog(
             onDismissRequest = { showTimePicker = false },
@@ -1115,7 +1140,7 @@ private fun AddEventDialog(
                     ) {
                         Icon(Icons.Rounded.Event, contentDescription = null)
                         Spacer(Modifier.width(6.dp))
-                        Text(date?.format(DATE) ?: stringResource(R.string.btn_pick_date))
+                        Text(date?.format(shortDate()) ?: stringResource(R.string.btn_pick_date))
                     }
                 }
                 OutlinedButton(
@@ -1134,8 +1159,10 @@ private fun AddEventDialog(
                     Slider(
                         value = offset.toFloat(),
                         onValueChange = { offset = it.roundToInt() },
-                        valueRange = 15f..180f,
-                        steps = 32
+                        // SET-13: границы своего занятия — из единого источника
+                        valueRange = OffsetBounds.EVENT_RANGE,
+                        steps = (OffsetBounds.EVENT_MAX - OffsetBounds.EVENT_MIN) /
+                            OffsetBounds.STEP - 1
                     )
                 }
             }
@@ -1189,10 +1216,13 @@ private fun AddEventDialog(
     }
 
     if (showTimePicker) {
+        // SET-14: 12/24 — по системной настройке пользователя
+        val context = LocalContext.current
+        val is24h = AndroidDateFormat.is24HourFormat(context)
         val timeState = rememberTimePickerState(
             initialHour = time.hour,
             initialMinute = time.minute,
-            is24Hour = true
+            is24Hour = is24h
         )
         AlertDialog(
             onDismissRequest = { showTimePicker = false },
@@ -1223,7 +1253,12 @@ private fun AddEventDialog(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: Context) {
+private fun AppearanceCard(
+    settings: Settings,
+    vm: SettingsViewModel,
+    context: Context,
+    onRejected: () -> Unit
+) {
     val scope = rememberCoroutineScope()
     // --- Язык интерфейса (новое в 0.5.0): первая строка секции «Оформление» ---
     var showLanguageDialog by rememberSaveable { mutableStateOf(false) }
@@ -1243,14 +1278,18 @@ private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: C
     ) { uri ->
         if (uri != null) {
             scope.launch(Dispatchers.IO) {
-                try {
-                    val file = File(context.filesDir, "background.jpg")
-                    context.contentResolver.openInputStream(uri)?.use { input ->
-                        file.outputStream().use { output -> input.copyTo(output) }
+                // SEC-11 (0.11.0): файл проверяется, а не копируется вслепую:
+                // тип (реально декодируется как картинка), размер (≤ 20 МБ — не убить
+                // хранилище), плюс даунскейл до 2048px по большей стороне (не убить
+                // память при декодировании на слабых устройствах). Некондиция —
+                // отказ с внятным снекбаром, а не молчаливый «фон не меняется»
+                val ok = copyValidatedBackground(context, uri)
+                withContext(Dispatchers.Main) {
+                    if (ok) {
+                        vm.setBackground(File(context.filesDir, "background.jpg").absolutePath)
+                    } else {
+                        onRejected()
                     }
-                    vm.setBackground(file.absolutePath)
-                } catch (_: Exception) {
-                    // Не удалось скопировать картинку — фон просто не меняется
                 }
             }
         }
@@ -1383,17 +1422,11 @@ private fun AppearanceCard(settings: Settings, vm: SettingsViewModel, context: C
                 Spacer(Modifier.width(12.dp))
                 Text(stringResource(R.string.set_background), style = MaterialTheme.typography.bodyLarge)
             }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedButton(onClick = { imagePicker.launch(arrayOf("image/*")) }) {
-                    Text(stringResource(R.string.btn_pick_image))
-                }
-                TextButton(
-                    onClick = { vm.setBackground(null) },
-                    enabled = settings.backgroundImagePath != null
-                ) {
-                    Text(stringResource(R.string.btn_remove))
-                }
-            }
+                    BackgroundPickerRow(
+                        onPick = { imagePicker.launch(arrayOf("image/*")) },
+                        onRemove = { vm.setBackground(null) },
+                        removeEnabled = settings.backgroundImagePath != null
+                    )
             Text(
                 stringResource(R.string.bg_opacity),
                 style = MaterialTheme.typography.bodySmall,
@@ -1496,28 +1529,41 @@ private fun AccentDot(
     description: String
 ) {
     val shape = CircleShape
+    // SET-15 (0.11.0): визуальный кружок 36dp внутри тач-таргета 48dp (было 36dp
+    // целиком — ниже минимума Material/A11y), роль RadioButton для скринридера
     Box(
         modifier = Modifier
-            .size(36.dp)
-            .clip(shape)
-            .background(color)
-            .then(
-                if (selected) {
-                    Modifier.border(2.dp, borderColor, shape)
-                } else {
-                    Modifier.border(1.dp, outlineColor, shape)
-                }
-            )
-            .clickable(onClickLabel = description, onClick = onSelect),
+            .size(48.dp)
+            .clip(CircleShape)
+            .clickable(
+                onClickLabel = description,
+                role = Role.RadioButton,
+                onClick = onSelect
+            ),
         contentAlignment = Alignment.Center
     ) {
-        if (selected) {
-            Icon(
-                Icons.Rounded.Check,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.size(18.dp)
-            )
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .clip(shape)
+                .background(color)
+                .then(
+                    if (selected) {
+                        Modifier.border(2.dp, borderColor, shape)
+                    } else {
+                        Modifier.border(1.dp, outlineColor, shape)
+                    }
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            if (selected) {
+                Icon(
+                    Icons.Rounded.Check,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
         }
     }
 }
@@ -1730,8 +1776,10 @@ private fun AboutCard(versionName: String?, context: Context) {
                 else stringResource(R.string.app_name),
                 style = MaterialTheme.typography.titleMedium
             )
+            // SET-16 (0.11.0): копирайт — из ресурсов, а не константа в коде
+            // (весь текст UI обязан жить в strings.xml — единый контракт i18n)
             Text(
-                "© 2026 RVMXL · Apache License 2.0",
+                stringResource(R.string.copyright_line),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -1766,6 +1814,62 @@ private fun AboutCard(versionName: String?, context: Context) {
 
 // --- Утилиты ---
 
+/** Кнопки выбора/удаления фоновой картинки (вынесено из AppearanceCard). */
+@Composable
+private fun BackgroundPickerRow(onPick: () -> Unit, onRemove: () -> Unit, removeEnabled: Boolean) {
+    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        OutlinedButton(onClick = onPick) {
+            Text(stringResource(R.string.btn_pick_image))
+        }
+        TextButton(onClick = onRemove, enabled = removeEnabled) {
+            Text(stringResource(R.string.btn_remove))
+        }
+    }
+}
+
+/**
+ * SEC-11 (0.11.0): скопировать выбранное изображение в filesDir/background.jpg
+ * С ВАЛИДАЦИЕЙ: реально декодируется как картинка (фильтр «image» в пикере
+ * можно обойти), не больше 20 МБ, даунскейл до 2048px по большей стороне
+ * (inSampleSize — декодирование не съедает сотни МБ на слабых устройствах).
+ * @return успех копирования.
+ */
+private fun copyValidatedBackground(context: Context, uri: Uri): Boolean = try {
+    val resolver = context.contentResolver
+    val sizeOk = resolver.openAssetFileDescriptor(uri, "r")?.use { it.length <= 20L * 1024 * 1024 }
+        ?: false
+    if (!sizeOk) {
+        false
+    } else {
+        // 1) проверка «это вообще картинка» + размеры (без выделения памяти под пиксели)
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        resolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, bounds) }
+        if (bounds.outWidth <= 0 || bounds.outHeight <= 0) {
+            false
+        } else {
+            // 2) даунскейл до 2048px по большей стороне
+            var sample = 1
+            var maxSide = maxOf(bounds.outWidth, bounds.outHeight)
+            while (maxSide / (sample * 2) >= 2048) sample *= 2
+            val decodeOpts = BitmapFactory.Options().apply { inSampleSize = sample }
+            val bitmap = resolver.openInputStream(uri)?.use {
+                BitmapFactory.decodeStream(it, null, decodeOpts)
+            } ?: return false
+            val ok = bitmap != null
+            if (ok) {
+                val file = File(context.filesDir, "background.jpg")
+                file.outputStream().use { out ->
+                    bitmap!!.compress(Bitmap.CompressFormat.JPEG, 90, out)
+                }
+            }
+            bitmap?.recycle()
+            ok
+        }
+    }
+} catch (_: Exception) {
+    false
+}
+
 // Локальные formatOffset / daysWord / exampleWake / wakeExample удалены:
 // строки смещений собираются через ui.common.formatOffset, времена — через
 // exampleWakeTime(...).hhmm() и LocalTime.hhmm() из ui.common.Formats.
@@ -1781,15 +1885,18 @@ private fun profileLine(settings: Settings): String {
     return if (settings.targetName.isBlank()) role else "$role · ${settings.targetName}"
 }
 
-/** Подпись своего события: «Пн 07:30 · за 45 мин» или «14.10 09:00 · за 30 мин». */
+/** Подпись своего события: «Пн 07:30 · за 45 мин» или «14 окт 09:00 · за 30 мин».
+ *  SET-14: дата — коротким локализованным форматом (не жёсткое dd.MM), сегменты
+ *  обёрнуты в bidi-изоляты — при арабском интерфейсе порядок «день/время/офсет»
+ *  не плавает. */
 @Composable
 private fun describeCustomEvent(event: CustomEvent): String {
     val moment = if (event.dayOfWeek != null) {
         dayShortName(event.dayOfWeek)
     } else {
-        event.date?.format(DATE) ?: ""
+        event.date?.format(shortDate()) ?: ""
     }
-    return "$moment ${event.time.format(timeFormat())} " +
+    return bidiSegment(moment) + " " + bidiSegment(event.time.format(timeFormat())) + " " +
         stringResource(R.string.event_offset_suffix, formatOffset(event.offsetMinutes))
 }
 

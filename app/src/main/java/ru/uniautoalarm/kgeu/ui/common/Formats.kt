@@ -5,16 +5,24 @@ import androidx.compose.ui.res.stringResource
 import java.time.DayOfWeek
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.Locale
 import ru.uniautoalarm.kgeu.R
 
 /**
- * Формат «HH:mm», единый для всех экранов. ФУНКЦИЯ, а не val-синглтон (SET-4/UI-5,
- * 0.10.0): статический форматтер захватывал локаль первого использования и после
- * смены языка продолжал ей пользоваться (у арабского — старые цифры). Локаль
- * берётся на момент вызова: attachBaseContext уже обернул контекст в язык приложения.
+ * Формат времени, УВАЖАЮЩИЙ локаль (SET-14, 0.11.0): раньше «HH:mm» был 24-часовым
+ * во всех 15 локалях — для en/fr это было неверно (12-часовой формат с AM/PM).
+ * ofLocalizedTime(SHORT) берёт привычный локали формат (и 12/24h, и разделитель);
+ * локаль — на момент вызова (SET-4/UI-5: attachBaseContext уже обернул контекст).
  */
-fun timeFormat(): DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
+fun timeFormat(): DateTimeFormatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+
+/**
+ * Короткая дата «14 окт.» с ЛОКАЛИЗОВАННЫМ месяцем (SET-14): раньше было жёсткое
+ * «dd.MM» — русская конвенция во всех локалях. Аббревиатура месяца берётся из
+ * локали (арабский/иероглифы — корректно через ICU), цифры — локальные.
+ */
+fun shortDate(): DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM", Locale.getDefault())
 
 /**
  * Локализованная «длинная» дата («вторник, 14 октября») — тоже функция по той же
@@ -61,3 +69,11 @@ fun exampleWakeTime(offsetMinutes: Int): LocalTime =
 
 /** «08:30» из LocalTime — без локали, часы всегда двузначные. */
 fun LocalTime.hhmm(): String = "%02d:%02d".format(hour, minute)
+
+/**
+ * Bidi-изолят сегмента (SET-14): FSI…PDI вокруг вставки в смешанное направление.
+ * Составная строка «день 09:00 · за 45 мин» при арабском интерфейсе без изолятов
+ * рендерилась с перепутанным порядком сегментов (двоеточия/дефисы «плавали»).
+ * На LTR-локалях изоляты невидимы и безвредны.
+ */
+fun bidiSegment(s: String): String = "\u2068$s\u2069"

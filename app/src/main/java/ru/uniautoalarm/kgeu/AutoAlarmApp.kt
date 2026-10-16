@@ -5,6 +5,7 @@ import kotlinx.coroutines.launch
 import ru.uniautoalarm.kgeu.alarm.NightlyScheduler
 import ru.uniautoalarm.kgeu.alarm.ReminderScheduler
 import ru.uniautoalarm.kgeu.di.AppContainer
+import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 import ru.uniautoalarm.kgeu.work.WorkScheduler
 
 /** Application: создаёт контейнер зависимостей и восстанавливает фоновые задачи. */
@@ -15,6 +16,9 @@ class AutoAlarmApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // SET-12 (0.11.0): фиксируем системную локаль ДО любых обёртываний —
+        // иначе честный возврат на «язык системы» невозможен
+        LocaleHelper.captureSystemLocale()
         container = AppContainer(this)
         // DATA-14 (0.10.0): миграции — в appScope контейнера, а не в ad-hoc scope:
         // общий SupervisorJob, и нет гонки отмирания анонимного scope с SyncWorker

@@ -15,10 +15,29 @@ import ru.uniautoalarm.kgeu.data.local.LocaleStore
  */
 object LocaleHelper {
 
+    /**
+     * SET-12 (0.11.0): системная локаль, снятая ОДИН РАЗ при старте процесса
+     * ([captureSystemLocale] из Application.onCreate). Нужна для честного возврата
+     * на «язык системы»: раньше Locale.setDefault не сбрасывался — выбрав ru и
+     * вернувшись на «язык системы», пользователь получал ru-форматтеры навсегда.
+     */
+    @Volatile
+    private var systemDefault: Locale? = null
+
+    /** Зафиксировать системную локаль (вызывается один раз из AutoAlarmApp.onCreate). */
+    fun captureSystemLocale() {
+        if (systemDefault == null) systemDefault = Locale.getDefault()
+    }
+
     /** Контекст с локалью приложения; для «языка системы» возвращается как есть. */
     fun wrap(context: Context): Context {
         val tag = LocaleStore.language(context)
-        if (tag.isBlank()) return context
+        if (tag.isBlank()) {
+            // SET-12: «язык системы» — возвращаем системную локаль по умолчанию
+            // (после предшествующего выбора конкретного языка она была перезаписана)
+            systemDefault?.let { Locale.setDefault(it) }
+            return context
+        }
         val locale = Locale.forLanguageTag(tag)
         Locale.setDefault(locale)
         val config = Configuration(context.resources.configuration)
