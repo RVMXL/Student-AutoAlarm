@@ -77,7 +77,6 @@
     <!-- ==== Home screen ==== -->
     <string name="home_title">Auto-Alarm</string>
     <string name="cd_refresh_schedule">Refresh the schedule</string>
-    <string name="mode_standard_chip">per schedule</string>
     <string name="loading_settings">Loading settings…</string>
     <string name="alarm_off_title">Alarm is off</string>
     <string name="alarm_off_subtitle">Turn it on with the toggle below</string>
@@ -261,6 +260,8 @@
     <string name="btn_pick_image">Pick an image</string>
     <string name="btn_remove">Remove</string>
     <string name="bg_opacity">Overlay opacity</string>
+    <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
+    <string name="bg_image_rejected">File won\'t work: pick an image up to 20 MB (JPG/PNG/WebP)</string>
     <string name="set_glass">Glass effect</string>
     <string name="set_glass_desc">Cards are semi-transparent like frosted glass; the background image is blurred</string>
     <string name="glass_intensity">Glass intensity</string>
@@ -293,6 +294,7 @@
     <!-- ==== Settings: about ==== -->
     <string name="about_version">KGEU Auto-Alarm · v%1$s</string>
     <string name="about_data">Schedule data: official kabinet.kgeu.ru API. The app is not affiliated with KGEU.</string>
+    <string name="copyright_line">© 2026 RVMXL · Apache License 2.0</string>
     <string name="btn_github">GitHub repository</string>
 
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->

@@ -77,7 +77,6 @@
     <!-- ==== Главный экран ==== -->
     <string name="home_title">المنبّه التلقائي</string>
     <string name="cd_refresh_schedule">تحديث الجدول الدراسي</string>
-    <string name="mode_standard_chip">حسب الجدول</string>
     <string name="loading_settings">جارٍ تحميل الإعدادات…</string>
     <string name="alarm_off_title">المنبّه مُعطَّل</string>
     <string name="alarm_off_subtitle">فعّله باستخدام المفتاح أدناه</string>
@@ -261,6 +260,8 @@
     <string name="btn_pick_image">اختيار صورة</string>
     <string name="btn_remove">إزالة</string>
     <string name="bg_opacity">شفافية الطبقة الخلفية</string>
+    <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
+    <string name="bg_image_rejected">الملف غير مناسب: اختر صورة بحجم 20 ميجابايت كحد أقصى (JPG/PNG/WebP)</string>
     <string name="set_glass">تأثير الزجاج</string>
     <string name="set_glass_desc">البطاقات شبه شفافة كالزجاج المصنفر؛ وتُموَّه صورة الخلفية</string>
     <string name="glass_intensity">شدة تأثير الزجاج</string>
@@ -293,6 +294,7 @@
     <!-- ==== Настройки: о приложении ==== -->
     <string name="about_version">المنبّه التلقائي لجامعة قازان للطاقة · v%1$s</string>
     <string name="about_data">بيانات الجدول الدراسي: واجهة برمجة التطبيقات الرسمية لـ kabinet.kgeu.ru. التطبيق غير تابع لجامعة قازان للطاقة.</string>
+    <string name="copyright_line">© 2026 RVMXL · Apache License 2.0</string>
     <string name="btn_github">المستودع على GitHub</string>
 
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->

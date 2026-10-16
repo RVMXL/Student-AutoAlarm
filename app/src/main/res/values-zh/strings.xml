@@ -77,7 +77,6 @@
     <!-- ==== Главный экран ==== -->
     <string name="home_title">自动闹钟</string>
     <string name="cd_refresh_schedule">刷新课程表</string>
-    <string name="mode_standard_chip">按课表</string>
     <string name="loading_settings">正在加载设置…</string>
     <string name="alarm_off_title">闹钟已关闭</string>
     <string name="alarm_off_subtitle">用下方开关开启</string>
@@ -261,6 +260,8 @@
     <string name="btn_pick_image">选择图片</string>
     <string name="btn_remove">移除</string>
     <string name="bg_opacity">底衬透明度</string>
+    <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
+    <string name="bg_image_rejected">文件不可用：请选择不超过 20 MB 的图片（JPG/PNG/WebP）</string>
     <string name="set_glass">玻璃效果</string>
     <string name="set_glass_desc">卡片呈磨砂玻璃般的半透明效果，背景图片会虚化</string>
     <string name="glass_intensity">玻璃效果强度</string>
@@ -293,6 +294,7 @@
     <!-- ==== Настройки: о приложении ==== -->
     <string name="about_version">喀山动力大学自动闹钟 · v%1$s</string>
     <string name="about_data">课程表数据：kabinet.kgeu.ru 官方 API。本应用与喀山动力大学无隶属关系。</string>
+    <string name="copyright_line">© 2026 RVMXL · Apache License 2.0</string>
     <string name="btn_github">GitHub 仓库</string>
 
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->

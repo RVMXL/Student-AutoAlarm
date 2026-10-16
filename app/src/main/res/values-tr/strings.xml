@@ -77,7 +77,6 @@
     <!-- ==== Главный экран ==== -->
     <string name="home_title">Otomatik Alarm</string>
     <string name="cd_refresh_schedule">Ders programını yenile</string>
-    <string name="mode_standard_chip">programa göre</string>
     <string name="loading_settings">Ayarlar yükleniyor…</string>
     <string name="alarm_off_title">Alarm kapalı</string>
     <string name="alarm_off_subtitle">Aşağıdaki düğmeyle aç</string>
@@ -261,6 +260,8 @@
     <string name="btn_pick_image">Resim seç</string>
     <string name="btn_remove">Kaldır</string>
     <string name="bg_opacity">Altlık saydamlığı</string>
+    <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
+    <string name="bg_image_rejected">Dosya uygun değil: en fazla 20 MB\'lık bir resim seç (JPG/PNG/WebP)</string>
     <string name="set_glass">Cam efekti</string>
     <string name="set_glass_desc">Kartlar buzlu cam gibi yarı saydam olur; arka plan resmi bulanıklaştırılır</string>
     <string name="glass_intensity">Cam efekti yoğunluğu</string>
@@ -293,6 +294,7 @@
     <!-- ==== Настройки: о приложении ==== -->
     <string name="about_version">KGEU Otomatik Alarmı · v%1$s</string>
     <string name="about_data">Ders programı verileri: kabinet.kgeu.ru resmi API\'si. Uygulama KGEU ile bağlantılı değildir.</string>
+    <string name="copyright_line">© 2026 RVMXL · Apache License 2.0</string>
     <string name="btn_github">GitHub deposu</string>
 
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->

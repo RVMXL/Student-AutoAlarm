@@ -77,7 +77,6 @@
     <!-- ==== Главный экран ==== -->
     <string name="home_title">Автооятқыш</string>
     <string name="cd_refresh_schedule">Кестені жаңарту</string>
-    <string name="mode_standard_chip">кесте бойынша</string>
     <string name="loading_settings">Параметрлер жүктелуде…</string>
     <string name="alarm_off_title">Оятқыш өшірулі</string>
     <string name="alarm_off_subtitle">Төмендегі ажыратқышпен қос</string>
@@ -261,6 +260,8 @@
     <string name="btn_pick_image">Сурет таңдау</string>
     <string name="btn_remove">Алып тастау</string>
     <string name="bg_opacity">Астар мөлдірлігі</string>
+    <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
+    <string name="bg_image_rejected">Файл жарамайды: 20 МБ-ға дейінгі сурет таңда (JPG/PNG/WebP)</string>
     <string name="set_glass">Шыны эффектісі</string>
     <string name="set_glass_desc">Карталар жартылай мөлдір, аяз басқан шыны сияқты; фон суреті бұлыңғырланады</string>
     <string name="glass_intensity">Шыны эффектісінің күші</string>
@@ -293,6 +294,7 @@
     <!-- ==== Настройки: о приложении ==== -->
     <string name="about_version">ҚазЭУ автооятқышы · v%1$s</string>
     <string name="about_data">Кесте деректері: kabinet.kgeu.ru ресми API. Қолданба КГЭУ-мен ешқандай байланыста емес.</string>
+    <string name="copyright_line">© 2026 RVMXL · Apache License 2.0</string>
     <string name="btn_github">GitHub репозиторийі</string>
 
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->

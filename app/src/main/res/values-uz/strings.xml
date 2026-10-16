@@ -77,7 +77,6 @@
     <!-- ==== Home screen ==== -->
     <string name="home_title">Avtobudilnik</string>
     <string name="cd_refresh_schedule">Dars jadvalini yangilash</string>
-    <string name="mode_standard_chip">jadval bo‘yicha</string>
     <string name="loading_settings">Sozlamalar yuklanmoqda…</string>
     <string name="alarm_off_title">Budilnik oʻchirilgan</string>
     <string name="alarm_off_subtitle">Pastdagi tugma orqali yoqib qoʻy</string>
@@ -261,6 +260,8 @@
     <string name="btn_pick_image">Rasm tanlash</string>
     <string name="btn_remove">Olib tashlash</string>
     <string name="bg_opacity">Fon qatlamining shaffofligi</string>
+    <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
+    <string name="bg_image_rejected">Fayl yaramaydi: 20 MB gacha rasm tanla (JPG/PNG/WebP)</string>
     <string name="set_glass">Shisha effekti</string>
     <string name="set_glass_desc">Kartalar yarim shaffof, mat shisha kabi; fon rasmi xiralashtiriladi</string>
     <string name="glass_intensity">Shisha effekti kuchi</string>
@@ -293,6 +294,7 @@
     <!-- ==== Settings: about ==== -->
     <string name="about_version">KGEU avtobudilnigi · v%1$s</string>
     <string name="about_data">Dars jadvali maʼlumotlari: kabinet.kgeu.ru rasmiy APIsi. Ilova KGEU bilan bogʻliq emas.</string>
+    <string name="copyright_line">© 2026 RVMXL · Apache License 2.0</string>
     <string name="btn_github">GitHub repozitoriysi</string>
 
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->

@@ -77,7 +77,6 @@
     <!-- ==== Pantalla principal ==== -->
     <string name="home_title">Autoalarma</string>
     <string name="cd_refresh_schedule">Actualizar el horario</string>
-    <string name="mode_standard_chip">según el horario</string>
     <string name="loading_settings">Cargando ajustes…</string>
     <string name="alarm_off_title">La alarma está apagada</string>
     <string name="alarm_off_subtitle">Actívala con el interruptor de abajo</string>
@@ -261,6 +260,8 @@
     <string name="btn_pick_image">Elegir imagen</string>
     <string name="btn_remove">Quitar</string>
     <string name="bg_opacity">Opacidad de la capa</string>
+    <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
+    <string name="bg_image_rejected">El archivo no vale: elige una imagen de hasta 20 MB (JPG/PNG/WebP)</string>
     <string name="set_glass">Efecto de vidrio</string>
     <string name="set_glass_desc">Las tarjetas son semitransparentes, como vidrio esmerilado; la imagen de fondo se desenfoca</string>
     <string name="glass_intensity">Intensidad del vidrio</string>
@@ -293,6 +294,7 @@
     <!-- ==== Ajustes: acerca de ==== -->
     <string name="about_version">Autoalarma KGEU · v%1$s</string>
     <string name="about_data">Datos del horario: API oficial de kabinet.kgeu.ru. La app no está afiliada a KGEU.</string>
+    <string name="copyright_line">© 2026 RVMXL · Apache License 2.0</string>
     <string name="btn_github">Repositorio en GitHub</string>
 
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
