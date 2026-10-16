@@ -7,6 +7,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import ru.uniautoalarm.kgeu.data.model.CalendarStyle
 import ru.uniautoalarm.kgeu.ui.theme.CUSTOM_ACCENT_INDEX
+import ru.uniautoalarm.kgeu.ui.theme.CalendarDecor
 import ru.uniautoalarm.kgeu.ui.theme.argbToHsv
 import ru.uniautoalarm.kgeu.ui.theme.customAccentPalette
 import ru.uniautoalarm.kgeu.ui.theme.hsvToArgb
@@ -51,8 +52,12 @@ class CalendarSkinsTest {
 
     @Test
     fun `font flags follow style`() {
-        assertTrue(CalendarStyle.CHALK.skin()!!.serif)
+        // 0.15.0: «Мел» — рукописный (cursive), бумага/ретро — антиква, терминал/неон — моно
+        val chalk = CalendarStyle.CHALK.skin()!!
+        assertTrue(chalk.cursive)
+        assertTrue(!chalk.serif)
         assertTrue(CalendarStyle.RETRO.skin()!!.serif)
+        assertTrue(CalendarStyle.PAPER.skin()!!.serif)
         assertTrue(CalendarStyle.TERMINAL.skin()!!.mono)
         assertTrue(CalendarStyle.NEON.skin()!!.mono)
         assertTrue(CalendarStyle.NEON.skin()!!.glow)
@@ -61,6 +66,26 @@ class CalendarSkinsTest {
         assertTrue(paper.serif)
         assertTrue(!paper.mono)
         assertTrue(!paper.glow)
+        assertTrue(!paper.cursive)
+    }
+
+    @Test
+    fun `each style has its own decor`() {
+        // 0.15.0: у каждого стиля СВОЁ оформление листа — кольца-пружина только у бумаги
+        assertEquals(
+            mapOf(
+                CalendarStyle.PAPER to CalendarDecor.SPRINGS,
+                CalendarStyle.CHALK to CalendarDecor.WOOD,
+                CalendarStyle.NEON to CalendarDecor.GLOW,
+                CalendarStyle.TERMINAL to CalendarDecor.MONITOR,
+                CalendarStyle.AQUA to CalendarDecor.WASH,
+                CalendarStyle.RETRO to CalendarDecor.PRESS
+            ),
+            listOf(
+                CalendarStyle.PAPER, CalendarStyle.CHALK, CalendarStyle.NEON,
+                CalendarStyle.TERMINAL, CalendarStyle.AQUA, CalendarStyle.RETRO
+            ).associateWith { it.skin()!!.decor }
+        )
     }
 
     // --- «Свой цвет» ---
