@@ -18,6 +18,7 @@ import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.alarm.DismissResult
 import ru.uniautoalarm.kgeu.alarm.NightlyScheduler
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
+import ru.uniautoalarm.kgeu.data.model.AlarmTarget
 import ru.uniautoalarm.kgeu.data.model.Lesson
 import ru.uniautoalarm.kgeu.data.model.Settings
 import ru.uniautoalarm.kgeu.data.model.SyncInfo
@@ -25,6 +26,19 @@ import ru.uniautoalarm.kgeu.data.model.Target
 import ru.uniautoalarm.kgeu.di.AppContainer
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 import ru.uniautoalarm.kgeu.ui.common.refreshErrorMessage
+import java.time.LocalDateTime
+
+/**
+ * Поставленный будильник для карточки «Мои будильники» (Bug E, 0.10.0):
+ * момент, метка, движок и живой ли слот (проба FLAG_NO_CREATE — только APP).
+ */
+data class ScheduledAlarm(
+    val wakeAt: LocalDateTime,
+    val label: String,
+    val target: AlarmTarget,
+    val slotAlive: Boolean,
+    val autoEnabled: Boolean,
+)
 
 /**
  * ViewModel главного экрана: снимок настроек, состояние синхронизации, пары на сегодня/завтра
@@ -34,6 +48,9 @@ import ru.uniautoalarm.kgeu.ui.common.refreshErrorMessage
  * (при возврате на вкладку VM живёт, при пересоздании активити пересчитается).
  */
 class HomeViewModel(private val container: AppContainer) : ViewModel() {
+
+    /** Счётчик возвратов экрана на передний план — перечитывать пробы/разрешения (UI-6). */
+    private val resumeTick = MutableStateFlow(0)
 
     /** Настройки: null до первого значения DataStore (краткий миг после запуска). */
     val settings: StateFlow<Settings?> = container.settings.settings
@@ -91,8 +108,8 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
         val engine = container.appScope.launch {
             runCatching {
                 if (enabled) {
-                    // чистый лист от обоих движков; в чужие часы не выпрыгиваем
-                    container.alarm.dismissAll(openListOnUnsupported = false)
+                    // чистый лист от обоих движков (0.10.0: часы сами не открываются никогда)
+                    container.alarm.dismissAll()
                     container.settings.update { it.copy(autoAlarmEnabled = true) }
                     // свежее расписание ПЕРЕД постановкой: замены появляются после
                     // последнего синка — по устаревшему кэшу тумблер ставил будильник
@@ -121,12 +138,12 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
-    /** Локализованный итог снятия будильников для снекбара тумблера. */
+    /** Локализованный итог снятия будильников для снекбара тумблера.
+     *  0.10.0: вариант «открыл список часов» удалён вместе с авто-переходами. */
     private fun dismissMessage(res: DismissResult): String = when {
         res.inAppCancelled ->
             LocaleHelper.string(container.appContext, R.string.toggle_off_app_cancelled)
         res.sent > 0 -> LocaleHelper.string(container.appContext, R.string.toggle_off_dismissed)
-        res.openedList -> LocaleHelper.string(container.appContext, R.string.toggle_off_opened)
         else -> LocaleHelper.string(container.appContext, R.string.toggle_off_manual)
     }
 
@@ -167,6 +184,54 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
         val type = targetType ?: return null
         val id = targetId ?: return null
         return Target(type, id, targetName)
+    }
+
+    /**
+     * Bug E (0.10.0): поставленный будильник — для карточки «Мои будильники».
+     * Источник: маркер последней постановки + проба живого слота (APP-движок).
+     * Пересчитывается на каждой эмиссии настроек и на [resumeTick] (возврат
+     * на экран — UI-6: проба слота вне композиции, состояние всегда свежее).
+     */
+    val nextAlarm: StateFlow<ScheduledAlarm?> = combine(
+        settings.filterNotNull(),
+        resumeTick
+    ) { s, _ -> scheduledAlarm(s) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    /** Снять все будильники из карточки «Мои будильники»; итог — в снекбар. */
+    fun dismissAlarmsFromCard(onResult: (String) -> Unit) {
+        viewModelScope.launch {
+            val res = container.alarm.dismissAll()
+            onResult(dismissMessage(res))
+        }
+    }
+
+    /** Явно открыть список будильников часов (движок «В часах»). */
+    fun openClockList(onResult: (String?) -> Unit) {
+        val ok = container.stockAlarms.openAlarmList()
+        if (!ok) {
+            onResult(LocaleHelper.string(container.appContext, R.string.alarms_list_open_failed))
+        }
+    }
+
+    private suspend fun scheduledAlarm(s: Settings): ScheduledAlarm? {
+        if (!s.setupComplete) return null
+        if (s.lastScheduledWakeEpochMinute <= 0) return null
+        val wake = LocalDate.ofEpochDay(s.lastScheduledWakeEpochMinute / 1440L)
+            .atStartOfDay().plusMinutes(s.lastScheduledWakeEpochMinute % 1440L)
+        val slotAlive = s.alarmTarget != AlarmTarget.APP || container.inAppAlarms.hasOneShot()
+        return ScheduledAlarm(
+            wakeAt = wake,
+            label = s.lastScheduledLabel,
+            target = s.alarmTarget,
+            slotAlive = slotAlive,
+            autoEnabled = s.autoAlarmEnabled
+        )
+    }
+
+    /** Экран вернулся на передний план — пересчитать пробы слотов/разрешений. */
+    fun onScreenResume() {
+        resumeTick.value = resumeTick.value + 1
     }
 
     private companion object {

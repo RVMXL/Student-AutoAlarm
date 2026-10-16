@@ -2,6 +2,7 @@ package ru.uniautoalarm.kgeu.ui.home
 
 import android.Manifest
 import android.app.AlarmManager
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -31,6 +32,7 @@ import androidx.compose.material.icons.rounded.Alarm
 import androidx.compose.material.icons.rounded.AlarmOn
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -47,6 +49,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -62,34 +65,33 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 import kotlinx.coroutines.launch
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
+import ru.uniautoalarm.kgeu.data.model.AlarmTarget
 import ru.uniautoalarm.kgeu.data.model.Lesson
 import ru.uniautoalarm.kgeu.data.model.Settings
 import ru.uniautoalarm.kgeu.data.model.SyncInfo
 import ru.uniautoalarm.kgeu.ui.common.LocalAppContainer
-import ru.uniautoalarm.kgeu.ui.common.TIME
+import ru.uniautoalarm.kgeu.ui.common.longDate
+import ru.uniautoalarm.kgeu.ui.common.timeFormat
 
 /** Скругления карточек (по ТЗ — 20.dp, статус-карточка крупнее). */
 private val CardShape = RoundedCornerShape(20.dp)
 private val StatusCardShape = RoundedCornerShape(24.dp)
 
-/** Локализованная «длинная» дата (день недели, число, месяц) — по языку приложения. */
-private val RU_LONG_DATE: DateTimeFormatter =
-    DateTimeFormatter.ofPattern("EEEE, d MMMM", Locale.getDefault())
-
 /**
- * Главный экран: статус завтрашнего будильника, тумблер, партия «на неделю вперёд»,
- * ближайшие занятия и предупреждения системы. Снекбары — локальный Scaffold.
+ * Главный экран: статус завтрашнего будильника, тумблер, карточка «Мои будильники»
+ * (0.10.0 — Bug E: поставленные будильники теперь видны в приложении), ближайшие
+ * занятия и предупреждения системы. Снекбары — локальный Scaffold.
  */
 @Composable
 fun HomeScreen() {
@@ -105,29 +107,50 @@ fun HomeScreen() {
     val tomorrowLessons by vm.tomorrowLessons.collectAsStateWithLifecycle()
     // UI-11: пока engine-работа тумблера идёт (до 12 с), переключатель заблокирован
     val toggling by vm.toggling.collectAsStateWithLifecycle()
+    // 0.10.0 (Bug E): поставленный будильник — для карточки «Мои будильники»
+    val nextAlarm by vm.nextAlarm.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    // Системные проверки — прямо в экране (через LocalContext, без утечек в VM)
+    // Системные проверки — состояние перечитывается на КАЖДОМ возврате экрана
+    // на передний план (UI-6): раньше вычислялись один раз в композиции и не
+    // обновлялись после изменения разрешений в настройках системы
     val alarmManager = remember { context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager }
     val powerManager = remember { context.getSystemService(Context.POWER_SERVICE) as? PowerManager }
-    val needsExactAlarmPermission =
-        Build.VERSION.SDK_INT >= 31 && alarmManager?.canScheduleExactAlarms() == false
-    val ignoringBattery =
-        powerManager?.isIgnoringBatteryOptimizations(context.packageName) ?: true
+    var needsExactAlarmPermission by remember { mutableStateOf(false) }
+    var ignoringBattery by remember { mutableStateOf(true) }
+    // AL-11 (0.10.0): Android 14+ может не выдать full-screen intent свежей установке —
+    // тогда звонок деградирует до тихого heads-up; предупреждаем с кнопкой исправления
+    var fsiDenied by remember { mutableStateOf(false) }
 
-    // Разрешение уведомлений (Android 13+): спрашиваем один раз при входе на главный экран
+    LifecycleResumeEffect(Unit) {
+        needsExactAlarmPermission =
+            Build.VERSION.SDK_INT >= 31 && alarmManager?.canScheduleExactAlarms() == false
+        ignoringBattery =
+            powerManager?.isIgnoringBatteryOptimizations(context.packageName) ?: true
+        fsiDenied =
+            Build.VERSION.SDK_INT >= 34 &&
+            (context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager)?.canUseFullScreenIntent() == false
+        // UI-6: проба слота будильника тоже вне композиции — перечитать
+        vm.onScreenResume()
+        onPauseOrDispose { }
+    }
+
+    // Разрешение уведомлений (Android 13+, UI-4): спрашиваем РОВНО один раз за сессию
+    // — раньше диалог перезапускался при каждом входе на главный экран
     val notifPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { }
+    var notifRequested by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(Unit) {
-        if (Build.VERSION.SDK_INT >= 33 &&
+        if (!notifRequested && Build.VERSION.SDK_INT >= 33 &&
             ContextCompat.checkSelfPermission(
                 context, Manifest.permission.POST_NOTIFICATIONS
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+            notifRequested = true
             notifPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
@@ -190,7 +213,36 @@ fun HomeScreen() {
                 )
             }
             item {
+                // 0.10.0 (Bug E): поставленные будильники видны в приложении;
+                // часы открываются только явной кнопкой в движке «В часах»
+                AlarmsCard(
+                    alarm = nextAlarm,
+                    target = settings?.alarmTarget,
+                    onDismiss = {
+                        vm.dismissAlarmsFromCard { msg ->
+                            scope.launch { snackbarHostState.showSnackbar(msg) }
+                        }
+                    },
+                    onOpenClock = {
+                        vm.openClockList { msg ->
+                            if (msg != null) scope.launch { snackbarHostState.showSnackbar(msg) }
+                        }
+                    }
+                )
+            }
+            item {
                 UpcomingCard(todayLessons = todayLessons, tomorrowLessons = tomorrowLessons)
+            }
+            if (fsiDenied) {
+                item {
+                    WarningCard(
+                        title = stringResource(R.string.dialog_fsi_title),
+                        description = stringResource(R.string.dialog_fsi_desc),
+                        actionLabel = stringResource(R.string.action_allow),
+                        isError = false,
+                        onAction = { openFullScreenIntentSettings(context) }
+                    )
+                }
             }
             if (needsExactAlarmPermission) {
                 item {
@@ -354,7 +406,7 @@ private fun StatusCard(
 @Composable
 private fun PlanContent(plan: AlarmPlan) {
     Text(
-        stringResource(R.string.tomorrow_label, plan.date.format(RU_LONG_DATE)),
+        stringResource(R.string.tomorrow_label, plan.date.format(longDate())),
         style = MaterialTheme.typography.titleMedium
     )
     Text(
@@ -363,7 +415,7 @@ private fun PlanContent(plan: AlarmPlan) {
         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
     )
     Text(
-        plan.wakeAt.format(TIME),
+        plan.wakeAt.format(timeFormat()),
         style = MaterialTheme.typography.displayLarge.copy(fontWeight = FontWeight.Bold)
     )
     HorizontalDivider(
@@ -401,7 +453,7 @@ private fun PlanContent(plan: AlarmPlan) {
                 )
             }
             Text(
-                stringResource(R.string.lesson_at, lesson.start.format(TIME)),
+                stringResource(R.string.lesson_at, lesson.start.format(timeFormat())),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
             )
@@ -410,7 +462,7 @@ private fun PlanContent(plan: AlarmPlan) {
         event != null -> {
             Text(event.name, style = MaterialTheme.typography.titleMedium)
             Text(
-                stringResource(R.string.own_event_at, event.time.format(TIME)),
+                stringResource(R.string.own_event_at, event.time.format(timeFormat())),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
             )
@@ -480,7 +532,124 @@ private fun ToggleCard(enabled: Boolean, busy: Boolean, onToggle: (Boolean) -> U
     }
 }
 
-// --- Ближайшие занятия ---
+// --- Карточка «Мои будильники» (0.10.0, Bug E) ---
+
+/**
+ * Поставленные будильники теперь видны в приложении: время звонка, дата, метка,
+ * движок и живой ли слот. Кнопка «Снять» гасит будильники обоих движков; в движке
+ * «В часах» доступна ЯВНАЯ кнопка списка часов — приложение само часы не открывает.
+ */
+@Composable
+private fun AlarmsCard(
+    alarm: ScheduledAlarm?,
+    target: AlarmTarget?,
+    onDismiss: () -> Unit,
+    onOpenClock: () -> Unit,
+) {
+    Card(
+        shape = CardShape,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        ),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    Icons.Rounded.AlarmOn,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    stringResource(R.string.alarms_card_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+            if (alarm == null) {
+                Text(
+                    stringResource(R.string.alarms_empty),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                // список часов уместен ТОЛЬКО в движке «В часах»: там могут остаться
+                // будильники, которых приложение не видит (оболочка игнорирует DISMISS)
+                if (target == AlarmTarget.CLOCK) {
+                    TextButton(onClick = onOpenClock) {
+                        Text(stringResource(R.string.btn_alarm_list))
+                    }
+                }
+            } else {
+                Row(
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        alarm.wakeAt.format(timeFormat()),
+                        style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Column {
+                        Text(
+                            alarm.wakeAt.format(longDate()),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Text(
+                            stringResource(
+                                if (alarm.target == AlarmTarget.APP) R.string.alarms_engine_app
+                                else R.string.alarms_engine_clock
+                            ),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+                if (alarm.label.isNotBlank()) {
+                    Text(
+                        alarm.label,
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        if (alarm.slotAlive) Icons.Rounded.Check else Icons.Rounded.Warning,
+                        contentDescription = null,
+                        tint = if (alarm.slotAlive) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Text(
+                        stringResource(
+                            if (alarm.slotAlive) R.string.alarms_active
+                            else R.string.alarms_slot_missing
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.weight(1f)
+                    )
+                    TextButton(onClick = onDismiss) {
+                        Text(stringResource(R.string.action_dismiss_alarms))
+                    }
+                }
+                if (alarm.target == AlarmTarget.CLOCK) {
+                    TextButton(onClick = onOpenClock) {
+                        Text(stringResource(R.string.btn_alarm_list))
+                    }
+                }
+            }
+        }
+    }
+}
 
 @Composable
 private fun UpcomingCard(todayLessons: List<Lesson>, tomorrowLessons: List<Lesson>) {
@@ -527,7 +696,7 @@ private fun UpcomingCard(todayLessons: List<Lesson>, tomorrowLessons: List<Lesso
 private fun UpcomingRow(lesson: Lesson) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
-            "${lesson.start.format(TIME)}–${lesson.end.format(TIME)}",
+            "${lesson.start.format(timeFormat())}–${lesson.end.format(timeFormat())}",
             style = MaterialTheme.typography.bodyMedium.copy(fontFeatureSettings = "tnum"),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -624,6 +793,18 @@ private fun openBatteryOptimizationSettings(context: Context) {
     try {
         context.startActivity(
             Intent(AndroidSettings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                .setData(Uri.parse("package:${context.packageName}"))
+        )
+    } catch (_: Exception) {
+    }
+}
+
+/** AL-11: экран разрешения «Полноэкранные уведомления» (Android 14+ отказал в FSI). */
+private fun openFullScreenIntentSettings(context: Context) {
+    if (Build.VERSION.SDK_INT < 30) return
+    try {
+        context.startActivity(
+            Intent(AndroidSettings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT)
                 .setData(Uri.parse("package:${context.packageName}"))
         )
     } catch (_: Exception) {

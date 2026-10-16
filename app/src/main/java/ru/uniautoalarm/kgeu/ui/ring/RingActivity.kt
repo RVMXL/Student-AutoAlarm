@@ -35,15 +35,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import ru.uniautoalarm.kgeu.AutoAlarmApp
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.alarm.AlarmFireReceiver
 import ru.uniautoalarm.kgeu.alarm.InAppAlarmScheduler
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
+import ru.uniautoalarm.kgeu.ui.common.timeFormat
 import ru.uniautoalarm.kgeu.ui.theme.AutoAlarmTheme
-
-private val TIME: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
 /**
  * Полноэкранный звонок собственного будильника (движок «В приложении»).
@@ -128,7 +126,7 @@ class RingActivity : ComponentActivity() {
                     style = MaterialTheme.typography.titleLarge
                 )
                 Text(
-                    wakeAt.format(TIME),
+                    wakeAt.format(timeFormat()),
                     style = MaterialTheme.typography.displayLarge,
                     color = MaterialTheme.colorScheme.primary
                 )

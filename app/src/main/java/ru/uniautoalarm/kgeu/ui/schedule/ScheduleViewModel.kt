@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.db.ExceptionEntity
 import ru.uniautoalarm.kgeu.data.model.ExceptionRule
@@ -141,18 +143,25 @@ class ScheduleViewModel(private val container: AppContainer) : ViewModel() {
      * «пр. материаловедение» продолжит звенеть (тип уже написан в названии пары,
      * отдельные тумблеры типов не нужны — убраны).
      * Правило с таким названием уже есть → удаляется (иконка гаснет), нет → добавляется.
+     *
+     * UI-9 (0.10.0): read-then-write сериализован мьютексом — двойной тап больше
+     * не успевает прочитать «правила ещё нет» дважды и создать дубликат правила.
      */
+    private val exceptionGate = Mutex()
+
     fun toggleException(subject: String) {
         viewModelScope.launch {
-            val dao = container.database.exceptionDao()
-            val normalized = ScheduleRepository.normalizeForMatch(subject)
-            val matching = dao.allOnce().filter {
-                ScheduleRepository.normalizeForMatch(it.subject) == normalized
-            }
-            if (matching.isNotEmpty()) {
-                matching.forEach { dao.delete(it.id) }
-            } else {
-                dao.upsert(ExceptionEntity(subject = subject.trim()))
+            exceptionGate.withLock {
+                val dao = container.database.exceptionDao()
+                val normalized = ScheduleRepository.normalizeForMatch(subject)
+                val matching = dao.allOnce().filter {
+                    ScheduleRepository.normalizeForMatch(it.subject) == normalized
+                }
+                if (matching.isNotEmpty()) {
+                    matching.forEach { dao.delete(it.id) }
+                } else {
+                    dao.upsert(ExceptionEntity(subject = subject.trim()))
+                }
             }
         }
     }

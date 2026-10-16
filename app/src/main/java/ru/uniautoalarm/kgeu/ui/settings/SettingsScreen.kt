@@ -130,7 +130,7 @@ import ru.uniautoalarm.kgeu.ui.common.LanguagePicker
 import ru.uniautoalarm.kgeu.ui.common.LocalAppContainer
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 import ru.uniautoalarm.kgeu.ui.common.SUPPORTED_LANGUAGES
-import ru.uniautoalarm.kgeu.ui.common.TIME
+import ru.uniautoalarm.kgeu.ui.common.timeFormat
 import ru.uniautoalarm.kgeu.ui.common.dayShortName
 import ru.uniautoalarm.kgeu.ui.common.displayName
 import ru.uniautoalarm.kgeu.ui.common.exampleWakeTime
@@ -529,7 +529,7 @@ private fun AlarmSettingsCard(
                     ) {
                         Column(Modifier.weight(1f)) {
                             Text(
-                                stringResource(R.string.pair_at, pairStart.format(TIME)),
+                                stringResource(R.string.pair_at, pairStart.format(timeFormat())),
                                 style = MaterialTheme.typography.bodyLarge
                             )
                             Text(
@@ -705,7 +705,7 @@ private fun PairOffsetDialog(
     var value by rememberSaveable { mutableIntStateOf(initialMinutes) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.dialog_pair_title, pairStart.format(TIME))) },
+        title = { Text(stringResource(R.string.dialog_pair_title, pairStart.format(timeFormat()))) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
@@ -733,7 +733,7 @@ private fun PairOffsetDialog(
                 Text(
                     stringResource(
                         R.string.dialog_pair_example,
-                        pairStart.format(TIME),
+                        pairStart.format(timeFormat()),
                         pairStart.minusMinutes(value.toLong()).hhmm()
                     ),
                     style = MaterialTheme.typography.bodySmall,
@@ -1124,7 +1124,7 @@ private fun AddEventDialog(
                 ) {
                     Icon(Icons.Rounded.Schedule, contentDescription = null)
                     Spacer(Modifier.width(6.dp))
-                    Text(stringResource(R.string.event_time, time.format(TIME)))
+                    Text(stringResource(R.string.event_time, time.format(timeFormat())))
                 }
                 Column {
                     Text(
@@ -1789,7 +1789,7 @@ private fun describeCustomEvent(event: CustomEvent): String {
     } else {
         event.date?.format(DATE) ?: ""
     }
-    return "$moment ${event.time.format(TIME)} " +
+    return "$moment ${event.time.format(timeFormat())} " +
         stringResource(R.string.event_offset_suffix, formatOffset(event.offsetMinutes))
 }
 

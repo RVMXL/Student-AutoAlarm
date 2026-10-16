@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import ru.uniautoalarm.kgeu.R
@@ -142,7 +144,7 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
         val engine = container.appScope.launch {
             runCatching {
                 if (enabled) {
-                    container.alarm.dismissAll(openListOnUnsupported = false)
+                    container.alarm.dismissAll()
                     container.settings.update { it.copy(autoAlarmEnabled = true) }
                     withTimeoutOrNull(12_000) { container.scheduleRepository.refreshAround() }
                     container.alarm.setNextUpcoming()
@@ -179,21 +181,18 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
                     res.sent > 0 -> LocaleHelper.string(
                         container.appContext, R.string.dismiss_alarms_sent, res.sent, res.total
                     )
-                    res.openedList ->
-                        LocaleHelper.string(container.appContext, R.string.dismiss_unsupported_opened)
-                    else ->
-                        LocaleHelper.string(container.appContext, R.string.dismiss_unsupported_manual)
+                    else -> LocaleHelper.string(container.appContext, R.string.dismiss_unsupported_manual)
                 }
             )
         }
     }
 
-    /** Локализованный итог снятия будильников для снекбара тумблера. */
+    /** Локализованный итог снятия будильников для снекбара тумблера.
+     *  0.10.0: вариант «открыл список часов» удалён вместе с авто-переходами. */
     private fun dismissMessage(res: DismissResult): String = when {
         res.inAppCancelled ->
             LocaleHelper.string(container.appContext, R.string.toggle_off_app_cancelled)
         res.sent > 0 -> LocaleHelper.string(container.appContext, R.string.toggle_off_dismissed)
-        res.openedList -> LocaleHelper.string(container.appContext, R.string.toggle_off_opened)
         else -> LocaleHelper.string(container.appContext, R.string.toggle_off_manual)
     }
 
@@ -236,6 +235,7 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
      * Куда ставится будильник: «В часах» (SET_ALARM, как раньше) или «В приложении»
      * (собственный точный будильник — тумблер и снятие работают без капризов оболочки).
      * Смена цели — чистый лист: снимаем оба движка, ставим заново активным.
+     * 0.10.0: снятие больше никогда не открывает часы (баг пользователя).
      *
      * 0.9.0 (SET-7): dismissal/постановка сериализуются мьютексом AlarmGateway,
      * а работа перенесена в appScope — быстрые переключения больше не могут
@@ -245,7 +245,7 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
         if (!_toggling.compareAndSet(false, true)) return
         val engine = container.appScope.launch {
             runCatching {
-                container.alarm.dismissAll(openListOnUnsupported = false)
+                container.alarm.dismissAll()
                 container.settings.update { it.copy(alarmTarget = target) }
                 if (container.settings.current().autoAlarmEnabled) {
                     container.alarm.setNextUpcoming(notify = false)
@@ -288,18 +288,23 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
     /**
      * Добавить исключение: без пустых и дублей (сравнение по ТОЧНОМУ полному названию
      * — вместе с приставкой типа: «л. материаловедение» и «пр. материаловедение» —
-     * разные правила).
+     * разные правила). UI-9 (0.10.0): проверка и запись — под мьютексом, двойной
+     * ввод не создаёт дубль.
      */
+    private val exceptionGate = Mutex()
+
     fun addException(subject: String) {
         val trimmed = subject.trim()
         if (trimmed.isEmpty()) return
         viewModelScope.launch {
-            val dao = container.database.exceptionDao()
-            val normalized = ScheduleRepository.normalizeForMatch(trimmed)
-            val exists = dao.allOnce().any {
-                ScheduleRepository.normalizeForMatch(it.subject) == normalized
+            exceptionGate.withLock {
+                val dao = container.database.exceptionDao()
+                val normalized = ScheduleRepository.normalizeForMatch(trimmed)
+                val exists = dao.allOnce().any {
+                    ScheduleRepository.normalizeForMatch(it.subject) == normalized
+                }
+                if (!exists) dao.upsert(ExceptionEntity(subject = trimmed))
             }
-            if (!exists) dao.upsert(ExceptionEntity(subject = trimmed))
         }
     }
 

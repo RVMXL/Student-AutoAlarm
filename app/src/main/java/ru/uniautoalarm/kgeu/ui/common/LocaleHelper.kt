@@ -27,6 +27,17 @@ object LocaleHelper {
         return context.createConfigurationContext(config)
     }
 
+    /**
+     * Локаль приложения БЕЗ создания обёрнутого контекста — для дат/времени
+     * (DateTimeFormatter) в уведомлениях и приёмниках: строки там и так идут
+     * через [string], а форматтеры раньше брали Locale.getDefault() — на холодном
+     * старте это язык СИСТЕМЫ (SET-3: смешанные языки в одном уведомлении).
+     */
+    fun locale(context: Context): Locale {
+        val tag = LocaleStore.language(context)
+        return if (tag.isBlank()) Locale.getDefault() else Locale.forLanguageTag(tag)
+    }
+
     /** Локализованная строка из любого контекста (учитывает язык приложения). */
     fun string(context: Context, resId: Int, vararg args: Any): String =
         wrap(context).getString(resId, *args)

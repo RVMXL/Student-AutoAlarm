@@ -11,7 +11,6 @@ package ru.uniautoalarm.kgeu.ui.theme
  */
 data class AccentPalette(
     val id: Int,
-    val name: String, // русское имя («Янтарь», «Оранжевый», …) — для списка в настройках
 
     // --- Базовый акцент, светлая схема ---
     val primary: Long,
@@ -60,7 +59,6 @@ val ACCENT_PALETTES: List<AccentPalette> = listOf(
     // 0 — Янтарь (дефолт)
     AccentPalette(
         id = 0,
-        name = "Янтарь",
         primary = 0xFFB45309,
         primaryContainer = 0xFFFFDDB4,
         onPrimaryContainer = 0xFF2E1500,
@@ -87,7 +85,6 @@ val ACCENT_PALETTES: List<AccentPalette> = listOf(
     // 1 — Оранжевый
     AccentPalette(
         id = 1,
-        name = "Оранжевый",
         primary = 0xFFBC5700,
         primaryContainer = 0xFFFFDCC2,
         onPrimaryContainer = 0xFF3B1800,
@@ -114,7 +111,6 @@ val ACCENT_PALETTES: List<AccentPalette> = listOf(
     // 2 — Красный
     AccentPalette(
         id = 2,
-        name = "Красный",
         primary = 0xFFBA1A1A,
         primaryContainer = 0xFFFFDAD6,
         onPrimaryContainer = 0xFF410002,
@@ -141,7 +137,6 @@ val ACCENT_PALETTES: List<AccentPalette> = listOf(
     // 3 — Зелёный
     AccentPalette(
         id = 3,
-        name = "Зелёный",
         primary = 0xFF386A20,
         primaryContainer = 0xFFB7F397,
         onPrimaryContainer = 0xFF052100,
@@ -168,7 +163,6 @@ val ACCENT_PALETTES: List<AccentPalette> = listOf(
     // 4 — Розовый
     AccentPalette(
         id = 4,
-        name = "Розовый",
         primary = 0xFFB02E55,
         primaryContainer = 0xFFFFD9DF,
         onPrimaryContainer = 0xFF3E0719,
@@ -195,7 +189,6 @@ val ACCENT_PALETTES: List<AccentPalette> = listOf(
     // 5 — Фиолетовый (не синий/индиго — тёплый баклажановый пурпур)
     AccentPalette(
         id = 5,
-        name = "Фиолетовый",
         primary = 0xFF7A4CA6,
         primaryContainer = 0xFFF2DAFF,
         onPrimaryContainer = 0xFF2C0A44,

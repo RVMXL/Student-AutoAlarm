@@ -1,5 +1,6 @@
 package ru.uniautoalarm.kgeu.ui.setup
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -115,6 +116,9 @@ fun SetupScreen(onFinished: () -> Unit) {
 
     // UI-2: rememberSaveable — поворот/смена темы в середине мастера не сбрасывают шаг
     var step by rememberSaveable { mutableIntStateOf(0) }
+
+    // UI-8 (0.10.0): системный «назад» в мастере ходит по шагам, а не закрывает приложение
+    BackHandler(enabled = step > 0) { step-- }
 
     Column(
         modifier = Modifier

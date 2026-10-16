@@ -29,6 +29,7 @@ import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Today
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -68,13 +69,14 @@ import ru.uniautoalarm.kgeu.data.model.CalendarStyle
 import ru.uniautoalarm.kgeu.data.model.Lesson
 import ru.uniautoalarm.kgeu.ui.common.LocalAppContainer
 import ru.uniautoalarm.kgeu.ui.common.dayShortName
+import ru.uniautoalarm.kgeu.ui.common.timeFormat
 import ru.uniautoalarm.kgeu.ui.theme.PaperColors
 
 private val CardShape = RoundedCornerShape(20.dp)
 private val ChipShape = RoundedCornerShape(8.dp)
 
-private val TIME: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
-private val RU_MONTH_DAY: DateTimeFormatter =
+/** «12 октября» — функция, а не синглтон: локаль на момент вызова (SET-4/UI-5). */
+private fun monthDay(): DateTimeFormatter =
     DateTimeFormatter.ofPattern("d MMMM", Locale.getDefault())
 
 /** Бумажная палитра как Color (константы PaperColors — Long). */
@@ -171,8 +173,8 @@ fun ScheduleScreen() {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "${weekMonday.format(RU_MONTH_DAY)} – " +
-                            weekMonday.plusDays(6).format(RU_MONTH_DAY),
+                        "${weekMonday.format(monthDay())} – " +
+                            weekMonday.plusDays(6).format(monthDay()),
                         style = MaterialTheme.typography.titleMedium,
                         textAlign = TextAlign.Center,
                         // текущая неделя выделена акцентом — из неё чаще всего и «уезжают»
@@ -187,11 +189,13 @@ fun ScheduleScreen() {
                         )
                     }
                 }
+                // UI-14 (0.10.0): перелистывание вперёд не гейтится по busy —
+                // но кнопка отключена во время загрузки, чтобы не штормить API подряд
                 IconButton(onClick = {
                     vm.nextWeek { msg ->
                         scope.launch { snackbarHostState.showSnackbar(msg) }
                     }
-                }) {
+                }, enabled = !sync.busy) {
                     Icon(
                         Icons.Rounded.ChevronRight,
                         contentDescription = stringResource(R.string.cd_next_week)
@@ -243,12 +247,31 @@ fun ScheduleScreen() {
             }
 
             if (dayLessons.isEmpty()) {
-                EmptyDayCard(
-                    paper = paper,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
+                if (sync.busy && sync.lastSyncEpochMs == 0L) {
+                    // UI-15 (0.10.0): первая загрузка — вместо ложного «нет пар» показываем
+                    // индикатор; EmptyDayCard рисуем только когда данные уже приходили
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        CircularProgressIndicator()
+                        Text(
+                            stringResource(R.string.refreshing),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (paper) PaperInkSoft else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                } else {
+                    EmptyDayCard(
+                        paper = paper,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    )
+                }
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -406,13 +429,13 @@ private fun LessonCard(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    lesson.start.format(TIME),
+                    lesson.start.format(timeFormat()),
                     style = MaterialTheme.typography.titleLarge
                         .copy(fontFeatureSettings = "tnum"),
                     color = contentColor
                 )
                 Text(
-                    lesson.end.format(TIME),
+                    lesson.end.format(timeFormat()),
                     style = MaterialTheme.typography.labelMedium
                         .copy(fontFeatureSettings = "tnum"),
                     color = softColor

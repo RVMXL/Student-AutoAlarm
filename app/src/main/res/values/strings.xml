@@ -45,7 +45,6 @@
     <string name="lang_subtitle">Выберите язык интерфейса — позже можно изменить в настройках</string>
     <string name="lang_system">Язык системы</string>
     <string name="set_language">Язык</string>
-    <string name="set_language_desc">Язык интерфейса приложения</string>
 
     <!-- ==== Мастер настройки ==== -->
     <string name="setup_step_of">Шаг %1$d из %2$d</string>
@@ -99,6 +98,15 @@
     <string name="home_upcoming_title">Ближайшие занятия</string>
     <string name="home_no_pairs">Пар нет</string>
 
+    <!-- ==== 0.10.0, Bug E: карточка «Мои будильники» ==== -->
+    <string name="alarms_card_title">Мои будильники</string>
+    <string name="alarms_empty">Будильников нет</string>
+    <string name="alarms_active">Будильник стоит — сработает по расписанию</string>
+    <string name="alarms_slot_missing">Будильник не найден в системе — перепоставится автоматически</string>
+    <string name="alarms_engine_app">движок „В приложении“</string>
+    <string name="alarms_engine_clock">движок „В часах“</string>
+    <string name="action_dismiss_alarms">Снять будильники</string>
+
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
     <!-- ==== Диагностика на главном ==== -->
@@ -108,6 +116,10 @@
     <string name="dialog_battery_desc">Агрессивный энергосберегающий режим может снимать ночную перепроверку расписания.</string>
     <string name="dialog_stale_title">Расписание не обновлялось более 3 дней</string>
     <string name="dialog_stale_desc">Расписание вуза часто меняют — подтяните свежие данные.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
+    <string name="dialog_fsi_title">Полноэкранный звонок ограничен системой</string>
+    <string name="dialog_fsi_desc">Система не разрешает разворачивать звонок поверх экрана блокировки — сигнал покажется уведомлением. Разрешите «Полноэкранные уведомления» для приложения.</string>
 
     <!-- ==== Снекбары обновления ==== -->
     <string name="err_no_target">Сначала выберите группу или преподавателя в настройках</string>
@@ -150,6 +162,8 @@
     <string name="skip_deferred_to_night">пара завтра — будильник поставится ночью в 00:05 (сейчас разовый зазвенел бы сегодня)</string>
     <string name="skip_clock_refused">часы телефона не приняли команду — включите «Напоминание о будильнике» в настройках</string>
     <string name="skip_too_far">пара дальше недели — будильник установится автоматически ближе к ней</string>
+    <!-- 0.10.0, AL-9: DISMISS не принят, новый SET отменён — предупрежаем про двойной звонок -->
+    <string name="notif_dismiss_not_accepted">часы не приняли отключение старого будильника — снимите его в часах вручную, иначе могут прозвенеть оба</string>
     <string name="test_alarm_label">Тест: Автобудильник работает!</string>
     <string name="test_alarm_ok">Будильник на 2 минуты поставлен — проверь часы</string>
     <string name="test_alarm_fail">Не удалось поставить тестовый будильник — часы не отвечают</string>
@@ -184,13 +198,12 @@
     <string name="pair_custom_offset">Подъём за %1$s → будильник в %2$s</string>
     <string name="pair_common_offset">Общий подъём: за %1$s</string>
     <string name="btn_disable_app_alarms">Отключить будильники приложения</string>
-    <string name="disable_alarms_desc">Кнопка отправляет в часы команду отключения по точным меткам «Авто: Пн»…«Авто: Вс». Если оболочка команду не принимает (часть Realme UI/ColorOS — ограничение системы), приложение само откроет список будильников — снимите метки «Авто:» вручную.</string>
+    <string name="disable_alarms_desc">Кнопка отправляет в часы команду отключения по точным меткам «Авто: Пн»…«Авто: Вс» и метке разового будильника. Если оболочка команду не принимает (часть Realme UI/ColorOS — ограничение системы), снимите метки «Авто:» вручную через кнопку «Список будильников» — приложение само часы не открывает.</string>
     <string name="btn_test_alarm">Проверить будильник</string>
     <string name="btn_alarm_list">Список будильников</string>
     <string name="alarms_list_open_failed">Часы не открыли список будильников</string>
-    <string name="dismiss_alarms_sent">Команда отключения отправлена в часы (%1$d из %2$d). Если будильники «Авто: …» остались — отключите их в списке будильников</string>
-    <string name="dismiss_unsupported_opened">Часы не поддерживают отключение командой (ограничение оболочки) — открыл список будильников: снимите будильники с меткой «Авто:» вручную</string>
-    <string name="dismiss_unsupported_manual">Часы не поддерживают отключение командой (ограничение оболочки) — откройте будильники в приложении часов и снимите метки «Авто:» вручную</string>
+    <string name="dismiss_alarms_sent">Команда отключения отправлена в часы (%1$d из %2$d). Если будильники «Авто: …» остались — отключите их через «Список будильников»</string>
+    <string name="dismiss_unsupported_manual">Часы не поддерживают отключение командой (ограничение оболочки) — откройте будильники через кнопку «Список будильников» и снимите метки «Авто:» вручную</string>
 
     <!-- ==== Диалоги настроек: смещение подъёма ==== -->
     <string name="dialog_offset_title">Подъём до пары</string>
@@ -211,14 +224,8 @@
     <string name="hint_subject_name">Название дисциплины</string>
     <string name="cd_add_exception">Добавить исключение</string>
     <string name="exceptions_found">Найдено в расписании:</string>
-    <string name="exc_kind_all">Все типы</string>
-    <string name="exc_kind_lec">Лекции</string>
-    <string name="exc_kind_pr">Практики</string>
-    <string name="exc_kind_lab">Лабораторные</string>
-    <string name="exc_kind_filter">Тип пары для нового исключения</string>
     <string name="toggle_off_dismissed">Авто-будильник выключен, будильники приложения сняты в часах</string>
-    <string name="toggle_off_opened">Авто-будильник выключен. Часы не приняли отключение (ограничение оболочки) — открыл список будильников: снимите метки «Авто:» вручную</string>
-    <string name="toggle_off_manual">Авто-будильник выключен. Часы не приняли отключение (ограничение оболочки) — снимите будильники с меткой «Авто:» в часах вручную</string>
+    <string name="toggle_off_manual">Авто-будильник выключен. Часы не приняли отключение (ограничение оболочки) — снимите будильники с меткой «Авто:» через «Список будильников» вручную</string>
     <string name="toggle_off_app_cancelled">Авто-будильник выключен, будильники приложения сняты</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
@@ -291,4 +298,7 @@
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
     <string name="notif_group_check_title">Проверьте группу</string>
     <string name="notif_group_check_text">Расписание приходит пустым — прежний кэш сохранён. Проверьте группу в настройках.</string>
+
+    <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
+    <string name="auto_label_prefix">Авто:</string>
 </resources>
