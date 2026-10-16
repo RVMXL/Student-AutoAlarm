@@ -45,7 +45,6 @@
     <string name="lang_subtitle">Интерфейс тилин танда — кийин параметрлерде өзгөртүүгө болот</string>
     <string name="lang_system">Система тили</string>
     <string name="set_language">Тил</string>
-    <string name="set_language_desc">Колдонмонун интерфейс тили</string>
 
     <!-- ==== Мастер настройки ==== -->
     <string name="setup_step_of">Кадам %1$d / %2$d</string>
@@ -99,6 +98,15 @@
     <string name="home_upcoming_title">Алдагы сабактар</string>
     <string name="home_no_pairs">Жуп жок</string>
 
+    <!-- ==== 0.10.0, Bug E: карточка «Мои будильники» ==== -->
+    <string name="alarms_card_title">Менин ояткычтарым</string>
+    <string name="alarms_empty">Ояткычтар жок</string>
+    <string name="alarms_active">Ояткыч коюлган — график боюнча согот</string>
+    <string name="alarms_slot_missing">Ояткыч системада табылган жок — автоматтык түрдө кайра коюлат</string>
+    <string name="alarms_engine_app">«Тиркемеде» кыймылдаткычы</string>
+    <string name="alarms_engine_clock">«Саатта» кыймылдаткычы</string>
+    <string name="action_dismiss_alarms">Ояткычтарды алып салу</string>
+
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
     <!-- ==== Диагностика на главном ==== -->
@@ -108,6 +116,10 @@
     <string name="dialog_battery_desc">Агрессивдүү энергия үнөмдөө режими түнгү кесте текшерүүсүн өчүрүп коюшу мүмкүн.</string>
     <string name="dialog_stale_title">Кесте 3 күндөн ашык жаңыртылган эмес</string>
     <string name="dialog_stale_desc">Университеттин кестеси көп өзгөрөт — жаңы маалыматтарды тартып ал.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
+    <string name="dialog_fsi_title">Толук экрандык эңгини система чектеген</string>
+    <string name="dialog_fsi_desc">Система эңгини кулпу экранынын үстүндө жайылтууга уруксат бербейт — сигнал билдирме түрүндө көрүнөт. Колдонмо үчүн «Толук экрандуу билдирмелер» опциясына уруксат бер.</string>
 
     <!-- ==== Снекбары обновления ==== -->
     <string name="err_no_target">Адегенде параметрлерден топту же окутуучуну танда</string>
@@ -150,6 +162,8 @@
     <string name="skip_deferred_to_night">сабак эртең — ояткыч түндө 00:05-те коюлат (азыр койсо, бүгүн согот)</string>
     <string name="skip_clock_refused">Телефондун саат колдонмосу буйрукту кабыл албады — параметрлерден «Ояткыч эскертүүсүн» күйгүз</string>
     <string name="skip_too_far">сабак аптадан да алыс — оятуучу анын алдында автоматтык түрдө коюлат</string>
+    <!-- 0.10.0, AL-9: DISMISS не принят, новый SET отменён — предупрежаем про двойной звонок -->
+    <string name="notif_dismiss_not_accepted">Саат эски ояткычты өчүрүүнү кабыл албады — аны сааттан кол менен алып сал, антпесе экөө тең согушу мүмкүн</string>
     <string name="test_alarm_label">Тест: Автоояткыч иштеп турат!</string>
     <string name="test_alarm_ok">2 минутка ояткыч коюлду — саатты текшер</string>
     <string name="test_alarm_fail">Сыноо ояткычын коюу мүмкүн болбоду — саат жооп бербейт</string>
@@ -184,13 +198,12 @@
     <string name="pair_custom_offset">Оянгу: %1$s мурун → ояткыч: %2$s</string>
     <string name="pair_common_offset">Жалпы оянгу: %1$s мурун</string>
     <string name="btn_disable_app_alarms">Колдонмо ояткычтарын өчүрүү</string>
-    <string name="disable_alarms_desc">Баскыч саатка «Авто: Пн»…«Авто: Вс» так энбелгилери боюнча өчүрүү буйругун жиберет. Оболочка буйрукту кабыл албаса (Realme UI/ColorOS-тун айрым нускалары — системалык чектөө), колдонмо ояткычтар тизмесин өзү ачат — «Авто:» энбелгилерин кол менен алып сал.</string>
+    <string name="disable_alarms_desc">Баскыч саатка «Авто: Пн»…«Авто: Вс» так энбелгилери жана бир жолку ояткыч энбелгиси боюнча өчүрүү буйругун жиберет. Оболочка буйрукту кабыл албаса (Realme UI/ColorOS-тун айрым нускалары — системалык чектөө), «Авто:» энбелгилерин «Ояткычтар тизмеси» баскычы аркылуу кол менен алып сал — колдонмо саатты өзү ачпайт.</string>
     <string name="btn_test_alarm">Ояткычты текшерүү</string>
     <string name="btn_alarm_list">Ояткычтар тизмеси</string>
     <string name="alarms_list_open_failed">Саат колдонмосу ояткычтар тизмесин ачкан жок</string>
-    <string name="dismiss_alarms_sent">Саатка өчүрүү буйругу жиберилди (%1$d/%2$d). «Авто: …» ояткычтары калса — аларды ояткычтар тизмесинен өчүр.</string>
-    <string name="dismiss_unsupported_opened">Саат буйрук менен өчүрүүнү колдообойт (оболочка чектөөсү) — ояткычтар тизмесин ачтым: «Авто:» энбелгиси бар ояткычтарды кол менен алып сал</string>
-    <string name="dismiss_unsupported_manual">Саат буйрук менен өчүрүүнү колдообойт (оболочка чектөөсү) — саат колдонмосунан ояткычтарды ачып, «Авто:» энбелгилерин кол менен алып сал</string>
+    <string name="dismiss_alarms_sent">Саатка өчүрүү буйругу жиберилди (%1$d/%2$d). «Авто: …» ояткычтары калса — аларды «Ояткычтар тизмеси» аркылуу өчүр</string>
+    <string name="dismiss_unsupported_manual">Саат буйрук менен өчүрүүнү колдообойт (оболочка чектөөсү) — ояткычтарды «Ояткычтар тизмеси» баскычы аркылуу ачып, «Авто:» энбелгилерин кол менен алып сал</string>
 
     <!-- ==== Диалоги настроек: смещение подъёма ==== -->
     <string name="dialog_offset_title">Жупка чейинки оянгу</string>
@@ -211,14 +224,8 @@
     <string name="hint_subject_name">Сабактын аталышы</string>
     <string name="cd_add_exception">Өзгөчөлүк кошуу</string>
     <string name="exceptions_found">Кестеден табылды:</string>
-    <string name="exc_kind_all">Бардык түрлөрү</string>
-    <string name="exc_kind_lec">Лекциялар</string>
-    <string name="exc_kind_pr">Практикалар</string>
-    <string name="exc_kind_lab">Лабораториялар</string>
-    <string name="exc_kind_filter">Жаңы өзгөчө учур үчүн жуп түрү</string>
     <string name="toggle_off_dismissed">Автоояткыч өчүрүлдү, тиркеменин ояткычтары сааттан алынды</string>
-    <string name="toggle_off_opened">Автоояткыч өчүрүлдү. Саат буйрук менен өчүрүүнү колдообойт (оболочка чектөөсү) — ояткычтар тизмесин ачтым: «Авто:» энбелгиси бар ояткычтарды кол менен алып сал</string>
-    <string name="toggle_off_manual">Автоояткыч өчүрүлдү. Саат буйрук менен өчүрүүнү колдообойт (оболочка чектөөсү) — саат колдонмосунан ояткычтарды ачып, «Авто:» энбелгилерин кол менен алып сал</string>
+    <string name="toggle_off_manual">Автоояткыч өчүрүлдү. Саат өчүрүүнү кабыл албады (оболочка чектөөсү) — «Авто:» энбелгиси бар ояткычтарды «Ояткычтар тизмеси» аркылуу кол менен алып сал</string>
     <string name="toggle_off_app_cancelled">Автоояткыч өчүрүлдү, тиркеменин ояткычтары алынды</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
@@ -291,4 +298,7 @@
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
     <string name="notif_group_check_title">Топту текшер</string>
     <string name="notif_group_check_text">Кесте бош келет — мурунку кеш сакталды. Параметрлерден топту текшер.</string>
+
+    <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
+    <string name="auto_label_prefix">Авто:</string>
 </resources>

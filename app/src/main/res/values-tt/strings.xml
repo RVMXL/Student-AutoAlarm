@@ -45,7 +45,6 @@
     <string name="lang_subtitle">Интерфейс телен сайла — соңрак көйләүләрдә үзгәртеп була</string>
     <string name="lang_system">Система теле</string>
     <string name="set_language">Тел</string>
-    <string name="set_language_desc">Кушымта интерфейсы теле</string>
 
     <!-- ==== Мастер настройки ==== -->
     <string name="setup_step_of">Адым %1$d / %2$d</string>
@@ -99,6 +98,15 @@
     <string name="home_upcoming_title">Якын арадагы дәресләр</string>
     <string name="home_no_pairs">Паралар юк</string>
 
+    <!-- ==== 0.10.0, Bug E: карточка «Мои будильники» ==== -->
+    <string name="alarms_card_title">Минем будильникларым</string>
+    <string name="alarms_empty">Будильниклар юк</string>
+    <string name="alarms_active">Будильник куелган — расписание буенча яңгырачак</string>
+    <string name="alarms_slot_missing">Будильник системада табылмады — автоматик рәвештә кабат куелачак</string>
+    <string name="alarms_engine_app">движок „Кушымтада“</string>
+    <string name="alarms_engine_clock">движок „Сәгатьтә“</string>
+    <string name="action_dismiss_alarms">Будильникларны сүндерү</string>
+
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
     <!-- ==== Диагностика на главном ==== -->
@@ -108,6 +116,10 @@
     <string name="dialog_battery_desc">Агрессив энергия саклау режимы төнге расписаниены кабат тикшерүне туктатып куярга мөмкин.</string>
     <string name="dialog_stale_title">Расписание 3 көннән артык яңартылмаган</string>
     <string name="dialog_stale_desc">Югары уку йорты расписаниясен еш үзгәртәләр — яңа мәгълүматларны тартып ал.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
+    <string name="dialog_fsi_title">Тулы экранлы сигнал система тарафыннан чикләнгән</string>
+    <string name="dialog_fsi_desc">Система сигналны бикләү экраны өстенә җәеп күрсәтергә рөхсәт итми — сигнал хәбәр буларак күренәчәк. Кушымта өчен «Тулы экранлы хәбәрләр»не рөхсәт ит.</string>
 
     <!-- ==== Снекбары обновления ==== -->
     <string name="err_no_target">Элек көйләүләрдә группа яки укытучыны сайла</string>
@@ -150,6 +162,8 @@
     <string name="skip_deferred_to_night">пара иртәгә — будильник төндә 00:05\'та куелачак (хәзер куйса, бүген шылтырар иде)</string>
     <string name="skip_clock_refused">Телефон сәгате боерыкны кабул итмәде — көйләүләрдә «Будильник турында искәртү»не кабыз</string>
     <string name="skip_too_far">пара атнадан да еракта — будильник аның алдыннан автоматик рәвештә куелачак</string>
+    <!-- 0.10.0, AL-9: DISMISS не принят, новый SET отменён — предупрежаем про двойной звонок -->
+    <string name="notif_dismiss_not_accepted">сәгать иске будильникны сүндерүне кабул итмәде — аны сәгатьтә кул белән сүндер, юкса икесе дә шылтырар</string>
     <string name="test_alarm_label">Тест: Автобудильник эшли!</string>
     <string name="test_alarm_ok">Будильник 2 минутка куелды — сәгатьне тикшер</string>
     <string name="test_alarm_fail">Тест будильник куяп булмады — сәгать җавап бирми</string>
@@ -184,13 +198,12 @@
     <string name="pair_custom_offset">Уяну: %1$s элегрәк → будильник %2$s вакытында</string>
     <string name="pair_common_offset">Гомуми уяну: %1$s алдан</string>
     <string name="btn_disable_app_alarms">Кушымта будильникларын сүндерү</string>
-    <string name="disable_alarms_desc">Төймә сәгатькә «Авто: Пн»…«Авто: Вс» төгәл меткалары буенча сүндерү боерыгын җибәрә. Оболочка боерыкны кабул итмәсә (кайбер Realme UI/ColorOS — система чикләмәсе), кушымта үзе будильниклар исемлеген ачачак — «Авто:» меткаларын кул белән алып ташла.</string>
+    <string name="disable_alarms_desc">Төймә сәгатькә «Авто: Пн»…«Авто: Вс» төгәл меткалары һәм бер тапкырлы будильник меткасы буенча сүндерү боерыгын җибәрә. Оболочка боерыкны кабул итмәсә (кайбер Realme UI/ColorOS — система чикләмәсе), «Авто:» меткаларын «Будильниклар исемлеге» төймәсе аша кул белән алып ташла — кушымта үзе сәгатьне ачмый.</string>
     <string name="btn_test_alarm">Будильникны тикшерү</string>
     <string name="btn_alarm_list">Будильниклар исемлеге</string>
     <string name="alarms_list_open_failed">Сәгать будильниклар исемлеген ачмады</string>
-    <string name="dismiss_alarms_sent">Сәгатькә сүндерү боерыгы җибәрелде (%2$d эчнән %1$d). «Авто: …» будильниклары калса — аларны будильниклар исемлегендә сүндер</string>
-    <string name="dismiss_unsupported_opened">Сәгать боерык белән сүндерүне хупламый (оболочка чикләмәсе) — будильниклар исемлеген ачтым: «Авто:» меткалы будильникларны кул белән сүндер</string>
-    <string name="dismiss_unsupported_manual">Сәгать боерык белән сүндерүне хупламый (оболочка чикләмәсе) — сәгать кушымтасында будильникларны ач һәм «Авто:» меткаларын кул белән алып ташла</string>
+    <string name="dismiss_alarms_sent">Сәгатькә сүндерү боерыгы җибәрелде (%2$d эчнән %1$d). «Авто: …» будильниклары калса — аларны «Будильниклар исемлеге» аша сүндер</string>
+    <string name="dismiss_unsupported_manual">Сәгать боерык белән сүндерүне хупламый (оболочка чикләмәсе) — будильникларны «Будильниклар исемлеге» төймәсе аша ач һәм «Авто:» меткаларын кул белән алып ташла</string>
 
     <!-- ==== Диалоги настроек: смещение подъёма ==== -->
     <string name="dialog_offset_title">Пара алдыннан уяну</string>
@@ -211,14 +224,8 @@
     <string name="hint_subject_name">Дисциплина исеме</string>
     <string name="cd_add_exception">Искәрмә өстәү</string>
     <string name="exceptions_found">Расписаниеда табылды:</string>
-    <string name="exc_kind_all">Барлык төрләр</string>
-    <string name="exc_kind_lec">Лекцияләр</string>
-    <string name="exc_kind_pr">Практикалар</string>
-    <string name="exc_kind_lab">Лабораторияләр</string>
-    <string name="exc_kind_filter">Яңа искәрмә өчен пара төре</string>
     <string name="toggle_off_dismissed">Автобудильник сүндерелде, кушымта будильниклары сәгатьтән алынды</string>
-    <string name="toggle_off_opened">Автобудильник сүндерелде. Сәгать боерыкны кабул итмәде (оболочка чикләмәсе) — будильниклар исемлеген ачтым: «Авто:» меткалы будильникларны кул белән сүндер</string>
-    <string name="toggle_off_manual">Автобудильник сүндерелде. Сәгать боерыкны кабул итмәде (оболочка чикләмәсе) — сәгать кушымтасында будильникларны ач һәм «Авто:» меткаларын кул белән алып ташла</string>
+    <string name="toggle_off_manual">Автобудильник сүндерелде. Сәгать сүндерүне кабул итмәде (оболочка чикләмәсе) — «Авто:» меткалы будильникларны «Будильниклар исемлеге» аша кул белән сүндер</string>
     <string name="toggle_off_app_cancelled">Автобудильник сүндерелде, кушымта будильниклары алынды</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
@@ -291,4 +298,7 @@
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
     <string name="notif_group_check_title">Төркемне тикшер</string>
     <string name="notif_group_check_text">Расписание буш килә — элекке кэш сакланып калды. Көйләүләрдә төркемне тикшер.</string>
+
+    <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
+    <string name="auto_label_prefix">Авто:</string>
 </resources>

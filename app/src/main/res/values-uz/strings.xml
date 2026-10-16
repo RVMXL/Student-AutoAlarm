@@ -45,7 +45,6 @@
     <string name="lang_subtitle">Interfeys tilini tanla — keyinchalik sozlamalarda oʻzgartirish mumkin</string>
     <string name="lang_system">Tizim tili</string>
     <string name="set_language">Til</string>
-    <string name="set_language_desc">Ilova interfeysi tili</string>
 
     <!-- ==== Setup wizard ==== -->
     <string name="setup_step_of">Qadam %1$d/%2$d</string>
@@ -99,6 +98,15 @@
     <string name="home_upcoming_title">Yaqin mashgʻulotlar</string>
     <string name="home_no_pairs">Paralar yoʻq</string>
 
+    <!-- ==== 0.10.0, Bug E: карточка «Мои будильники» ==== -->
+    <string name="alarms_card_title">Budilniklarim</string>
+    <string name="alarms_empty">Budilniklar yoʻq</string>
+    <string name="alarms_active">Budilnik qoʻyilgan — jadval boʻyicha jiringaydi</string>
+    <string name="alarms_slot_missing">Budilnik tizimda topilmadi — avtomatik ravishda qayta qoʻyiladi</string>
+    <string name="alarms_engine_app">dvigatel „Ilovada“</string>
+    <string name="alarms_engine_clock">dvigatel „Soatda“</string>
+    <string name="action_dismiss_alarms">Budilniklarni oʻchirish</string>
+
     <!-- ==== Alarm batch results (home + settings) ==== -->
 
     <!-- ==== Diagnostics on home ==== -->
@@ -108,6 +116,10 @@
     <string name="dialog_battery_desc">Agressiv quvvat tejash rejimi tungi jadvalni qayta tekshirishni bekor qilishi mumkin.</string>
     <string name="dialog_stale_title">Dars jadvali 3 kundan ortiq yangilanmagan</string>
     <string name="dialog_stale_desc">Universitet jadvalini tez-tez oʻzgartirishadi — yangi maʼlumotlarni tortib ol.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
+    <string name="dialog_fsi_title">Toʻliq ekranli jiringash tizim tomonidan cheklangan</string>
+    <string name="dialog_fsi_desc">Tizim jiringashni ekran qulfi ustida toʻliq ekranda koʻrsatishga ruxsat bermaydi — signal bildirishnoma sifatida koʻrinadi. Ilova uchun «Toʻliq ekranli bildirishnomalar»ga ruxsat ber.</string>
 
     <!-- ==== Refresh snackbars ==== -->
     <string name="err_no_target">Avval sozlamalarda guruh yoki oʻqituvchini tanla</string>
@@ -150,6 +162,8 @@
     <string name="skip_deferred_to_night">para ertaga — budilnik kechqurun 00:05 da o‘rnatiladi (hozir qo‘ysa, bugun chalinardi)</string>
     <string name="skip_clock_refused">Telefon soati buyruqni qabul qilmadi — sozlamalarda «Budilnik eslatmasi» funksiyasini yoqib qoʻy</string>
     <string name="skip_too_far">juftlik haftadan ham uzoq — budilnik u avtomatik ravishda oldindan o‘rnatiladi</string>
+    <!-- 0.10.0, AL-9: DISMISS не принят, новый SET отменён — предупрежаем про двойной звонок -->
+    <string name="notif_dismiss_not_accepted">soat eski budilnikni oʻchirishni qabul qilmadi — uni soatda qoʻlda oʻchirib qoʻy, aks holda ikkalasi ham chalinadi</string>
     <string name="test_alarm_label">Test: Avtobudilnik ishlayapti!</string>
     <string name="test_alarm_ok">2 minutga budilnik qoʻyildi — soatni tekshir</string>
     <string name="test_alarm_fail">Sinov budilnigini qoʻyib boʻlmadi — soat javob bermayapti</string>
@@ -184,13 +198,12 @@
     <string name="pair_custom_offset">%1$s oldin uygʻonish → budilnik %2$s da</string>
     <string name="pair_common_offset">Umumiy uygʻonish: %1$s oldin</string>
     <string name="btn_disable_app_alarms">Ilova budilniklarini oʻchirish</string>
-    <string name="disable_alarms_desc">Tugma soatga «Авто: Пн»…«Авто: Вс» aniq yorliqlari boʻyicha oʻchirish buyrugʻini yuboradi. Agar telefon qobigʻi buyruqni qabul qilmasa (Realme UI/ColorOS ning bir qismi — tizim cheklovi), ilova budilniklar roʻyxatini oʻzi ochadi — «Авто:» yorliqlarini qoʻlda olib tashla.</string>
+    <string name="disable_alarms_desc">Tugma soatga «Авто: Пн»…«Авто: Вс» aniq yorliqlari va bir martalik budilnik yorligʻi boʻyicha oʻchirish buyrugʻini yuboradi. Agar telefon qobigʻi buyruqni qabul qilmasa (Realme UI/ColorOS ning bir qismi — tizim cheklovi), «Авто:» yorliqlarini «Budilniklar roʻyxati» tugmasi orqali qoʻlda olib tashla — ilova soatni oʻzi ochmaydi.</string>
     <string name="btn_test_alarm">Budilnikni sinash</string>
     <string name="btn_alarm_list">Budilniklar roʻyxati</string>
     <string name="alarms_list_open_failed">Soat budilniklar roʻyxatini ochmadi</string>
-    <string name="dismiss_alarms_sent">Soatga oʻchirish buyrugʻi yuborildi (%2$d tadan %1$d tasi). «Авто: …» budilniklar qolgan boʻlsa — ularni budilniklar roʻyxatida oʻchirib qoʻy</string>
-    <string name="dismiss_unsupported_opened">Soat buyruq orqali oʻchirishni qoʻllab-quvvatlamaydi (qobiq cheklovi) — budilniklar roʻyxati ochildi: «Авто:» yorlikli budilniklarni qoʻlda olib tashla</string>
-    <string name="dismiss_unsupported_manual">Soat buyruq orqali oʻchirishni qoʻllab-quvvatlamaydi (qobiq cheklovi) — soat ilovasida budilniklarni ochib, «Авто:» yorliqlarini qoʻlda olib tashla</string>
+    <string name="dismiss_alarms_sent">Soatga oʻchirish buyrugʻi yuborildi (%2$d tadan %1$d tasi). «Авто: …» budilniklar qolgan boʻlsa — ularni «Budilniklar roʻyxati» orqali oʻchirib qoʻy</string>
+    <string name="dismiss_unsupported_manual">Soat buyruq orqali oʻchirishni qoʻllab-quvvatlamaydi (qobiq cheklovi) — budilniklarni «Budilniklar roʻyxati» tugmasi orqali ochib, «Авто:» yorliqlarini qoʻlda olib tashla</string>
 
     <!-- ==== Settings dialogs: wake offset ==== -->
     <string name="dialog_offset_title">Paradan oldingi uygʻonish</string>
@@ -211,14 +224,8 @@
     <string name="hint_subject_name">Fan nomi</string>
     <string name="cd_add_exception">Istisno qoʻshish</string>
     <string name="exceptions_found">Dars jadvalida topildi:</string>
-    <string name="exc_kind_all">Barcha turlar</string>
-    <string name="exc_kind_lec">Maʼruzalar</string>
-    <string name="exc_kind_pr">Amaliyotlar</string>
-    <string name="exc_kind_lab">Laboratoriyalar</string>
-    <string name="exc_kind_filter">Yangi istisno uchun dars turi</string>
     <string name="toggle_off_dismissed">Avobudilnik oʻchirildi, ilova budilniklari soatdan olib tashlandi</string>
-    <string name="toggle_off_opened">Avobudilnik oʻchirildi. Soat buyruq orqali oʻchirishni qoʻllab-quvvatlamaydi (qobiq cheklovi) — budilniklar roʻyxati ochildi: «Авто:» yorlikli budilniklarni qoʻlda olib tashla</string>
-    <string name="toggle_off_manual">Avobudilnik oʻchirildi. Soat buyruq orqali oʻchirishni qoʻllab-quvvatlamaydi (qobiq cheklovi) — soat ilovasida budilniklarni ochib, «Авто:» yorliqlarini qoʻlda olib tashla</string>
+    <string name="toggle_off_manual">Avobudilnik oʻchirildi. Soat oʻchirishni qabul qilmadi (qobiq cheklovi) — «Авто:» yorlikli budilniklarni «Budilniklar roʻyxati» orqali qoʻlda olib tashla</string>
     <string name="toggle_off_app_cancelled">Avobudilnik oʻchirildi, ilova budilniklari olib tashlandi</string>
 
     <!-- ==== Settings: custom events ==== -->
@@ -291,4 +298,7 @@
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
     <string name="notif_group_check_title">Guruhni tekshir</string>
     <string name="notif_group_check_text">Jadval boʻsh keladi — saqlangan kesh saqlanib qoldi. Sozlamalarda guruhni tekshir.</string>
+
+    <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
+    <string name="auto_label_prefix">Auto:</string>
 </resources>

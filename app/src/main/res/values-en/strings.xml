@@ -45,7 +45,6 @@
     <string name="lang_subtitle">Choose the app language — you can change it later in Settings</string>
     <string name="lang_system">System language</string>
     <string name="set_language">Language</string>
-    <string name="set_language_desc">The app\'s interface language</string>
 
     <!-- ==== Setup wizard ==== -->
     <string name="setup_step_of">Step %1$d of %2$d</string>
@@ -99,6 +98,15 @@
     <string name="home_upcoming_title">Upcoming classes</string>
     <string name="home_no_pairs">No classes</string>
 
+    <!-- ==== 0.10.0, Bug E: карточка «Мои будильники» ==== -->
+    <string name="alarms_card_title">My alarms</string>
+    <string name="alarms_empty">No alarms</string>
+    <string name="alarms_active">Alarm is set — it will ring on schedule</string>
+    <string name="alarms_slot_missing">Alarm not found in the system — it will be set again automatically</string>
+    <string name="alarms_engine_app">in-app engine</string>
+    <string name="alarms_engine_clock">built-in Clock engine</string>
+    <string name="action_dismiss_alarms">Dismiss alarms</string>
+
     <!-- ==== Batch results (home + settings) ==== -->
 
     <!-- ==== Diagnostics on the home screen ==== -->
@@ -108,6 +116,10 @@
     <string name="dialog_battery_desc">Aggressive power saving may cancel the overnight schedule re-check.</string>
     <string name="dialog_stale_title">The schedule hasn\'t been updated in over 3 days</string>
     <string name="dialog_stale_desc">University schedules change often — pull fresh data.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
+    <string name="dialog_fsi_title">Full-screen ringing is restricted by the system</string>
+    <string name="dialog_fsi_desc">The system doesn\'t allow the alarm to expand over the lock screen — the signal will appear as a notification. Allow \"Full-screen notifications\" for the app.</string>
 
     <!-- ==== Refresh snackbars ==== -->
     <string name="err_no_target">First choose a group or a teacher in Settings</string>
@@ -150,6 +162,8 @@
     <string name="skip_deferred_to_night">class is tomorrow — the alarm will be set tonight at 00:05 (a one-shot set now would ring today)</string>
     <string name="skip_clock_refused">the Clock app didn\'t accept the command — turn on \"Alarm reminder\" in the app\'s settings</string>
     <string name="skip_too_far">the class is more than a week away — the alarm will be set automatically closer to it</string>
+    <!-- 0.10.0, AL-9: DISMISS не принят, новый SET отменён — предупрежаем про двойной звонок -->
+    <string name="notif_dismiss_not_accepted">the Clock app didn\'t accept the dismissal of the old alarm — remove it manually in the Clock app, otherwise both may ring</string>
     <string name="test_alarm_label">Test: Auto-Alarm is working!</string>
     <string name="test_alarm_ok">Alarm set for 2 minutes from now — check the Clock app</string>
     <string name="test_alarm_fail">Couldn\'t set the test alarm — the Clock app isn\'t responding</string>
@@ -184,13 +198,12 @@
     <string name="pair_custom_offset">Wake-up %1$s before → alarm at %2$s</string>
     <string name="pair_common_offset">Common wake-up: %1$s before</string>
     <string name="btn_disable_app_alarms">Turn off the app\'s alarms</string>
-    <string name="disable_alarms_desc">The button sends a dismiss command to the Clock app using the exact labels \"Авто: Пн\"…\"Авто: Вс\". If the system shell doesn\'t accept the command (some Realme UI/ColorOS versions — a system limitation), the app will open the alarm list itself — remove the \"Авто:\" alarms manually.</string>
+    <string name="disable_alarms_desc">The button sends a dismiss command to the Clock app using the exact labels \"Авто: Пн\"…\"Авто: Вс\" and the one-shot alarm label. If the system shell doesn\'t accept the command (some Realme UI/ColorOS versions — a system limitation), remove the \"Авто:\" labels manually via the \"Alarm list\" button — the app never opens the Clock app itself.</string>
     <string name="btn_test_alarm">Test the alarm</string>
     <string name="btn_alarm_list">Alarm list</string>
     <string name="alarms_list_open_failed">The Clock app didn\'t open the alarm list</string>
-    <string name="dismiss_alarms_sent">Dismiss command sent to the Clock app (%1$d of %2$d). If any \"Авто: …\" alarms are left, turn them off in the alarm list</string>
-    <string name="dismiss_unsupported_opened">The Clock app doesn\'t support dismiss commands (system shell limitation) — the alarm list is open: turn off the \"Авто:\" alarms manually</string>
-    <string name="dismiss_unsupported_manual">The Clock app doesn\'t support dismiss commands (system shell limitation) — open the alarms in the Clock app and remove the \"Авто:\" labels manually</string>
+    <string name="dismiss_alarms_sent">Dismiss command sent to the Clock app (%1$d of %2$d). If any \"Авто: …\" alarms are left, turn them off via the \"Alarm list\" button</string>
+    <string name="dismiss_unsupported_manual">The Clock app doesn\'t support dismiss commands (system shell limitation) — open the alarms via the \"Alarm list\" button and remove the \"Авто:\" labels manually</string>
 
     <!-- ==== Settings dialogs: wake-up offset ==== -->
     <string name="dialog_offset_title">Wake-up before class</string>
@@ -211,14 +224,8 @@
     <string name="hint_subject_name">Subject name</string>
     <string name="cd_add_exception">Add exception</string>
     <string name="exceptions_found">Found in the schedule:</string>
-    <string name="exc_kind_all">All types</string>
-    <string name="exc_kind_lec">Lectures</string>
-    <string name="exc_kind_pr">Practice</string>
-    <string name="exc_kind_lab">Labs</string>
-    <string name="exc_kind_filter">Lesson type for the new exception</string>
     <string name="toggle_off_dismissed">Auto-alarm is off — the app\'s alarms have been removed from the Clock</string>
-    <string name="toggle_off_opened">Auto-alarm is off. The Clock app doesn\'t support dismiss commands (system shell limitation) — the alarm list is open: turn off the \"Авто:\" alarms manually</string>
-    <string name="toggle_off_manual">Auto-alarm is off. The Clock app doesn\'t support dismiss commands (system shell limitation) — open the alarms in the Clock app and remove the \"Авто:\" labels manually</string>
+    <string name="toggle_off_manual">Auto-alarm is off. The Clock app didn\'t accept the dismissal (system shell limitation) — remove the \"Авто:\" alarms manually via \"Alarm list\"</string>
     <string name="toggle_off_app_cancelled">Auto-alarm is off, the app\'s alarms have been dismissed</string>
 
     <!-- ==== Settings: custom events ==== -->
@@ -291,4 +298,7 @@
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
     <string name="notif_group_check_title">Check your group</string>
     <string name="notif_group_check_text">The schedule comes back empty — the old cache is kept. Check the group in Settings.</string>
+
+    <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
+    <string name="auto_label_prefix">Auto:</string>
 </resources>

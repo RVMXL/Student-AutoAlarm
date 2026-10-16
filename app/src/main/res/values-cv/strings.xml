@@ -45,7 +45,6 @@
     <string name="lang_subtitle">Интерфейс чĕлхине суйла — каярахпа йышăнусенче улăштарма пулать</string>
     <string name="lang_system">Системăн чĕлхи</string>
     <string name="set_language">Чĕлхе</string>
-    <string name="set_language_desc">Программа интерфейсĕн чĕлхи</string>
 
     <!-- ==== Мастер настройки ==== -->
     <string name="setup_step_of">Утăм %1$d / %2$d</string>
@@ -99,6 +98,15 @@
     <string name="home_upcoming_title">Çывӑх парасем</string>
     <string name="home_no_pairs">Пара çук</string>
 
+    <!-- ==== 0.10.0, Bug E: карточка «Мои будильники» ==== -->
+    <string name="alarms_card_title">Ман будильниксем</string>
+    <string name="alarms_empty">Будильниксем çук</string>
+    <string name="alarms_active">Будильник лартӑннӑ — кӑларӑм тӑрӑх çилӗклет</string>
+    <string name="alarms_slot_missing">Будильник системӑра тупӑнмарӗ — автоматик тепӗр хут лартӑнӑ</string>
+    <string name="alarms_engine_app">движок „Программӑра“</string>
+    <string name="alarms_engine_clock">движок „Сехетсенче“</string>
+    <string name="action_dismiss_alarms">Будильниксене сунтар</string>
+
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
     <!-- ==== Диагностика на главном ==== -->
@@ -108,6 +116,10 @@
     <string name="dialog_battery_desc">Хӑватлӑ энергосберегающи режим каҫхи тӗрӗслевӗсене пӑса пултарать.</string>
     <string name="dialog_stale_title">Расписаниене 3 кунран ытла çĕнетмен</string>
     <string name="dialog_stale_desc">Университет расписаниӗ час-часах улӑшӑнать — çӗнӗ даннӑйсене тиесле.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
+    <string name="dialog_fsi_title">Тулли экранлӑ сигнал системӑран чикӗленнӗ</string>
+    <string name="dialog_fsi_desc">Система сигналне биклӗ экран ҫине тулли экрана кӑтартма ирӗк пармасть — сигнал пӗлтерӳ пек курӑнать. Программа валли «Тулли экранлӑ пӗлтерӳсене» ирӗк пар.</string>
 
     <!-- ==== Снекбары обновления ==== -->
     <string name="err_no_target">Малтан йышӑнусенче группӑна е вӗрентекенне суйла</string>
@@ -150,6 +162,8 @@
     <string name="skip_deferred_to_night">пара ыран — будильник каçпа 00:05-ре лартӑна (халь лартсан, паян шӑнкаларӗ)</string>
     <string name="skip_clock_refused">телефон сехетӗсем команда йышӑнмарӗҫ — йышӑнусенче „Будильник çинчен асӑну“ хушӑр</string>
     <string name="skip_too_far">пара эрнерен те инҫет — будильник ӑна умӗнченех автоматик лартӑна</string>
+    <!-- 0.10.0, AL-9: DISMISS не принят, новый SET отменён — предупрежаем про двойной звонок -->
+    <string name="notif_dismiss_not_accepted">сехетсем кивӗ будильник сунтарнине йышӑнмарӗҫ — ӑна сехетсенче алӑпа сунтар, вӑлсӑр иккӗш те çилӗклет</string>
     <string name="test_alarm_label">Тест: Автобудильник ĕçлет!</string>
     <string name="test_alarm_ok">2 минутран будильник лартӑннӑ — сехетсене пӑх</string>
     <string name="test_alarm_fail">Тест будильникне ларта пулмарӗ — сехетсем йышӑнмаҫҫӗ</string>
@@ -184,13 +198,12 @@
     <string name="pair_custom_offset">%1$s малӑн вӑранса тӑни → будильник %2$s çинче</string>
     <string name="pair_common_offset">Пӗрлехи вӑранса тӑни: %1$s малӑн</string>
     <string name="btn_disable_app_alarms">Программа будильникӗсене сунтар</string>
-    <string name="disable_alarms_desc">Пӑшӑл сехетсене „Авто: Пн“…„Авто: Вс“ тӗплӗ ятсемпе сунтар командине парать. Оболочка командӑна йышӑнмасть пулсан (пӗр пайӗ Realme UI/ColorOS — системӑн чикӗленӗвӗ), программа хӑй будильник йышӗне уҫӗ — „Авто:“ ятсене алӑпа сунтар.</string>
+    <string name="disable_alarms_desc">Пӑшӑл сехетсене «Авто: Пн»…«Авто: Вс» тӗплӗ ятсемпе тата пӗр хутлӑ будильник ячӗпе сунтар командине парать. Оболочка командӑна йышӑнмасть пулсан (пӗр пайӗ Realme UI/ColorOS — системӑн чикӗленӗвӗ), «Авто:» ятсене «Будильник йышӗ» пӑшӑлпа алӑпа сунтар — программа хӑй сехетсене уҫмасть.</string>
     <string name="btn_test_alarm">Будильникне тӗрӗсле</string>
     <string name="btn_alarm_list">Будильник йышӗ</string>
     <string name="alarms_list_open_failed">Сехетсем будильник йышӗне уҫмарӗҫ</string>
-    <string name="dismiss_alarms_sent">Сунтар команди сехетсене кайрӗ (%1$d / %2$d). „Авто: …“ будильниксем юлсан — будильник йышӗнче сунтар</string>
-    <string name="dismiss_unsupported_opened">Сехетсем командӑпа сунтарма йышӑнмаҫҫӗ (оболочка чикӗленӗвӗ) — будильник йышӗне уҫрӑм: „Авто:“ ятлӑ будильниксене алӑпа сунтар</string>
-    <string name="dismiss_unsupported_manual">Сехетсем командӑпа сунтарма йышӑнмаҫҫӗ (оболочка чикӗленӗвӗ) — сехет программинче будильниксене уҫса „Авто:“ ятсене алӑпа сунтар</string>
+    <string name="dismiss_alarms_sent">Сунтар команди сехетсене кайрӗ (%1$d / %2$d). «Авто: …» будильниксем юлсан — вӗсене «Будильник йышӗ» урлӑ сунтар</string>
+    <string name="dismiss_unsupported_manual">Сехетсем командӑпа сунтарма йышӑнмаҫҫӗ (оболочка чикӗленӗвӗ) — будильниксене «Будильник йышӗ» пӑшӑлпа уҫса «Авто:» ятсене алӑпа сунтар</string>
 
     <!-- ==== Диалоги настроек: смещение подъёма ==== -->
     <string name="dialog_offset_title">Пара умӗн вӑранса тӑни</string>
@@ -211,14 +224,8 @@
     <string name="hint_subject_name">Дисциплина ячӗ</string>
     <string name="cd_add_exception">Исключени хуш</string>
     <string name="exceptions_found">Расписаниере тупӑнчӗ:</string>
-    <string name="exc_kind_all">Пур тӗс те</string>
-    <string name="exc_kind_lec">Лекцисем</string>
-    <string name="exc_kind_pr">Практикасем</string>
-    <string name="exc_kind_lab">Лабораторисем</string>
-    <string name="exc_kind_filter">Ҫӗнӗ кӑларӑм валли парин тӗсӗ</string>
     <string name="toggle_off_dismissed">Автобудильник сунтарнӑ, будильниксене сехетрен кӑларса пӑрахнӑ</string>
-    <string name="toggle_off_opened">Автобудильник сунтарнӑ. Сехетсем командӑпа сунтарма йышӑнмаҫҫӗ (оболочка чикӗленӗвӗ) — будильник йышӗне уҫрӑм: „Авто:“ ятлӑ будильниксене алӑпа сунтар</string>
-    <string name="toggle_off_manual">Автобудильник сунтарнӑ. Сехетсем командӑпа сунтарма йышӑнмаҫҫӗ (оболочка чикӗленӗвӗ) — сехет программинче будильниксене уҫса „Авто:“ ятсене алӑпа сунтар</string>
+    <string name="toggle_off_manual">Автобудильник сунтарнӑ. Сехетсем сунтарнине йышӑнмарӗҫ (оболочка чикӗленӗвӗ) — «Авто:» ятлӑ будильниксене «Будильник йышӗ» урлӑ алӑпа сунтар</string>
     <string name="toggle_off_app_cancelled">Автобудильник сунтарнӑ, программа будильникӗсене сунтарнӑ</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
@@ -291,4 +298,7 @@
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
     <string name="notif_group_check_title">Группӑна тӗрӗсле</string>
     <string name="notif_group_check_text">Расписание пушӑ килеть — малтанхи копи сыхланнӑ. Йышӑнусенче группӑна тӗрӗсле.</string>
+
+    <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
+    <string name="auto_label_prefix">Авто:</string>
 </resources>

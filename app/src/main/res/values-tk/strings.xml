@@ -45,7 +45,6 @@
     <string name="lang_subtitle">Programmanyň dilini saýla — soňra sazlamalarda üýtgedip bilersiň</string>
     <string name="lang_system">Ulgam dili</string>
     <string name="set_language">Dil</string>
-    <string name="set_language_desc">Programmanyň interfeýs dili</string>
 
     <!-- ==== Sazlama uskunasy ==== -->
     <string name="setup_step_of">Ädim %1$d / %2$d</string>
@@ -99,6 +98,15 @@
     <string name="home_upcoming_title">Ýakyn sapaklar</string>
     <string name="home_no_pairs">Sapak ýok</string>
 
+    <!-- ==== 0.10.0, Bug E: карточка «Мои будильники» ==== -->
+    <string name="alarms_card_title">Meniň ýatgyjylarym</string>
+    <string name="alarms_empty">Ýatgyjy ýok</string>
+    <string name="alarms_active">Ýatgyjy goýuldy — meýilnama boýunça çalar</string>
+    <string name="alarms_slot_missing">Ýatgyjy ulgamda tapylmady — awtomatiki gaýdan goýulýar</string>
+    <string name="alarms_engine_app">motor „Programmada“</string>
+    <string name="alarms_engine_clock">motor „Sagatda“</string>
+    <string name="action_dismiss_alarms">Ýatgyjylary öçür</string>
+
     <!-- ==== Topar goýmak netijeleri (baş + sazlamalar) ==== -->
 
     <!-- ==== Baş ekranda diagnostika ==== -->
@@ -108,6 +116,10 @@
     <string name="dialog_battery_desc">Agyr energiýa tygşytlaýjy tertip gije sabak çeredecesiniň gaýtadan barlamasyny ýatyr edip bilýär.</string>
     <string name="dialog_stale_title">Sabak çeredecesi 3 günden köp wagt täzelenmedi</string>
     <string name="dialog_stale_desc">Uniwersitetiň sabak çeredecesini köp üýtgedýärler — täze maglumatlary çek.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
+    <string name="dialog_fsi_title">Doly ekranly çalşyny ulgam çäklendirýär</string>
+    <string name="dialog_fsi_desc">Ulgam çalşyny gulpylanan ekranyň üstünde doly ekranda görkezmäge rugsat bermeýär — signal bildiriş hökmünde görkeziler. Programma üçin «Doly ekranly bildirişler» rugsadyny ber.</string>
 
     <!-- ==== Täzeleme snekbarlary ==== -->
     <string name="err_no_target">Ilki sazlamalardan topar ýa-da mugallym saýla</string>
@@ -150,6 +162,8 @@
     <string name="skip_deferred_to_night">sapak ertir — jaňawlyk gije 00:05-de goýulýar (häzir goýsa, şu gün çalpar)</string>
     <string name="skip_clock_refused">telefonuň sagady buýrugy kabul etmedi — sazlamalarda «Ýatgyjy ýada salyşy» bölümini ýak</string>
     <string name="skip_too_far">sapy hepdeden hem daşda — jaňawlyk awtomatiki onuň öňünden goýulýar</string>
+    <!-- 0.10.0, AL-9: DISMISS не принят, новый SET отменён — предупрежаем про двойной звонок -->
+    <string name="notif_dismiss_not_accepted">sagat köne ýatgyjyny öçürmegi kabul etmedi — ony sagatda el bilen öçür, ýogsasyk ikisi hem çalar</string>
     <string name="test_alarm_label">Synag: Awtomatik ýatgyjy işleýär!</string>
     <string name="test_alarm_ok">2 minutlyk ýatgyjy goýuldy — sagady barla</string>
     <string name="test_alarm_fail">Synag ýatgyjysyny goýmak başartmady — sagat jogap bermeýär</string>
@@ -184,12 +198,11 @@
     <string name="pair_custom_offset">%1$s öň oýanmak → ýatgyjy %2$s</string>
     <string name="pair_common_offset">Umumy oýanmak: %1$s öň</string>
     <string name="btn_disable_app_alarms">Programmanyň ýatgyjylaryny öçür</string>
-    <string name="disable_alarms_desc">Düwme sagada «Авто: Пн»…«Авто: Вс» bellikli ýatgyjylary öçürmek buýrugyny ýollaýar. Eger örtük buýrugy kabul etmese (Realme UI/ColorOS-yň bir bölegi — ulgamyň çäklendirmesi), programma özi ýatgyjylaryň sanawyny açar — «Авто:» belliklerini el bilen aýyr.</string>
+    <string name="disable_alarms_desc">Düwme sagada «Авто: Пн»…«Авто: Вс» anyk bellikleri we bir gezeklik ýatgyjynyň belligi boýunça öçürmek buýrugyny ýollaýar. Eger örtük buýrugy kabul etmese (Realme UI/ColorOS-yň bir bölegi — ulgamyň çäklendirmesi), «Авто:» belliklerini «Ýatgyjylaryň sanawy» düwmesi arkaly el bilen aýyr — programma özi sagady açmaýar.</string>
     <string name="btn_test_alarm">Ýatgyjy barla</string>
     <string name="btn_alarm_list">Ýatgyjylaryň sanawy</string>
     <string name="alarms_list_open_failed">Sagat ýatgyjylaryň sanawyny açmady</string>
-    <string name="dismiss_alarms_sent">Öçürmek buýrugy sagata ýollandy (%1$d / %2$d). «Авто: …» ýatgyjylary galdy bolsa — olary ýatgyjylaryň sanawynda öçür</string>
-    <string name="dismiss_unsupported_opened">Sagat buýruk bilen öçürmegi goldamaýar (örtügiň çäklemesi) — ýatgyjylaryň sanawyny açdym: «Авто:» bellikli ýatgyjylary el bilen aýyr</string>
+    <string name="dismiss_alarms_sent">Öçürmek buýrugy sagata ýollandy (%1$d / %2$d). «Авто: …» ýatgyjylary galdy bolsa — olary «Ýatgyjylaryň sanawy» arkaly öçür</string>
     <string name="dismiss_unsupported_manual">Sagat buýruk bilen öçürmegi goldamaýar (örtügiň çäklemesi) — sagat programmasynda ýatgyjylary aç we «Авто:» belliklerini el bilen aýyr</string>
 
     <!-- ==== Sazlamalaryň diialoglary: oýanmak boşlugy ==== -->
@@ -211,14 +224,8 @@
     <string name="hint_subject_name">Dersiň ady</string>
     <string name="cd_add_exception">Istisna goş</string>
     <string name="exceptions_found">Sabak çeredecesinde tapylan:</string>
-    <string name="exc_kind_all">Ähli görnüşler</string>
-    <string name="exc_kind_lec">Leksiýalar</string>
-    <string name="exc_kind_pr">Amalyýetler</string>
-    <string name="exc_kind_lab">Laboratoriýalar</string>
-    <string name="exc_kind_filter">Täze istisna üçin sapagyň görnüşi</string>
     <string name="toggle_off_dismissed">Awtobudýyjy öçürildi, programmanyň ýatgyjylary sagatdan alynardy</string>
-    <string name="toggle_off_opened">Awtobudýyjy öçürildi. Sagat buýruk bilen öçürmegi goldamaýar (örtügiň çäklemesi) — ýatgyjylaryň sanawyny açdym: «Авто:» bellikli ýatgyjylary el bilen aýyr</string>
-    <string name="toggle_off_manual">Awtobudýyjy öçürildi. Sagat buýruk bilen öçürmegi goldamaýar (örtügiň çäklemesi) — sagat programmasynda ýatgyjylary aç we «Авто:» belliklerini el bilen aýyr</string>
+    <string name="toggle_off_manual">Awtobudýyjy öçürildi. Sagat öçürmegi kabul etmedi (örtügiň çäklemesi) — «Авто:» bellikli ýatgyjylary «Ýatgyjylaryň sanawy» arkaly el bilen öçür</string>
     <string name="toggle_off_app_cancelled">Awtobudýyjy öçürildi, programmanyň ýatgyjylary aýryldy</string>
 
     <!-- ==== Sazlamalar: şahsy wakalar ==== -->
@@ -291,4 +298,7 @@
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
     <string name="notif_group_check_title">Topary barla</string>
     <string name="notif_group_check_text">Çedul boş gelýär — saklanan nusga saklanylýar. Sazlamalardan topary barla.</string>
+
+    <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
+    <string name="auto_label_prefix">Awtomatik:</string>
 </resources>

@@ -45,7 +45,6 @@
     <string name="lang_subtitle">选择应用界面语言 — 之后可在设置中更改</string>
     <string name="lang_system">跟随系统</string>
     <string name="set_language">语言</string>
-    <string name="set_language_desc">应用界面语言</string>
 
     <!-- ==== Мастер настройки ==== -->
     <string name="setup_step_of">第 %1$d 步，共 %2$d 步</string>
@@ -99,6 +98,15 @@
     <string name="home_upcoming_title">接下来的课程</string>
     <string name="home_no_pairs">没有课</string>
 
+    <!-- ==== 0.10.0, Bug E: карточка «Мои будильники» ==== -->
+    <string name="alarms_card_title">我的闹钟</string>
+    <string name="alarms_empty">暂无闹钟</string>
+    <string name="alarms_active">闹钟已设置 — 将按课表响铃</string>
+    <string name="alarms_slot_missing">系统中未找到闹钟 — 将自动重新设置</string>
+    <string name="alarms_engine_app">「应用内」引擎</string>
+    <string name="alarms_engine_clock">「系统时钟」引擎</string>
+    <string name="action_dismiss_alarms">清除闹钟</string>
+
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
     <!-- ==== Диагностика на главном ==== -->
@@ -108,6 +116,10 @@
     <string name="dialog_battery_desc">激进的省电模式可能会取消夜间的课程表复查。</string>
     <string name="dialog_stale_title">课程表已超过 3 天未更新</string>
     <string name="dialog_stale_desc">大学课程表经常变动 — 请拉取最新数据。</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
+    <string name="dialog_fsi_title">全屏响铃受系统限制</string>
+    <string name="dialog_fsi_desc">系统不允许在锁屏界面上展开响铃 — 信号将以通知形式显示。请允许本应用使用“全屏通知”。</string>
 
     <!-- ==== Снекбары обновления ==== -->
     <string name="err_no_target">请先在设置中选择班级或教师</string>
@@ -150,6 +162,8 @@
     <string name="skip_deferred_to_night">课程在明天 —— 闹钟将在夜里 00:05 自动设置（现在设置的话今天就会响）</string>
     <string name="skip_clock_refused">手机时钟应用未接受命令 — 请在应用设置中开启“闹钟提醒”</string>
     <string name="skip_too_far">课程在一周之后 —— 闹钟会在临近时自动设置</string>
+    <!-- 0.10.0, AL-9: DISMISS не принят, новый SET отменён — предупрежаем про двойной звонок -->
+    <string name="notif_dismiss_not_accepted">时钟应用未接受旧闹钟的关闭命令 — 请在时钟应用中手动将其关闭，否则两个闹钟可能同时响起</string>
     <string name="test_alarm_label">测试：自动闹钟运行中！</string>
     <string name="test_alarm_ok">已设置 2 分钟后的闹钟 — 去时钟应用里看看</string>
     <string name="test_alarm_fail">测试闹钟设置失败 — 时钟应用没有响应</string>
@@ -184,13 +198,12 @@
     <string name="pair_custom_offset">提前 %1$s 起床 → %2$s 响铃</string>
     <string name="pair_common_offset">统一起床：提前 %1$s</string>
     <string name="btn_disable_app_alarms">关闭应用设置的闹钟</string>
-    <string name="disable_alarms_desc">此按钮会按精确标签«Авто: Пн»…«Авто: Вс»向时钟应用发送关闭命令。如果系统不接受该命令（部分 Realme UI/ColorOS 受系统限制），应用会自行打开闹钟列表 — 请手动移除«Авто:»标签。</string>
+    <string name="disable_alarms_desc">此按钮会按精确标签«Авто: Пн»…«Авто: Вс»和一次性闹钟标签向时钟应用发送关闭命令。如果系统不接受该命令（部分 Realme UI/ColorOS 受系统限制），请通过“闹钟列表”按钮手动移除«Авто:»标签 — 应用不会自行打开时钟应用。</string>
     <string name="btn_test_alarm">测试闹钟</string>
     <string name="btn_alarm_list">闹钟列表</string>
     <string name="alarms_list_open_failed">无法打开时钟应用的闹钟列表</string>
-    <string name="dismiss_alarms_sent">关闭命令已发送到时钟应用（%1$d/%2$d）。如果«Авто: …»闹钟还在，请在闹钟列表中手动关闭</string>
-    <string name="dismiss_unsupported_opened">时钟应用不支持通过命令关闭（系统界面限制）— 已为你打开闹钟列表：请手动移除«Авто:»标签的闹钟</string>
-    <string name="dismiss_unsupported_manual">时钟应用不支持通过命令关闭（系统界面限制）— 请在时钟应用中打开闹钟，手动移除«Авто:»标签</string>
+    <string name="dismiss_alarms_sent">关闭命令已发送到时钟应用（%1$d/%2$d）。如果«Авто: …»闹钟还在 — 请通过“闹钟列表”手动关闭</string>
+    <string name="dismiss_unsupported_manual">时钟应用不支持通过命令关闭（系统界面限制）— 请通过“闹钟列表”按钮打开闹钟，手动移除«Авто:»标签</string>
 
     <!-- ==== Диалоги настроек: смещение подъёма ==== -->
     <string name="dialog_offset_title">课前的起床时间</string>
@@ -211,14 +224,8 @@
     <string name="hint_subject_name">课程名称</string>
     <string name="cd_add_exception">添加例外</string>
     <string name="exceptions_found">在课程表中找到：</string>
-    <string name="exc_kind_all">所有类型</string>
-    <string name="exc_kind_lec">讲座</string>
-    <string name="exc_kind_pr">实践课</string>
-    <string name="exc_kind_lab">实验课</string>
-    <string name="exc_kind_filter">新排除规则的课程类型</string>
     <string name="toggle_off_dismissed">自动闹钟已关闭，应用设置的闹钟已从系统时钟移除</string>
-    <string name="toggle_off_opened">自动闹钟已关闭。时钟应用不支持通过命令关闭（系统界面限制）— 已为你打开闹钟列表：请手动移除«Авто:»标签的闹钟</string>
-    <string name="toggle_off_manual">自动闹钟已关闭。时钟应用不支持通过命令关闭（系统界面限制）— 请在时钟应用中打开闹钟，手动移除«Авто:»标签</string>
+    <string name="toggle_off_manual">自动闹钟已关闭。时钟应用未接受关闭命令（系统界面限制）— 请通过“闹钟列表”手动移除«Авто:»标签的闹钟</string>
     <string name="toggle_off_app_cancelled">自动闹钟已关闭，应用内的闹钟已取消</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
@@ -291,4 +298,7 @@
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
     <string name="notif_group_check_title">请检查班级</string>
     <string name="notif_group_check_text">课表返回为空 — 旧缓存已保留。请在设置中检查班级。</string>
+
+    <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
+    <string name="auto_label_prefix">自动：</string>
 </resources>

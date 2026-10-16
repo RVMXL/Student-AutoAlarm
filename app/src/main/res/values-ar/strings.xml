@@ -45,7 +45,6 @@
     <string name="lang_subtitle">اختر لغة التطبيق — يمكنك تغييرها لاحقًا من الإعدادات</string>
     <string name="lang_system">لغة النظام</string>
     <string name="set_language">اللغة</string>
-    <string name="set_language_desc">لغة واجهة التطبيق</string>
 
     <!-- ==== Мастер настройки ==== -->
     <string name="setup_step_of">الخطوة %1$d من %2$d</string>
@@ -99,6 +98,15 @@
     <string name="home_upcoming_title">الحصص القادمة</string>
     <string name="home_no_pairs">لا توجد حصص</string>
 
+    <!-- ==== 0.10.0, Bug E: карточка «Мои будильники» ==== -->
+    <string name="alarms_card_title">منبّهاتي</string>
+    <string name="alarms_empty">لا توجد منبّهات</string>
+    <string name="alarms_active">المنبّه مضبوط — سيرن وفق الجدول</string>
+    <string name="alarms_slot_missing">المنبّه غير موجود في النظام — سيُعاد ضبطه تلقائيًا</string>
+    <string name="alarms_engine_app">محرك «في التطبيق»</string>
+    <string name="alarms_engine_clock">محرك «في الساعة»</string>
+    <string name="action_dismiss_alarms">إزالة المنبّهات</string>
+
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
     <!-- ==== Диагностика на главном ==== -->
@@ -108,6 +116,10 @@
     <string name="dialog_battery_desc">قد يُلغي وضع توفير الطاقة العدواني إعادة التحقق الليلية من الجدول الدراسي.</string>
     <string name="dialog_stale_title">لم يُحدَّث الجدول الدراسي منذ أكثر من 3 أيام</string>
     <string name="dialog_stale_desc">يُعدَّل جدول الجامعة كثيرًا — اجلب أحدث البيانات.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
+    <string name="dialog_fsi_title">الرنين بملء الشاشة مقيَّد من النظام</string>
+    <string name="dialog_fsi_desc">لا يسمح النظام بفتح الرنين فوق شاشة القفل — سيظهر المنبّه كإشعار عادي. اسمح بخيار «الإشعارات بملء الشاشة» لهذا التطبيق.</string>
 
     <!-- ==== Снекбары обновления ==== -->
     <string name="err_no_target">اختر أولًا مجموعة أو أستاذًا في الإعدادات</string>
@@ -150,6 +162,8 @@
     <string name="skip_deferred_to_night">الحصص غدًا — سيُضبط المنبّه ليلًا عند 00:05 (لو ضُبط الآن لرنّ اليوم)</string>
     <string name="skip_clock_refused">تطبيق الساعة المدمج لم يقبل الأمر — فعّل «التذكير بالمنبّه» في الإعدادات</string>
     <string name="skip_too_far">الدرس أبعد من أسبوع — سيُضبط المنبّه تلقائيًا قبيل موعده</string>
+    <!-- 0.10.0, AL-9: DISMISS не принят, новый SET отменён — предупрежаем про двойной звонок -->
+    <string name="notif_dismiss_not_accepted">لم تقبل الساعة تعطيل المنبّه القديم — أزِله من الساعة يدويًا، وإلا فقد يرنّ كلاهما</string>
     <string name="test_alarm_label">اختبار: المنبّه التلقائي يعمل!</string>
     <string name="test_alarm_ok">تم ضبط منبّه بعد دقيقتين — تحقق من تطبيق الساعة</string>
     <string name="test_alarm_fail">تعذّر ضبط المنبّه التجريبي — تطبيق الساعة لا يستجيب</string>
@@ -184,13 +198,12 @@
     <string name="pair_custom_offset">الاستيقاظ قبل بـ %1$s → المنبّه في %2$s</string>
     <string name="pair_common_offset">الاستيقاظ العام: قبل بـ %1$s</string>
     <string name="btn_disable_app_alarms">تعطيل منبّهات التطبيق</string>
-    <string name="disable_alarms_desc">يرسل الزر إلى الساعة أمر تعطيل وفق التسميات الدقيقة «Авто: Пн»…«Авто: Вс». إذا كانت الواجهة لا تقبل الأمر (جزء من Realme UI/ColorOS — قيد من النظام)، فسيفتح التطبيق قائمة المنبّهات بنفسه — أزل تسميات «Авто:» يدويًا.</string>
+    <string name="disable_alarms_desc">يرسل الزر إلى الساعة أمر تعطيل وفق التسميات الدقيقة «Авто: Пн»…«Авто: Вс» وتسمية المنبّه الأحادي. إذا كانت الواجهة لا تقبل الأمر (جزء من Realme UI/ColorOS — قيد من النظام)، فأزل تسميات «Авто:» يدويًا عبر زر «قائمة المنبّهات» — التطبيق لا يفتح الساعة بنفسه.</string>
     <string name="btn_test_alarm">اختبار المنبّه</string>
     <string name="btn_alarm_list">قائمة المنبّهات</string>
     <string name="alarms_list_open_failed">لم يفتح تطبيق الساعة قائمة المنبّهات</string>
-    <string name="dismiss_alarms_sent">أُرسل أمر التعطيل إلى الساعة (%1$d من %2$d). إذا بقيت منبّهات «Авто: …» — عطّلها من قائمة المنبّهات</string>
-    <string name="dismiss_unsupported_opened">لا تدعم الساعة التعطيل بالأمر (قيد من الواجهة) — فتح التطبيق قائمة المنبّهات: أزل المنبّهات ذات تسمية «Авто:» يدويًا</string>
-    <string name="dismiss_unsupported_manual">لا تدعم الساعة التعطيل بالأمر (قيد من الواجهة) — افتح المنبّهات في تطبيق الساعة وأزل تسميات «Авто:» يدويًا</string>
+    <string name="dismiss_alarms_sent">أُرسل أمر التعطيل إلى الساعة (%1$d من %2$d). إذا بقيت منبّهات «Авто: …» — عطّلها عبر «قائمة المنبّهات»</string>
+    <string name="dismiss_unsupported_manual">لا تدعم الساعة التعطيل بالأمر (قيد من الواجهة) — افتح المنبّهات عبر زر «قائمة المنبّهات» وأزل تسميات «Авто:» يدويًا</string>
 
     <!-- ==== Диалоги настроек: смещение подъёма ==== -->
     <string name="dialog_offset_title">الاستيقاظ قبل الحصة</string>
@@ -211,14 +224,8 @@
     <string name="hint_subject_name">اسم المادة</string>
     <string name="cd_add_exception">إضافة استثناء</string>
     <string name="exceptions_found">موجود في الجدول الدراسي:</string>
-    <string name="exc_kind_all">كل الأنواع</string>
-    <string name="exc_kind_lec">محاضرات</string>
-    <string name="exc_kind_pr">تمارين عملية</string>
-    <string name="exc_kind_lab">أعمال معملية</string>
-    <string name="exc_kind_filter">نوع الحصة للاستثناء الجديد</string>
     <string name="toggle_off_dismissed">تم إيقاف المنبّه التلقائي وإزالة منبّهات التطبيق من الساعة</string>
-    <string name="toggle_off_opened">تم إيقاف المنبّه التلقائي. لا تدعم الساعة التعطيل بالأمر (قيد من الواجهة) — فتح التطبيق قائمة المنبّهات: أزل المنبّهات ذات تسمية «Авто:» يدويًا</string>
-    <string name="toggle_off_manual">تم إيقاف المنبّه التلقائي. لا تدعم الساعة التعطيل بالأمر (قيد من الواجهة) — افتح المنبّهات في تطبيق الساعة وأزل تسميات «Авто:» يدويًا</string>
+    <string name="toggle_off_manual">تم إيقاف المنبّه التلقائي. لم تقبل الساعة التعطيل (قيد من الواجهة) — أزل المنبّهات ذات تسمية «Авто:» يدويًا عبر «قائمة المنبّهات»</string>
     <string name="toggle_off_app_cancelled">أُوقف المنبّه التلقائي وأُزيلت منبهات التطبيق</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
@@ -291,4 +298,7 @@
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
     <string name="notif_group_check_title">تحقق من المجموعة</string>
     <string name="notif_group_check_text">يصل الجدول فارغًا — النسخة المحفوظة مؤقتًا باقية. تحقق من المجموعة في الإعدادات.</string>
+
+    <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
+    <string name="auto_label_prefix">تلقائي:</string>
 </resources>

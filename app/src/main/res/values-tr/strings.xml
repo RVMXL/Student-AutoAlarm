@@ -45,7 +45,6 @@
     <string name="lang_subtitle">Arayüz dilini seç — daha sonra ayarlardan değiştirebilirsin</string>
     <string name="lang_system">Sistem dili</string>
     <string name="set_language">Dil</string>
-    <string name="set_language_desc">Uygulamanın arayüz dili</string>
 
     <!-- ==== Мастер настройки ==== -->
     <string name="setup_step_of">Adım %1$d/%2$d</string>
@@ -99,6 +98,15 @@
     <string name="home_upcoming_title">Yaklaşan dersler</string>
     <string name="home_no_pairs">Ders yok</string>
 
+    <!-- ==== 0.10.0, Bug E: карточка «Мои будильники» ==== -->
+    <string name="alarms_card_title">Alarmlarım</string>
+    <string name="alarms_empty">Alarm yok</string>
+    <string name="alarms_active">Alarm kurulu — programa göre çalacak</string>
+    <string name="alarms_slot_missing">Alarm sistemde bulunamadı — otomatik olarak yeniden kurulacak</string>
+    <string name="alarms_engine_app">uygulama içi motoru</string>
+    <string name="alarms_engine_clock">saat içi motoru</string>
+    <string name="action_dismiss_alarms">Alarmları kaldır</string>
+
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
     <!-- ==== Диагностика на главном ==== -->
@@ -108,6 +116,10 @@
     <string name="dialog_battery_desc">Agresif güç tasarrufu modu, gece ders programı kontrolünü iptal edebilir.</string>
     <string name="dialog_stale_title">Ders programı 3 günden uzun süredir güncellenmedi</string>
     <string name="dialog_stale_desc">Üniversitenin programı sık değişir — güncel verileri çek.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
+    <string name="dialog_fsi_title">Tam ekran zil sistem tarafından kısıtlandı</string>
+    <string name="dialog_fsi_desc">Sistem, zilin kilit ekranının üzerinde açılmasına izin vermiyor — sinyal bildirim olarak görünecek. Uygulamaya “Tam ekran bildirimleri” iznini ver.</string>
 
     <!-- ==== Снекбары обновления ==== -->
     <string name="err_no_target">Önce ayarlardan grup veya öğretim üyesi seç</string>
@@ -150,6 +162,8 @@
     <string name="skip_deferred_to_night">ders yarın — alarm gece 00:05\'te kurulacak (şimdi kurulsa bugün çalardı)</string>
     <string name="skip_clock_refused">telefonun Saat uygulaması komutu kabul etmedi — ayarlarda “Alarm hatırlatması” seçeneğini aç</string>
     <string name="skip_too_far">ders bir haftadan daha uzakta — alarm kendiliğinden öncesinde kurulacak</string>
+    <!-- 0.10.0, AL-9: DISMISS не принят, новый SET отменён — предупрежаем про двойной звонок -->
+    <string name="notif_dismiss_not_accepted">Saat uygulaması eski alarmı kapatma komutunu kabul etmedi — Saat uygulamasından elle kapat, yoksa iki alarm da çalabilir</string>
     <string name="test_alarm_label">Test: Otomatik alarm çalışıyor!</string>
     <string name="test_alarm_ok">2 dakika sonraya alarm kuruldu — Saat uygulamasını kontrol et</string>
     <string name="test_alarm_fail">Test alarmı kurulamadı — Saat uygulaması yanıt vermiyor</string>
@@ -184,13 +198,12 @@
     <string name="pair_custom_offset">%1$s önce kalk → alarm %2$s</string>
     <string name="pair_common_offset">Ortak kalkma: %1$s önce</string>
     <string name="btn_disable_app_alarms">Uygulamanın alarmlarını kapat</string>
-    <string name="disable_alarms_desc">Düğme, «Авто: Пн»…«Авто: Вс» etiketlerine göre Saat uygulamasına kapatma komutu gönderir. Sistem komutu kabul etmezse (bazı Realme UI/ColorOS sürümlerinde sistem kısıtlaması) uygulama alarm listesini kendisi açar — «Авто:» etiketlerini elle kaldır.</string>
+    <string name="disable_alarms_desc">Düğme, «Авто: Пн»…«Авто: Вс» etiketlerine ve tek seferlik alarm etiketine göre Saat uygulamasına kapatma komutu gönderir. Arayüz komutu kabul etmezse (bazı Realme UI/ColorOS sürümlerinde sistem kısıtlaması) «Авто:» etiketlerini “Alarm listesi” düğmesiyle elle kaldır — uygulama Saat uygulamasını kendisi açmaz.</string>
     <string name="btn_test_alarm">Alarmı test et</string>
     <string name="btn_alarm_list">Alarm listesi</string>
     <string name="alarms_list_open_failed">Saat uygulaması alarm listesini açmadı</string>
-    <string name="dismiss_alarms_sent">Kapatma komutu Saat uygulamasına gönderildi (%1$d/%2$d). «Авто: …» alarmları hâlâ duruyorsa alarm listesinden elle kapat</string>
-    <string name="dismiss_unsupported_opened">Saat uygulaması komutla kapatmayı desteklemiyor (arayüz kısıtlaması) — alarm listesi açıldı: «Авто:» etiketli alarmları elle kaldır</string>
-    <string name="dismiss_unsupported_manual">Saat uygulaması komutla kapatmayı desteklemiyor (arayüz kısıtlaması) — alarmları Saat uygulamasında aç ve «Авто:» etiketlerini elle kaldır</string>
+    <string name="dismiss_alarms_sent">Kapatma komutu Saat uygulamasına gönderildi (%1$d/%2$d). «Авто: …» alarmları hâlâ duruyorsa “Alarm listesi” üzerinden elle kapat</string>
+    <string name="dismiss_unsupported_manual">Saat uygulaması komutla kapatmayı desteklemiyor (arayüz kısıtlaması) — alarmları “Alarm listesi” düğmesiyle aç ve «Авто:» etiketlerini elle kaldır</string>
 
     <!-- ==== Диалоги настроек: смещение подъёма ==== -->
     <string name="dialog_offset_title">Ders öncesi kalkma</string>
@@ -211,14 +224,8 @@
     <string name="hint_subject_name">Ders adı</string>
     <string name="cd_add_exception">İstisna ekle</string>
     <string name="exceptions_found">Ders programında bulunanlar:</string>
-    <string name="exc_kind_all">Tüm türler</string>
-    <string name="exc_kind_lec">Teorik dersler</string>
-    <string name="exc_kind_pr">Uygulamalar</string>
-    <string name="exc_kind_lab">Laboratuvarlar</string>
-    <string name="exc_kind_filter">Yeni istisna için ders türü</string>
     <string name="toggle_off_dismissed">Otomatik alarm kapatıldı, uygulamanın alarmları saatten kaldırıldı</string>
-    <string name="toggle_off_opened">Otomatik alarm kapatıldı. Saat uygulaması komutla kapatmayı desteklemiyor (arayüz kısıtlaması) — alarm listesi açıldı: «Авто:» etiketli alarmları elle kaldır</string>
-    <string name="toggle_off_manual">Otomatik alarm kapatıldı. Saat uygulaması komutla kapatmayı desteklemiyor (arayüz kısıtlaması) — alarmları Saat uygulamasında aç ve «Авто:» etiketlerini elle kaldır</string>
+    <string name="toggle_off_manual">Otomatik alarm kapatıldı. Saat uygulaması kapatmayı kabul etmedi (arayüz kısıtlaması) — «Авто:» etiketli alarmları “Alarm listesi” üzerinden elle kaldır</string>
     <string name="toggle_off_app_cancelled">Otomatik alarm kapatıldı, uygulamanın alarmları kaldırıldı</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
@@ -291,4 +298,7 @@
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
     <string name="notif_group_check_title">Grubunu kontrol et</string>
     <string name="notif_group_check_text">Ders programı boş geliyor — kayıtlı önbellek korunuyor. Ayarlardan grubu kontrol et.</string>
+
+    <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
+    <string name="auto_label_prefix">Oto:</string>
 </resources>

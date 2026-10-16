@@ -45,7 +45,6 @@
     <string name="lang_subtitle">Elige el idioma de la interfaz — luego puedes cambiarlo en Ajustes</string>
     <string name="lang_system">Idioma del sistema</string>
     <string name="set_language">Idioma</string>
-    <string name="set_language_desc">El idioma de la interfaz de la app</string>
 
     <!-- ==== Asistente de configuración ==== -->
     <string name="setup_step_of">Paso %1$d de %2$d</string>
@@ -99,6 +98,15 @@
     <string name="home_upcoming_title">Próximas clases</string>
     <string name="home_no_pairs">No hay clases</string>
 
+    <!-- ==== 0.10.0, Bug E: карточка «Мои будильники» ==== -->
+    <string name="alarms_card_title">Mis alarmas</string>
+    <string name="alarms_empty">No hay alarmas</string>
+    <string name="alarms_active">La alarma está puesta — sonará según el horario</string>
+    <string name="alarms_slot_missing">La alarma no aparece en el sistema — se volverá a programar automáticamente</string>
+    <string name="alarms_engine_app">motor «En la app»</string>
+    <string name="alarms_engine_clock">motor «En el reloj»</string>
+    <string name="action_dismiss_alarms">Quitar las alarmas</string>
+
     <!-- ==== Resultados de la programación (principal + ajustes) ==== -->
 
     <!-- ==== Diagnóstico en la pantalla principal ==== -->
@@ -108,6 +116,10 @@
     <string name="dialog_battery_desc">El modo de ahorro de energía agresivo puede cancelar la re-verificación nocturna del horario.</string>
     <string name="dialog_stale_title">El horario no se actualiza hace más de 3 días</string>
     <string name="dialog_stale_desc">Los horarios de la universidad cambian seguido — descarga datos frescos.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
+    <string name="dialog_fsi_title">El sonido a pantalla completa está restringido por el sistema</string>
+    <string name="dialog_fsi_desc">El sistema no permite desplegar el sonido de la alarma sobre la pantalla de bloqueo — la señal se mostrará como notificación. Permite las \"Notificaciones de pantalla completa\" para la app.</string>
 
     <!-- ==== Snackbars de actualización ==== -->
     <string name="err_no_target">Primero elige un grupo o un profesor en Ajustes</string>
@@ -150,6 +162,8 @@
     <string name="skip_deferred_to_night">la clase es mañana — la alarma se programará esta noche a las 00:05 (si se pusiera ahora, sonaría hoy)</string>
     <string name="skip_clock_refused">la app de reloj del teléfono no aceptó el comando — activa \"Recordatorio de alarma\" en los ajustes</string>
     <string name="skip_too_far">la clase es a más de una semana — la alarma se activará automáticamente antes</string>
+    <!-- 0.10.0, AL-9: DISMISS не принят, новый SET отменён — предупрежаем про двойной звонок -->
+    <string name="notif_dismiss_not_accepted">el reloj no aceptó la desactivación de la alarma anterior — quítala manualmente en el reloj, de lo contrario pueden sonar ambas</string>
     <string name="test_alarm_label">¡Prueba: la Autoalarma funciona!</string>
     <string name="test_alarm_ok">Alarma programada para dentro de 2 minutos — revisa el reloj</string>
     <string name="test_alarm_fail">No se pudo programar la alarma de prueba — el reloj no responde</string>
@@ -184,13 +198,12 @@
     <string name="pair_custom_offset">Levantarte %1$s antes → alarma a las %2$s</string>
     <string name="pair_common_offset">Levantarse general: %1$s antes</string>
     <string name="btn_disable_app_alarms">Desactivar las alarmas de la app</string>
-    <string name="disable_alarms_desc">El botón envía al reloj un comando de desactivación con las etiquetas exactas \"Авто: Пн\"…\"Авто: Вс\". Si la capa del sistema no acepta el comando (en algunas versiones de Realme UI/ColorOS es una limitación del sistema), la app abrirá por sí misma la lista de alarmas — quita las etiquetas \"Авто:\" a mano.</string>
+    <string name="disable_alarms_desc">El botón envía al reloj un comando de desactivación con las etiquetas exactas \"Авто: Пн\"…\"Авто: Вс\" y la etiqueta de la alarma única. Si la capa del sistema no acepta el comando (en algunas versiones de Realme UI/ColorOS es una limitación del sistema), quita las etiquetas \"Авто:\" a mano con el botón \"Lista de alarmas\" — la app no abre el reloj por sí sola.</string>
     <string name="btn_test_alarm">Probar la alarma</string>
     <string name="btn_alarm_list">Lista de alarmas</string>
     <string name="alarms_list_open_failed">El reloj no abrió la lista de alarmas</string>
-    <string name="dismiss_alarms_sent">Comando de desactivación enviado al reloj (%1$d de %2$d). Si quedan alarmas \"Авто: …\", desactívalas en la lista de alarmas</string>
-    <string name="dismiss_unsupported_opened">El reloj no admite la desactivación por comando (limitación de la capa del sistema) — se abrió la lista de alarmas: quita a mano las alarmas con la etiqueta \"Авто:\"</string>
-    <string name="dismiss_unsupported_manual">El reloj no admite la desactivación por comando (limitación de la capa del sistema) — abre las alarmas en la app de reloj y quita las etiquetas \"Авто:\" a mano</string>
+    <string name="dismiss_alarms_sent">Comando de desactivación enviado al reloj (%1$d de %2$d). Si quedan alarmas \"Авто: …\", desactívalas con \"Lista de alarmas\"</string>
+    <string name="dismiss_unsupported_manual">El reloj no admite la desactivación por comando (limitación de la capa del sistema) — abre las alarmas con el botón \"Lista de alarmas\" y quita las etiquetas \"Авто:\" a mano</string>
 
     <!-- ==== Diálogos de ajustes: hora de levantarse ==== -->
     <string name="dialog_offset_title">Levantarte antes de la clase</string>
@@ -211,14 +224,8 @@
     <string name="hint_subject_name">Nombre de la materia</string>
     <string name="cd_add_exception">Agregar excepción</string>
     <string name="exceptions_found">Encontradas en el horario:</string>
-    <string name="exc_kind_all">Todos los tipos</string>
-    <string name="exc_kind_lec">Clases teóricas</string>
-    <string name="exc_kind_pr">Prácticas</string>
-    <string name="exc_kind_lab">Laboratorios</string>
-    <string name="exc_kind_filter">Tipo de clase para la nueva exclusión</string>
     <string name="toggle_off_dismissed">Alarma automática desactivada; las alarmas de la app se quitaron del reloj</string>
-    <string name="toggle_off_opened">Alarma automática desactivada. El reloj no admite la desactivación por comando (limitación de la capa del sistema) — se abrió la lista de alarmas: quita a mano las alarmas con la etiqueta \"Авто:\"</string>
-    <string name="toggle_off_manual">Alarma automática desactivada. El reloj no admite la desactivación por comando (limitación de la capa del sistema) — abre las alarmas en la app de reloj y quita las etiquetas \"Авто:\" a mano</string>
+    <string name="toggle_off_manual">Alarma automática desactivada. El reloj no aceptó la desactivación (limitación de la capa del sistema) — quita manualmente las alarmas con la etiqueta \"Авто:\" usando \"Lista de alarmas\"</string>
     <string name="toggle_off_app_cancelled">Alarma automática apagada, alarmas de la app eliminadas</string>
 
     <!-- ==== Ajustes: eventos propios ==== -->
@@ -291,4 +298,7 @@
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
     <string name="notif_group_check_title">Comprueba tu grupo</string>
     <string name="notif_group_check_text">El horario llega vacío — la caché guardada se mantiene. Comprueba el grupo en Ajustes.</string>
+
+    <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
+    <string name="auto_label_prefix">Auto:</string>
 </resources>

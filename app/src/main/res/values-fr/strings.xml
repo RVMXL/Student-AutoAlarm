@@ -45,7 +45,6 @@
     <string name="lang_subtitle">Choisis la langue de l\'appli — tu pourras la changer plus tard dans les paramètres</string>
     <string name="lang_system">Langue du système</string>
     <string name="set_language">Langue</string>
-    <string name="set_language_desc">Langue de l\'interface de l\'appli</string>
 
     <!-- ==== Мастер настройки ==== -->
     <string name="setup_step_of">Étape %1$d sur %2$d</string>
@@ -99,6 +98,15 @@
     <string name="home_upcoming_title">Prochains cours</string>
     <string name="home_no_pairs">Aucun cours</string>
 
+    <!-- ==== 0.10.0, Bug E: карточка «Мои будильники» ==== -->
+    <string name="alarms_card_title">Mes réveils</string>
+    <string name="alarms_empty">Aucun réveil</string>
+    <string name="alarms_active">Le réveil est en place — il sonnera selon l\'emploi du temps</string>
+    <string name="alarms_slot_missing">Le réveil est introuvable dans le système — il sera reprogrammé automatiquement</string>
+    <string name="alarms_engine_app">moteur « Dans l\'appli »</string>
+    <string name="alarms_engine_clock">moteur « Dans l\'horloge »</string>
+    <string name="action_dismiss_alarms">Retirer les réveils</string>
+
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
     <!-- ==== Диагностика на главном ==== -->
@@ -108,6 +116,10 @@
     <string name="dialog_battery_desc">Le mode d\'économie d\'énergie agressif peut supprimer la revérification nocturne de l\'emploi du temps.</string>
     <string name="dialog_stale_title">L\'emploi du temps n\'a pas été actualisé depuis plus de 3 jours</string>
     <string name="dialog_stale_desc">L\'emploi du temps de l\'université change souvent — importe des données à jour.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
+    <string name="dialog_fsi_title">La sonnerie plein écran est limitée par le système</string>
+    <string name="dialog_fsi_desc">Le système ne permet pas de déployer la sonnerie par-dessus l\'écran de verrouillage — le signal s\'affichera comme notification. Autorise les « Notifications plein écran » pour l\'appli.</string>
 
     <!-- ==== Снекбары обновления ==== -->
     <string name="err_no_target">Choisis d\'abord un groupe ou un enseignant dans les paramètres</string>
@@ -150,6 +162,8 @@
     <string name="skip_deferred_to_night">le cours est demain — le réveil sera programmé cette nuit à 00:05 (mis maintenant, il sonnerait aujourd\'hui)</string>
     <string name="skip_clock_refused">l\'horloge du téléphone n\'a pas accepté la commande — active le « Rappel du réveil » dans les paramètres</string>
     <string name="skip_too_far">le cours est dans plus d’une semaine — le réveil sera programmé automatiquement à l’approche</string>
+    <!-- 0.10.0, AL-9: DISMISS не принят, новый SET отменён — предупрежаем про двойной звонок -->
+    <string name="notif_dismiss_not_accepted">l\'horloge n\'a pas accepté la désactivation de l\'ancien réveil — retire-le manuellement dans l\'horloge, sinon les deux peuvent sonner</string>
     <string name="test_alarm_label">Test : l\'Auto-réveil fonctionne !</string>
     <string name="test_alarm_ok">Réveil programmé dans 2 minutes — vérifie l\'horloge</string>
     <string name="test_alarm_fail">Impossible de programmer le réveil de test — l\'horloge ne répond pas</string>
@@ -184,13 +198,12 @@
     <string name="pair_custom_offset">Lever %1$s avant → réveil à %2$s</string>
     <string name="pair_common_offset">Lever général : %1$s avant</string>
     <string name="btn_disable_app_alarms">Désactiver les réveils de l\'appli</string>
-    <string name="disable_alarms_desc">Le bouton envoie à l\'horloge une commande de désactivation par les libellés exacts «Авто: Пн»…«Авто: Вс». Si la surcouche n\'accepte pas la commande (une partie de Realme UI/ColorOS — limitation du système), l\'appli ouvrira elle-même la liste des réveils — supprime les libellés «Авто:» manuellement.</string>
+    <string name="disable_alarms_desc">Le bouton envoie à l\'horloge une commande de désactivation par les libellés exacts «Авто: Пн»…«Авто: Вс» et le libellé du réveil unique. Si la surcouche n\'accepte pas la commande (une partie de Realme UI/ColorOS — limitation du système), supprime les libellés «Авто:» manuellement via le bouton « Liste des réveils » — l\'appli n\'ouvre pas l\'horloge elle-même.</string>
     <string name="btn_test_alarm">Tester le réveil</string>
     <string name="btn_alarm_list">Liste des réveils</string>
     <string name="alarms_list_open_failed">L\'horloge n\'a pas ouvert la liste des réveils</string>
-    <string name="dismiss_alarms_sent">Commande de désactivation envoyée à l\'horloge (%1$d sur %2$d). S\'il reste des réveils «Авто: …», désactive-les dans la liste des réveils</string>
-    <string name="dismiss_unsupported_opened">L\'horloge ne prend pas en charge la désactivation par commande (limitation de la surcouche) — l\'appli a ouvert la liste des réveils : supprime manuellement les réveils libellés «Авто:»</string>
-    <string name="dismiss_unsupported_manual">L\'horloge ne prend pas en charge la désactivation par commande (limitation de la surcouche) — ouvre les réveils dans l\'appli Horloge et supprime les libellés «Авто:» manuellement</string>
+    <string name="dismiss_alarms_sent">Commande de désactivation envoyée à l\'horloge (%1$d sur %2$d). S\'il reste des réveils «Авто: …», désactive-les via « Liste des réveils »</string>
+    <string name="dismiss_unsupported_manual">L\'horloge ne prend pas en charge la désactivation par commande (limitation de la surcouche) — ouvre les réveils via le bouton « Liste des réveils » et supprime les libellés «Авто:» manuellement</string>
 
     <!-- ==== Диалоги настроек: смещение подъёма ==== -->
     <string name="dialog_offset_title">Lever avant le cours</string>
@@ -211,14 +224,8 @@
     <string name="hint_subject_name">Nom de la matière</string>
     <string name="cd_add_exception">Ajouter une exception</string>
     <string name="exceptions_found">Trouvé dans l\'emploi du temps :</string>
-    <string name="exc_kind_all">Tous les types</string>
-    <string name="exc_kind_lec">Cours magistraux</string>
-    <string name="exc_kind_pr">Travaux dirigés</string>
-    <string name="exc_kind_lab">Travaux pratiques</string>
-    <string name="exc_kind_filter">Type de séance pour la nouvelle exception</string>
     <string name="toggle_off_dismissed">Réveil auto désactivé — les alarmes de l\'appli ont été retirées de l\'horloge</string>
-    <string name="toggle_off_opened">Réveil auto désactivé. L\'horloge ne prend pas en charge la désactivation par commande (limitation de la surcouche) — l\'appli a ouvert la liste des réveils : supprime manuellement les réveils libellés «Авто:»</string>
-    <string name="toggle_off_manual">Réveil auto désactivé. L\'horloge ne prend pas en charge la désactivation par commande (limitation de la surcouche) — ouvre les réveils dans l\'appli Horloge et supprime les libellés «Авто:» manuellement</string>
+    <string name="toggle_off_manual">Réveil auto désactivé. L\'horloge n\'a pas accepté la désactivation (limitation de la surcouche) — supprime manuellement les réveils libellés «Авто:» via « Liste des réveils »</string>
     <string name="toggle_off_app_cancelled">Réveil auto désactivé, alarmes de l\'appli supprimées</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
@@ -291,4 +298,7 @@
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
     <string name="notif_group_check_title">Vérifie ton groupe</string>
     <string name="notif_group_check_text">L\'emploi du temps arrive vide — le cache enregistré est conservé. Vérifie le groupe dans les paramètres.</string>
+
+    <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
+    <string name="auto_label_prefix">Auto :</string>
 </resources>

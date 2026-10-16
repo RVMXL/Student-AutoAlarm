@@ -45,7 +45,6 @@
     <string name="lang_subtitle">Интерфейс тілін таңда — кейін параметрлерде өзгертуге болады</string>
     <string name="lang_system">Жүйе тілі</string>
     <string name="set_language">Тіл</string>
-    <string name="set_language_desc">Қолданбаның интерфейс тілі</string>
 
     <!-- ==== Мастер настройки ==== -->
     <string name="setup_step_of">Қадам %1$d / %2$d</string>
@@ -99,6 +98,15 @@
     <string name="home_upcoming_title">Алдағы сабақтар</string>
     <string name="home_no_pairs">Жұп жоқ</string>
 
+    <!-- ==== 0.10.0, Bug E: карточка «Мои будильники» ==== -->
+    <string name="alarms_card_title">Менің оятқыштарым</string>
+    <string name="alarms_empty">Оятқыштар жоқ</string>
+    <string name="alarms_active">Оятқыш қойылған — кесте бойынша соғады</string>
+    <string name="alarms_slot_missing">Оятқыш жүйеде табылмады — автоматты түрде қайта қойылады</string>
+    <string name="alarms_engine_app">«Қосымшада» қозғалтқышы</string>
+    <string name="alarms_engine_clock">«Сағатта» қозғалтқышы</string>
+    <string name="action_dismiss_alarms">Оятқыштарды алып тастау</string>
+
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
     <!-- ==== Диагностика на главном ==== -->
@@ -108,6 +116,10 @@
     <string name="dialog_battery_desc">Агрессивті энергия үнемдеу режимі түнгі кесте тексерісін өшіріп қоюы мүмкін.</string>
     <string name="dialog_stale_title">Кесте 3 күннен астам жаңартылмаған</string>
     <string name="dialog_stale_desc">Университет кестесі жиі өзгереді — жаңа деректерді тартып ал.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
+    <string name="dialog_fsi_title">Толық экранды қоңырауды жүйе шектеген</string>
+    <string name="dialog_fsi_desc">Жүйе қоңырауды құлыптау экранының үстінде ашуды рұқсат етпейді — сигнал хабарлама түрінде көрсетіледі. Қолданба үшін «Толық экранды хабарламалар» опциясына рұқсат бер.</string>
 
     <!-- ==== Снекбары обновления ==== -->
     <string name="err_no_target">Алдымен параметрлерден топты немесе оқытушыны таңда</string>
@@ -150,6 +162,8 @@
     <string name="skip_deferred_to_night">сабақ ертең — оятқыш түнде 00:05-те қойылады (қазір қойса, бүгін соғар еді)</string>
     <string name="skip_clock_refused">Телефонның сағат қолданбасы пәрменді қабылдамады — параметрлерден «Оятқыш ескертуін» қос</string>
     <string name="skip_too_far">сабақ аптадан да алыс — оятқыш оның алдында автоматты түрде қойылады</string>
+    <!-- 0.10.0, AL-9: DISMISS не принят, новый SET отменён — предупрежаем про двойной звонок -->
+    <string name="notif_dismiss_not_accepted">Сағат ескі оятқышты өшіруді қабылдамады — оны сағаттан қолмен алып таста, әйтпесе екеуі де соғуы мүмкін</string>
     <string name="test_alarm_label">Тест: Автооятқыш жұмыс істеп тұр!</string>
     <string name="test_alarm_ok">2 минутқа оятқыш қойылды — сағатты тексер</string>
     <string name="test_alarm_fail">Сынақ оятқышын қою мүмкін болмады — сағат жауап бермейді</string>
@@ -184,13 +198,12 @@
     <string name="pair_custom_offset">Ояну: %1$s бұрын → оятқыш: %2$s</string>
     <string name="pair_common_offset">Жалпы ояну: %1$s бұрын</string>
     <string name="btn_disable_app_alarms">Қолданба оятқыштарын өшіру</string>
-    <string name="disable_alarms_desc">Түйме сағатқа «Авто: Пн»…«Авто: Вс» дәл белгілері бойынша өшіру пәрменін жібереді. Оболочка пәрменді қабылдамаса (Realme UI/ColorOS-тың кейбір нұсқалары — жүйелік шектеу), қолданба оятқыштар тізімін өзі ашады — «Авто:» белгілерін қолмен алып таста.</string>
+    <string name="disable_alarms_desc">Түйме сағатқа «Авто: Пн»…«Авто: Вс» дәл белгілері және бір реттік оятқыш белгісі бойынша өшіру пәрменін жібереді. Оболочка пәрменді қабылдамаса (Realme UI/ColorOS-тың кейбір нұсқалары — жүйелік шектеу), «Авто:» белгілерін «Оятқыштар тізімі» түймесі арқылы қолмен алып таста — қолданба сағатты өзі ашпайды.</string>
     <string name="btn_test_alarm">Оятқышты тексеру</string>
     <string name="btn_alarm_list">Оятқыштар тізімі</string>
     <string name="alarms_list_open_failed">Сағат қолданбасы оятқыштар тізімін ашпады</string>
-    <string name="dismiss_alarms_sent">Сағатқа өшіру пәрмені жіберілді (%1$d/%2$d). «Авто: …» оятқыштары қалса — оларды оятқыштар тізімінен өшір.</string>
-    <string name="dismiss_unsupported_opened">Сағат пәрменмен өшіруді қолдамайды (оболочка шектеуі) — оятқыштар тізімін аштым: «Авто:» белгісі бар оятқыштарды қолмен алып таста</string>
-    <string name="dismiss_unsupported_manual">Сағат пәрменмен өшіруді қолдамайды (оболочка шектеуі) — сағат қолданбасынан оятқыштарды ашып, «Авто:» белгілерін қолмен алып таста</string>
+    <string name="dismiss_alarms_sent">Сағатқа өшіру пәрмені жіберілді (%1$d/%2$d). «Авто: …» оятқыштары қалса — оларды «Оятқыштар тізімі» арқылы өшір</string>
+    <string name="dismiss_unsupported_manual">Сағат пәрменмен өшіруді қолдамайды (оболочка шектеуі) — оятқыштарды «Оятқыштар тізімі» түймесі арқылы ашып, «Авто:» белгілерін қолмен алып таста</string>
 
     <!-- ==== Диалоги настроек: смещение подъёма ==== -->
     <string name="dialog_offset_title">Жұпқа дейінгі ояну</string>
@@ -211,14 +224,8 @@
     <string name="hint_subject_name">Пән атауы</string>
     <string name="cd_add_exception">Ерекшелік қосу</string>
     <string name="exceptions_found">Кестеден табылды:</string>
-    <string name="exc_kind_all">Барлық түрлері</string>
-    <string name="exc_kind_lec">Дәрістер</string>
-    <string name="exc_kind_pr">Тәжірибелер</string>
-    <string name="exc_kind_lab">Зертханалық сабақтар</string>
-    <string name="exc_kind_filter">Жаңа ерекшелік үшін жұп түрі</string>
     <string name="toggle_off_dismissed">Автооятқыш өшірілді, қосымша оятқыштары сағаттан алынды</string>
-    <string name="toggle_off_opened">Автооятқыш өшірілді. Сағат пәрменмен өшіруді қолдамайды (оболочка шектеуі) — оятқыштар тізімін аштым: «Авто:» белгісі бар оятқыштарды қолмен алып таста</string>
-    <string name="toggle_off_manual">Автооятқыш өшірілді. Сағат пәрменмен өшіруді қолдамайды (оболочка шектеуі) — сағат қолданбасынан оятқыштарды ашып, «Авто:» белгілерін қолмен алып таста</string>
+    <string name="toggle_off_manual">Автооятқыш өшірілді. Сағат өшіруді қабылдамады (оболочка шектеуі) — «Авто:» белгісі бар оятқыштарды «Оятқыштар тізімі» арқылы қолмен алып таста</string>
     <string name="toggle_off_app_cancelled">Автооятқыш өшірілді, қосымша оятқыштары алынды</string>
 
     <!-- ==== Настройки: свои занятия ==== -->
@@ -291,4 +298,7 @@
     <!-- 0.9.0, DATA-1: серия пустых ответов сервера при сохранённом кэше -->
     <string name="notif_group_check_title">Топты тексер</string>
     <string name="notif_group_check_text">Кесте бос келеді — бұрынғы кэш сақталды. Параметрлерден топты тексер.</string>
+
+    <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
+    <string name="auto_label_prefix">Авто:</string>
 </resources>
