@@ -14,14 +14,18 @@ android {
         applicationId = "ru.uniautoalarm.kgeu"
         minSdk = 26
         targetSdk = 35
-        // Версионирование: versionCode = major*10000 + minor*100 + patch (0.9.0 -> 900)
-        versionCode = 900
-        versionName = "0.9.0"
+        // Версионирование: versionCode = major*10000 + minor*100 + patch (0.10.0 -> 1000)
+        versionCode = 1000
+        versionName = "0.10.0"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            // INFRA-4/SEC-8 (0.10.0): R8 + shrinkResources включены — ранее dex был 45 МБ
+            // (icons-extended целиком) при APK 12,5 МБ; теперь мёртвый код/ресурсы вырезаются,
+            // читаемый реверс тоже. Правила — proguard-rules.pro.
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

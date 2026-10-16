@@ -1,0 +1,18 @@
+# INFRA-2 (0.10.0): фаза 1 подъёма toolchain — автоматические PR об обновлениях.
+# Майорные прыжки AGP/Kotlin/BOM делаем поэтапно и осознанно; Dependabot готовит
+# кандидатов, решение о мерже — за человеком/агентом после полного прогона CI.
+version: 2
+updates:
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["dependencies"]
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["dependencies"]
+    open-pull-requests-limit: 5

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    SEC-1 (0.10.0): auto-backup для Android < 12 — ничего не включаем в бэкап
+    (полное отключение — allowBackup=false в манифесте; файл оставлен для валидности).
+-->
+<full-backup-content>
+    <exclude domain="root" path="." />
+    <exclude domain="file" path="." />
+    <exclude domain="database" path="." />
+    <exclude domain="sharedpref" path="." />
+    <exclude domain="external" path="." />
+</full-backup-content>
