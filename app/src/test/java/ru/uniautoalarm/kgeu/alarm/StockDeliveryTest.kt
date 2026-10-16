@@ -31,6 +31,26 @@ class StockDeliveryTest {
         assertEquals(Delivery.DEFER_TO_NIGHT, StockAlarmSetter.deliveryDecision(now, wake))
     }
 
+    // AL-6 (0.10.0): граница деферраля по времени суток. Подъём завтра 23:50 при
+    // «сейчас» 23:55 — ближайшее наступление 23:50 УЖЕ прошло, разовый зазвенит
+    // завтра — ставим сразу, деферраль не нужен (сравнение строго по времени суток,
+    // не «всё завтрашнее — откладывать»).
+    @Test
+    fun `tomorrow late-night wake after its time today delivers`() {
+        val now = tuesday.withHour(23).withMinute(55)
+        val wake = tuesday.plusDays(1).toLocalDate().atTime(23, 50)
+        assertEquals(Delivery.DELIVER, StockAlarmSetter.deliveryDecision(now, wake))
+    }
+
+    // AL-6 (0.10.0): симметричный случай — подъём завтра 00:20 при «сейчас» 00:10:
+    // ближайшее наступление 00:20 — СЕГОДНЯ, одноразовый звенел бы сейчас же → до ночи.
+    @Test
+    fun `tomorrow just-after-midnight wake still ahead today defers`() {
+        val now = tuesday.toLocalDate().atTime(0, 10)
+        val wake = tuesday.plusDays(1).toLocalDate().atTime(0, 20)
+        assertEquals(Delivery.DEFER_TO_NIGHT, StockAlarmSetter.deliveryDecision(now, wake))
+    }
+
     @Test
     fun `tomorrow lesson late evening now delivers for tomorrow morning`() {
         // пара завтра в 08:30, сейчас 18:00 — время 08:30 сегодня уже прошло:

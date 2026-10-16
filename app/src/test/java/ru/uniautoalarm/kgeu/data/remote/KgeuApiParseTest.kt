@@ -98,9 +98,13 @@ class KgeuApiParseTest {
         assertEquals(null, KgeuApi.parseIsoDateTime(""))
         assertEquals(null, KgeuApi.parseIsoDateTime(null))
         assertEquals(null, KgeuApi.parseIsoDateTime("не-дата"))
+        // DATA-13 (0.10.0): стенка-время КГЭУ — это Казань (UTC+3); результат приводится
+        // к зоне устройства. Проверяем ИНСТАНТ, чтобы тест не зависел от TZ бегуна:
+        // «08:30 в Казани» — один и тот же момент в любой зоне.
         assertEquals(
-            java.time.LocalDateTime.parse("2026-10-20T08:30:00"),
+            java.time.OffsetDateTime.parse("2026-10-20T08:30:00+03:00").toInstant(),
             KgeuApi.parseIsoDateTime("2026-10-20T08:30:00")
+                ?.atZone(java.time.ZoneId.systemDefault())?.toInstant()
         )
     }
 }
