@@ -14,6 +14,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.Log
+import java.util.concurrent.Executors
 import kotlinx.coroutines.launch
 import ru.uniautoalarm.kgeu.AutoAlarmApp
 import ru.uniautoalarm.kgeu.data.model.AlarmTarget
@@ -25,6 +26,10 @@ import ru.uniautoalarm.kgeu.data.model.AlarmTarget
  * Жизненный цикл: AlarmFireReceiver → startForegroundService(ACTION_START по умолчанию)
  * → звонок; кнопка «Отключить» (уведомление / RingActivity) → ACTION_STOP → тишина,
  * «пропущен» при автоглушении, и сразу ставится следующий будильник в «Стандарте».
+ *
+ * 0.10.0 (AL-18): prepare() медиаплеера и подбор звука — на фоновом потоке
+ * (главный больше не блокируется чтением кодека в момент звонка), а цепочка
+ * источников расширена: системный звук будильника → звонок → уведомление.
  */
 class AlarmRingingService : Service() {
 
@@ -32,6 +37,9 @@ class AlarmRingingService : Service() {
     private var vibrator: Vibrator? = null
     private val handler = Handler(Looper.getMainLooper())
     private var label: String = ""
+
+    /** Одиночный фоновый исполнитель звука: prepare() на главном потоке тормозил звонок. */
+    private val soundExecutor = Executors.newSingleThreadExecutor()
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -66,18 +74,26 @@ class AlarmRingingService : Service() {
             startForeground(NOTIF_ID, notification)
         }
 
-        startSound()
+        soundExecutor.execute { startSound() }
         startVibration()
 
         // автоглушение: нет реакции 10 минут — тише, помечаем «пропущен»
         handler.postDelayed({ stopRinging(missed = true, rearm = true) }, AUTO_SILENCE_MS)
     }
 
+    /**
+     * Цепочка источников (AL-18): TYPE_ALARM → TYPE_RINGTONE → TYPE_NOTIFICATION.
+     * Раньше при null обоих первых URI звонок молчал: добавлен последний фолбэк,
+     * а сборка/prepare выполняются на [soundExecutor], не на главном потоке.
+     * Вызывается ТОЛЬКО на [soundExecutor] (см. startRinging).
+     */
     private fun startSound() {
         runCatching {
             val uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
                 ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE)
-            MediaPlayer().apply {
+                ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                ?: return
+            val p = MediaPlayer().apply {
                 setDataSource(this@AlarmRingingService, uri)
                 setAudioAttributes(
                     AudioAttributes.Builder()
@@ -88,7 +104,8 @@ class AlarmRingingService : Service() {
                 isLooping = true
                 prepare()
                 start()
-            }.also { player = it }
+            }
+            player = p
         }.onFailure { Log.w(TAG, "Звук будильника недоступен: ${it.message}") }
     }
 
@@ -145,6 +162,7 @@ class AlarmRingingService : Service() {
 
     override fun onDestroy() {
         handler.removeCallbacksAndMessages(null)
+        soundExecutor.shutdownNow()
         runCatching {
             player?.stop()
             player?.release()

@@ -10,6 +10,7 @@ import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.model.AlarmPlan
 import ru.uniautoalarm.kgeu.data.model.AlarmTarget
 import ru.uniautoalarm.kgeu.data.repository.SettingsRepository
+import ru.uniautoalarm.kgeu.di.AppClock
 import ru.uniautoalarm.kgeu.domain.AlarmPlanner
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 
@@ -36,6 +37,18 @@ import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
  * 0.9.0: все входы сериализованы мьютексом [gate] (AL-7/SET-7) — интерливинг
  * тумблер × ночной тик × смена цели больше не может дать двойной SET_ALARM
  * или снять только что поставленный будильник.
+ *
+ * 0.10.0: снятие ([dismissAll]) больше НИКОГДА не открывает стоковые часы
+ * (баг пользователя: авто-фолбэк SHOW_ALARMS выпрыгивал в часы при отказе
+ * оболочки принимать DISMISS) — в часы попадаем только по явной кнопке
+ * [StockAlarmSetter.openAlarmList]. AL-9: если часы НЕ приняли DISMISS при
+ * переносе будильника, новый SET не отправляется (иначе прозвенели бы оба) —
+ * маркер чистится, ставит заново ночная сверка, пользователь получает
+ * уведомление «снимите старый будильник вручную». AL-16: найденный план
+ * пробуждения передаётся в постановку без повторного чтения planFor.
+ * AL-21: время — через инжектируемый [AppClock]. Метка будильника APP-движка
+ * локализуется (SET-5): в часы метка пишется как раньше — «Авто: …» (стабильный
+ * канал DISMISS), на звонке приложения — на языке интерфейса.
  */
 class AlarmGateway(
     private val context: Context,
@@ -43,6 +56,7 @@ class AlarmGateway(
     private val stock: StockAlarmSetter,
     private val inApp: InAppAlarmScheduler,
     private val planner: AlarmPlanner,
+    private val clock: AppClock = AppClock.SYSTEM,
 ) {
 
     /** Сериализация постановки/снятия/свёрки: взаимное исключение всех вызовов. */
@@ -93,7 +107,12 @@ class AlarmGateway(
         if (markerMatches && !slotAlive) {
             Log.w(TAG, "Маркер=$wakeEpochMinute есть, слот APP мёртв (ребут/force-stop) — перепоставляю")
         }
-        return setForDateLocked(next.date, notify)
+        // AL-16: план уже найден — передаём его в постановку без повторного planFor
+        return if (s.alarmTarget == AlarmTarget.APP) {
+            setForDateInAppLocked(next, notify)
+        } else {
+            stock.setForDate(next.date, notify)
+        }
     }
 
     /**
@@ -116,7 +135,7 @@ class AlarmGateway(
      * позже завтра превращался бы в «на день недели, который придётся выключать».
      */
     private suspend fun findNextUpcoming(): AlarmPlan? {
-        val now = LocalDateTime.now()
+        val now = clock.now()
         for (i in 0..1) {
             val date = now.toLocalDate().plusDays(i.toLong())
             val plan = planner.planFor(date) ?: continue
@@ -140,14 +159,24 @@ class AlarmGateway(
             }
             return null
         }
-        if (inApp.scheduleOneShot(plan.wakeAt, plan.label)) {
+        return setForDateInAppLocked(plan, notify)
+    }
+
+    /**
+     * Постановка по готовому плану (AL-16): слот перезаписывается свежим планом.
+     * Метка локализуется (SET-5): на звонке/в уведомлениях приложения она на языке
+     * интерфейса; в DataStore маркер хранит ПЛАНОВУЮ метку — для CLOCK-постановки
+     * из того же плана (часам нужен стабильный «Авто: …» для DISMISS).
+     */
+    private suspend fun setForDateInAppLocked(plan: AlarmPlan, notify: Boolean): AlarmPlan? {
+        if (inApp.scheduleOneShot(plan.wakeAt, appDisplayLabel(plan.label))) {
             if (notify) Notifications.alarmSet(context, plan)
             updateLastScheduledLocked(plan)
             return plan
         }
         if (notify) {
             Notifications.alarmSkipped(
-                context, date, LocaleHelper.string(context, R.string.skip_clock_refused)
+                context, plan.date, LocaleHelper.string(context, R.string.skip_clock_refused)
             )
         }
         return null
@@ -161,20 +190,21 @@ class AlarmGateway(
      * Снять все будильники приложения: собственный движок отменяется гарантированно
      * (PendingIntent.cancel), стоковые часы получают DISMISS по меткам; маркеры
      * постановки сбрасываются — следующий тумблер/тик ставит заново, а не «молчит».
-     * [openListOnUnsupported] = false — не открывать список часов при отказе оболочки
-     * (смена цели будильника: выскакивать в чужое приложение не зачем).
+     *
+     * 0.10.0: параметр openListOnUnsupported УДАЛЁН вместе с авто-фолбэком SHOW_ALARMS
+     * — приложение само не открывает часы ни в каком движке (баг пользователя).
      */
-    suspend fun dismissAll(openListOnUnsupported: Boolean = true): DismissResult =
-        gate.withLock { dismissAllLocked(openListOnUnsupported) }
+    suspend fun dismissAll(): DismissResult =
+        gate.withLock { dismissAllLocked() }
 
-    private suspend fun dismissAllLocked(openListOnUnsupported: Boolean): DismissResult {
+    private suspend fun dismissAllLocked(): DismissResult {
         val s = settings.current()
         val appEngine = s.alarmTarget == AlarmTarget.APP
         inApp.cancelOneShot()
         inApp.cancelTest()
-        // часы тоже чистим (могли остаться от прежнего режима/цели); при движке приложения
-        // фолбэк «открыть список часов» лишний — выскакивать в чужое приложение не зачем
-        val res = stock.dismissAppAlarms(openListOnUnsupported = openListOnUnsupported && !appEngine)
+        // часы тоже чистим (могли остаться от прежнего режима/цели); в сами часы
+        // не переходим — объясняем итог снекбаром, список часов открывает пользователь
+        val res = stock.dismissAppAlarms()
         return res.copy(inAppCancelled = appEngine)
     }
 
@@ -240,7 +270,7 @@ class AlarmGateway(
                 markerWake == next.wakeAt -> Unit // слот уже стоит на верный момент
                 else -> {
                     // замена/перенос/устаревший маркер — перезаписываем слот свежим планом
-                    inApp.scheduleOneShot(next.wakeAt, next.label)
+                    inApp.scheduleOneShot(next.wakeAt, appDisplayLabel(next.label))
                     updateLastScheduledLocked(next)
                     if (notifyOnChange) Notifications.alarmSet(context, next)
                 }
@@ -270,10 +300,20 @@ class AlarmGateway(
                     Log.i(TAG, "Фоновая сверка: перенос CLOCK-будильника отложен до ночной сверки (AL-2)")
                     return
                 }
-                // время/день изменились (замена/перенос) или маркер устарел
+                // время/день изменились (замена/перенос) или маркер устарел.
+                // AL-9: если часы НЕ приняли DISMISS (ColorOS молча игнорирует),
+                // новый SET НЕ отправляем — иначе прозвенели бы ОБА. Маркер чистим:
+                // ночная сверка поставит заново (когда старый уже не актуален или
+                // пользователь снял его сам), а пользователя честно предупреждаем.
                 val dismissed = stock.dismissSingleLabel(s.lastScheduledLabel)
                 if (!dismissed) {
-                    Log.w(TAG, "DISMISS не принят оболочкой — возможны оба будильника (см. настройки)")
+                    Log.w(TAG, "DISMISS не принят оболочкой — новый SET отменён (AL-9)")
+                    clearLastScheduledLocked()
+                    Notifications.alarmSkipped(
+                        context, LocalDate.now(),
+                        LocaleHelper.string(context, R.string.notif_dismiss_not_accepted)
+                    )
+                    return
                 }
                 val plan = stock.setForDate(next.date, notify = true)
                 if (plan == null) clearLastScheduledLocked()
@@ -306,7 +346,22 @@ class AlarmGateway(
         if (v <= 0) null
         else LocalDate.ofEpochDay(v / 1440L).atStartOfDay().plusMinutes(v % 1440L)
 
+    /**
+     * Метка для звонка/уведомлений APP-движка (SET-5): плановая «Авто: …»
+     * перепрефиксуется на язык интерфейса. Не-«Авто»-метки (тест) не трогаются.
+     */
+    private fun appDisplayLabel(label: String): String =
+        if (label.startsWith(LABEL_PREFIX)) {
+            LocaleHelper.string(context, R.string.auto_label_prefix) + " " +
+                label.removePrefix(LABEL_PREFIX)
+        } else {
+            label
+        }
+
     private companion object {
         const val TAG = "AlarmGateway"
+
+        /** Префикс плановых меток (AlarmPlanner) — единый для SET/DISMISS в часах. */
+        const val LABEL_PREFIX = "Авто: "
     }
 }

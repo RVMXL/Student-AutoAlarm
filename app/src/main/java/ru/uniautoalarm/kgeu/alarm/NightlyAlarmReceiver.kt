@@ -34,23 +34,27 @@ class NightlyAlarmReceiver : BroadcastReceiver() {
                 val appContext = context.applicationContext
                 val container = (appContext as AutoAlarmApp).container
 
+                // 1) ВСЕГДА перепланируем следующую ночь (AL-14, 0.10.0): раньше это
+                //    стояло после раннего выхода по !setupComplete — цепочка тиков
+                //    умирала навсегда, пока пользователь не включил бы тумблер или
+                //    не перезагрузил телефон. Теперь тик самовосстанавливается всегда.
+                NightlyScheduler.scheduleNext(appContext)
+
                 val s = container.settings.current()
                 if (!s.setupComplete) return@launch // онбординг не пройден — не мешаем
-
-                // 1) всегда перепланируем следующую ночь
-                NightlyScheduler.scheduleNext(appContext)
 
                 if (!s.autoAlarmEnabled) return@launch // тумблер автовключения выключен
 
                 // 2) свежее расписание на текущую неделю (+следующая внутри refreshWeek;
-                //    максимум 9 с; при ошибке остаёмся на кэше) — сверка берёт ближайшее
-                //    предстоящее пробуждение (сегодня или завтра)
+                //    0.10.0 (AL-5): бюджет сжат 9с → 7с — внутри ~10-с окна goAsync
+                //    должен уместиться и ещё быстрый reconcile на кэше; при ошибке
+                //    остаёмся на кэше)
                 val today = LocalDate.now()
                 val type = s.targetType
                 val id = s.targetId
                 if (type != null && id != null) {
                     try {
-                        withTimeoutOrNull(9_000) {
+                        withTimeoutOrNull(7_000) {
                             container.scheduleRepository.refreshWeek(
                                 Target(type, id, s.targetName), today
                             )

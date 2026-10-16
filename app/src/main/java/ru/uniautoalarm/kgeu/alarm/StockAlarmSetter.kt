@@ -24,11 +24,18 @@ data class DismissResult(
     val sent: Int,
     /** Общее число попыток (метки «Авто: Пн…Вс» + метка последнего разового). */
     val total: Int,
-    /** Команды не приняты — открыт список будильников часов (SHOW_ALARMS) как фолбэк. */
-    val openedList: Boolean,
     /** Активен движок «В приложении» — собственные будильники сняты гарантированно (cancel). */
     val inAppCancelled: Boolean = false,
 )
+
+/**
+ * 0.10.0 (баг пользователя): приложение больше НИКОГДА не открывает стоковые часы
+ * само по себе. Раньше при отказе оболочки принимать DISMISS_ALARM (ColorOS/Realme UI
+ * делают это всегда) срабатывал автоматический фолбэк SHOW_ALARMS — часы внезапно
+ * выпрыгивали на передний план, в том числе посреди смены движка на «В приложении».
+ * Теперь неуспех снятия объясняется снекбаром/уведомлением, а список будильников часов
+ * открывается ТОЛЬКО явной кнопкой пользователя — [openAlarmList].
+ */
 
 /**
  * Постановка будильника в СТОКОВОЕ приложение часов через публичный intent
@@ -191,19 +198,18 @@ class StockAlarmSetter(
      * поэтому каждая метка отправляется отдельным интентом (баг 0.3.1: метка «Авто»
      * не совпадала ни с чем; исправлено в 0.4.0, см. RELEASE-0.4.0).
      *
-     * Ограничение системы: контракт не возвращает результат («сколько отключено»),
-     * а часть OEM-часов (Realme UI/ColorOS, старые MIUI) интент DISMISS_ALARM вообще
-     * не принимают — startActivity бросит исключение. Тогда честно открываем список
-     * будильников часов (SHOW_ALARMS), чтобы пользователь снял метки «Авто:» вручную
-     * — кроме случая [openListOnUnsupported] = false (движок «В приложении»: будильники
-     * уже сняты cancel'ом, а выпрыгивать в часы не зачем).
+     * 0.10.0: автоматический фолбэк SHOW_ALARMS УДАЛЁН (баг пользователя: приложение
+     * само выпрыгивало в стоковые часы, когда оболочка не принимала DISMISS —
+     * ColorOS/Realme UI не принимают его никогда). Неуспех теперь означает только
+     * sent = 0 — итог объясняется снекбаром/уведомлением, а в часах пользователь
+     * попадает только по собственной кнопке ([openAlarmList]).
      *
      * После успешной отправки команд маркеры постановки (эпоха-минута, метка, сигнатура
      * партии) сбрасываются: следующий тумблер/ночной тик поставит будильники заново,
      * а не «промолчит», считая их уже стоящими (баг 0.5.x: выключенный тумблер не
      * снимал будильники, а включённый заново — не ставил их после ручного удаления).
      */
-    suspend fun dismissAppAlarms(openListOnUnsupported: Boolean = true): DismissResult = withContext(Dispatchers.Default) {
+    suspend fun dismissAppAlarms(): DismissResult = withContext(Dispatchers.Default) {
         val s = settings.current()
         val clockPackage = detectClockPackage()
         val labels = buildList {
@@ -232,32 +238,11 @@ class StockAlarmSetter(
             }
         }
 
-        val result = if (sent > 0) {
-            DismissResult(sent, labels.size, openedList = false)
-        } else {
-            // Часы не приняли ни одной команды — ограничение оболочки. Фолбэк «открыть
-            // список будильников» — только когда он уместен (см. [openListOnUnsupported])
-            if (openListOnUnsupported) {
-                val intents = buildList {
-                    if (clockPackage != null) add(Intent(AlarmClock.ACTION_SHOW_ALARMS).setPackage(clockPackage))
-                    add(Intent(AlarmClock.ACTION_SHOW_ALARMS))
-                }
-                val opened = intents.any { intent ->
-                    try {
-                        context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                        true
-                    } catch (_: Exception) {
-                        false
-                    }
-                }
-                DismissResult(0, labels.size, openedList = opened)
-            } else {
-                DismissResult(0, labels.size, openedList = false)
-            }
-        }
+        // 0.10.0: никаких авто-переходов в часы при отказе оболочки — итог объясняется
+        // снекбаром/уведомлением; список часов открывает только явная кнопка [openAlarmList]
 
         // маркеры сбрасываем в любом исходе: после команды DISMISS (или после того, как
-        // пользователь снял будильники в открытом списке) старые маркеры уже не соответствуют
+        // пользователь снял будильники вручную) старые маркеры уже не соответствуют
         // реальности, и «уже стоит» было бы ложью
         settings.update {
             it.copy(
@@ -265,7 +250,29 @@ class StockAlarmSetter(
                 lastScheduledLabel = ""
             )
         }
-        result
+        DismissResult(sent, labels.size)
+    }
+
+    /**
+     * ЯВНО открыть список будильников стоковых часов (SHOW_ALARMS) — только по
+     * нажатию пользователя (карточка «Мои будильники»/настройки). 0.10.0: это
+     * единственный путь из приложения в часы — автоматических переходов больше нет.
+     * @return true, если часы открылись.
+     */
+    fun openAlarmList(): Boolean {
+        val clockPackage = detectClockPackage()
+        val intents = buildList {
+            if (clockPackage != null) add(Intent(AlarmClock.ACTION_SHOW_ALARMS).setPackage(clockPackage))
+            add(Intent(AlarmClock.ACTION_SHOW_ALARMS))
+        }
+        return intents.any { intent ->
+            try {
+                context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                true
+            } catch (_: Exception) {
+                false
+            }
+        }
     }
 
     /**

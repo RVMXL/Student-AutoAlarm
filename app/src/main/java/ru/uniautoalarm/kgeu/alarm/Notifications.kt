@@ -37,10 +37,14 @@ object Notifications {
     private const val NOTIF_RINGING_ID = 1005
     private const val NOTIF_GROUP_CHECK_ID = 1006
 
+    // AL-19 (0.10.0): «пропущен» больше не переиспользует ID 1002 (сниск «не поставлен»)
+    // — иначе «пропущен» затирал свежее объяснение, почему будильник не стоит
+    private const val NOTIF_MISSED_ID = 1007
+
     // форматтеры — функции, а не val: даты уведомлений должны следовать
     // языку приложения, выбранному в момент отправки
-    private fun ruDate(): DateTimeFormatter =
-        DateTimeFormatter.ofPattern("EEEE dd MMMM", Locale.getDefault())
+    private fun ruDate(context: Context): DateTimeFormatter =
+        DateTimeFormatter.ofPattern("EEEE dd MMMM", LocaleHelper.locale(context))
 
     /** Канал создаётся идемпотентно перед любой отправкой (minSdk 26 — API доступен всегда). */
     fun ensureChannel(context: Context) {
@@ -74,7 +78,7 @@ object Notifications {
             plan.customEvent != null -> plan.customEvent.name
             else -> plan.label
         }
-        val text = "${plan.date.format(ruDate())}: $details"
+        val text = "${plan.date.format(ruDate(context))}: $details"
         val notification = baseBuilder(context)
             .setContentTitle(LocaleHelper.string(context, R.string.notif_alarm_set, time))
             .setContentText(text)
@@ -87,7 +91,7 @@ object Notifications {
 
     /** Будильник не поставлен: пар нет, цель не выбрана и т.п. */
     fun alarmSkipped(context: Context, date: LocalDate, reason: String) {
-        val text = "${date.format(ruDate())}: $reason"
+        val text = "${date.format(ruDate(context))}: $reason"
         val notification = baseBuilder(context)
             .setContentTitle(LocaleHelper.string(context, R.string.notif_skipped_title))
             .setContentText(text)
@@ -113,7 +117,7 @@ object Notifications {
         val text = LocaleHelper.string(
             context,
             R.string.notif_reminder_text,
-            plan.date.format(ruDate()),
+            plan.date.format(ruDate(context)),
             time,
             details
         )
@@ -195,7 +199,7 @@ object Notifications {
         return ringingBuilder(context, label).build()
     }
 
-    /** «Будильник пропущен» — автоглушение после 10 минут без ответа. */
+    /** «Будильник пропущен» — автоглушение после 10 минут без ответа (AL-19: свой ID). */
     fun alarmMissed(context: Context, label: String) {
         val text = label.ifBlank { LocaleHelper.string(context, R.string.home_title) }
         val notification = baseBuilder(context)
@@ -204,7 +208,7 @@ object Notifications {
             .setContentIntent(mainActivityIntent(context))
             .setAutoCancel(true)
             .build()
-        post(context, NOTIF_SKIPPED_ID, notification)
+        post(context, NOTIF_MISSED_ID, notification)
     }
 
     // --- Внутреннее ---

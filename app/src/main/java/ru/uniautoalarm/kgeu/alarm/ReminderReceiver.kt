@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import ru.uniautoalarm.kgeu.AutoAlarmApp
+import ru.uniautoalarm.kgeu.data.model.AlarmTarget
 import ru.uniautoalarm.kgeu.data.model.Target
 
 /**
@@ -54,10 +55,16 @@ class ReminderReceiver : BroadcastReceiver() {
                     }
                 }
 
-                // 3) на завтра есть пара? → напоминание (текст считает Notifications)
-                val plan = container.planner.planFor(tomorrow)
-                if (plan != null) {
-                    Notifications.reminder(appContext, plan)
+                // 3) на завтра есть пара? → напоминание (текст считает Notifications).
+                // AL-12 (0.10.0): напоминание показывается ТОЛЬКО в движке «В часах» —
+                // оно фолбэк «не забудьте поставить будильник», а в движке приложения
+                // будильник ставится сам, и такое напоминание — дезинформация.
+                val s2 = container.settings.current()
+                if (s2.alarmTarget == AlarmTarget.CLOCK) {
+                    val plan = container.planner.planFor(tomorrow)
+                    if (plan != null) {
+                        Notifications.reminder(appContext, plan)
+                    }
                 }
             } catch (e: CancellationException) {
                 throw e
