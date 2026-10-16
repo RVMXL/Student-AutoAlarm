@@ -105,6 +105,8 @@
     <string name="alarms_engine_app">「应用内」引擎</string>
     <string name="alarms_engine_clock">「系统时钟」引擎</string>
     <string name="action_dismiss_alarms">清除闹钟</string>
+    <string name="alarms_test_row">测试闹钟</string>
+    <string name="alarms_test_cancel">取消测试</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
@@ -187,7 +189,7 @@
     <string name="alarm_target_clock">系统时钟</string>
     <string name="alarm_target_app">应用内</string>
     <string name="set_show_clock">设置时显示时钟应用</string>
-    <string name="set_show_clock_desc">如果闹钟无法自动设置（Realme、Oppo、Huawei），请开启：时钟应用会带着现成的闹钟打开 — 点“保存”确认即可。</string>
+    <string name="set_show_clock_desc">如果闹钟无法自动设置（Realme、Oppo、Huawei），请开启：夜间核对和测试闹钟会带着现成的闹钟打开时钟应用 — 点“保存”确认即可。主开关和切换引擎会静默设置闹钟，不会打开时钟应用。</string>
     <string name="set_wake_offset">第一节课前 %1$s 起床</string>
     <string name="set_offset_example">第一节课 08:30 上课 → 闹钟将在 %1$s 响铃</string>
     <string name="set_per_pair">每节课的起床时间</string>

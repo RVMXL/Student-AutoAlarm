@@ -105,6 +105,8 @@
     <string name="alarms_engine_app">движок „Программӑра“</string>
     <string name="alarms_engine_clock">движок „Сехетсенче“</string>
     <string name="action_dismiss_alarms">Будильниксене сунтар</string>
+    <string name="alarms_test_row">Тест будильникӗ</string>
+    <string name="alarms_test_cancel">Тесте сирпӗт</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
@@ -187,7 +189,7 @@
     <string name="alarm_target_clock">Сехетсенче</string>
     <string name="alarm_target_app">Программӑра</string>
     <string name="set_show_clock">Лартнӑ чух сехете кӑтарт</string>
-    <string name="set_show_clock_desc">Будильниксем хӑйсем лартӑнмастӑр пулсан хушӑр (Realme, Oppo, Huawei): сехетсем хатӗр будильникпа уҫӑнаҫҫӗ — „Сыхла“ пӑшӑлпа çирӗплетӗр.</string>
+    <string name="set_show_clock_desc">Будильниксем хӑйсем лартӑнмастӑр пулсан хушӑр (Realme, Oppo, Huawei): каҫхи тӗпчени тата тест будильникӗ сехетсене хатӗр будильникпа уҫӑнаҫҫӗ — „Сыхла“ пӑшӑлпа çирӗплетӗр. Тумблер тата движок улӑштарни будильниксене сехетсене уҫмасӑр ларта.</string>
     <string name="set_wake_offset">Пӗрремӗш пара умӗнчен %1$s вӑранса тӑни</string>
     <string name="set_offset_example">Пӗрремӗш пара 08:30 → будильник %1$s çинче</string>
     <string name="set_per_pair">Кашни пара умӗнче уйрӑм вӑранса тӑни</string>

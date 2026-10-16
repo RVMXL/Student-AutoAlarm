@@ -105,6 +105,8 @@
     <string name="alarms_engine_app">motor «En la app»</string>
     <string name="alarms_engine_clock">motor «En el reloj»</string>
     <string name="action_dismiss_alarms">Quitar las alarmas</string>
+    <string name="alarms_test_row">Alarma de prueba</string>
+    <string name="alarms_test_cancel">Cancelar prueba</string>
 
     <!-- ==== Resultados de la programación (principal + ajustes) ==== -->
 
@@ -187,7 +189,7 @@
     <string name="alarm_target_clock">En el reloj</string>
     <string name="alarm_target_app">En la app</string>
     <string name="set_show_clock">Mostrar el reloj al programar las alarmas</string>
-    <string name="set_show_clock_desc">Actívalo si las alarmas no se programan solas (Realme, Oppo, Huawei): el reloj se abrirá con la alarma ya lista — confírmala con \"Guardar\".</string>
+    <string name="set_show_clock_desc">Actívalo si las alarmas no se programan solas (Realme, Oppo, Huawei): la comprobación nocturna y la alarma de prueba abrirán el reloj con la alarma ya lista — confírmala con \"Guardar\". El interruptor principal y los cambios de motor programan las alarmas en silencio, sin abrir el reloj.</string>
     <string name="set_wake_offset">Levantarte %1$s antes de la primera clase</string>
     <string name="set_offset_example">Primera clase a las 08:30 → alarma a las %1$s</string>
     <string name="set_per_pair">Levantarte para cada clase</string>

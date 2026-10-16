@@ -105,6 +105,8 @@
     <string name="alarms_engine_app">محرك «في التطبيق»</string>
     <string name="alarms_engine_clock">محرك «في الساعة»</string>
     <string name="action_dismiss_alarms">إزالة المنبّهات</string>
+    <string name="alarms_test_row">منبّه تجريبي</string>
+    <string name="alarms_test_cancel">إلغاء المنبّه التجريبي</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
@@ -187,7 +189,7 @@
     <string name="alarm_target_clock">في الساعة</string>
     <string name="alarm_target_app">في التطبيق</string>
     <string name="set_show_clock">إظهار الساعة عند الضبط</string>
-    <string name="set_show_clock_desc">فعّله إذا كانت المنبّهات لا تُضبط تلقائيًا (Realme وOppo وHuawei): سيُفتح تطبيق الساعة ومنبّه جاهز — أكِّد بزر «حفظ».</string>
+    <string name="set_show_clock_desc">فعّله إذا كانت المنبّهات لا تُضبط تلقائيًا (Realme وOppo وHuawei): الفحص الليلي والمنبّه التجريبي سيفتحان تطبيق الساعة ومنبّه جاهز — أكِّد بزر «حفظ». المفتاح الرئيسي وتغييرات المحرك يضبطان المنبّهات بصمت، دون فتح الساعة.</string>
     <string name="set_wake_offset">الاستيقاظ قبل الحصة الأولى بـ %1$s</string>
     <string name="set_offset_example">الحصة الأولى في 08:30 → المنبّه في %1$s</string>
     <string name="set_per_pair">استيقاظ مخصص لكل حصة</string>

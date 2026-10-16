@@ -105,6 +105,8 @@
     <string name="alarms_engine_app">движок „В приложении“</string>
     <string name="alarms_engine_clock">движок „В часах“</string>
     <string name="action_dismiss_alarms">Снять будильники</string>
+    <string name="alarms_test_row">Тестовый будильник</string>
+    <string name="alarms_test_cancel">Снять тестовый</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
@@ -187,7 +189,7 @@
     <string name="alarm_target_clock">В часах</string>
     <string name="alarm_target_app">В приложении</string>
     <string name="set_show_clock">Показывать часы при постановке</string>
-    <string name="set_show_clock_desc">Включите, если будильники не ставятся сами (Realme, Oppo, Huawei): часы откроются с готовым будильником — подтвердите кнопкой «Сохранить».</string>
+    <string name="set_show_clock_desc">Включите, если будильники не ставятся сами (Realme, Oppo, Huawei): ночная сверка и тестовый будильник откроют часы с готовым будильником — подтвердите кнопкой «Сохранить». Тумблер и смена движка ставят тихо, без открытия часов.</string>
     <string name="set_wake_offset">Подъём за %1$s до первой пары</string>
     <string name="set_offset_example">Первая пара в 08:30 → будильник в %1$s</string>
     <string name="set_per_pair">Подъём под каждую пару</string>

@@ -105,6 +105,8 @@
     <string name="alarms_engine_app">«Тиркемеде» кыймылдаткычы</string>
     <string name="alarms_engine_clock">«Саатта» кыймылдаткычы</string>
     <string name="action_dismiss_alarms">Ояткычтарды алып салу</string>
+    <string name="alarms_test_row">Сыноо ояткычы</string>
+    <string name="alarms_test_cancel">Сыноо ояткычын алып салу</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
@@ -187,7 +189,7 @@
     <string name="alarm_target_clock">Саатта</string>
     <string name="alarm_target_app">Тиркемеде</string>
     <string name="set_show_clock">Коюу учурунда саатты көрсөтүү</string>
-    <string name="set_show_clock_desc">Ояткычтар өзү-өзүнөн коюлбай калса, күйгүз (Realme, Oppo, Huawei): саат даяр ояткыч менен ачылат — «Сактоо» баскычы менен ыраста.</string>
+    <string name="set_show_clock_desc">Ояткычтар өзү-өзүнөн коюлбай калса, күйгүз (Realme, Oppo, Huawei): түнкү текшерүү жана сыноо ояткычы саатты даяр ояткыч менен ачат — «Сактоо» баскычы менен ыраста. Негизги калак жана кыймылдаткычты алмаштыруу ояткычтарды үнсүз коёт, саатты ачпайт.</string>
     <string name="set_wake_offset">Биринчи жуптан %1$s мурун оянгу</string>
     <string name="set_offset_example">Биринчи жуп саат 08:30 → ояткыч убакыты: %1$s</string>
     <string name="set_per_pair">Ар бир жупка өзүнчө оянгу</string>

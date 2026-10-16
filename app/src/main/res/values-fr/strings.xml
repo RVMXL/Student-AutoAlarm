@@ -105,6 +105,8 @@
     <string name="alarms_engine_app">moteur « Dans l\'appli »</string>
     <string name="alarms_engine_clock">moteur « Dans l\'horloge »</string>
     <string name="action_dismiss_alarms">Retirer les réveils</string>
+    <string name="alarms_test_row">Alarme de test</string>
+    <string name="alarms_test_cancel">Annuler le test</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
@@ -187,7 +189,7 @@
     <string name="alarm_target_clock">Dans l\'horloge</string>
     <string name="alarm_target_app">Dans l\'appli</string>
     <string name="set_show_clock">Afficher l\'horloge lors de la programmation</string>
-    <string name="set_show_clock_desc">Active-le si les réveils ne se programment pas tout seuls (Realme, Oppo, Huawei) : l\'horloge s\'ouvrira avec le réveil prêt — confirme avec « Enregistrer ».</string>
+    <string name="set_show_clock_desc">Active-le si les réveils ne se programment pas tout seuls (Realme, Oppo, Huawei) : la vérification nocturne et l\'alarme de test ouvriront l\'horloge avec le réveil prêt — confirme avec « Enregistrer ». L\'interrupteur principal et les changements de moteur programment les réveils en silence, sans ouvrir l\'horloge.</string>
     <string name="set_wake_offset">Lever %1$s avant le premier cours</string>
     <string name="set_offset_example">Premier cours à 08:30 → réveil à %1$s</string>
     <string name="set_per_pair">Lever pour chaque cours</string>

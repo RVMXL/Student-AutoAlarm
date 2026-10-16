@@ -105,6 +105,8 @@
     <string name="alarms_engine_app">муҳаррики „Дар барнома“</string>
     <string name="alarms_engine_clock">муҳаррики „Дар соат“</string>
     <string name="action_dismiss_alarms">Хомӯш кардани будильникҳо</string>
+    <string name="alarms_test_row">Будильники санҷишӣ</string>
+    <string name="alarms_test_cancel">Санҷишро хомӯш кардан</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
@@ -187,7 +189,7 @@
     <string name="alarm_target_clock">Дар соат</string>
     <string name="alarm_target_app">Дар барнома</string>
     <string name="set_show_clock">Ҳангоми гузоштан нишон додани соат</string>
-    <string name="set_show_clock_desc">Фаъол кун, агар будильникҳо худашон гузошта нашаванд (Realme, Oppo, Huawei): соат бо будильники омода кушода мешавад — бо тугмаи «Нигоҳ доштан» тасдиқ кун.</string>
+    <string name="set_show_clock_desc">Фаъол кун, агар будильникҳо худашон гузошта нашаванд (Realme, Oppo, Huawei): санҷиши шабона ва будильники санҷишӣ соатро бо будильники омода мекушояд — бо тугмаи «Нигоҳ доштан» тасдиқ кун. Калидаки асосӣ ва ивази муҳаррик будильникҳоро бе садо мегузорад, соатро намекушояд.</string>
     <string name="set_wake_offset">Бедор шудан %1$s пеш аз параи якум</string>
     <string name="set_offset_example">Параи якум соати 08:30 → будильник соати %1$s</string>
     <string name="set_per_pair">Бедор шудан пеш аз ҳар пара</string>

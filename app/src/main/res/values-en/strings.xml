@@ -105,6 +105,8 @@
     <string name="alarms_engine_app">in-app engine</string>
     <string name="alarms_engine_clock">built-in Clock engine</string>
     <string name="action_dismiss_alarms">Dismiss alarms</string>
+    <string name="alarms_test_row">Test alarm</string>
+    <string name="alarms_test_cancel">Cancel test</string>
 
     <!-- ==== Batch results (home + settings) ==== -->
 
@@ -187,7 +189,7 @@
     <string name="alarm_target_clock">Clock app</string>
     <string name="alarm_target_app">In the app</string>
     <string name="set_show_clock">Show the Clock app when setting alarms</string>
-    <string name="set_show_clock_desc">Turn on if alarms aren\'t set on their own (Realme, Oppo, Huawei): the Clock app will open with the alarm ready — confirm it with \"Save\".</string>
+    <string name="set_show_clock_desc">Turn on if alarms aren\'t set on their own (Realme, Oppo, Huawei): the nightly check and the test alarm will open the Clock app with the alarm ready — confirm it with \"Save\". The main toggle and engine changes set alarms silently, without opening the Clock app.</string>
     <string name="set_wake_offset">Wake up %1$s before your first class</string>
     <string name="set_offset_example">First class at 08:30 → alarm at %1$s</string>
     <string name="set_per_pair">Wake-up for each class</string>

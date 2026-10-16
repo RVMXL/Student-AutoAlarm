@@ -105,6 +105,8 @@
     <string name="alarms_engine_app">motor „Programmada“</string>
     <string name="alarms_engine_clock">motor „Sagatda“</string>
     <string name="action_dismiss_alarms">Ýatgyjylary öçür</string>
+    <string name="alarms_test_row">Synag ýatgyjy</string>
+    <string name="alarms_test_cancel">Synag ýatgyjysyny öçür</string>
 
     <!-- ==== Topar goýmak netijeleri (baş + sazlamalar) ==== -->
 
@@ -187,7 +189,7 @@
     <string name="alarm_target_clock">Sagatda</string>
     <string name="alarm_target_app">Programmada</string>
     <string name="set_show_clock">Ýatgyjy goýlanda sagady görkez</string>
-    <string name="set_show_clock_desc">Ýatgyjylar öz-özünden goýulmasa, muny ýak (Realme, Oppo, Huawei): sagat taýýar ýatgyjy bilen açylar — «Sakla» düwmesi bilen tassykla.</string>
+    <string name="set_show_clock_desc">Ýatgyjylar öz-özünden goýulmasa, muny ýak (Realme, Oppo, Huawei): gije barlag we synag ýatgyjysy sagady taýýar ýatgyjy bilen açar — «Sakla» düwmesi bilen tassykla. Esas geçegi we motoryň çalyşmagy ýatgyjylary sesiz goýýar, sagady açmaýar.</string>
     <string name="set_wake_offset">Birinji sapakdan %1$s öň oýanmak</string>
     <string name="set_offset_example">Birinji sapak 08:30-da → ýatgyjy %1$s</string>
     <string name="set_per_pair">Her sapak üçin aýry oýanmak</string>

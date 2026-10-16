@@ -105,6 +105,8 @@
     <string name="alarms_engine_app">dvigatel „Ilovada“</string>
     <string name="alarms_engine_clock">dvigatel „Soatda“</string>
     <string name="action_dismiss_alarms">Budilniklarni oʻchirish</string>
+    <string name="alarms_test_row">Sinov budilnigi</string>
+    <string name="alarms_test_cancel">Sinovni bekor qilish</string>
 
     <!-- ==== Alarm batch results (home + settings) ==== -->
 
@@ -187,7 +189,7 @@
     <string name="alarm_target_clock">Soatda</string>
     <string name="alarm_target_app">Ilovada</string>
     <string name="set_show_clock">Qoʻyishda soatni koʻrsatish</string>
-    <string name="set_show_clock_desc">Budilniklar oʻzi qoʻyilmasa, yoqib qoʻy (Realme, Oppo, Huawei): soat tayyor budilnik bilan ochiladi — «Saqlash» tugmasi bilan tasdiqla.</string>
+    <string name="set_show_clock_desc">Budilniklar oʻzi qoʻyilmasa, yoqib qoʻy (Realme, Oppo, Huawei): kechki tekshiruv va sinov budilnigi soatni tayyor budilnik bilan ochadi — «Saqlash» tugmasi bilan tasdiqla. Asosiy kalit va dvigatelni almashtirish budilniklarni ovozsiz qoʻyadi, soatni ochmaydi.</string>
     <string name="set_wake_offset">Birinchi paradan %1$s oldin uygʻonish</string>
     <string name="set_offset_example">Birinchi para 08:30 da → budilnik %1$s da</string>
     <string name="set_per_pair">Har bir paraga alohida uygʻonish</string>

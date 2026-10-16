@@ -105,6 +105,8 @@
     <string name="alarms_engine_app">uygulama içi motoru</string>
     <string name="alarms_engine_clock">saat içi motoru</string>
     <string name="action_dismiss_alarms">Alarmları kaldır</string>
+    <string name="alarms_test_row">Test alarmı</string>
+    <string name="alarms_test_cancel">Testi iptal et</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
@@ -187,7 +189,7 @@
     <string name="alarm_target_clock">Saatta</string>
     <string name="alarm_target_app">Uygulamada</string>
     <string name="set_show_clock">Kurarken Saat uygulamasını göster</string>
-    <string name="set_show_clock_desc">Alarmlar kendi kendine kurulmuyorsa aç (Realme, Oppo, Huawei): Saat uygulaması hazır alarmla açılır — “Kaydet” düğmesiyle onayla.</string>
+    <string name="set_show_clock_desc">Alarmlar kendi kendine kurulmuyorsa aç (Realme, Oppo, Huawei): gece kontrolü ve test alarmı, hazır alarmıyla birlikte Saat uygulamasını açar — “Kaydet” düğmesiyle onayla. Ana düğme ve motor değişikliği alarmları sessizce kurar, Saat uygulamasını açmaz.</string>
     <string name="set_wake_offset">İlk dersten %1$s önce kalkma</string>
     <string name="set_offset_example">İlk ders 08:30 → alarm %1$s</string>
     <string name="set_per_pair">Her ders için ayrı kalkma</string>

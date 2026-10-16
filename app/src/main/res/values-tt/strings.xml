@@ -105,6 +105,8 @@
     <string name="alarms_engine_app">движок „Кушымтада“</string>
     <string name="alarms_engine_clock">движок „Сәгатьтә“</string>
     <string name="action_dismiss_alarms">Будильникларны сүндерү</string>
+    <string name="alarms_test_row">Тест будильнигы</string>
+    <string name="alarms_test_cancel">Тестне алып ташлау</string>
 
     <!-- ==== Результаты постановки партии (главный + настройки) ==== -->
 
@@ -187,7 +189,7 @@
     <string name="alarm_target_clock">Сәгатьтә</string>
     <string name="alarm_target_app">Кушымтада</string>
     <string name="set_show_clock">Будильник куелганда сәгать күрсәтү</string>
-    <string name="set_show_clock_desc">Будильниклар үзләре куелмаса, кабыз (Realme, Oppo, Huawei): сәгать әзер будильник белән ачылачак — «Сакла» төймәсе белән расла.</string>
+    <string name="set_show_clock_desc">Будильниклар үзләре куелмаса, кабыз (Realme, Oppo, Huawei): төнге тикшерү һәм тест будильнигы сәгатьне әзер будильник белән ачачак — «Сакла» төймәсе белән расла. Тумблер һәм движокны алмаштыру будильникларны тыныч куна, сәгатьне ачмый.</string>
     <string name="set_wake_offset">Беренче пара алдыннан %1$s элегрәк уяну</string>
     <string name="set_offset_example">Беренче пара 08:30\'да → будильник %1$s вакытында</string>
     <string name="set_per_pair">Һәр пара алдыннан уяну</string>
