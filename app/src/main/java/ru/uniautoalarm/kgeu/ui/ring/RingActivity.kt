@@ -7,12 +7,14 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -24,14 +26,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.core.view.WindowCompat
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -42,12 +47,14 @@ import ru.uniautoalarm.kgeu.alarm.InAppAlarmScheduler
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 import ru.uniautoalarm.kgeu.ui.common.timeFormat
 import ru.uniautoalarm.kgeu.ui.theme.AutoAlarmTheme
+import ru.uniautoalarm.kgeu.ui.theme.resolveDarkTheme
 
 /**
  * Полноэкранный звонок собственного будильника (движок «В приложении»).
  * Поднимается по full-screen intent из звонящего уведомления поверх экрана
  * блокировки (showWhenLocked + turnScreenOn). Кнопка «Отключить» глушит сервис
- * звонка; следующий будильник в «Стандарте» ставится сервисом сразу после стопа.
+ * звонка; следующий будильник ставится сервисом сразу после стопа
+ * (AL-20: док больше не упоминает удалённый режим «Стандарт»).
  */
 class RingActivity : ComponentActivity() {
 
@@ -70,6 +77,8 @@ class RingActivity : ComponentActivity() {
             )
         }
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        // UI-18 (0.11.0): edge-to-edge — статус-бар под контролем темы (ниже)
+        enableEdgeToEdge()
 
         val label = intent.getStringExtra(AlarmFireReceiver.EXTRA_LABEL) ?: ""
         val triggerAtMs = intent.getLongExtra(
@@ -83,7 +92,18 @@ class RingActivity : ComponentActivity() {
             val container = (application as AutoAlarmApp).container
             val settings by container.settings.settings
                 .collectAsStateWithLifecycle(initialValue = null)
+            val darkTheme = resolveDarkTheme(settings)
             AutoAlarmTheme(settings) {
+                // UI-18 (0.11.0): статус-бар согласован с темой звонка — светлые иконки
+                // на тёмном фоне и наоборот (раньше на тёмном звонке были тёмные иконки),
+                // фон статус-бара — плотный цвет фона темы (без стекла: полупрозрачный
+                // бар над lockscreen неверно композитируется)
+                val statusBarColor = MaterialTheme.colorScheme.background.copy(alpha = 1f)
+                SideEffect {
+                    WindowCompat.getInsetsController(window, window.decorView)
+                        .isAppearanceLightStatusBars = !darkTheme
+                    window.statusBarColor = statusBarColor.toArgb()
+                }
                 // UI-3: системный «назад»/жест на звонке глушит звук и закрывает экран —
                 // иначе finish() без stopRinging оставлял звук играть без UI-выключения
                 // (при отказанных уведомлениях — вообще без способов, см. AL-10)
@@ -109,7 +129,9 @@ class RingActivity : ComponentActivity() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    // UI-18: edge-to-edge — отступы под оба системных бара
                     .statusBarsPadding()
+                    .navigationBarsPadding()
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center

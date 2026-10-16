@@ -291,7 +291,9 @@ class AlarmGateway(
                     Log.i(TAG, "Фоновая сверка: SET_ALARM не отправляю (BAL-риск, AL-2) — поставит ночная сверка")
                     return
                 }
-                val plan = stock.setForDate(next.date, notify = true)
+                // AL-17 (0.11.0): ночная сверка — фоновая гигиена, «отложено до ночи»
+                // каждую ночь в шторке — спам; итог постановки виден в карточке «Мои будильники»
+                val plan = stock.setForDate(next.date, notify = true, notifyDeferred = false)
                 if (plan == null) clearLastScheduledLocked() // часы отказались — не храним ложный маркер
             }
             markerWake == next.wakeAt -> Unit // живой будильник на верный момент — не трогаем
@@ -315,7 +317,9 @@ class AlarmGateway(
                     )
                     return
                 }
-                val plan = stock.setForDate(next.date, notify = true)
+                // AL-17: как выше — ночной тик молчит об откладке (уведомление — только
+                // о реальных сбоях вроде «DISMISS не принят» выше)
+                val plan = stock.setForDate(next.date, notify = true, notifyDeferred = false)
                 if (plan == null) clearLastScheduledLocked()
             }
         }

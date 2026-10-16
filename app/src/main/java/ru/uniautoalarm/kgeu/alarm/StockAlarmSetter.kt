@@ -121,7 +121,13 @@ class StockAlarmSetter(
      * @return план, если будильник реально передан часам; null — пар нет / постановка
      *         отложена до ночи / часы не приняли команду.
      */
-    suspend fun setForDate(date: LocalDate, notify: Boolean = true): AlarmPlan? =
+    suspend fun setForDate(
+        date: LocalDate,
+        notify: Boolean = true,
+        /** AL-17 (0.11.0): ночная сверка глушит «отложено до ночи» — иначе тик 00:05 и
+         *  страховка 06:00 заваливали шторку ежедневным спамом в ожидании постановки. */
+        notifyDeferred: Boolean = true,
+    ): AlarmPlan? =
         withContext(Dispatchers.Default) {
             val s = settings.current()
             // resolveActivity ненадёжен на части оболочек: отрицательный ответ — НЕ повод
@@ -146,7 +152,13 @@ class StockAlarmSetter(
             // фиксирует правило «сегодня/безопасное завтра/откладка до ночи» (0.8.0)
             // и spill-случай своего события в 00:30 (wakeAt вчера — AL-6).
             val delivered = when (deliveryDecision(now, plan.wakeAt)) {
-                Delivery.PAST -> false // защита от прошедшего момента: разовый звенел бы завтра
+                Delivery.PAST -> {
+                    // AL-13 (0.11.0): молчаливый null больше не бывает — логируем и объясняем
+                    // (уведомления нет: PAST — штатный spill-случай своего события в 00:30,
+                    // а не авария; статус виден в карточке «Мои будильники»)
+                    Log.i(TAG, "Момент подъёма $plan.wakeAt уже прошёл — SET_ALARM не отправляю (AL-13)")
+                    false
+                }
                 Delivery.TOO_FAR -> {
                     if (notify) {
                         Notifications.alarmSkipped(
@@ -159,7 +171,7 @@ class StockAlarmSetter(
                     // разовый будильник на завтра, поставленный сейчас, зазвенел бы СЕГОДНЯ:
                     // время подъёма ещё не наступило. Откладываем до ночной сверки 00:05 —
                     // она поставит его в правильный день (логика 0.8.0)
-                    if (notify) {
+                    if (notify && notifyDeferred) {
                         Notifications.alarmSkipped(
                             context, date,
                             LocaleHelper.string(context, R.string.skip_deferred_to_night)

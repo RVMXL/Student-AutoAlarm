@@ -19,7 +19,9 @@ import ru.uniautoalarm.kgeu.di.AppContainer
  */
 object ReminderScheduler {
 
-    private const val REQUEST_CODE_REMINDER = 43
+    // AL-15 (0.11.0): 43 коллидировало с потенциальными бэкап-кодами PendingIntent —
+    // заведомо уникальный код в своём диапазоне (уведомления 1001…1007, активности 0/201/202)
+    private const val REQUEST_CODE_REMINDER = 43001
 
     /** Поставить/перепоставить ближайший тик напоминания. Идемпотентно, чует настройки. */
     fun scheduleNext(context: Context) {
