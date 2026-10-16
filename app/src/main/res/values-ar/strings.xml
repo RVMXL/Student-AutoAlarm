@@ -142,6 +142,8 @@
     <string name="snackbar_excluded_off">أُلغي الاستثناء</string>
     <string name="cd_enable_alarm">تفعيل المنبّه قبل هذه الحصة</string>
     <string name="cd_disable_alarm">عدم ضبط المنبّه قبل هذه الحصة</string>
+    <string name="cd_day_lessons">توجد محاضرات في هذا اليوم</string>
+    <string name="cd_day_marked">الأقسام المُعلَّمة في هذا اليوم: %1$d</string>
     <string name="empty_no_lessons">لا توجد دروس</string>
     <string name="empty_no_alarm_needed">في هذا اليوم لن تحتاج إلى منبّه</string>
 
@@ -255,9 +257,16 @@
     <string name="accent_green">أخضر</string>
     <string name="accent_pink">وردي</string>
     <string name="accent_purple">بنفسجي</string>
+    <string name="accent_custom">لون مخصص</string>
+    <string name="accent_custom_preview">يُطبَّق اللون بعد النقر على «تم»</string>
     <string name="schedule_style">نمط الجدول</string>
     <string name="style_standard">قياسي</string>
     <string name="style_paper">تقويم ورقي</string>
+    <string name="style_chalk">سبورة</string>
+    <string name="style_neon">نيون</string>
+    <string name="style_terminal">طرفية</string>
+    <string name="style_aqua">ألوان مائية</string>
+    <string name="style_retro">طباعة ريترو</string>
     <string name="set_background">الخلفية</string>
     <string name="btn_pick_image">اختيار صورة</string>
     <string name="btn_remove">إزالة</string>
@@ -265,10 +274,13 @@
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">الملف غير مناسب: اختر صورة بحجم 20 ميجابايت كحد أقصى (JPG/PNG/WebP)</string>
     <string name="set_glass">تأثير الزجاج</string>
-    <string name="set_glass_desc">البطاقات شبه شفافة كالزجاج المصنفر؛ وتُموَّه صورة الخلفية</string>
-    <string name="glass_intensity">شدة تأثير الزجاج</string>
+    <string name="set_glass_desc">البطاقات شبه شفافة مثل الزجاج المصنفر؛ يظهر التمويه والتشويه خلف الزجاج فقط وتبقى الصورة حادة</string>
     <string name="glass_tip">نصيحة: يبدو تأثير الزجاج في أفضل حالاته مع صورة خلفية (أعلاه)</string>
     <string name="glass_active">تأثير الزجاج مفعّل</string>
+    <string name="glass_matteness">الزجاج المصنفر</string>
+    <string name="glass_distortion">التشويه</string>
+    <string name="set_fsi_title">المنبّه لا يُشغّل الشاشة</string>
+    <string name="set_fsi_desc">اسمح بالرنين في ملء الشاشة: ستُضاء الشاشة عند الرنين وسيصبح زر «إيقاف» متاحًا فورًا. انقر لفتح الإعدادات</string>
 
     <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
     <string name="ring_title">حان وقت الاستيقاظ!</string>

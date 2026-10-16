@@ -142,6 +142,8 @@
     <string name="snackbar_excluded_off">Исключение снято</string>
     <string name="cd_enable_alarm">Включить будильник перед этой парой</string>
     <string name="cd_disable_alarm">Не ставить будильник перед этой парой</string>
+    <string name="cd_day_lessons">В этот день есть пары</string>
+    <string name="cd_day_marked">Обозначенных секций в этот день: %1$d</string>
     <string name="empty_no_lessons">Занятий нет</string>
     <string name="empty_no_alarm_needed">В этот день будильник не понадобится</string>
 
@@ -255,9 +257,16 @@
     <string name="accent_green">Зелёный</string>
     <string name="accent_pink">Розовый</string>
     <string name="accent_purple">Фиолетовый</string>
+    <string name="accent_custom">Свой цвет</string>
+    <string name="accent_custom_preview">Цвет применится после «Готово»</string>
     <string name="schedule_style">Стиль расписания</string>
     <string name="style_standard">Стандарт</string>
     <string name="style_paper">Бумажный календарь</string>
+    <string name="style_chalk">Мел и доска</string>
+    <string name="style_neon">Неон</string>
+    <string name="style_terminal">Терминал</string>
+    <string name="style_aqua">Акварель</string>
+    <string name="style_retro">Ретро-печать</string>
     <string name="set_background">Фон</string>
     <string name="btn_pick_image">Выбрать картинку</string>
     <string name="btn_remove">Убрать</string>
@@ -265,10 +274,13 @@
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Файл не подходит: нужна картинка до 20 МБ (JPG/PNG/WebP)</string>
     <string name="set_glass">Эффект стекла</string>
-    <string name="set_glass_desc">Карточки полупрозрачные, как матовое стекло; фоновая картинка размывается</string>
-    <string name="glass_intensity">Интенсивность стекла</string>
+    <string name="set_glass_desc">Карточки полупрозрачные, как матовое стекло; размытие и искажение — только за стеклом, картинка остаётся резкой</string>
     <string name="glass_tip">Совет: стекло лучше всего смотрится с фоновой картинкой (выше)</string>
     <string name="glass_active">Стекло активно</string>
+    <string name="glass_matteness">Матовость</string>
+    <string name="glass_distortion">Искажение</string>
+    <string name="set_fsi_title">Будильник не включает экран</string>
+    <string name="set_fsi_desc">Разрешите полноэкранный звонок: экран будет загораться при звонке, а «Отключить» — доступно сразу. Нажмите, чтобы открыть настройки</string>
 
     <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
     <string name="ring_title">Пора вставать!</string>

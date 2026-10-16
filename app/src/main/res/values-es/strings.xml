@@ -142,6 +142,8 @@
     <string name="snackbar_excluded_off">Excepción eliminada</string>
     <string name="cd_enable_alarm">Activar la alarma antes de esta clase</string>
     <string name="cd_disable_alarm">No programar alarma antes de esta clase</string>
+    <string name="cd_day_lessons">Hay clases este día</string>
+    <string name="cd_day_marked">Secciones marcadas este día: %1$d</string>
     <string name="empty_no_lessons">No hay clases</string>
     <string name="empty_no_alarm_needed">Este día no necesitarás alarma</string>
 
@@ -255,9 +257,16 @@
     <string name="accent_green">Verde</string>
     <string name="accent_pink">Rosa</string>
     <string name="accent_purple">Morado</string>
+    <string name="accent_custom">Color propio</string>
+    <string name="accent_custom_preview">El color se aplica al pulsar Listo</string>
     <string name="schedule_style">Estilo del horario</string>
     <string name="style_standard">Estándar</string>
     <string name="style_paper">Calendario de papel</string>
+    <string name="style_chalk">Pizarra</string>
+    <string name="style_neon">Neón</string>
+    <string name="style_terminal">Terminal</string>
+    <string name="style_aqua">Acuarela</string>
+    <string name="style_retro">Prensa retro</string>
     <string name="set_background">Fondo</string>
     <string name="btn_pick_image">Elegir imagen</string>
     <string name="btn_remove">Quitar</string>
@@ -265,10 +274,13 @@
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">El archivo no vale: elige una imagen de hasta 20 MB (JPG/PNG/WebP)</string>
     <string name="set_glass">Efecto de vidrio</string>
-    <string name="set_glass_desc">Las tarjetas son semitransparentes, como vidrio esmerilado; la imagen de fondo se desenfoca</string>
-    <string name="glass_intensity">Intensidad del vidrio</string>
+    <string name="set_glass_desc">Las tarjetas son translúcidas como vidrio esmerilado; el desenfoque y la distorsión se ven solo tras el cristal, la imagen sigue nítida</string>
     <string name="glass_tip">Consejo: el vidrio luce mejor con una imagen de fondo (arriba)</string>
     <string name="glass_active">Vidrio activado</string>
+    <string name="glass_matteness">Esmerilado</string>
+    <string name="glass_distortion">Distorsión</string>
+    <string name="set_fsi_title">La alarma no enciende la pantalla</string>
+    <string name="set_fsi_desc">Permite el timbre a pantalla completa: la pantalla se encenderá al sonar y Apagar estará disponible al instante. Toca para abrir los ajustes</string>
 
     <!-- ==== Ajustes: sistema ==== -->
     <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->

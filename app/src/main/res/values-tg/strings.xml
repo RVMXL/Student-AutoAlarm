@@ -142,6 +142,8 @@
     <string name="snackbar_excluded_off">Истисно бардошта шуд</string>
     <string name="cd_enable_alarm">Пеш аз ин пара будильникро фаъол кардан</string>
     <string name="cd_disable_alarm">Пеш аз ин пара будильник нагузоштан</string>
+    <string name="cd_day_lessons">Дар рӯзи ин дарсҳо ҳастанд</string>
+    <string name="cd_day_marked">Бахшҳои нишоншуда дар ин рӯз: %1$d</string>
     <string name="empty_no_lessons">Машғулият нест</string>
     <string name="empty_no_alarm_needed">Дар ин рӯз будильник лозим намеояд</string>
 
@@ -255,9 +257,16 @@
     <string name="accent_green">Сабз</string>
     <string name="accent_pink">Гулобӣ</string>
     <string name="accent_purple">Бунафш</string>
+    <string name="accent_custom">Ранги шахсӣ</string>
+    <string name="accent_custom_preview">Ранг баъди «Тайёр» татбиқ мешавад</string>
     <string name="schedule_style">Услуби ҷадвали дарсҳо</string>
     <string name="style_standard">Стандарт</string>
     <string name="style_paper">Тақвими коғазӣ</string>
+    <string name="style_chalk">Гач ва тахта</string>
+    <string name="style_neon">Неон</string>
+    <string name="style_terminal">Терминал</string>
+    <string name="style_aqua">Акварел</string>
+    <string name="style_retro">Ретро чопӣ</string>
     <string name="set_background">Замина</string>
     <string name="btn_pick_image">Интихоби сурат</string>
     <string name="btn_remove">Бардоштан</string>
@@ -265,10 +274,13 @@
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Файл мувофиқ нест: сурати то 20 МБ интихоб кун (JPG/PNG/WebP)</string>
     <string name="set_glass">Эффекти шиша</string>
-    <string name="set_glass_desc">Кортҳо нимшаффофанд, монанди шишаи махмалӣ; сурати замина мухмал мешавад</string>
-    <string name="glass_intensity">Дараҷаи эффекти шиша</string>
+    <string name="set_glass_desc">Кортҳо нимшаффоф, ба монанди шишаи яхбаста; тармиш ва тағйири шакл танҳо дар пушти шиша, тасвир возеҳ мемонад</string>
     <string name="glass_tip">Маслиҳат: шиша бо сурати замина (дар боло) аз ҳама беҳтар намоён мешавад</string>
     <string name="glass_active">Шиша фаъол аст</string>
+    <string name="glass_matteness">Муттароӣ</string>
+    <string name="glass_distortion">Тағйири шакл</string>
+    <string name="set_fsi_title">Оякунанда экранро фурӯзон намекунад</string>
+    <string name="set_fsi_desc">Равон сохтани занг дар тамоми экран роҳ диҳед: ҳангоми занг экран фурӯзон мешавад ва «Хомӯш кардан» фавран дастрас аст. Барои кушодани танзимот зер кунед</string>
 
     <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
     <string name="ring_title">Вақти хестан!</string>

@@ -142,6 +142,8 @@
     <string name="snackbar_excluded_off">已取消例外</string>
     <string name="cd_enable_alarm">开启这节课前的闹钟</string>
     <string name="cd_disable_alarm">这节课前不设置闹钟</string>
+    <string name="cd_day_lessons">这一天有课</string>
+    <string name="cd_day_marked">这一天已标记的科目：%1$d</string>
     <string name="empty_no_lessons">没有课程</string>
     <string name="empty_no_alarm_needed">这一天不需要闹钟</string>
 
@@ -255,9 +257,16 @@
     <string name="accent_green">绿色</string>
     <string name="accent_pink">粉色</string>
     <string name="accent_purple">紫色</string>
+    <string name="accent_custom">自定义颜色</string>
+    <string name="accent_custom_preview">点击“完成”后应用颜色</string>
     <string name="schedule_style">课程表样式</string>
     <string name="style_standard">标准</string>
     <string name="style_paper">纸质日历</string>
+    <string name="style_chalk">粉笔黑板</string>
+    <string name="style_neon">霓虹</string>
+    <string name="style_terminal">终端</string>
+    <string name="style_aqua">水彩</string>
+    <string name="style_retro">复古印刷</string>
     <string name="set_background">背景</string>
     <string name="btn_pick_image">选择图片</string>
     <string name="btn_remove">移除</string>
@@ -265,10 +274,13 @@
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">文件不可用：请选择不超过 20 MB 的图片（JPG/PNG/WebP）</string>
     <string name="set_glass">玻璃效果</string>
-    <string name="set_glass_desc">卡片呈磨砂玻璃般的半透明效果，背景图片会虚化</string>
-    <string name="glass_intensity">玻璃效果强度</string>
+    <string name="set_glass_desc">卡片像磨砂玻璃一样半透明；模糊与畸变只出现在玻璃后面，背景图片保持清晰</string>
     <string name="glass_tip">小贴士：搭配背景图片（上方设置）效果最佳</string>
     <string name="glass_active">玻璃效果已开启</string>
+    <string name="glass_matteness">磨砂度</string>
+    <string name="glass_distortion">畸变</string>
+    <string name="set_fsi_title">闹钟无法唤醒屏幕</string>
+    <string name="set_fsi_desc">请允许全屏响铃：响铃时屏幕会点亮，“关闭”按钮立即可用。点击打开设置</string>
 
     <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
     <string name="ring_title">该起床了！</string>

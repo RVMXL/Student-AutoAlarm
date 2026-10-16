@@ -142,6 +142,8 @@
     <string name="snackbar_excluded_off">Өзгөчөлүк өчүрүлдү</string>
     <string name="cd_enable_alarm">Ушул жуптун алдында ояткычты күйгүзүү</string>
     <string name="cd_disable_alarm">Ушул жуптун алдында ояткыч койбоо</string>
+    <string name="cd_day_lessons">Бул күндө сабактар бар</string>
+    <string name="cd_day_marked">Бул күндөгү белгиленген бөлүмдөр: %1$d</string>
     <string name="empty_no_lessons">Сабак жок</string>
     <string name="empty_no_alarm_needed">Бул күнү ояткыч керек эмес</string>
 
@@ -255,9 +257,16 @@
     <string name="accent_green">Жашыл</string>
     <string name="accent_pink">Кызгылт</string>
     <string name="accent_purple">Кызгылт көк</string>
+    <string name="accent_custom">Өз түсү</string>
+    <string name="accent_custom_preview">Түс «Даяр» басылгандан кийин колдонулат</string>
     <string name="schedule_style">Кесте стили</string>
     <string name="style_standard">Стандарт</string>
     <string name="style_paper">Кагаз календарь</string>
+    <string name="style_chalk">Бор жана такта</string>
+    <string name="style_neon">Неон</string>
+    <string name="style_terminal">Терминал</string>
+    <string name="style_aqua">Суу боёк</string>
+    <string name="style_retro">Ретро басма</string>
     <string name="set_background">Фон</string>
     <string name="btn_pick_image">Сүрөт тандоо</string>
     <string name="btn_remove">Алып салу</string>
@@ -265,10 +274,13 @@
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Файл жарабайт: 20 МБ чейинки сүрөт танда (JPG/PNG/WebP)</string>
     <string name="set_glass">Айнек эффектиси</string>
-    <string name="set_glass_desc">Карталар жарым-жартылай тунук, үбүлөнгөн айнек сыяктуу; фондогу сүрөт бүдөмүктөлөт</string>
-    <string name="glass_intensity">Айнек эффектисинин күчү</string>
+    <string name="set_glass_desc">Карточкалар муздаткан айнек сыяктуу жарым мөлдүр; булдурактык менен бурмалануу айнектин артында гана, сүрөт анык калат</string>
     <string name="glass_tip">Кеңеш: айнек эффектиси фон сүрөтү менен (жогоруда) эң жакшы көрүнөт</string>
     <string name="glass_active">Айнек эффектиси күйгүзүлгөн</string>
+    <string name="glass_matteness">Булдурактык</string>
+    <string name="glass_distortion">Бурмалануу</string>
+    <string name="set_fsi_title">Ояткыч экранды күйгүзбөйт</string>
+    <string name="set_fsi_desc">Толук экранду күүгө уруксат бер: күү кезинде экран жанып, «Өчүрүү» дароо колго кирет. Параметрлерди ачуу үчүн бас</string>
 
     <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
     <string name="ring_title">Туруунун убактысы!</string>

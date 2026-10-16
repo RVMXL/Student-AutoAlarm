@@ -142,6 +142,8 @@
     <string name="snackbar_excluded_off">Exception retirée</string>
     <string name="cd_enable_alarm">Activer le réveil avant ce cours</string>
     <string name="cd_disable_alarm">Ne pas programmer de réveil avant ce cours</string>
+    <string name="cd_day_lessons">Il y a des cours ce jour-là</string>
+    <string name="cd_day_marked">Sections marquées ce jour-là : %1$d</string>
     <string name="empty_no_lessons">Aucun cours</string>
     <string name="empty_no_alarm_needed">Ce jour-là, pas besoin de réveil</string>
 
@@ -255,9 +257,16 @@
     <string name="accent_green">Vert</string>
     <string name="accent_pink">Rose</string>
     <string name="accent_purple">Violet</string>
+    <string name="accent_custom">Couleur personnalisée</string>
+    <string name="accent_custom_preview">La couleur s\'applique après « Terminé »</string>
     <string name="schedule_style">Style de l\'emploi du temps</string>
     <string name="style_standard">Standard</string>
     <string name="style_paper">Calendrier papier</string>
+    <string name="style_chalk">Ardoise</string>
+    <string name="style_neon">Néon</string>
+    <string name="style_terminal">Terminal</string>
+    <string name="style_aqua">Aquarelle</string>
+    <string name="style_retro">Presse rétro</string>
     <string name="set_background">Fond</string>
     <string name="btn_pick_image">Choisir une image</string>
     <string name="btn_remove">Retirer</string>
@@ -265,10 +274,13 @@
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Fichier non valide : choisis une image de 20 Mo max (JPG/PNG/WebP)</string>
     <string name="set_glass">Effet verre</string>
-    <string name="set_glass_desc">Les cartes sont semi-transparentes, comme du verre dépoli ; l\'image de fond est floutée</string>
-    <string name="glass_intensity">Intensité de l\'effet verre</string>
+    <string name="set_glass_desc">Les cartes sont translucides comme du verre dépoli ; le flou et la distorsion n\'apparaissent que derrière la vitre, l\'image reste nette</string>
     <string name="glass_tip">Astuce : l\'effet verre rend le mieux avec une image de fond (ci-dessus)</string>
     <string name="glass_active">Effet verre activé</string>
+    <string name="glass_matteness">Effet givré</string>
+    <string name="glass_distortion">Distorsion</string>
+    <string name="set_fsi_title">Le réveil n\'allume pas l\'écran</string>
+    <string name="set_fsi_desc">Autorisez la sonnerie plein écran : l\'écran s\'allumera à la sonnerie et « Désactiver » sera disponible aussitôt. Touchez pour ouvrir les paramètres</string>
 
     <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
     <string name="ring_title">Il est temps de se lever !</string>

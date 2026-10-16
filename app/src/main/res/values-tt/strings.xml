@@ -142,6 +142,8 @@
     <string name="snackbar_excluded_off">Искәрмә алынды</string>
     <string name="cd_enable_alarm">Бу пара алдыннан будильникны кабызу</string>
     <string name="cd_disable_alarm">Бу пара алдыннан будильник куймау</string>
+    <string name="cd_day_lessons">Бу көндә дәресләр бар</string>
+    <string name="cd_day_marked">Бу көндә билгеләнгән дәресләр: %1$d</string>
     <string name="empty_no_lessons">Дәресләр юк</string>
     <string name="empty_no_alarm_needed">Бу көндә будильник кирәк булмаячак</string>
 
@@ -255,9 +257,16 @@
     <string name="accent_green">Яшел</string>
     <string name="accent_pink">Алсу</string>
     <string name="accent_purple">Шәмәхә</string>
+    <string name="accent_custom">Үз төсе</string>
+    <string name="accent_custom_preview">Төс «Әзер» басылгач кулланыла</string>
     <string name="schedule_style">Расписание стиле</string>
     <string name="style_standard">Стандарт</string>
     <string name="style_paper">Кәгазь календарь</string>
+    <string name="style_chalk">Крейд һәм такта</string>
+    <string name="style_neon">Неон</string>
+    <string name="style_terminal">Терминал</string>
+    <string name="style_aqua">Су буяу</string>
+    <string name="style_retro">Ретро басма</string>
     <string name="set_background">Фон</string>
     <string name="btn_pick_image">Картинаны сайлау</string>
     <string name="btn_remove">Алып ташлау</string>
@@ -265,10 +274,13 @@
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Файл ярамый: 20 МБ кадәр картина сайла (JPG/PNG/WebP)</string>
     <string name="set_glass">Чыбык эффекты</string>
-    <string name="set_glass_desc">Карточкалар ярым үтә күренүчән, ятык чыбык кебек; фондагы картина буазлана</string>
-    <string name="glass_intensity">Чыбык эффекты көче</string>
+    <string name="set_glass_desc">Карточкалар тоңдырылган бышкылдай яртыла үтә күренә; болытлану һәм бозылу тик бышкыл артында, картина ачык кала</string>
     <string name="glass_tip">Киңәш: чыбык фондагы картина белән иң яхшы күренә (өстәрәк)</string>
     <string name="glass_active">Чыбык актив</string>
+    <string name="glass_matteness">Болытлану</string>
+    <string name="glass_distortion">Бозылу</string>
+    <string name="set_fsi_title">Уяткыч экраны кабызмый</string>
+    <string name="set_fsi_desc">Тулы экранлы кыңгырауга рөхсәт бир: кыңгырау вакытында экран кабыныр, «Сүндерү» шул ук минутта була. Көйләүләрне ачар өчен бас</string>
 
     <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
     <string name="ring_title">Уянырга вакыт!</string>

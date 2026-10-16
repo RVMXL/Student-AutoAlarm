@@ -142,6 +142,8 @@
     <string name="snackbar_excluded_off">Istisna aýryldy</string>
     <string name="cd_enable_alarm">Bu sapakdan öň ýatgyjyny ýak</string>
     <string name="cd_disable_alarm">Bu sapakdan öň ýatgyjy goýma</string>
+    <string name="cd_day_lessons">Bu gününde sapaklar bar</string>
+    <string name="cd_day_marked">Bu gününde bellenen bölümler: %1$d</string>
     <string name="empty_no_lessons">Sapak ýok</string>
     <string name="empty_no_alarm_needed">Bu güne ýatgyjy gerek bolmaz</string>
 
@@ -255,9 +257,16 @@
     <string name="accent_green">Ýaşyl</string>
     <string name="accent_pink">Gülreňki</string>
     <string name="accent_purple">Binegär</string>
+    <string name="accent_custom">Öz reňki</string>
+    <string name="accent_custom_preview">Rellä «Taýýar» basylandan soň ulanylýar</string>
     <string name="schedule_style">Sabak çeredecesiniň stili</string>
     <string name="style_standard">Standart</string>
     <string name="style_paper">Kagyz senenama</string>
+    <string name="style_chalk">Mel we tagta</string>
+    <string name="style_neon">Neon</string>
+    <string name="style_terminal">Terminal</string>
+    <string name="style_aqua">Akwarel</string>
+    <string name="style_retro">Retro çap</string>
     <string name="set_background">Fon</string>
     <string name="btn_pick_image">Surat saýla</string>
     <string name="btn_remove">Aýyr</string>
@@ -265,10 +274,13 @@
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Faýl ýaramok: 20 MB çenli surat saýla (JPG/PNG/WebP)</string>
     <string name="set_glass">Aýna effekt</string>
-    <string name="set_glass_desc">Kartlar duýuk aýna ýaly ýarym düýşük; fon suraty bulanylýar</string>
-    <string name="glass_intensity">Aýna effektiniň güýçlüligi</string>
+    <string name="set_glass_desc">Kartlar buzly aýnak ýaly ýarym düşnükir; bulanzyklyk we bozulma diňe aýnagyň arkasynda, surat anyk galýar</string>
     <string name="glass_tip">Maslahat: aýna effekti fon suraty (ýokardaky) bilen iň gowy görünýär</string>
     <string name="glass_active">Aýna effekt işleýär</string>
+    <string name="glass_matteness">Bulanzyklyk</string>
+    <string name="glass_distortion">Bozulma</string>
+    <string name="set_fsi_title">Oýatgyjy ekrany ýakynok</string>
+    <string name="set_fsi_desc">Doly ekranly zyňska rugsat ber: zyň wagtynda ekran ýanar, «Öçürmek» şuw wagt peýda bolur. Saýlawlary açmak üçin bas</string>
 
     <!-- ==== Sazlamalar: ulgam ==== -->
     <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->

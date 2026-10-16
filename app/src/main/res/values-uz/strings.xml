@@ -142,6 +142,8 @@
     <string name="snackbar_excluded_off">Istisno olib tashlandi</string>
     <string name="cd_enable_alarm">Bu paradan oldin budilnikni yoqish</string>
     <string name="cd_disable_alarm">Bu paradan oldin budilnik qoʻymaslik</string>
+    <string name="cd_day_lessons">Bu kunda darslar bor</string>
+    <string name="cd_day_marked">Bu kunda belgilangan boʻlimlar: %1$d</string>
     <string name="empty_no_lessons">Mashgʻulotlar yoʻq</string>
     <string name="empty_no_alarm_needed">Bu kunda budilnik kerak boʻlmaydi</string>
 
@@ -255,9 +257,16 @@
     <string name="accent_green">Yashil</string>
     <string name="accent_pink">Pushti</string>
     <string name="accent_purple">Binafsha</string>
+    <string name="accent_custom">Oʻz rangi</string>
+    <string name="accent_custom_preview">Rang «Tayyor» bosilgach qoʻllanadi</string>
     <string name="schedule_style">Dars jadvali uslubi</string>
     <string name="style_standard">Standart</string>
     <string name="style_paper">Qogʻoz taqvim</string>
+    <string name="style_chalk">Boʻr va doska</string>
+    <string name="style_neon">Neon</string>
+    <string name="style_terminal">Terminal</string>
+    <string name="style_aqua">Akvarel</string>
+    <string name="style_retro">Retro chop</string>
     <string name="set_background">Fon</string>
     <string name="btn_pick_image">Rasm tanlash</string>
     <string name="btn_remove">Olib tashlash</string>
@@ -265,10 +274,13 @@
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Fayl yaramaydi: 20 MB gacha rasm tanla (JPG/PNG/WebP)</string>
     <string name="set_glass">Shisha effekti</string>
-    <string name="set_glass_desc">Kartalar yarim shaffof, mat shisha kabi; fon rasmi xiralashtiriladi</string>
-    <string name="glass_intensity">Shisha effekti kuchi</string>
+    <string name="set_glass_desc">Kartalar muzlatilgan oyna kabi yarim shaffof; xiralashuv va deformatsiya faqat oyna ortida, rasm aniq qoladi</string>
     <string name="glass_tip">Maslahat: shisha effekti fon rasmi bilan (yuqorida) eng chiroyli koʻrinadi</string>
     <string name="glass_active">Shisha effekti yoqilgan</string>
+    <string name="glass_matteness">Matlik</string>
+    <string name="glass_distortion">Deformatsiya</string>
+    <string name="set_fsi_title">Oyatgich ekranni yoqmaydi</string>
+    <string name="set_fsi_desc">Toʻliq ekranli jiringashga ruxsat ber: jiringagananda ekran yonadi, «Oʻchirish» darhol paydo boʻladi. Sozlamalarni ochish uchun bos</string>
 
     <!-- ==== Settings: system ==== -->
     <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->

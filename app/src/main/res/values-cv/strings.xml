@@ -142,6 +142,8 @@
     <string name="snackbar_excluded_off">Исключени кӑларса пӑрахнӑ</string>
     <string name="cd_enable_alarm">Ку пара умӗнче будильник хуш</string>
     <string name="cd_disable_alarm">Ку пара умӗнче будильник лартма</string>
+    <string name="cd_day_lessons">Ку кунта вӗренӳсем пур</string>
+    <string name="cd_day_marked">Ку кунта палӑртнӑ вӗренӳсем: %1$d</string>
     <string name="empty_no_lessons">Заняти çук</string>
     <string name="empty_no_alarm_needed">Ку кунта будильник кирлӗ мар</string>
 
@@ -255,9 +257,16 @@
     <string name="accent_green">Çеçпĕл</string>
     <string name="accent_pink">Розӑ</string>
     <string name="accent_purple">Пурпур</string>
+    <string name="accent_custom">Суйланӑ тӗс</string>
+    <string name="accent_custom_preview">Тӗс «Хатӗр» хыҫҫӑн лартӑнать</string>
     <string name="schedule_style">Расписание стилӗ</string>
     <string name="style_standard">Стандарт</string>
     <string name="style_paper">Хут календарь</string>
+    <string name="style_chalk">Мел тата хӑйме</string>
+    <string name="style_neon">Неон</string>
+    <string name="style_terminal">Терминал</string>
+    <string name="style_aqua">Шыв тӗсӗ</string>
+    <string name="style_retro">Ретро пичет</string>
     <string name="set_background">Фон</string>
     <string name="btn_pick_image">Ӳкерчĕк суйла</string>
     <string name="btn_remove">Кăларса пăрах</string>
@@ -265,10 +274,13 @@
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Файл килетмен: 20 МБ çитиччен ӳкерчӗк суйла (JPG/PNG/WebP)</string>
     <string name="set_glass">Стекло эффектӗ</string>
-    <string name="set_glass_desc">Карттӑсем пӑрлӑ стекло пек çурӑ курӑнаҫҫӗ; фон ӳкерчӗкне пӑсӑрлатаҫҫӗ</string>
-    <string name="glass_intensity">Стекло вӑйӗ</string>
+    <string name="set_glass_desc">Карточкасем урлӑ фон пӑтӑх курӑнать; пӑтрану тата деформаци çеç пӗр вырӑнта, ӳкерчӗк уҫӑ курӑнать</string>
     <string name="glass_tip">Канаш: стекло фон ӳкерчӗкӗпе чи лайӑх курӑнать (çиертех)</string>
     <string name="glass_active">Стекло хастар</string>
+    <string name="glass_matteness">Пӑтӑхлӑх</string>
+    <string name="glass_distortion">Деформация</string>
+    <string name="set_fsi_title">Ояткӑч экрана хутармасть</string>
+    <string name="set_fsi_desc">Пӗтӗм экранлӑ сасӑ ирӗк пар: сасӑ чухне экран хутарать, «Сӳнтер» пултах пулать. Пуҫлавсене уҫма пич пани</string>
 
     <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
     <string name="ring_title">Вӑхӑт вӑранма!</string>

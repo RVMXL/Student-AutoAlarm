@@ -142,6 +142,8 @@
     <string name="snackbar_excluded_off">Ерекшелік өшірілді</string>
     <string name="cd_enable_alarm">Осы жұптың алдында оятқышты қосу</string>
     <string name="cd_disable_alarm">Осы жұптың алдында оятқыш қоймау</string>
+    <string name="cd_day_lessons">Бұл күні сабақтар бар</string>
+    <string name="cd_day_marked">Бұл күндегі белгіленген бөлімдер: %1$d</string>
     <string name="empty_no_lessons">Сабақ жоқ</string>
     <string name="empty_no_alarm_needed">Бұл күні оятқыш қажет емес</string>
 
@@ -255,9 +257,16 @@
     <string name="accent_green">Жасыл</string>
     <string name="accent_pink">Қызғылт</string>
     <string name="accent_purple">Күлгін</string>
+    <string name="accent_custom">Өз түсі</string>
+    <string name="accent_custom_preview">Түс «Дайын» басылғаннан кейін қолданылады</string>
     <string name="schedule_style">Кесте стилі</string>
     <string name="style_standard">Стандарт</string>
     <string name="style_paper">Қағаз күнтізбе</string>
+    <string name="style_chalk">Бор және тақта</string>
+    <string name="style_neon">Неон</string>
+    <string name="style_terminal">Терминал</string>
+    <string name="style_aqua">Су бояу</string>
+    <string name="style_retro">Ретро баспа</string>
     <string name="set_background">Фон</string>
     <string name="btn_pick_image">Сурет таңдау</string>
     <string name="btn_remove">Алып тастау</string>
@@ -265,10 +274,13 @@
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Файл жарамайды: 20 МБ-ға дейінгі сурет таңда (JPG/PNG/WebP)</string>
     <string name="set_glass">Шыны эффектісі</string>
-    <string name="set_glass_desc">Карталар жартылай мөлдір, аяз басқан шыны сияқты; фон суреті бұлыңғырланады</string>
-    <string name="glass_intensity">Шыны эффектісінің күші</string>
+    <string name="set_glass_desc">Кәртәңдер мұздатылған әйнек тәрізді жартылай мөлдір; бұлыңғырлық пен бұрмалану тек әйнектің артында, сурет анық қалады</string>
     <string name="glass_tip">Кеңес: шыны эффектісі фон суретімен (жоғарыда) ең жақсы көрінеді</string>
     <string name="glass_active">Шыны эффектісі қосулы</string>
+    <string name="glass_matteness">Бұлыңғырлық</string>
+    <string name="glass_distortion">Бұрмалану</string>
+    <string name="set_fsi_title">Оятқыш экранды қоспайды</string>
+    <string name="set_fsi_desc">Толық экранды шырылға рұқсат ет: шырыл кезінде экран жанып, «Өшіру» бірден қолжетімді болады. Параметрлерді ашу үшін түрт</string>
 
     <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
     <string name="ring_title">Тұру уақыты!</string>

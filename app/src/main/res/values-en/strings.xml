@@ -142,6 +142,8 @@
     <string name="snackbar_excluded_off">Exception removed</string>
     <string name="cd_enable_alarm">Enable the alarm before this class</string>
     <string name="cd_disable_alarm">Don\'t set an alarm before this class</string>
+    <string name="cd_day_lessons">Has classes on this day</string>
+    <string name="cd_day_marked">Marked sections on this day: %1$d</string>
     <string name="empty_no_lessons">No classes</string>
     <string name="empty_no_alarm_needed">No alarm will be needed on this day</string>
 
@@ -255,9 +257,16 @@
     <string name="accent_green">Green</string>
     <string name="accent_pink">Pink</string>
     <string name="accent_purple">Purple</string>
+    <string name="accent_custom">Custom color</string>
+    <string name="accent_custom_preview">The color applies after you tap Done</string>
     <string name="schedule_style">Schedule style</string>
     <string name="style_standard">Standard</string>
     <string name="style_paper">Paper calendar</string>
+    <string name="style_chalk">Chalkboard</string>
+    <string name="style_neon">Neon</string>
+    <string name="style_terminal">Terminal</string>
+    <string name="style_aqua">Watercolor</string>
+    <string name="style_retro">Retro print</string>
     <string name="set_background">Background</string>
     <string name="btn_pick_image">Pick an image</string>
     <string name="btn_remove">Remove</string>
@@ -265,10 +274,13 @@
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">File won\'t work: pick an image up to 20 MB (JPG/PNG/WebP)</string>
     <string name="set_glass">Glass effect</string>
-    <string name="set_glass_desc">Cards are semi-transparent like frosted glass; the background image is blurred</string>
-    <string name="glass_intensity">Glass intensity</string>
+    <string name="set_glass_desc">Cards are translucent like frosted glass; blur and distortion appear only behind the glass, the picture stays sharp</string>
     <string name="glass_tip">Tip: glass looks best with a background image (above)</string>
     <string name="glass_active">Glass is on</string>
+    <string name="glass_matteness">Frostiness</string>
+    <string name="glass_distortion">Distortion</string>
+    <string name="set_fsi_title">Alarm doesn\'t turn the screen on</string>
+    <string name="set_fsi_desc">Allow full-screen ringing: the screen will light up and Dismiss will be ready at once. Tap to open settings</string>
 
     <!-- ==== Settings: system ==== -->
     <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->

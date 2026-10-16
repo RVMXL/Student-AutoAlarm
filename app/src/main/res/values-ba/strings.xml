@@ -142,6 +142,8 @@
     <string name="snackbar_excluded_off">Айырым осраҡ алынды</string>
     <string name="cd_enable_alarm">Был параның алдында будильникты ҡабыҙыу</string>
     <string name="cd_disable_alarm">Был параның алдында будильник ҡуймау</string>
+    <string name="cd_day_lessons">Был көндә дәрестәр бар</string>
+    <string name="cd_day_marked">Был көндә билдәләнгән дәрестәр: %1$d</string>
     <string name="empty_no_lessons">Дәрестәр юҡ</string>
     <string name="empty_no_alarm_needed">Был көндө будильник кәрәкмәйәсәк</string>
 
@@ -255,9 +257,16 @@
     <string name="accent_green">Йәшел</string>
     <string name="accent_pink">Алһыу</string>
     <string name="accent_purple">Шәмәхә</string>
+    <string name="accent_custom">Үҙ төҫө</string>
+    <string name="accent_custom_preview">Төҫ «Әҙер» баҫылғас ҡулланыла</string>
     <string name="schedule_style">Расписание күренеше</string>
     <string name="style_standard">Стандарт</string>
     <string name="style_paper">Ҡағыҙ календарь</string>
+    <string name="style_chalk">Мел һәм таҡта</string>
+    <string name="style_neon">Неон</string>
+    <string name="style_terminal">Терминал</string>
+    <string name="style_aqua">Һыу буяу</string>
+    <string name="style_retro">Ретро баҫма</string>
     <string name="set_background">Фон</string>
     <string name="btn_pick_image">Рәсемде һайлау</string>
     <string name="btn_remove">Алып ташлау</string>
@@ -265,10 +274,13 @@
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Файл ярамай: 20 МБ-ға тиклем рәсем һайла (JPG/PNG/WebP)</string>
     <string name="set_glass">Быяла эффекты</string>
-    <string name="set_glass_desc">Карталар яртылаш үтә күренеүсән, йылтырһыҙ быяла кеүек; фон рәсеме тоноҡлоғон юғалта</string>
-    <string name="glass_intensity">Быяла дәрәжәһе</string>
+    <string name="set_glass_desc">Карточкалар боҙлатылған быяла кеүек яртылаш үтә күренә; болотланыу һәм бормаланыу тик быяла артында, рәсем асыҡ ҡала</string>
     <string name="glass_tip">Кәңәш: быяла фон рәсеме менән иң яҡшы күренә (өҫтәрәк)</string>
     <string name="glass_active">Быяла ҡабыҙылған</string>
+    <string name="glass_matteness">Болотланыу</string>
+    <string name="glass_distortion">Бормаланыу</string>
+    <string name="set_fsi_title">Уяғыс экраны ҡабыҙмай</string>
+    <string name="set_fsi_desc">Тулы экранлы урғауға рөхсәт бир: урғау ваҡытында экран ҡабынар, «Һүндереү» шул уҡ минутта була. Көйләүҙәрҙе асыр өсөн баҫ</string>
 
     <!-- ==== Звонок будильника приложения (движок «В приложении», 0.7.0) ==== -->
     <string name="ring_title">Уяныр ваҡыт!</string>
