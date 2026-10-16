@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import java.time.LocalDate
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -44,13 +47,26 @@ data class ScheduledAlarm(
  * ViewModel главного экрана: снимок настроек, состояние синхронизации, пары на сегодня/завтра
  * и план пробуждения на завтра (планировщик вызывается прямо из combine — данные уже в кэше).
  *
- * Дата «завтра» фиксируется на момент создания VM — для главного экрана этого достаточно
- * (при возврате на вкладку VM живёт, при пересоздании активити пересчитается).
+ * DATA-15 (0.11.0): «сегодня/завтра» — ПРОИЗВОДНЫЕ от тика возврата экрана (см. [resumeTick]),
+ * а не константы на время жизни VM: приложение, висевшее открытым через полночь,
+ * показывало блок «Сегодня» со вчерашними парами до пересоздания активити.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModel(private val container: AppContainer) : ViewModel() {
 
-    /** Счётчик возвратов экрана на передний план — перечитывать пробы/разрешения (UI-6). */
+    /** Счётчик возвратов экрана на передний план — перечитывать пробы/разрешения (UI-6)
+     *  и даты «сегодня/завтра» (DATA-15). */
     private val resumeTick = MutableStateFlow(0)
+
+    /** «Сегодня» — производная от тика возврата экрана (DATA-15). */
+    private val todayFlow: StateFlow<LocalDate> = resumeTick
+        .map { LocalDate.now() }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), LocalDate.now())
+
+    /** «Завтра» — производная от «сегодня». */
+    private val tomorrowFlow: StateFlow<LocalDate> = todayFlow
+        .map { it.plusDays(1) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), LocalDate.now().plusDays(1))
 
     /** Настройки: null до первого значения DataStore (краткий миг после запуска). */
     val settings: StateFlow<Settings?> = container.settings.settings
@@ -60,24 +76,22 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
     val sync: StateFlow<SyncInfo> = container.scheduleRepository.syncState
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), SyncInfo())
 
-    private val today: LocalDate = LocalDate.now()
-    private val tomorrow: LocalDate = today.plusDays(1)
+    /** Пары на завтра (реактивно, из кэша Room; дата — производная, DATA-15). */
+    val tomorrowLessons: StateFlow<List<Lesson>> = tomorrowFlow
+        .flatMapLatest { container.scheduleRepository.lessonsFlow(it) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    /** Пары на завтра (реактивно, из кэша Room). */
-    val tomorrowLessons: StateFlow<List<Lesson>> =
-        container.scheduleRepository.lessonsFlow(tomorrow)
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
-    /** Пары на сегодня — для блока «Ближайшие занятия». */
-    val todayLessons: StateFlow<List<Lesson>> =
-        container.scheduleRepository.lessonsFlow(today)
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    /** Пары на сегодня — для блока «Ближайшие занятия» (дата — производная, DATA-15). */
+    val todayLessons: StateFlow<List<Lesson>> = todayFlow
+        .flatMapLatest { container.scheduleRepository.lessonsFlow(it) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     /** План пробуждения на завтра; null — мастер не пройден / кандидатов нет. */
     val plan: StateFlow<AlarmPlan?> = combine(
         settings.filterNotNull(),
-        tomorrowLessons
-    ) { s, lessons ->
+        tomorrowLessons,
+        tomorrowFlow
+    ) { s, lessons, tomorrow ->
         if (!s.setupComplete) null
         else container.planner.planFor(tomorrow, lessons)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
@@ -159,6 +173,9 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
                 onResult(LocaleHelper.string(container.appContext, R.string.err_no_target))
                 return@launch
             }
+            // DATA-15: даты берём НА МОМЕНТ вызова, а не поля времени жизни VM
+            val today = LocalDate.now()
+            val tomorrow = today.plusDays(1)
             val results = listOf(
                 container.scheduleRepository.refreshWeek(target, today),
                 container.scheduleRepository.refreshWeek(target, tomorrow)

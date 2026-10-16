@@ -43,8 +43,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,6 +56,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
@@ -111,7 +114,14 @@ fun ScheduleScreen() {
 
     val paper = settings?.calendarStyle == CalendarStyle.PAPER
     val dayLessons = weekLessons[selectedDate].orEmpty()
-    val today = remember { LocalDate.now() }
+    // UI-13 (0.11.0): «сегодня» — состояние, обновляемое на каждом возврате экрана на
+    // передний план, а не замороженное на входе в композицию: приложение, висевшее
+    // открытым через полночь, подсвечивало вчерашний день до пересоздания активити
+    var today by remember { mutableStateOf(LocalDate.now()) }
+    LifecycleResumeEffect(Unit) {
+        today = LocalDate.now()
+        onPauseOrDispose { }
+    }
     val currentWeekMonday =
         remember(today) { today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)) }
     val isCurrentWeek = weekMonday == currentWeekMonday
@@ -234,7 +244,7 @@ fun ScheduleScreen() {
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items((0..6).toList()) { offset ->
+                items((0..6).toList(), key = { it }) { offset -> // UI-12: key — переиспользование состояния чипов
                     val date = weekMonday.plusDays(offset.toLong())
                     DayChip(
                         date = date,
@@ -280,7 +290,11 @@ fun ScheduleScreen() {
                     ),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    items(dayLessons) { lesson ->
+                    // UI-12: стабильный составной key — пересортировка/замены не пересоздают карточки заново
+                    items(dayLessons, key = { lesson ->
+                        "${lesson.date}:${lesson.start}:${lesson.end}:${lesson.subject}:" +
+                            "${lesson.room}:${lesson.kind}:${lesson.group}"
+                    }) { lesson ->
                         // строки снекбара вынесены в композицию: внутри scope.launch
                         // composable-функции (stringResource) вызывать нельзя
                         val msgExcludedOn =

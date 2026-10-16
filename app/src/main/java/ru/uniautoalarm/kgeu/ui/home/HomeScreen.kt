@@ -33,7 +33,6 @@ import androidx.compose.material.icons.rounded.AlarmOn
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Warning
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -303,20 +302,9 @@ private fun HeaderRow(settings: Settings?, busy: Boolean, onRefresh: () -> Unit)
                 Icon(Icons.Rounded.Refresh, contentDescription = stringResource(R.string.cd_refresh_schedule))
             }
         }
-        AssistChip(
-            onClick = { },
-            label = {
-                // 0.8.0: режим один — «одна ночь вперёд» с ежедневной ночной сверкой
-                Text(stringResource(R.string.mode_standard_chip))
-            },
-            leadingIcon = {
-                Icon(
-                    Icons.Rounded.AlarmOn,
-                    contentDescription = null,
-                    modifier = Modifier.size(18.dp)
-                )
-            }
-        )
+        // UI-19 (0.11.0): мёртвый AssistChip «Стандарт» удалён (onClick = {} ни на что
+        // не реагировал; режим один — «одна ночь вперёд», см. RELEASE-0.8.0),
+        // ключ mode_standard_chip вычищен из всех 15 локалей (SET-8-хвост)
     }
 }
 
@@ -653,7 +641,13 @@ private fun AlarmsCard(
 
 @Composable
 private fun UpcomingCard(todayLessons: List<Lesson>, tomorrowLessons: List<Lesson>) {
-    val now = remember { LocalTime.now() }
+    // UI-13 (0.11.0): «сейчас» — состояние, обновляемое на каждом возврате экрана,
+    // а не замороженное на входе в композицию: фильтр «ближайших» жил вчерашним временем
+    var now by remember { mutableStateOf(LocalTime.now()) }
+    LifecycleResumeEffect(Unit) {
+        now = LocalTime.now()
+        onPauseOrDispose { }
+    }
     val todayUpcoming = todayLessons.filter { it.end > now }
 
     Card(shape = CardShape, modifier = Modifier.fillMaxWidth()) {

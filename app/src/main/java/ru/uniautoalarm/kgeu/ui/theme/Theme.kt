@@ -59,13 +59,16 @@ fun AutoAlarmTheme(settings: Settings?, content: @Composable () -> Unit) {
 
     // Эффект стекла: все поверхности/карточки становятся полупрозрачными, под ними
     // просвечивает фоновая картинка. Интенсивность — ползунок в настройках (0..1):
-    // чем больше, тем прозрачнее. Минимум 0.15 — текст читается.
+    // чем больше, тем прозрачнее.
+    // UI-20 (0.11.0): нижний порог альфы поднят 0.15 → 0.55 — при 0.15 текст поверх
+    // яркой картинки сливался (контраст ~1.8:1, WCAG требует 4.5:1 для мелкого);
+    // 0.55 держит фон читаемым, оставляя картинку видимой.
     // ВАЖНО: стекло применяется ТОЛЬКО при заданной фоновой картинке. Без картинки
     // полупрозрачные поверхности композитились бы с windowBackground — при тёмной
     // системе и светлой теме это давало серую кашу («текст сливается»); без картинки
     // в стекле нет смысла, поэтому схема остаётся плотной и контрастной.
     if (settings?.glassEnabled == true && settings.backgroundImagePath != null) {
-        val glassAlpha = (1f - settings.glassIntensity * 0.85f).coerceIn(0.15f, 1f)
+        val glassAlpha = (1f - settings.glassIntensity * 0.85f).coerceIn(0.55f, 1f)
         colorScheme = colorScheme.copy(
             background = colorScheme.background.copy(alpha = glassAlpha),
             surface = colorScheme.surface.copy(alpha = glassAlpha),

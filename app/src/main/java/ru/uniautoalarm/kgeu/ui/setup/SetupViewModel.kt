@@ -16,6 +16,7 @@ import ru.uniautoalarm.kgeu.data.remote.KgeuGroup
 import ru.uniautoalarm.kgeu.data.remote.KgeuTeacher
 import ru.uniautoalarm.kgeu.di.AppContainer
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
+import ru.uniautoalarm.kgeu.ui.common.OffsetBounds
 
 /**
  * ViewModel мастера первичной настройки: роль → загрузка справочников КГЭУ →
@@ -25,20 +26,38 @@ import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
  */
 class SetupViewModel(private val container: AppContainer) : ViewModel() {
 
+    // UI-17 (0.11.0): наружу — только read-only StateFlow; экран больше НЕ пишет в
+    // MutableStateFlow VM (единственные точки записи — функции [pickRole]/[setQuery]).
+
     /** Шаг 2: выбранная роль (студент/преподаватель); до выбора — null. */
-    val role = MutableStateFlow<TargetType?>(null)
+    private val _role = MutableStateFlow<TargetType?>(null)
+    val role: StateFlow<TargetType?> = _role.asStateFlow()
+
+    /** Шаг 2: выбор роли из экрана (единственная внешняя точка записи роли). */
+    fun pickRole(type: TargetType) {
+        _role.value = type
+    }
 
     /** Поисковый запрос на шаге 2 (фильтрация списка по подстроке имени). */
-    val query = MutableStateFlow("")
+    private val _query = MutableStateFlow("")
+    val query: StateFlow<String> = _query.asStateFlow()
+
+    /** Поисковый запрос из экрана (единственная внешняя точка записи). */
+    fun setQuery(q: String) {
+        _query.value = q
+    }
 
     /** Идёт загрузка справочника. */
-    val loading = MutableStateFlow(false)
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> = _loading.asStateFlow()
 
     /** Человекочитаемая ошибка загрузки (null — ошибки нет). */
-    val error = MutableStateFlow<String?>(null)
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error.asStateFlow()
 
     /** Шаг 4: за сколько минут до первой пары будить (дефолт 90). */
-    val offsetMinutes = MutableStateFlow(DEFAULT_OFFSET_MINUTES)
+    private val _offsetMinutes = MutableStateFlow(DEFAULT_OFFSET_MINUTES)
+    val offsetMinutes: StateFlow<Int> = _offsetMinutes.asStateFlow()
 
     private val _groups = MutableStateFlow<List<KgeuGroup>>(emptyList())
     val groups: StateFlow<List<KgeuGroup>> = _groups.asStateFlow()
@@ -58,7 +77,7 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
         // смещение подъёма, чтобы «Готово» не сбрасывало его на дефолт.
         viewModelScope.launch {
             val saved = container.settings.current().wakeOffsetMinutes
-            offsetMinutes.value = saved.coerceIn(MIN_OFFSET_MINUTES, MAX_OFFSET_MINUTES)
+            _offsetMinutes.value = saved.coerceIn(MIN_OFFSET_MINUTES, MAX_OFFSET_MINUTES)
         }
     }
 
@@ -71,14 +90,14 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
      */
     fun prepareForRerun() {
         completing = false
-        role.value = null
-        query.value = ""
-        error.value = null
-        loading.value = false
+        _role.value = null
+        _query.value = ""
+        _error.value = null
+        _loading.value = false
         _selectedTarget.value = null
         viewModelScope.launch {
             val saved = container.settings.current().wakeOffsetMinutes
-            offsetMinutes.value = saved.coerceIn(MIN_OFFSET_MINUTES, MAX_OFFSET_MINUTES)
+            _offsetMinutes.value = saved.coerceIn(MIN_OFFSET_MINUTES, MAX_OFFSET_MINUTES)
         }
     }
 
@@ -88,8 +107,8 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
      * поэтому безопасен и из LaunchedEffect, и из кнопки «Повторить».
      */
     fun loadLists(role: TargetType) {
-        this.role.value = role
-        if (loading.value) return
+        _role.value = role
+        if (_loading.value) return
         val alreadyLoaded = when (role) {
             TargetType.STUDENT -> _groups.value.isNotEmpty()
             TargetType.TEACHER -> _teachers.value.isNotEmpty()
@@ -97,8 +116,8 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
         if (alreadyLoaded) return
 
         viewModelScope.launch {
-            loading.value = true
-            error.value = null
+            _loading.value = true
+            _error.value = null
             try {
                 when (role) {
                     TargetType.STUDENT -> _groups.value = container.kgeuApi.groups()
@@ -107,11 +126,11 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                error.value =
+                _error.value =
                     LocaleHelper.string(container.appContext, R.string.setup_load_failed) + " " +
                     LocaleHelper.string(container.appContext, R.string.setup_check_internet)
             } finally {
-                loading.value = false
+                _loading.value = false
             }
         }
     }
@@ -128,7 +147,7 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
 
     /** Шаг 4: смещение подъёма в минутах (защищаем диапазоном слайдера). */
     fun setOffset(minutes: Int) {
-        offsetMinutes.value = minutes.coerceIn(MIN_OFFSET_MINUTES, MAX_OFFSET_MINUTES)
+        _offsetMinutes.value = minutes.coerceIn(MIN_OFFSET_MINUTES, MAX_OFFSET_MINUTES)
     }
 
     /**
@@ -147,7 +166,7 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
         completing = true
         viewModelScope.launch {
             try {
-                val offset = offsetMinutes.value
+                val offset = _offsetMinutes.value
                 container.settings.applyTarget(target.type, target.id, target.name)
                 container.settings.update {
                     it.copy(
@@ -178,9 +197,11 @@ class SetupViewModel(private val container: AppContainer) : ViewModel() {
 
     companion object {
         const val DEFAULT_OFFSET_MINUTES = 90
-        const val MIN_OFFSET_MINUTES = 15
-        const val MAX_OFFSET_MINUTES = 240
-        const val OFFSET_STEP_MINUTES = 15
+
+        // SET-13 (0.11.0): границы — из единого источника ui.common.OffsetBounds
+        const val MIN_OFFSET_MINUTES = OffsetBounds.WAKE_MIN
+        const val MAX_OFFSET_MINUTES = OffsetBounds.WAKE_MAX
+        const val OFFSET_STEP_MINUTES = OffsetBounds.STEP
 
         /** Пресеты шага «Подъём» (минуты). */
         val OFFSET_PRESETS = listOf(30, 45, 60, 90, 120)

@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -165,8 +166,15 @@ private fun MainScaffold(settings: Settings) {
     val currentRoute = backStackEntry?.destination?.route
     val backgroundPath = settings.backgroundImagePath
 
+    // UI-20 (0.11.0): файл могли удалить вручную/очисткой хранилища — тогда AsyncImage
+    // молча рисует НИЧЕГО над прозрачным Scaffold. Проверяем существование: нет файла —
+    // работаем как без фона (плотный background), а не «прозрачная» поверхность
+    val backgroundFile = remember(backgroundPath) {
+        backgroundPath?.let { path -> File(path).takeIf { it.isFile && it.length() > 0 } }
+    }
+
     Scaffold(
-        containerColor = if (backgroundPath != null) {
+        containerColor = if (backgroundFile != null) {
             Color.Transparent
         } else {
             MaterialTheme.colorScheme.background
@@ -204,9 +212,9 @@ private fun MainScaffold(settings: Settings) {
         }
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
-            if (backgroundPath != null) {
+            if (backgroundFile != null) {
                 AsyncImage(
-                    model = File(backgroundPath),
+                    model = backgroundFile,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

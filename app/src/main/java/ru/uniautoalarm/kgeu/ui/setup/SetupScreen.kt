@@ -159,7 +159,7 @@ fun SetupScreen(onFinished: () -> Unit) {
             2 -> StepRole(
                 selected = role,
                 onPick = { type ->
-                    vm.role.value = type
+                    vm.pickRole(type) // UI-17: запись — только через функцию VM
                     step = 3
                 },
                 modifier = Modifier.weight(1f)
@@ -168,7 +168,7 @@ fun SetupScreen(onFinished: () -> Unit) {
             3 -> StepSearch(
                 role = role,
                 query = query,
-                onQueryChange = { vm.query.value = it },
+                onQueryChange = { vm.setQuery(it) },
                 loading = loading,
                 error = error,
                 groups = groups,
