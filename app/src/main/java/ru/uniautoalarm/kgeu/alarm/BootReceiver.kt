@@ -22,11 +22,16 @@ class BootReceiver : BroadcastReceiver() {
         val action = intent.action ?: return
         if (action != Intent.ACTION_BOOT_COMPLETED && action != ACTION_QUICKBOOT_POWERON) return
 
+        val appContext = context.applicationContext
+        // SEC-6 (0.11.0): ACTION_QUICKBOOT_POWERON не входит в protected-broadcast на
+        // части прошивок — послать его может ЛЮБОЕ приложение. BOOT_COMPLETED защищён
+        // системой, поэтому спам-гейт нужен только для QUICKBOOT: не чаще раза в 60 с
+        // (rearm идемпотентен, но бесконечный спам будил бы CPU/батарею).
+        if (action == ACTION_QUICKBOOT_POWERON && !quickbootAllowed(appContext)) return
+
         val pending = goAsync()
         CoroutineScope(Dispatchers.Default).launch {
             try {
-                val appContext = context.applicationContext
-
                 // 1) восстановить обе ночные сверки, напоминание и разовую синхронизацию
                 NightlyScheduler.scheduleNext(appContext)
                 ReminderScheduler.scheduleNext(appContext)
@@ -61,5 +66,22 @@ class BootReceiver : BroadcastReceiver() {
 
         // Константы Intent.ACTION_QUICKBOOT_POWERON в публичном SDK нет — берём строкой
         private const val ACTION_QUICKBOOT_POWERON = "android.intent.action.QUICKBOOT_POWERON"
+
+        private const val GUARD_PREFS = "boot_guard"
+        private const val GUARD_KEY_LAST_QUICKBOOT = "last_quickboot_ms"
+        private const val QUICKBOOT_MIN_INTERVAL_MS = 60_000L
+
+        /** true, если QUICKBOOT_POWERON-спам прошёл: с последней обработки прошло ≥ 60 с (SEC-6). */
+        private fun quickbootAllowed(context: Context): Boolean {
+            val prefs = context.getSharedPreferences(GUARD_PREFS, Context.MODE_PRIVATE)
+            val now = System.currentTimeMillis()
+            val last = prefs.getLong(GUARD_KEY_LAST_QUICKBOOT, 0L)
+            if (now - last < QUICKBOOT_MIN_INTERVAL_MS) {
+                Log.i(TAG, "QUICKBOOT_POWERON чаще раза в 60 с — игнорирую (SEC-6)")
+                return false
+            }
+            prefs.edit().putLong(GUARD_KEY_LAST_QUICKBOOT, now).apply()
+            return true
+        }
     }
 }
