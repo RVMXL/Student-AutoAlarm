@@ -83,6 +83,7 @@ import ru.uniautoalarm.kgeu.ui.theme.CalendarSkin
 import ru.uniautoalarm.kgeu.ui.theme.GlassPanel
 import ru.uniautoalarm.kgeu.ui.theme.glassCardColor
 import ru.uniautoalarm.kgeu.ui.theme.glassContentColor
+import ru.uniautoalarm.kgeu.ui.theme.glassHairlineColor
 import ru.uniautoalarm.kgeu.ui.theme.glassSecondaryColor
 import ru.uniautoalarm.kgeu.ui.theme.skin
 
@@ -303,23 +304,52 @@ fun ScheduleScreen() {
                 )
             }
 
-            LazyRow(
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items((0..6).toList(), key = { it }) { offset -> // UI-12: key — переиспользование состояния чипов
-                    val date = weekMonday.plusDays(offset.toLong())
-                    val dateLessons = weekLessons[date].orEmpty()
-                    DayChip(
-                        date = date,
-                        selected = date == selectedDate,
-                        isToday = date == today,
-                        skin = skin,
-                        hasLessons = dateLessons.isNotEmpty(),
-                        markedCount = DayMarkers.countMarked(dateLessons, exceptions),
-                        onClick = { vm.selectDate(date) }
-                    )
+            // FIX 0.17.0: в стандартном стиле кнопки дней были прозрачны — с фоновой
+            // картинкой текст сливался, а режим стекла на них не действовал. Ряд
+            // дней получает ФОН как у шапки календаря: при стекле — стеклянная
+            // полоса (GlassPanel) с АДАПТИВНЫМ цветом содержимого, без стекла —
+            // плотная полоса surfaceContainer (glassCardColor). В скинах чипы
+            // по-прежнему живут на листе скина — как было.
+            val dayChipRow: @Composable () -> Unit = {
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items((0..6).toList(), key = { it }) { offset -> // UI-12: key — переиспользование состояния чипов
+                        val date = weekMonday.plusDays(offset.toLong())
+                        val dateLessons = weekLessons[date].orEmpty()
+                        DayChip(
+                            date = date,
+                            selected = date == selectedDate,
+                            isToday = date == today,
+                            skin = skin,
+                            hasLessons = dateLessons.isNotEmpty(),
+                            markedCount = DayMarkers.countMarked(dateLessons, exceptions),
+                            onClick = { vm.selectDate(date) }
+                        )
+                    }
                 }
+            }
+            if (skin == null) {
+                GlassPanel(
+                    RoundedCornerShape(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 2.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                glassCardColor(MaterialTheme.colorScheme.surfaceContainer),
+                                RoundedCornerShape(16.dp)
+                            )
+                    ) {
+                        dayChipRow()
+                    }
+                }
+            } else {
+                dayChipRow()
             }
 
             if (dayLessons.isEmpty()) {
@@ -639,7 +669,9 @@ private fun DayChip(
 ) {
     val accent = skin?.accent ?: MaterialTheme.colorScheme.primary
     val onAccentColor = skin?.onAccent ?: MaterialTheme.colorScheme.onPrimary
-    val neutralMark = skin?.inkSoft ?: MaterialTheme.colorScheme.onSurfaceVariant
+    // на стекле — адаптивные цвета маркеров (0.17.0); без стекла — прежние темы
+    val neutralMark = skin?.inkSoft
+        ?: glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
     val sectionMark = skin?.mark ?: MaterialTheme.colorScheme.tertiary
     val label = "${dayShortName(date.dayOfWeek)} ${date.dayOfMonth}"
     // 0.15.0: «сегодня» — скруглённая полоска (толщиной в точку) НАД названием дня
@@ -647,46 +679,62 @@ private fun DayChip(
     // с точкой «есть пары». Ряд маркеров под числом теперь только про расписание:
     // серая точка «есть пары», цветная с числом «исключённых секций».
     // Маркеры скрываются у выбранного дня — чип и так залит акцентом.
+    // FIX 0.17.0: слоты над и под названием ФИКСИРОВАННОЙ высоты — подпись дня
+    // стоит на одной высоте у ВСЕХ чипов, независимо от того, есть ли сверху
+    // полоска «сегодня» и есть ли снизу точки маркеров (раньше Column рос
+    // вниз/вверх и подписи «плавали» по вертикали относительно друг друга).
     @Composable
     fun dayLabel() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            if (isToday) {
-                Box(
-                    modifier = Modifier
-                        .padding(bottom = 2.dp)
-                        .size(width = 16.dp, height = 4.dp)
-                        .background(
-                            if (selected) onAccentColor else accent,
-                            RoundedCornerShape(2.dp)
-                        )
-                )
+            Box(
+                modifier = Modifier.height(6.dp),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                if (isToday) {
+                    Box(
+                        modifier = Modifier
+                            .padding(bottom = 2.dp)
+                            .size(width = 16.dp, height = 4.dp)
+                            .background(
+                                if (selected) onAccentColor else accent,
+                                RoundedCornerShape(2.dp)
+                            )
+                    )
+                }
             }
             Text(label, fontWeight = if (isToday) FontWeight.Bold else null)
-            if (!selected && (hasLessons || markedCount > 0)) {
-                Row(
-                    modifier = Modifier.padding(top = 1.dp),
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if (hasLessons) {
-                        Box(
-                            modifier = Modifier
-                                .size(4.dp)
-                                .background(neutralMark, CircleShape)
-                        )
-                    }
-                    if (markedCount > 0) {
-                        Box(
-                            modifier = Modifier
-                                .size(4.dp)
-                                .background(sectionMark, CircleShape)
-                        )
-                        Text(
-                            markedCount.toString(),
-                            style = MaterialTheme.typography.labelSmall,
-                            fontSize = 9.sp,
-                            color = sectionMark
-                        )
+            Box(
+                modifier = Modifier.height(13.dp),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                if (!selected && (hasLessons || markedCount > 0)) {
+                    Row(
+                        modifier = Modifier.padding(top = 1.dp),
+                        horizontalArrangement = Arrangement.spacedBy(2.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (hasLessons) {
+                            Box(
+                                modifier = Modifier
+                                    .size(4.dp)
+                                    .background(neutralMark, CircleShape)
+                            )
+                        }
+                        if (markedCount > 0) {
+                            Box(
+                                modifier = Modifier
+                                    .size(4.dp)
+                                    .background(sectionMark, CircleShape)
+                            )
+                            Text(
+                                markedCount.toString(),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontSize = 9.sp,
+                                // на стекле — АДАПТИВНЫЙ цвет (читаемо и над тёмным,
+                                // и над светлым участком фона); без стекла — tertiary
+                                color = glassContentColor(sectionMark)
+                            )
+                        }
                     }
                 }
             }
@@ -720,12 +768,24 @@ private fun DayChip(
             )
         )
     } else {
+        // FIX 0.17.0: у чипов стандартного стиля теперь ЕСТЬ фон: при стекле
+        // заливка прозрачная (фрагмент фона рисует стеклянная полоса ряда —
+        // GlassPanel выше), без стекла — плотный surfaceContainer (glassCardColor).
+        // Подпись — АДАПТИВНОГО цвета на стекле (светлая на тёмном участке фона,
+        // тёмная на светлом); выбранный день залит акцентом — как в скинах.
         FilterChip(
             selected = selected,
             onClick = onClick,
             label = { dayLabel() },
             shape = ChipShape,
-            modifier = chipModifier
+            modifier = chipModifier,
+            border = BorderStroke(1.dp, glassHairlineColor(MaterialTheme.colorScheme.outline)),
+            colors = FilterChipDefaults.filterChipColors(
+                containerColor = glassCardColor(MaterialTheme.colorScheme.surfaceContainer),
+                labelColor = glassContentColor(MaterialTheme.colorScheme.onSurface),
+                selectedContainerColor = accent,
+                selectedLabelColor = onAccentColor
+            )
         )
     }
 }
