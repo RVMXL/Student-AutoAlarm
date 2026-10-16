@@ -273,13 +273,6 @@
     <string name="bg_opacity">底衬透明度</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">文件不可用：请选择不超过 20 MB 的图片（JPG/PNG/WebP）</string>
-    <string name="set_glass">玻璃效果</string>
-    <string name="set_glass_desc">卡片像磨砂玻璃一样半透明；模糊与畸变只出现在玻璃后面，背景图片保持清晰</string>
-    <string name="glass_tip">小贴士：搭配背景图片（上方设置）效果最佳</string>
-    <string name="glass_active">玻璃效果已开启</string>
-    <string name="glass_matteness">磨砂度</string>
-    <string name="glass_distortion">畸变</string>
-    <string name="glass_distortion_unsupported">畸变仅在 Android 13 及以上版本可用；当前版本的玻璃不绘制畸变</string>
     <string name="set_fsi_title">闹钟无法唤醒屏幕</string>
     <string name="set_fsi_desc">请允许全屏响铃：响铃时屏幕会点亮，“关闭”按钮立即可用。点击打开设置</string>
 

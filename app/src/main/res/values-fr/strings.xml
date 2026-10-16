@@ -273,13 +273,6 @@
     <string name="bg_opacity">Opacité du calque de fond</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Fichier non valide : choisis une image de 20 Mo max (JPG/PNG/WebP)</string>
-    <string name="set_glass">Effet verre</string>
-    <string name="set_glass_desc">Les cartes sont translucides comme du verre dépoli ; le flou et la distorsion n\'apparaissent que derrière la vitre, l\'image reste nette</string>
-    <string name="glass_tip">Astuce : l\'effet verre rend le mieux avec une image de fond (ci-dessus)</string>
-    <string name="glass_active">Effet verre activé</string>
-    <string name="glass_matteness">Effet givré</string>
-    <string name="glass_distortion">Distorsion</string>
-    <string name="glass_distortion_unsupported">La distorsion nécessite Android 13 ou plus récent — sur cette version, le verre est rendu sans elle</string>
     <string name="set_fsi_title">Le réveil n\'allume pas l\'écran</string>
     <string name="set_fsi_desc">Autorisez la sonnerie plein écran : l\'écran s\'allumera à la sonnerie et « Désactiver » sera disponible aussitôt. Touchez pour ouvrir les paramètres</string>
 

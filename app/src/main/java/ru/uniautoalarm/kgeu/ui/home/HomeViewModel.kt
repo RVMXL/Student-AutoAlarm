@@ -199,10 +199,15 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
-    /** Полная синхронизация не была ни разу или была дольше трёх суток назад. */
+    /**
+     * Последняя УСПЕШНАЯ синхронизация ЛЮБОГО рода не была ни разу или была дольше
+     * трёх суток назад. 0.18.0: считаем штамп любой синхронизации (кнопка на главной,
+     * недельная, полная) — раньше считалась только полная (раз в 7 дней по воркеру),
+     * поэтому предупреждение висело вечно, даже если пользователь обновлял кнопкой.
+     */
     fun dataStale(s: Settings): Boolean =
-        s.lastFullSyncEpochMs == 0L ||
-            System.currentTimeMillis() - s.lastFullSyncEpochMs > STALE_AFTER_MS
+        s.lastSyncEpochMs == 0L ||
+            System.currentTimeMillis() - s.lastSyncEpochMs > STALE_AFTER_MS
 
     /** Цель расписания из снимка настроек; не выбрана → null. */
     private fun Settings.toTarget(): Target? {

@@ -273,13 +273,6 @@
     <string name="bg_opacity">Астар мөлдірлігі</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Файл жарамайды: 20 МБ-ға дейінгі сурет таңда (JPG/PNG/WebP)</string>
-    <string name="set_glass">Шыны эффектісі</string>
-    <string name="set_glass_desc">Кәртәңдер мұздатылған әйнек тәрізді жартылай мөлдір; бұлыңғырлық пен бұрмалану тек әйнектің артында, сурет анық қалады</string>
-    <string name="glass_tip">Кеңес: шыны эффектісі фон суретімен (жоғарыда) ең жақсы көрінеді</string>
-    <string name="glass_active">Шыны эффектісі қосулы</string>
-    <string name="glass_matteness">Бұлыңғырлық</string>
-    <string name="glass_distortion">Бұрмалану</string>
-    <string name="glass_distortion_unsupported">Бұрмалану Android 13 және одан жаңасында ғана — бұл нұсқада әйнек онысыз салынады</string>
     <string name="set_fsi_title">Оятқыш экранды қоспайды</string>
     <string name="set_fsi_desc">Толық экранды шырылға рұқсат ет: шырыл кезінде экран жанып, «Өшіру» бірден қолжетімді болады. Параметрлерді ашу үшін түрт</string>
 

@@ -274,28 +274,6 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
-    // --- Эффект стекла ---
-
-    fun setGlassEnabled(enabled: Boolean) {
-        viewModelScope.launch {
-            container.settings.update { it.copy(glassEnabled = enabled) }
-        }
-    }
-
-    /** Матóвость стекла (0..1): 0 — прозрачное стекло, 1 — предельный блёр (лестница уровней). */
-    fun setGlassBlur(value: Float) {
-        viewModelScope.launch {
-            container.settings.update { it.copy(glassBlur = value.coerceIn(0f, 1f)) }
-        }
-    }
-
-    /** Искажение стекла (0..1): «линзовое» искривление пространства за стеклом. */
-    fun setGlassDistortion(value: Float) {
-        viewModelScope.launch {
-            container.settings.update { it.copy(glassDistortion = value.coerceIn(0f, 1f)) }
-        }
-    }
-
     /** Смена цели: сбрасываем флаг мастера — он откроется заново, offset подтянется в init. */
     fun changeTarget() {
         viewModelScope.launch {

@@ -273,13 +273,6 @@
     <string name="bg_opacity">Altlık saydamlığı</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Dosya uygun değil: en fazla 20 MB\'lık bir resim seç (JPG/PNG/WebP)</string>
-    <string name="set_glass">Cam efekti</string>
-    <string name="set_glass_desc">Kartlar buzlu cam gibi yarı saydamdır; bulanıklık ve çarpıtma yalnızca camın arkasında görünür, resim net kalır</string>
-    <string name="glass_tip">İpucu: Cam efekti, arka plan resmiyle (yukarıda) en iyi görünümü verir</string>
-    <string name="glass_active">Cam efekti açık</string>
-    <string name="glass_matteness">Matlık</string>
-    <string name="glass_distortion">Çarpıtma</string>
-    <string name="glass_distortion_unsupported">Çarpıtma yalnızca Android 13 ve üzerinde — bu sürümde cam onunsuz çizilir</string>
     <string name="set_fsi_title">Alarm ekranı açmıyor</string>
     <string name="set_fsi_desc">Tam ekran zili izni verin: zil çalınca ekran yanar ve Kapat hemen kullanılabilir. Ayarları açmak için dokunun</string>
 

@@ -273,13 +273,6 @@
     <string name="bg_opacity">Астыңгы катмардын тунуктугу</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Файл жарабайт: 20 МБ чейинки сүрөт танда (JPG/PNG/WebP)</string>
-    <string name="set_glass">Айнек эффектиси</string>
-    <string name="set_glass_desc">Карточкалар муздаткан айнек сыяктуу жарым мөлдүр; булдурактык менен бурмалануу айнектин артында гана, сүрөт анык калат</string>
-    <string name="glass_tip">Кеңеш: айнек эффектиси фон сүрөтү менен (жогоруда) эң жакшы көрүнөт</string>
-    <string name="glass_active">Айнек эффектиси күйгүзүлгөн</string>
-    <string name="glass_matteness">Булдурактык</string>
-    <string name="glass_distortion">Бурмалануу</string>
-    <string name="glass_distortion_unsupported">Бурмалануу Android 13 жана андан жаңысында гана — бул версияда айнек анысыз тартылат</string>
     <string name="set_fsi_title">Ояткыч экранды күйгүзбөйт</string>
     <string name="set_fsi_desc">Толук экранду күүгө уруксат бер: күү кезинде экран жанып, «Өчүрүү» дароо колго кирет. Параметрлерди ачуу үчүн бас</string>
 

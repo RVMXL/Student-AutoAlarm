@@ -54,6 +54,11 @@ class SettingsRepository(private val context: Context) {
         val SEMESTER_MIN = stringPreferencesKey("semester_min")
         val SEMESTER_MAX = stringPreferencesKey("semester_max")
         val LAST_FULL_SYNC_EPOCH_MS = longPreferencesKey("last_full_sync_epoch_ms")
+        // 0.18.0: штамп ЛЮБОЙ успешной синхронизации (кнопка на главной, недельная,
+        // полная) — по нему считается «расписание не обновлялось более 3 дней».
+        // Читается с фолбэком на старый ключ полной синхронизации, чтобы после
+        // обновления предупреждение не мигало у тех, кто недавно синкался.
+        val LAST_SYNC_EPOCH_MS = longPreferencesKey("last_sync_epoch_ms")
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val DYNAMIC_COLOR = booleanPreferencesKey("dynamic_color")
         val ACCENT_INDEX = intPreferencesKey("accent_index")
@@ -65,13 +70,6 @@ class SettingsRepository(private val context: Context) {
         val ALARM_SHOW_CLOCK_UI = booleanPreferencesKey("alarm_show_clock_ui")
         val ALARM_TARGET = stringPreferencesKey("alarm_target")
         val FIRST_LESSON_OFFSETS = stringPreferencesKey("first_lesson_offsets")
-        val GLASS_ENABLED = booleanPreferencesKey("glass_enabled")
-        // 0.14.0: стекло переехало с одного ползунка «интенсивность» на два —
-        // «матовость» и «искажение». Старый glass_intensity читается МИГРАЦИЕЙ
-        // (матовость = прежняя интенсивность) и больше не пишется.
-        val GLASS_BLUR = floatPreferencesKey("glass_blur")
-        val GLASS_DISTORTION = floatPreferencesKey("glass_distortion")
-        val GLASS_INTENSITY_LEGACY = floatPreferencesKey("glass_intensity")
         val CUSTOM_ACCENT_COLOR = intPreferencesKey("custom_accent_color")
         val LAST_SCHEDULED_WAKE = longPreferencesKey("last_scheduled_wake_epoch_minute")
         val LAST_SCHEDULED_LABEL = stringPreferencesKey("last_scheduled_label")
@@ -183,6 +181,9 @@ class SettingsRepository(private val context: Context) {
         semesterMin = this[Keys.SEMESTER_MIN]?.let { parseDate(it) },
         semesterMax = this[Keys.SEMESTER_MAX]?.let { parseDate(it) },
         lastFullSyncEpochMs = this[Keys.LAST_FULL_SYNC_EPOCH_MS] ?: 0L,
+        lastSyncEpochMs = this[Keys.LAST_SYNC_EPOCH_MS]
+            ?: this[Keys.LAST_FULL_SYNC_EPOCH_MS] // фолбэк: свежесть от прежнего штампа полной синхронизации
+            ?: 0L,
         themeMode = parseEnum(this[Keys.THEME_MODE], ThemeMode.SYSTEM),
         dynamicColor = this[Keys.DYNAMIC_COLOR] ?: true,
         accentIndex = this[Keys.ACCENT_INDEX] ?: 0,
@@ -194,13 +195,6 @@ class SettingsRepository(private val context: Context) {
         alarmShowClockUi = this[Keys.ALARM_SHOW_CLOCK_UI] ?: false,
         alarmTarget = parseEnum(this[Keys.ALARM_TARGET], AlarmTarget.APP),
         firstLessonOffsets = this[Keys.FIRST_LESSON_OFFSETS]?.let { parseOffsets(it) } ?: emptyMap(),
-        glassEnabled = this[Keys.GLASS_ENABLED] ?: false,
-        // Миграция 0.13.0 → 0.14.0: glass_blur ещё не записан, но есть старый
-        // glass_intensity — прежняя «интенсивность» становится начальной матовостью.
-        glassBlur = this[Keys.GLASS_BLUR]
-            ?: this[Keys.GLASS_INTENSITY_LEGACY]
-            ?: 0.5f,
-        glassDistortion = this[Keys.GLASS_DISTORTION] ?: 0.25f,
         customAccentColor = if (contains(Keys.CUSTOM_ACCENT_COLOR)) this[Keys.CUSTOM_ACCENT_COLOR] else null,
         lastScheduledWakeEpochMinute = this[Keys.LAST_SCHEDULED_WAKE] ?: -1L,
         lastScheduledLabel = this[Keys.LAST_SCHEDULED_LABEL] ?: "",
@@ -227,6 +221,7 @@ class SettingsRepository(private val context: Context) {
         if (max != null) this[Keys.SEMESTER_MAX] = max.toString() else remove(Keys.SEMESTER_MAX)
 
         this[Keys.LAST_FULL_SYNC_EPOCH_MS] = s.lastFullSyncEpochMs
+        this[Keys.LAST_SYNC_EPOCH_MS] = s.lastSyncEpochMs
 
         this[Keys.THEME_MODE] = s.themeMode.name
         this[Keys.DYNAMIC_COLOR] = s.dynamicColor
@@ -242,9 +237,6 @@ class SettingsRepository(private val context: Context) {
         this[Keys.ALARM_SHOW_CLOCK_UI] = s.alarmShowClockUi
         this[Keys.ALARM_TARGET] = s.alarmTarget.name
         this[Keys.FIRST_LESSON_OFFSETS] = serializeOffsets(s.firstLessonOffsets)
-        this[Keys.GLASS_ENABLED] = s.glassEnabled
-        this[Keys.GLASS_BLUR] = s.glassBlur.coerceIn(0f, 1f)
-        this[Keys.GLASS_DISTORTION] = s.glassDistortion.coerceIn(0f, 1f)
         val customAccent = s.customAccentColor
         if (customAccent != null) this[Keys.CUSTOM_ACCENT_COLOR] = customAccent
         else remove(Keys.CUSTOM_ACCENT_COLOR)

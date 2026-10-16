@@ -273,13 +273,6 @@
     <string name="bg_opacity">Astky gatlagyň transparanlygy</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Faýl ýaramok: 20 MB çenli surat saýla (JPG/PNG/WebP)</string>
-    <string name="set_glass">Aýna effekt</string>
-    <string name="set_glass_desc">Kartlar buzly aýnak ýaly ýarym düşnükir; bulanzyklyk we bozulma diňe aýnagyň arkasynda, surat anyk galýar</string>
-    <string name="glass_tip">Maslahat: aýna effekti fon suraty (ýokardaky) bilen iň gowy görünýär</string>
-    <string name="glass_active">Aýna effekt işleýär</string>
-    <string name="glass_matteness">Bulanzyklyk</string>
-    <string name="glass_distortion">Bozulma</string>
-    <string name="glass_distortion_unsupported">Bozulma diňe Android 13 we ondan ýokarda — bu wersiýada aýna onsuz çyzylyar</string>
     <string name="set_fsi_title">Oýatgyjy ekrany ýakynok</string>
     <string name="set_fsi_desc">Doly ekranly zyňska rugsat ber: zyň wagtynda ekran ýanar, «Öçürmek» şuw wagt peýda bolur. Saýlawlary açmak üçin bas</string>
 

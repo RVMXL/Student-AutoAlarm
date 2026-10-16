@@ -273,13 +273,6 @@
     <string name="bg_opacity">Шаффофии замина</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Файл мувофиқ нест: сурати то 20 МБ интихоб кун (JPG/PNG/WebP)</string>
-    <string name="set_glass">Эффекти шиша</string>
-    <string name="set_glass_desc">Кортҳо нимшаффоф, ба монанди шишаи яхбаста; тармиш ва тағйири шакл танҳо дар пушти шиша, тасвир возеҳ мемонад</string>
-    <string name="glass_tip">Маслиҳат: шиша бо сурати замина (дар боло) аз ҳама беҳтар намоён мешавад</string>
-    <string name="glass_active">Шиша фаъол аст</string>
-    <string name="glass_matteness">Муттароӣ</string>
-    <string name="glass_distortion">Тағйири шакл</string>
-    <string name="glass_distortion_unsupported">Тағйири шакл танҳо Android 13 ва навтарам питоянда — дар ин версия шиша бе он кашида мешавад</string>
     <string name="set_fsi_title">Оякунанда экранро фурӯзон намекунад</string>
     <string name="set_fsi_desc">Равон сохтани занг дар тамоми экран роҳ диҳед: ҳангоми занг экран фурӯзон мешавад ва «Хомӯш кардан» фавран дастрас аст. Барои кушодани танзимот зер кунед</string>
 

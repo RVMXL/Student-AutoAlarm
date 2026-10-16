@@ -95,9 +95,8 @@ class RingActivity : ComponentActivity() {
             val darkTheme = resolveDarkTheme(settings)
             AutoAlarmTheme(settings) {
                 // UI-18 (0.11.0): статус-бар согласован с темой звонка — светлые иконки
-                // на тёмном фоне и наоборот (раньше на тёмном звонке были тёмные иконки),
-                // фон статус-бара — плотный цвет фона темы (без стекла: полупрозрачный
-                // бар над lockscreen неверно композитируется)
+                // на тёмном фоне и наоборот (раньше на тёмном звонке были тёмные иконки);
+                // фон статус-бара — плотный цвет фона темы
                 val statusBarColor = MaterialTheme.colorScheme.background.copy(alpha = 1f)
                 SideEffect {
                     WindowCompat.getInsetsController(window, window.decorView)

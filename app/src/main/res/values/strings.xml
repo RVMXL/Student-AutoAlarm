@@ -273,13 +273,6 @@
     <string name="bg_opacity">Прозрачность подложки</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Файл не подходит: нужна картинка до 20 МБ (JPG/PNG/WebP)</string>
-    <string name="set_glass">Эффект стекла</string>
-    <string name="set_glass_desc">Карточки полупрозрачные, как матовое стекло; размытие и искажение — только за стеклом, картинка остаётся резкой</string>
-    <string name="glass_tip">Совет: стекло лучше всего смотрится с фоновой картинкой (выше)</string>
-    <string name="glass_active">Стекло активно</string>
-    <string name="glass_matteness">Матовость</string>
-    <string name="glass_distortion">Искажение</string>
-    <string name="glass_distortion_unsupported">Искажение доступно на Android 13 и новее — на этой версии стекло рисуется без него</string>
     <string name="set_fsi_title">Будильник не включает экран</string>
     <string name="set_fsi_desc">Разрешите полноэкранный звонок: экран будет загораться при звонке, а «Отключить» — доступно сразу. Нажмите, чтобы открыть настройки</string>
 

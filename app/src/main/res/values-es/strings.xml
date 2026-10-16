@@ -273,13 +273,6 @@
     <string name="bg_opacity">Opacidad de la capa</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">El archivo no vale: elige una imagen de hasta 20 MB (JPG/PNG/WebP)</string>
-    <string name="set_glass">Efecto de vidrio</string>
-    <string name="set_glass_desc">Las tarjetas son translúcidas como vidrio esmerilado; el desenfoque y la distorsión se ven solo tras el cristal, la imagen sigue nítida</string>
-    <string name="glass_tip">Consejo: el vidrio luce mejor con una imagen de fondo (arriba)</string>
-    <string name="glass_active">Vidrio activado</string>
-    <string name="glass_matteness">Esmerilado</string>
-    <string name="glass_distortion">Distorsión</string>
-    <string name="glass_distortion_unsupported">La distorsión requiere Android 13 o posterior; en esta versión el cristal se dibuja sin ella</string>
     <string name="set_fsi_title">La alarma no enciende la pantalla</string>
     <string name="set_fsi_desc">Permite el timbre a pantalla completa: la pantalla se encenderá al sonar y Apagar estará disponible al instante. Toca para abrir los ajustes</string>
 

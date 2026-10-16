@@ -273,13 +273,6 @@
     <string name="bg_opacity">Фон курӑнни</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Файл килетмен: 20 МБ çитиччен ӳкерчӗк суйла (JPG/PNG/WebP)</string>
-    <string name="set_glass">Стекло эффектӗ</string>
-    <string name="set_glass_desc">Карточкасем урлӑ фон пӑтӑх курӑнать; пӑтрану тата деформаци çеç пӗр вырӑнта, ӳкерчӗк уҫӑ курӑнать</string>
-    <string name="glass_tip">Канаш: стекло фон ӳкерчӗкӗпе чи лайӑх курӑнать (çиертех)</string>
-    <string name="glass_active">Стекло хастар</string>
-    <string name="glass_matteness">Пӑтӑхлӑх</string>
-    <string name="glass_distortion">Деформация</string>
-    <string name="glass_distortion_unsupported">Деформация вырăнлă тек Android 13 тата каялла — ку версире кантра унсӑ ӳкерет</string>
     <string name="set_fsi_title">Ояткӑч экрана хутармасть</string>
     <string name="set_fsi_desc">Пӗтӗм экранлӑ сасӑ ирӗк пар: сасӑ чухне экран хутарать, «Сӳнтер» пултах пулать. Пуҫлавсене уҫма пич пани</string>
 

@@ -273,13 +273,6 @@
     <string name="bg_opacity">Аҫҡы ҡат үтә күренеүсәнлеге</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Файл ярамай: 20 МБ-ға тиклем рәсем һайла (JPG/PNG/WebP)</string>
-    <string name="set_glass">Быяла эффекты</string>
-    <string name="set_glass_desc">Карточкалар боҙлатылған быяла кеүек яртылаш үтә күренә; болотланыу һәм бормаланыу тик быяла артында, рәсем асыҡ ҡала</string>
-    <string name="glass_tip">Кәңәш: быяла фон рәсеме менән иң яҡшы күренә (өҫтәрәк)</string>
-    <string name="glass_active">Быяла ҡабыҙылған</string>
-    <string name="glass_matteness">Болотланыу</string>
-    <string name="glass_distortion">Бормаланыу</string>
-    <string name="glass_distortion_unsupported">Бормаланыу Android 13 һәм унан яңыраҡта ғына — был версияла быяла уныһыҙ һыҙола</string>
     <string name="set_fsi_title">Уяғыс экраны ҡабыҙмай</string>
     <string name="set_fsi_desc">Тулы экранлы урғауға рөхсәт бир: урғау ваҡытында экран ҡабынар, «Һүндереү» шул уҡ минутта була. Көйләүҙәрҙе асыр өсөн баҫ</string>
 

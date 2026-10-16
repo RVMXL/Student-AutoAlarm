@@ -273,13 +273,6 @@
     <string name="bg_opacity">Fon qatlamining shaffofligi</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Fayl yaramaydi: 20 MB gacha rasm tanla (JPG/PNG/WebP)</string>
-    <string name="set_glass">Shisha effekti</string>
-    <string name="set_glass_desc">Kartalar muzlatilgan oyna kabi yarim shaffof; xiralashuv va deformatsiya faqat oyna ortida, rasm aniq qoladi</string>
-    <string name="glass_tip">Maslahat: shisha effekti fon rasmi bilan (yuqorida) eng chiroyli koʻrinadi</string>
-    <string name="glass_active">Shisha effekti yoqilgan</string>
-    <string name="glass_matteness">Matlik</string>
-    <string name="glass_distortion">Deformatsiya</string>
-    <string name="glass_distortion_unsupported">Deformatsiya faqat Android 13 va undan yangida — bu versiyada oyna unsiz chiziladi</string>
     <string name="set_fsi_title">Oyatgich ekranni yoqmaydi</string>
     <string name="set_fsi_desc">Toʻliq ekranli jiringashga ruxsat ber: jiringagananda ekran yonadi, «Oʻchirish» darhol paydo boʻladi. Sozlamalarni ochish uchun bos</string>
 

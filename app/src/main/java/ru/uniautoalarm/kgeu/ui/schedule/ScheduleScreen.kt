@@ -80,11 +80,6 @@ import ru.uniautoalarm.kgeu.ui.common.dayShortName
 import ru.uniautoalarm.kgeu.ui.common.timeFormat
 import ru.uniautoalarm.kgeu.ui.theme.CalendarDecor
 import ru.uniautoalarm.kgeu.ui.theme.CalendarSkin
-import ru.uniautoalarm.kgeu.ui.theme.GlassPanel
-import ru.uniautoalarm.kgeu.ui.theme.glassCardColor
-import ru.uniautoalarm.kgeu.ui.theme.glassContentColor
-import ru.uniautoalarm.kgeu.ui.theme.glassHairlineColor
-import ru.uniautoalarm.kgeu.ui.theme.glassSecondaryColor
 import ru.uniautoalarm.kgeu.ui.theme.skin
 
 private val CardShape = RoundedCornerShape(20.dp)
@@ -196,9 +191,7 @@ fun ScheduleScreen() {
                     SkinCalendarHeader(skin, monthTitle)
                 }
                 // FIX 0.15.0: в стандартном стиле шапка жила прямо на фоне — с картинкой
-                // текст мог слиться. 0.15 — поверхность surfaceContainer; 0.17 — стеклянная
-                // панель (GlassPanel) с АДАПТИВНЫМ цветом содержимого: по яркости фрагмента
-                // фона под шапкой — светлый текст на тёмном участке, тёмный на светлом.
+                // текст мог слиться; у шапки плотная поверхность surfaceContainer.
                 // В скинах шапка живёт на листе скина — как было.
                 val weekHeader: @Composable () -> Unit = {
                 Row(
@@ -224,7 +217,7 @@ fun ScheduleScreen() {
                         textAlign = TextAlign.Center,
                         // текущая неделя выделена акцентом — из неё чаще всего и «уезжают»
                         color = if (isCurrentWeek) accent
-                            else skin?.ink ?: glassContentColor(MaterialTheme.colorScheme.onSurface)
+                            else skin?.ink ?: MaterialTheme.colorScheme.onSurface
                     )
                     if (isCurrentWeek) {
                         SmallBadge(
@@ -253,7 +246,7 @@ fun ScheduleScreen() {
                         // подсвечена, пока пользователь «уехал» с текущей недели
                         tint = if (!isCurrentWeek) accent
                             else skin?.inkSoft
-                                ?: glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
+                                ?: MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 IconButton(onClick = {
@@ -269,22 +262,18 @@ fun ScheduleScreen() {
             }
                 }
                 if (skin == null) {
-                    GlassPanel(
-                        RoundedCornerShape(16.dp),
+                    // у шапки стандартного стиля плотная поверхность — с фоновой
+                    // картинкой текст больше не сливается
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp, vertical = 2.dp)
+                            .background(
+                                MaterialTheme.colorScheme.surfaceContainer,
+                                RoundedCornerShape(16.dp)
+                            )
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(
-                                    glassCardColor(MaterialTheme.colorScheme.surfaceContainer),
-                                    RoundedCornerShape(16.dp)
-                                )
-                        ) {
-                            weekHeader()
-                        }
+                        weekHeader()
                     }
                 } else {
                     Box(
@@ -304,12 +293,10 @@ fun ScheduleScreen() {
                 )
             }
 
-            // FIX 0.17.0: в стандартном стиле кнопки дней были прозрачны — с фоновой
-            // картинкой текст сливался, а режим стекла на них не действовал. Ряд
-            // дней получает ФОН как у шапки календаря: при стекле — стеклянная
-            // полоса (GlassPanel) с АДАПТИВНЫМ цветом содержимого, без стекла —
-            // плотная полоса surfaceContainer (glassCardColor). В скинах чипы
-            // по-прежнему живут на листе скина — как было.
+            // у ряда дней в стандартном стиле плотный фон surfaceContainer (как у
+            // шапки) — с фоновой картинкой подписи не сливаются. В скинах чипы
+            // живут на листе скина. Подписи дней — на одной высоте
+            // (фиксированные слоты в dayLabel).
             val dayChipRow: @Composable () -> Unit = {
                 LazyRow(
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
@@ -331,22 +318,16 @@ fun ScheduleScreen() {
                 }
             }
             if (skin == null) {
-                GlassPanel(
-                    RoundedCornerShape(16.dp),
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp, vertical = 2.dp)
+                        .background(
+                            MaterialTheme.colorScheme.surfaceContainer,
+                            RoundedCornerShape(16.dp)
+                        )
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                glassCardColor(MaterialTheme.colorScheme.surfaceContainer),
-                                RoundedCornerShape(16.dp)
-                            )
-                    ) {
-                        dayChipRow()
-                    }
+                    dayChipRow()
                 }
             } else {
                 dayChipRow()
@@ -669,9 +650,8 @@ private fun DayChip(
 ) {
     val accent = skin?.accent ?: MaterialTheme.colorScheme.primary
     val onAccentColor = skin?.onAccent ?: MaterialTheme.colorScheme.onPrimary
-    // на стекле — адаптивные цвета маркеров (0.17.0); без стекла — прежние темы
-    val neutralMark = skin?.inkSoft
-        ?: glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
+    // маркеры — цвета темы
+    val neutralMark = skin?.inkSoft ?: MaterialTheme.colorScheme.onSurfaceVariant
     val sectionMark = skin?.mark ?: MaterialTheme.colorScheme.tertiary
     val label = "${dayShortName(date.dayOfWeek)} ${date.dayOfMonth}"
     // 0.15.0: «сегодня» — скруглённая полоска (толщиной в точку) НАД названием дня
@@ -730,9 +710,7 @@ private fun DayChip(
                                 markedCount.toString(),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontSize = 9.sp,
-                                // на стекле — АДАПТИВНЫЙ цвет (читаемо и над тёмным,
-                                // и над светлым участком фона); без стекла — tertiary
-                                color = glassContentColor(sectionMark)
+                                color = sectionMark
                             )
                         }
                     }
@@ -768,21 +746,18 @@ private fun DayChip(
             )
         )
     } else {
-        // FIX 0.17.0: у чипов стандартного стиля теперь ЕСТЬ фон: при стекле
-        // заливка прозрачная (фрагмент фона рисует стеклянная полоса ряда —
-        // GlassPanel выше), без стекла — плотный surfaceContainer (glassCardColor).
-        // Подпись — АДАПТИВНОГО цвета на стекле (светлая на тёмном участке фона,
-        // тёмная на светлом); выбранный день залит акцентом — как в скинах.
+        // чип стандартного стиля на плотной полосе surfaceContainer: контейнер
+        // surfaceContainer, подпись onSurface, выбранный день залит акцентом
+        // (как в скинах); кромка — дефолтная M3
         FilterChip(
             selected = selected,
             onClick = onClick,
             label = { dayLabel() },
             shape = ChipShape,
             modifier = chipModifier,
-            border = BorderStroke(1.dp, glassHairlineColor(MaterialTheme.colorScheme.outline)),
             colors = FilterChipDefaults.filterChipColors(
-                containerColor = glassCardColor(MaterialTheme.colorScheme.surfaceContainer),
-                labelColor = glassContentColor(MaterialTheme.colorScheme.onSurface),
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                labelColor = MaterialTheme.colorScheme.onSurface,
                 selectedContainerColor = accent,
                 selectedLabelColor = onAccentColor
             )

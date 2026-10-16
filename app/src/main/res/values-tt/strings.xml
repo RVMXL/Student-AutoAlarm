@@ -273,13 +273,6 @@
     <string name="bg_opacity">Фон катламының үтә күренүчәнлеге</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">Файл ярамый: 20 МБ кадәр картина сайла (JPG/PNG/WebP)</string>
-    <string name="set_glass">Чыбык эффекты</string>
-    <string name="set_glass_desc">Карточкалар тоңдырылган бышкылдай яртыла үтә күренә; болытлану һәм бозылу тик бышкыл артында, картина ачык кала</string>
-    <string name="glass_tip">Киңәш: чыбык фондагы картина белән иң яхшы күренә (өстәрәк)</string>
-    <string name="glass_active">Чыбык актив</string>
-    <string name="glass_matteness">Болытлану</string>
-    <string name="glass_distortion">Бозылу</string>
-    <string name="glass_distortion_unsupported">Бозылу Android 13 һәм аннан яңыракта гына — бу версияда быяла анысыз сызыла</string>
     <string name="set_fsi_title">Уяткыч экраны кабызмый</string>
     <string name="set_fsi_desc">Тулы экранлы кыңгырауга рөхсәт бир: кыңгырау вакытында экран кабыныр, «Сүндерү» шул ук минутта була. Көйләүләрне ачар өчен бас</string>
 

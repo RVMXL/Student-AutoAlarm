@@ -65,6 +65,11 @@ data class Settings(val setupComplete: Boolean = false,
     val wakeOffsetMinutes: Int = 90, val autoAlarmEnabled: Boolean = true,
     val semesterMin: LocalDate? = null, val semesterMax: LocalDate? = null,
     val lastFullSyncEpochMs: Long = 0,
+    /** Штамп ЛЮБОЙ успешной синхронизации (0.18.0): кнопка на главной, недельная,
+     *  полная. По нему работает предупреждение «расписание не обновлялось более
+     *  3 дней» — раньше считалась только полная синхронизация (раз в 7 дней),
+     *  и предупреждение не убиралось даже после ручного обновления. */
+    val lastSyncEpochMs: Long = 0,
     val themeMode: ThemeMode = ThemeMode.SYSTEM, val dynamicColor: Boolean = true,
     val accentIndex: Int = 0, val calendarStyle: CalendarStyle = CalendarStyle.STANDARD,
     val backgroundImagePath: String? = null, val backgroundOpacity: Float = 0.35f,
@@ -83,20 +88,6 @@ data class Settings(val setupComplete: Boolean = false,
     /** Свой подъём для каждой первой пары: ключ — минуты от 00:00 начала пары,
      *  значение — запас на сборы. Пары без записи используют общий wakeOffsetMinutes. */
     val firstLessonOffsets: Map<Int, Int> = emptyMap(),
-    /**
-     * Эффект стекла (0.14.0; переработки 0.15.0/0.16.0): полупрозрачные карточки,
-     * за которыми виден фрагмент фоновой картинки, размытый и искажённый — РОВНО
-     * за стеклом, сама картинка остаётся резкой. Стекло БЕСЦВЕТНОЕ (0.16.0):
-     * подложки цветом темы нет — сквозь стекло виден только фон.
-     * Матóвость [glassBlur] (0..1): 0 — стекло полностью прозрачное (фон виден
-     * 1:1), 1 — предельно мутный блёр; между ними — лестница из 5 уровней
-     * размытия, каждая ступень заметна. Искажение [glassDistortion] (0..1) —
-     * «линзовое» искривление пространства за стеклом. Ползунки видны только
-     * при включённом стекле.
-     * Миграция: старый glassIntensity (0.9.0–0.13.0) читается как начальная матовость.
-     */
-    val glassEnabled: Boolean = false, val glassBlur: Float = 0.5f,
-    val glassDistortion: Float = 0.25f,
     /** Эпоха-минута (день*1440 + минуты) последнего поставленного разового будильника —
      *  дедупликация: мгновенная постановка при включении тумблера не дублирует
      *  ночную сверку 00:05, а сверка не снимает живой будильник. */

@@ -273,13 +273,6 @@
     <string name="bg_opacity">شفافية الطبقة الخلفية</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">الملف غير مناسب: اختر صورة بحجم 20 ميجابايت كحد أقصى (JPG/PNG/WebP)</string>
-    <string name="set_glass">تأثير الزجاج</string>
-    <string name="set_glass_desc">البطاقات شبه شفافة مثل الزجاج المصنفر؛ يظهر التمويه والتشويه خلف الزجاج فقط وتبقى الصورة حادة</string>
-    <string name="glass_tip">نصيحة: يبدو تأثير الزجاج في أفضل حالاته مع صورة خلفية (أعلاه)</string>
-    <string name="glass_active">تأثير الزجاج مفعّل</string>
-    <string name="glass_matteness">الزجاج المصنفر</string>
-    <string name="glass_distortion">التشويه</string>
-    <string name="glass_distortion_unsupported">التشويه متاح على أندرويد 13 وأحدث — في هذه النسخة يُرسم الزجاج بدونه</string>
     <string name="set_fsi_title">المنبّه لا يُشغّل الشاشة</string>
     <string name="set_fsi_desc">اسمح بالرنين في ملء الشاشة: ستُضاء الشاشة عند الرنين وسيصبح زر «إيقاف» متاحًا فورًا. انقر لفتح الإعدادات</string>
 

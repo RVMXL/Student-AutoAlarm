@@ -273,13 +273,6 @@
     <string name="bg_opacity">Overlay opacity</string>
     <!-- 0.11.0, SEC-11: выбранный файл не подходит под фоновую картинку -->
     <string name="bg_image_rejected">File won\'t work: pick an image up to 20 MB (JPG/PNG/WebP)</string>
-    <string name="set_glass">Glass effect</string>
-    <string name="set_glass_desc">Cards are translucent like frosted glass; blur and distortion appear only behind the glass, the picture stays sharp</string>
-    <string name="glass_tip">Tip: glass looks best with a background image (above)</string>
-    <string name="glass_active">Glass is on</string>
-    <string name="glass_matteness">Frostiness</string>
-    <string name="glass_distortion">Distortion</string>
-    <string name="glass_distortion_unsupported">Distortion needs Android 13 or newer — on this version the glass renders without it</string>
     <string name="set_fsi_title">Alarm doesn\'t turn the screen on</string>
     <string name="set_fsi_desc">Allow full-screen ringing: the screen will light up and Dismiss will be ready at once. Tap to open settings</string>
 

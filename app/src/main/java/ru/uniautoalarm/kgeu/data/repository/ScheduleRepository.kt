@@ -116,6 +116,16 @@ class ScheduleRepository(
                     }
                 }
                 updateEmptyStreak(suspiciousEmpty)
+                if (!suspiciousEmpty) {
+                    // 0.18.0: недельная синхронизация тоже штампует свежесть — раньше
+                    // штамповала только полная (раз в 7 дней), и предупреждение
+                    // «не обновлялось более 3 дней» не убиралось даже после
+                    // ручного обновления кнопкой
+                    val now = System.currentTimeMillis()
+                    settings.update { s ->
+                        s.copy(lastSyncEpochMs = now)
+                    }
+                }
                 _syncState.update {
                     it.copy(
                         busy = false,
@@ -166,8 +176,12 @@ class ScheduleRepository(
             }
             updateEmptyStreak(suspiciousEmpty)
             if (!suspiciousEmpty) {
-                // DATA-4: свежесть — от успеха основного запроса расписания
-                settings.update { s -> s.copy(lastFullSyncEpochMs = System.currentTimeMillis()) }
+                // DATA-4: свежесть — от успеха основного запроса расписания;
+                // полная синхронизация штампует и lastSyncEpochMs (предупреждение «3 дня»)
+                val now = System.currentTimeMillis()
+                settings.update { s ->
+                    s.copy(lastFullSyncEpochMs = now, lastSyncEpochMs = now)
+                }
             }
             // Границы семестра — вспомогательные: их сбой НЕ влияет на свежесть (DATA-4)
             runCatching {
