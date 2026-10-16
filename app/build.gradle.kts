@@ -18,9 +18,9 @@ android {
         applicationId = "ru.uniautoalarm.kgeu"
         minSdk = 26
         targetSdk = 35
-        // Версионирование: versionCode = major*10000 + minor*100 + patch (0.11.0 -> 1100)
-        versionCode = 1100
-        versionName = "0.11.0"
+        // Версионирование: versionCode = major*10000 + minor*100 + patch (0.12.0 -> 1200)
+        versionCode = 1200
+        versionName = "0.12.0"
     }
 
     buildTypes {
