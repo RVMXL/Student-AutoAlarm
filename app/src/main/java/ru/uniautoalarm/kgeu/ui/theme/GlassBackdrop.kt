@@ -40,31 +40,37 @@ import kotlin.math.max
 import kotlin.math.sin
 
 /**
- * Чистая математика стекла (0.15.0) — без Android/Compose-типов поверх чисел,
+ * Чистая математика стекла (0.16.0) — без Android/Compose-типов поверх чисел,
  * покрыта юнит-тестом GlassMathTest.
  *
- * Семантика ползунка «Матовость» (исправление 0.15.0): 0 — стекло ПРОЗРАЧНОЕ
- * (сквозь него виден фон один в один), 1 — стекло МУТНОЕ (сильный блёр).
- * В 0.14.0 мáтовость была переименованным ползунком «интенсивность»: при 0
- * поверхность становилась просто плотной карточкой, а фрагмент фона почти
- * не размывался («отпечаток»).
+ * Семантика ползунка «Матовость»: 0 — стекло ПРОЗРАЧНОЕ (фон виден один в один),
+ * 1 — стекло МУТНОЕ (предельный блёр). С 0.16.0 мáтовость ведёт по ЛЕСТНИЦЕ из
+ * [LEVEL_COUNT] уровней размытия: каждая ступень — заметный скачок мутности,
+ * поэтому ползунок «действует» по всему диапазону, а не только на краях
+ * (в 0.15.0 кроссфейд «резкая → предельная муть» + подложка темы гасили отклик).
+ * Стекло БЕСЦВЕТНОЕ: подложки цветом темы поверх фрагмента больше нет —
+ * она тонировала стекло белым/тёмным цветом светлой/тёмной темы.
  */
 object GlassMath {
 
+    /** Уровней размытия в лестнице (включая уровень 0 — резкий). Минимум 2. */
+    const val LEVEL_COUNT = 5
+
     /**
-     * Альфа тонкой подложки ПОВЕРХ фрагмента фона (для контраста текста):
-     * светлая тема — высветляющая, тёмная — затемняющая. Намеренно малая:
-     * стекло не должно превращаться в плотную заливку даже при мáтовости 1 —
-     * мутность даёт сам блёр фрагмента.
+     * Позиция на лестнице размытия для мáтовости: (индекс нижнего уровня,
+     * доля смешения к следующему). 0 → (0, 0) — ровно резкий уровень;
+     * 1 → (LEVEL_COUNT-2, 1) — ровно самый мутный уровень.
      */
-    fun scrimAlpha(matteness: Float, dark: Boolean): Float =
-        if (dark) 0.16f + matteness.coerceIn(0f, 1f) * 0.32f
-        else 0.10f + matteness.coerceIn(0f, 1f) * 0.24f
+    fun levelMix(matteness: Float): Pair<Int, Float> {
+        val t = matteness.coerceIn(0f, 1f) * (LEVEL_COUNT - 1)
+        val index = t.toInt().coerceIn(0, LEVEL_COUNT - 2)
+        return index to (t - index)
+    }
 
     /**
      * Плотная заглушка на случай, когда фрагмент фона ещё недоступен
-     * (битмап не готов, геометрия слоя не измерена): поверхность остаётся
-     * читаемой, а не рисует «отпечаток» с мусорной геометрией.
+     * (уровни не декодированы, геометрия слоя не измерена): поверхность
+     * остаётся читаемой, а не рисует «отпечаток» с мусорной геометрией.
      */
     fun fallbackScrimAlpha(dark: Boolean): Float = if (dark) 0.88f else 0.92f
 
@@ -75,28 +81,32 @@ object GlassMath {
     /**
      * Вертикальный сдвиг сэмплинга (доля высоты фрагмента) для точки x в 0..1 —
      * синусоидальная «волна» преломления фолбэка; при distortion = 0 всегда 0.
+     * 0.16.0: амплитуда 0.05 → 0.12 — искажение стало различимым глазом.
      */
     fun sampleShiftY(x01: Float, distortion: Float): Float {
         if (distortion <= 0f) return 0f
         val phase = 2.0 * PI * x01.toDouble().coerceIn(0.0, 1.0) * 1.75
-        return sin(phase).toFloat() * distortion.coerceIn(0f, 1f) * 0.05f
+        return sin(phase).toFloat() * distortion.coerceIn(0f, 1f) * 0.12f
     }
 
-    /** Амплитуда искажения в пикселях для AGSL-шейдера (Android 13+). */
+    /**
+     * Амплитуда искажения в пикселях для AGSL-шейдера (Android 13+).
+     * 0.16.0: 4.5% → 12% высоты — искажение стало различимым глазом.
+     */
     fun distortionAmp(distortion: Float, heightPx: Float): Float =
-        distortion.coerceIn(0f, 1f) * heightPx * 0.045f
+        distortion.coerceIn(0f, 1f) * heightPx * 0.12f
 }
 
 /**
- * Состояние фона «стекла» (0.15.0): резкая и сильно размытая копии фоновой
- * картинки + параметры. Обе копии строятся ОДИН раз на файл (блюр больше не
- * зависит от ползунка — мáтовость смешивает резкую и размытую копии по альфе).
+ * Состояние фона «стекла» (0.16.0): ЛЕСТНИЦА копий фоновой картинки от резкой
+ * до предельно размытой ([GlassMath.LEVEL_COUNT] уровней) + параметры. Все
+ * уровни строятся ОДИН раз на файл (ползунки не перезапускают декод); мáтовость
+ * выбирает пару соседних уровней и долю смешения между ними (GlassMath.levelMix).
  * origin/layerSize — геометрия слоя фоновой картинки в окне (пересчёт
  * «координата карточки → пиксель картинки», как при ContentScale.Crop).
  */
 class GlassBackdropState {
-    var sharpBitmap by mutableStateOf<ImageBitmap?>(null)
-    var blurBitmap by mutableStateOf<ImageBitmap?>(null)
+    var levels by mutableStateOf<List<ImageBitmap>?>(null)
     var origin by mutableStateOf(Offset.Zero)
     var layerSize by mutableStateOf(Size.Zero)
     var matteness by mutableStateOf(0.5f)
@@ -109,24 +119,25 @@ val LocalGlassBackdrop = staticCompositionLocalOf<GlassBackdropState?> { null }
 
 /**
  * Цвет заливки стеклянной поверхности: при активном стекле — прозрачный
- * (фрагмент фона и подложка рисуются [glassSurface] под содержимым),
- * без стекла — обычный цвет Material. Вызывается на местах Card/Surface,
- * чтобы убрать плотную заливку, которая в 0.14.0 закрывала собою фрагмент.
+ * (фрагмент фона рисуется [glassSurface] под содержимым), без стекла —
+ * обычный цвет Material. Вызывается на местах Card/Surface.
  */
 @Composable
 fun glassCardColor(fallback: Color): Color =
     if (LocalGlassBackdrop.current != null) Color.Transparent else fallback
 
 /**
- * Стеклянная поверхность (0.15.0): рисует ПОД содержимым элемента точный
+ * Стеклянная поверхность (0.16.0): рисует ПОД содержимым элемента точный
  * фрагмент фоновой картинки (BitmapShader-матрица отображает координаты
  * элемента в пиксели картинки 1:1 — стекло «прозрачно», а не «отпечаток»),
- * поверх — размытую копию с альфой = мáтовость, поверх — тонкая подложка
- * контраста и объёмные кромки в духе iOS. Искажение — AGSL-шейдер на
- * Android 13+, на старых API — полосный фолбэк.
+ * смешанный по мáтовости из пары соседних уровней лестницы размытия.
+ * Стекло БЕСЦВЕТНОЕ: только фрагмент фона (степень мутности — по мáтовости)
+ * и объёмные кромки; никакой подложки цветом темы (0.16.0: убрана — она
+ * тонировала стекло цветом светлой/тёмной темы, пользователь видел «карточку»).
+ * Искажение — AGSL-шейдер на Android 13+, на старых API — полосный фолбэк.
  *
  * Без фона/стекла (LocalGlassBackdrop == null) модификатор — no-op.
- * Пока битмап/геометрия не готовы — плотная заглушка вместо фрагмента.
+ * Пока уровни/геометрия не готовы — плотная заглушка вместо фрагмента.
  */
 @Composable
 fun Modifier.glassSurface(shape: Shape): Modifier {
@@ -138,19 +149,19 @@ fun Modifier.glassSurface(shape: Shape): Modifier {
         .onGloballyPositioned { coords = it }
         .drawBehind {
             val c = coords ?: return@drawBehind
-            val sharp = state.sharpBitmap
-            val blur = state.blurBitmap
+            val levels = state.levels
             val layer = state.layerSize
-            val ready = sharp != null && blur != null &&
-                layer.width >= 1f && layer.height >= 1f &&
-                state.origin != Offset.Zero && c.isAttached
+            // layerSize >= 1 достаточно: origin и layerSize ставятся одним
+            // onGloballyPositioned слоя фона — раз размер известен, известен origin
+            val ready = levels != null && levels.size == GlassMath.LEVEL_COUNT &&
+                layer.width >= 1f && layer.height >= 1f && c.isAttached
             val outline = shape.createOutline(size, layoutDirection, density)
             val path = outlineToPath(outline)
-            if (!ready) {
+            if (!ready || levels == null) {
                 drawFallbackGlass(path, state.dark)
                 return@drawBehind
             }
-            drawGlassFragment(path, state, sharp!!, blur!!, c, size)
+            drawGlassFragment(path, state, levels, c, size)
         }
 }
 
@@ -173,7 +184,7 @@ private fun DrawScope.drawEdges(path: Path, dark: Boolean) {
     drawPath(path, shade.copy(alpha = shade.alpha * 0.6f), style = Stroke(width = 0.8.dp.toPx()))
 }
 
-/** Плотная заглушка (битмап/геометрия не готовы) — читаемо, без «отпечатков». */
+/** Плотная заглушка (уровни/геометрия не готовы) — читаемо, без «отпечатков». */
 private fun DrawScope.drawFallbackGlass(path: Path, dark: Boolean) {
     val base = if (dark) Color(0xFF201B15) else Color(0xFFFFF8F1)
     drawPath(path, base.copy(alpha = GlassMath.fallbackScrimAlpha(dark)))
@@ -181,63 +192,84 @@ private fun DrawScope.drawFallbackGlass(path: Path, dark: Boolean) {
 }
 
 /**
- * Стеклянный фрагмент: точный кусок фона под элементом + размытая копия
- * (альфа = мáтовость) + подложка контраста ПОВЕРХ + кромки.
+ * Матрица «локальные координаты элемента → пиксели картинки» при
+ * ContentScale.Crop: картинка вписана по большей стороне и отцентрирована.
+ * Уровни лестницы могут отличаться разрешением — у каждого своя матрица;
+ * пропорции у всех одинаковые, поэтому отображение визуально совпадает.
+ */
+private fun cropMatrix(
+    layer: Size,
+    origin: Offset,
+    elementPos: Offset,
+    bmpWidth: Float,
+    bmpHeight: Float
+): Matrix {
+    val scale = max(layer.width / bmpWidth, layer.height / bmpHeight)
+    val offX = (layer.width - bmpWidth * scale) / 2f
+    val offY = (layer.height - bmpHeight * scale) / 2f
+    return Matrix().apply {
+        postTranslate(elementPos.x - origin.x - offX, elementPos.y - origin.y - offY)
+        postScale(1f / scale, 1f / scale)
+    }
+}
+
+/**
+ * Стеклянный фрагмент: точный кусок фона под элементом из пары соседних
+ * уровней лестницы (мáтовость), искажение по ползунку, кромки. БЕЗ подложки
+ * цветом темы (0.16.0) — стекло бесцветное, сквозь него виден только фон.
  */
 private fun DrawScope.drawGlassFragment(
     path: Path,
     st: GlassBackdropState,
-    sharp: ImageBitmap,
-    blur: ImageBitmap,
+    levels: List<ImageBitmap>,
     c: LayoutCoordinates,
     elementSize: Size
 ) {
-    val layer = st.layerSize
     val pos = c.positionInRoot()
-    // ContentScale.Crop: картинка вписана по большей стороне и отцентрирована
-    val scale = max(layer.width / sharp.width, layer.height / sharp.height)
-    val offX = (layer.width - sharp.width * scale) / 2f
-    val offY = (layer.height - sharp.height * scale) / 2f
-    // матрица «локальные координаты элемента → пиксели картинки»:
-    // сначала перенос в слой (позиция элемента − origin слоя − центрирование), затем 1/scale
-    val base = Matrix().apply {
-        postTranslate(pos.x - st.origin.x - offX, pos.y - st.origin.y - offY)
-        postScale(1f / scale, 1f / scale)
-    }
+    val (index, fraction) = GlassMath.levelMix(st.matteness)
+    val bmpA = levels[index]
+    val bmpB = levels[index + 1]
+    val matrixA = cropMatrix(
+        st.layerSize, st.origin, pos, bmpA.width.toFloat(), bmpA.height.toFloat()
+    )
+    val matrixB = cropMatrix(
+        st.layerSize, st.origin, pos, bmpB.width.toFloat(), bmpB.height.toFloat()
+    )
 
     clipPath(path) {
         drawIntoCanvas { canvas ->
             val native = canvas.nativeCanvas
-            val sharpShader = BitmapShader(
-                sharp.asAndroidBitmap(), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP
-            ).apply { setLocalMatrix(base) }
-            val blurShader = BitmapShader(
-                blur.asAndroidBitmap(), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP
-            ).apply { setLocalMatrix(base) }
-            val matteness = st.matteness.coerceIn(0f, 1f)
+            val shaderA = BitmapShader(
+                bmpA.asAndroidBitmap(), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP
+            ).apply { setLocalMatrix(matrixA) }
+            val shaderB = BitmapShader(
+                bmpB.asAndroidBitmap(), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP
+            ).apply { setLocalMatrix(matrixB) }
             if (Build.VERSION.SDK_INT >= 33) {
-                // AGSL: искажение (синусоидальное преломление) + микс резкой/размытой копий
+                // AGSL: искажение (синусоидальное преломление) + смешение уровней
                 val rs = AgslGlass.shader
-                rs.setInputShader("uSharp", sharpShader)
-                rs.setInputShader("uBlur", blurShader)
-                rs.setFloatUniform("uMatteness", matteness)
-                rs.setFloatUniform("uAmp", GlassMath.distortionAmp(st.distortion, elementSize.height))
+                rs.setInputShader("uA", shaderA)
+                rs.setInputShader("uB", shaderB)
+                rs.setFloatUniform("uMix", fraction)
+                rs.setFloatUniform(
+                    "uAmp", GlassMath.distortionAmp(st.distortion, elementSize.height)
+                )
                 val paint = Paint().apply { isFilterBitmap = true; shader = rs }
                 native.drawPath(path.asAndroidPath(), paint)
             } else {
-                // фолбэк: резкая копия + размытая поверх с альфой мáтовости;
+                // фолбэк: нижний уровень целиком + следующий поверх с альфой доли;
                 // искажение — полосный сдвиг сэмплинга
-                val paintSharp = Paint().apply { isFilterBitmap = true; shader = sharpShader }
-                val paintBlur = Paint().apply {
-                    isFilterBitmap = true; shader = blurShader
-                    alpha = (matteness * 255f).toInt().coerceIn(0, 255)
+                val paintA = Paint().apply { isFilterBitmap = true; shader = shaderA }
+                val paintB = Paint().apply {
+                    isFilterBitmap = true; shader = shaderB
+                    alpha = (fraction * 255f).toInt().coerceIn(0, 255)
                 }
                 val strips = GlassMath.stripCount(st.distortion)
                 val w = elementSize.width
                 val h = elementSize.height
                 if (strips <= 1) {
-                    native.drawRect(0f, 0f, w, h, paintSharp)
-                    native.drawRect(0f, 0f, w, h, paintBlur)
+                    native.drawRect(0f, 0f, w, h, paintA)
+                    native.drawRect(0f, 0f, w, h, paintB)
                 } else {
                     for (i in 0 until strips) {
                         val left = i * w / strips
@@ -245,23 +277,21 @@ private fun DrawScope.drawGlassFragment(
                         val shift = GlassMath.sampleShiftY(
                             ((left + right) / 2f) / w, st.distortion
                         ) * h
-                        val mi = Matrix(base)
-                        mi.postTranslate(0f, shift)
-                        sharpShader.setLocalMatrix(mi)
-                        blurShader.setLocalMatrix(mi)
+                        shaderA.setLocalMatrix(
+                            Matrix(matrixA).apply { postTranslate(0f, shift) }
+                        )
+                        shaderB.setLocalMatrix(
+                            Matrix(matrixB).apply { postTranslate(0f, shift) }
+                        )
                         native.save()
                         native.clipRect(left, 0f, right, h)
-                        native.drawRect(0f, 0f, w, h, paintSharp)
-                        native.drawRect(0f, 0f, w, h, paintBlur)
+                        native.drawRect(0f, 0f, w, h, paintA)
+                        native.drawRect(0f, 0f, w, h, paintB)
                         native.restore()
                     }
                 }
             }
         }
-        // подложка контраста — ПОВЕРХ фрагмента (в 0.14.0 заливка была ПОД ним
-        // и закрывала фрагмент полупрозрачным цветом карточки)
-        val scrim = if (st.dark) Color(0xFF14100C) else Color(0xFFFFFBF4)
-        drawPath(path, scrim.copy(alpha = GlassMath.scrimAlpha(st.matteness, st.dark)))
     }
 
     drawEdges(path, st.dark)
@@ -269,22 +299,25 @@ private fun DrawScope.drawGlassFragment(
 
 /**
  * AGSL-шейдер стекла (Android 13+): синусоидальное преломление сэмплинга
- * (амплитуда uAmp) + смешение резкой и размытой копий по мáтовости.
- * Отдельный object: класс RuntimeShader существует только с API 33, объект
- * инициализируется лишь при фактическом обращении из ветки SDK >= 33.
+ * по ДВУМ осям (амплитуда uAmp, форма волны — «жидкое стекло») + смешение
+ * пары уровней лестницы по uMix. Отдельный object: класс RuntimeShader
+ * существует только с API 33, объект инициализируется лишь при фактическом
+ * обращении из ветки SDK >= 33.
  */
 private object AgslGlass {
     private const val SKSL = """
-        uniform shader uSharp;
-        uniform shader uBlur;
-        uniform float uMatteness;
+        uniform shader uA;
+        uniform shader uB;
+        uniform float uMix;
         uniform float uAmp;
         half4 main(float2 fragCoord) {
-            float wave = sin(fragCoord.y * 0.043 + sin(fragCoord.x * 0.011) * 1.7);
-            float2 off = float2(wave * uAmp, wave * uAmp * 0.4);
-            half4 s = uSharp.eval(fragCoord + off);
-            half4 b = uBlur.eval(fragCoord + off);
-            return mix(s, b, uMatteness);
+            float2 off = float2(
+                sin(fragCoord.y * 0.045 + sin(fragCoord.x * 0.013) * 1.7) * uAmp,
+                cos(fragCoord.x * 0.038 + sin(fragCoord.y * 0.021) * 1.3) * uAmp * 0.6
+            );
+            half4 a = uA.eval(fragCoord + off);
+            half4 b = uB.eval(fragCoord + off);
+            return mix(a, b, uMix);
         }
     """
     val shader = RuntimeShader(SKSL)

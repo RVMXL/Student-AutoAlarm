@@ -171,10 +171,13 @@ private val TOP_DESTINATIONS = listOf(
  * Своя фоновая картинка: если задана — Scaffold рисуется прозрачным,
  * а картинка (файл из filesDir) кладётся под NavHost с пользовательской прозрачностью.
  *
- * Стекло 2.1 (0.15.0): фоновая картинка ВСЕГДА резкая; [LocalGlassBackdrop]
- * поставляет пары копий (резкая + сильно размытая), [glassSurface] на карточках/
- * нижней панели рисует под ними точные фрагменты: мáтовость 0 — стекло прозрачное,
- * 1 — мутный блёр; искажение — AGSL на Android 13+ (см. ui.theme.GlassBackdrop).
+ * Стекло 2.2 (0.16.0): фоновая картинка ВСЕГДА резкая; [LocalGlassBackdrop]
+ * поставляет ЛЕСТНИЦУ копий (резкая + 4 уровня размытия), [glassSurface] на
+ * карточках/нижней панели рисует под ними точные фрагменты: мáтовость 0 —
+ * стекло прозрачное, 1 — мутный блёр (каждая ступень лестницы заметна);
+ * искажение — AGSL на Android 13+ (см. ui.theme.GlassBackdrop).
+ * Провайдер оборачивает ВЕСЬ Scaffold: нижняя панель тоже стеклянная
+ * (в 0.15.0 провайдер стоял только вокруг NavHost — панель оставалась плотной).
  *
  * @param settings снимок настроек — фоновая картинка и её прозрачность.
  */
@@ -196,18 +199,17 @@ private fun MainScaffold(settings: Settings) {
     val glassState = remember { GlassBackdropState() }
     val glassActive = settings.glassEnabled && backgroundFile != null
 
-    // 0.15.0: пара копий фона (резкая ~1600px + сильно размытая 720px) строится
-    // один раз на файл — мáтовость больше НЕ влияет на кэш (смешение идёт по альфе
-    // при отрисовке), ползунок не перезапускает декодирование
+    // 0.16.0: лестница уровней фона (резкая ~1600px + 4 размытых) строится
+    // один раз на файл — ползунки не перезапускают декодирование, мáтовость
+    // лишь выбирает пару соседних уровней при отрисовке
     LaunchedEffect(backgroundFile) {
         val file = backgroundFile
-        if (file == null) {
-            glassState.sharpBitmap = null
-            glassState.blurBitmap = null
+        glassState.levels = if (file == null) {
+            null
         } else {
-            val pair = withContext(Dispatchers.IO) { produceBackdrop(file) }
-            glassState.sharpBitmap = pair?.first?.asImageBitmap()
-            glassState.blurBitmap = pair?.second?.asImageBitmap()
+            withContext(Dispatchers.IO) {
+                produceBackdrop(file)?.map { it.asImageBitmap() }
+            }
         }
     }
     SideEffect {
@@ -216,74 +218,77 @@ private fun MainScaffold(settings: Settings) {
         glassState.dark = darkTheme
     }
 
-    Scaffold(
-        containerColor = if (backgroundFile != null) {
-            Color.Transparent
-        } else {
-            MaterialTheme.colorScheme.background
-        },
-        bottomBar = {
-            NavigationBar(
-                // стекло 2.1: нижняя панель — стеклянная поверхность; заливка прозрачная,
-                // фрагмент фона и подложка рисует glassSurface
-                containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
-                modifier = Modifier.glassSurface(RectangleShape)
-            ) {
-                for (destination in TOP_DESTINATIONS) {
-                    val selected = currentRoute == destination.route
-                    NavigationBarItem(
-                        selected = selected,
-                        onClick = {
-                            navController.navigate(destination.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+    // 0.16.0: провайдер вокруг ВСЕГО Scaffold — glassCardColor/glassSurface в
+    // bottomBar видят состояние стекла (в 0.15.0 панель была вне провайдера:
+    // LocalGlassBackdrop == null → плотная не-стеклянная панель)
+    CompositionLocalProvider(
+        LocalGlassBackdrop provides if (glassActive) glassState else null
+    ) {
+        Scaffold(
+            containerColor = if (backgroundFile != null) {
+                Color.Transparent
+            } else {
+                MaterialTheme.colorScheme.background
+            },
+            bottomBar = {
+                NavigationBar(
+                    // стекло 2.2: нижняя панель — стеклянная поверхность; заливка
+                    // прозрачная, фрагмент фона рисует glassSurface
+                    containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
+                    modifier = Modifier.glassSurface(RectangleShape)
+                ) {
+                    for (destination in TOP_DESTINATIONS) {
+                        val selected = currentRoute == destination.route
+                        NavigationBarItem(
+                            selected = selected,
+                            onClick = {
+                                navController.navigate(destination.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = {
-                            val label = stringResource(destination.labelRes)
-                            Icon(
-                                imageVector = if (selected) {
-                                    destination.selectedIcon
-                                } else {
-                                    destination.unselectedIcon
-                                },
-                                contentDescription = label
-                            )
-                        },
-                        label = { Text(stringResource(destination.labelRes)) }
+                            },
+                            icon = {
+                                val label = stringResource(destination.labelRes)
+                                Icon(
+                                    imageVector = if (selected) {
+                                        destination.selectedIcon
+                                    } else {
+                                        destination.unselectedIcon
+                                    },
+                                    contentDescription = label
+                                )
+                            },
+                            label = { Text(stringResource(destination.labelRes)) }
+                        )
+                    }
+                }
+            }
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    // геометрия слоя фона: фон рисуется matchParentSize в этом же Box —
+                    // origin/размер Box = origin/размер картинки для пересчёта фрагментов
+                    .onGloballyPositioned {
+                        glassState.origin = it.positionInRoot()
+                        glassState.layerSize =
+                            androidx.compose.ui.geometry.Size(it.size.width.toFloat(), it.size.height.toFloat())
+                    }
+            ) {
+                if (backgroundFile != null) {
+                    AsyncImage(
+                        model = backgroundFile,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        // 0.14.0: картинка БОЛЬШЕ не размывается целиком — резкая;
+                        // размытие живёт только в стеклянных поверхностях (выше)
+                        modifier = Modifier.matchParentSize(),
+                        alpha = settings.backgroundOpacity
                     )
                 }
-            }
-        }
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                // геометрия слоя фона: фон рисуется matchParentSize в этом же Box —
-                // origin/размер Box = origin/размер картинки для пересчёта фрагментов
-                .onGloballyPositioned {
-                    glassState.origin = it.positionInRoot()
-                    glassState.layerSize =
-                        androidx.compose.ui.geometry.Size(it.size.width.toFloat(), it.size.height.toFloat())
-                }
-        ) {
-            if (backgroundFile != null) {
-                AsyncImage(
-                    model = backgroundFile,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    // 0.14.0: картинка БОЛЬШЕ не размывается целиком — резкая;
-                    // размытие живёт только в стеклянных поверхностях (выше)
-                    modifier = Modifier.matchParentSize(),
-                    alpha = settings.backgroundOpacity
-                )
-            }
-            CompositionLocalProvider(
-                LocalGlassBackdrop provides if (glassActive) glassState else null
-            ) {
                 NavHost(
                     navController = navController,
                     startDestination = Routes.HOME,
@@ -299,13 +304,15 @@ private fun MainScaffold(settings: Settings) {
 }
 
 /**
- * Пара копий фоновой картинки для стекла (0.15.0):
- * 1) резкая — декод с прореживанием до ~1600px по большей стороне (нужна, чтобы
- *    стекло при мáтовости 0 показывало фон «один в один» — настоящая прозрачность);
- * 2) размытая — 720px, три прохода downscale→upscale ×10 (максимально мутный блёр).
+ * Лестница копий фоновой картинки для стекла (0.16.0): [GlassMath.LEVEL_COUNT]
+ * уровней от резкого до предельно мутного:
+ *  0) резкая — декод с прореживанием до ~1600px по большей стороне (стекло при
+ *     мáтовости 0 показывает фон «один в один» — настоящая прозрачность);
+ *  1..4) размытые — из копии 720px: ÷2 (лёгкая дымка), ÷6 (средний блёр),
+ *     ÷14 ×2 прохода (сильный), ÷14 ×3 (предельная муть).
  * null — файл не читается (стеклянные поверхности рисуют плотную заглушку).
  */
-private fun produceBackdrop(file: File): Pair<Bitmap, Bitmap>? = runCatching {
+private fun produceBackdrop(file: File): List<Bitmap>? = runCatching {
     val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
     BitmapFactory.decodeFile(file.absolutePath, bounds)
     if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return@runCatching null
@@ -322,12 +329,26 @@ private fun produceBackdrop(file: File): Pair<Bitmap, Bitmap>? = runCatching {
     } else {
         sharp
     }
+    listOf(
+        sharp,
+        blurred(base, divisor = 2, passes = 1),
+        blurred(base, divisor = 6, passes = 1),
+        blurred(base, divisor = 14, passes = 2),
+        blurred(base, divisor = 14, passes = 3)
+    )
+}.getOrNull()
+
+/**
+ * Один уровень размытия: [passes] проходов «даунскейл до 1/[divisor] → апскейл
+ * до размера [base]». Каждый проход размывает уже размытое — мутность копится.
+ */
+private fun blurred(base: Bitmap, divisor: Int, passes: Int): Bitmap {
     var result = base
-    repeat(3) {
-        val small = Bitmap.createScaledBitmap(
-            result, maxOf(1, result.width / 10), maxOf(1, result.height / 10), true
-        )
+    repeat(passes) {
+        val w = maxOf(1, result.width / divisor)
+        val h = maxOf(1, result.height / divisor)
+        val small = Bitmap.createScaledBitmap(result, w, h, true)
         result = Bitmap.createScaledBitmap(small, base.width, base.height, true)
     }
-    sharp to result
-}.getOrNull()
+    return result
+}

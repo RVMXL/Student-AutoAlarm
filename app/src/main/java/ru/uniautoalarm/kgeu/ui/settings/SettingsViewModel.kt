@@ -282,7 +282,7 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
         }
     }
 
-    /** Матóвость стекла (0..1): сила размытия и плотность морозной заливки. */
+    /** Матóвость стекла (0..1): 0 — прозрачное стекло, 1 — предельный блёр (лестница уровней). */
     fun setGlassBlur(value: Float) {
         viewModelScope.launch {
             container.settings.update { it.copy(glassBlur = value.coerceIn(0f, 1f)) }

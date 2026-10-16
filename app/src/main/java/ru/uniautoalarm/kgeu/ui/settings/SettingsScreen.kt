@@ -164,6 +164,7 @@ import ru.uniautoalarm.kgeu.ui.theme.ACCENT_PALETTES
 import ru.uniautoalarm.kgeu.ui.theme.CUSTOM_ACCENT_INDEX
 import ru.uniautoalarm.kgeu.ui.theme.argbToHsv
 import ru.uniautoalarm.kgeu.ui.theme.customAccentPalette
+import ru.uniautoalarm.kgeu.ui.theme.LocalGlassBackdrop
 import ru.uniautoalarm.kgeu.ui.theme.glassCardColor
 import ru.uniautoalarm.kgeu.ui.theme.glassSurface
 import ru.uniautoalarm.kgeu.ui.theme.hsvToArgb
@@ -1390,14 +1391,17 @@ private fun AppearanceCard(
     var opacity by rememberSaveable(settings.backgroundOpacity) {
         mutableFloatStateOf(settings.backgroundOpacity)
     }
-    // Стекло 2.0 (0.14.0): два ползунка — матовость (размытие + плотность заливки)
+    // Стекло 2.0 (0.14.0): два ползунка — матовость (0 = прозрачное, 1 = мутный блёр)
     // и искажение («линзовое» искривление за стеклом). Видны только при включённом стекле.
+    // 0.16.0: перетаскивание ОТКЛИКАЕТСЯ МГНОВЕННО — значение пишется прямо в состояние
+    // стекла (персистентность в DataStore — по окончании перетаскивания)
     var glassBlur by rememberSaveable(settings.glassBlur) {
         mutableFloatStateOf(settings.glassBlur)
     }
     var glassDistortion by rememberSaveable(settings.glassDistortion) {
         mutableFloatStateOf(settings.glassDistortion)
     }
+    val glassState = LocalGlassBackdrop.current
     var showColorPicker by rememberSaveable { mutableStateOf(false) }
     // FIX 0.14.0: кружки акцентов показывали только светлое primary всех палитр —
     // в тёмной теме реальный акцент другой (primaryDark), и цвет кружка не совпадал
@@ -1638,7 +1642,11 @@ private fun AppearanceCard(
                 )
                 Slider(
                     value = glassBlur,
-                    onValueChange = { glassBlur = it },
+                    onValueChange = {
+                        glassBlur = it
+                        // мгновенный отклик: без ожидания записи в DataStore
+                        glassState?.matteness = it
+                    },
                     onValueChangeFinished = { vm.setGlassBlur(glassBlur) },
                     valueRange = 0f..1f
                 )
@@ -1649,7 +1657,11 @@ private fun AppearanceCard(
                 )
                 Slider(
                     value = glassDistortion,
-                    onValueChange = { glassDistortion = it },
+                    onValueChange = {
+                        glassDistortion = it
+                        // мгновенный отклик: без ожидания записи в DataStore
+                        glassState?.distortion = it
+                    },
                     onValueChangeFinished = { vm.setGlassDistortion(glassDistortion) },
                     valueRange = 0f..1f
                 )
