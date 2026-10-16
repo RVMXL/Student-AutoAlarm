@@ -8,6 +8,12 @@ on:
       tag:
         description: "Существующий тег, например v0.1.0"
         required: true
+      # INFRA-5 (0.11.0): релизы больше не «навсегда prerelease» — после прогонов
+      # на устройствах можно пометить стабильным (галка latest + не-prerelease)
+      promote:
+        description: "Пометить релиз стабильным (latest, снять prerelease)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -102,6 +108,14 @@ jobs:
           CERT_SHA=$(sed -n 's/^.*certificate SHA-256 digest: //p' /tmp/certs.txt | head -1)
           echo "Сертификат подписи (SHA-256): $CERT_SHA"
           echo "CERT_SHA=$CERT_SHA" >> "$GITHUB_ENV"
+          # SEC-10 (0.11.0): отпечаток сертификата сверяется с тем, что заявлен
+          # в README (открытая константа — пользователь сверяет APK по нему):
+          # подмена ключа в Secrets ломает сборку, а не тихо подписывает чужим
+          EXPECTED_CERT="fd294748430864897f873057a72f19c1e7b2d3cbb7f4cbcf2dd495f5c595f5a0"
+          if [ "$(echo "$CERT_SHA" | tr 'A-F' 'a-f')" != "$EXPECTED_CERT" ]; then
+            echo "✗ сертификат APK ($CERT_SHA) не совпал с заявленным в README ($EXPECTED_CERT)"
+            exit 1
+          fi
 
       - name: "5b. Сверка versionCode/versionName в APK с тегом"
         run: |
@@ -160,3 +174,12 @@ jobs:
           N=$(gh release view "$TAG" --json assets -q '.assets | length')
           echo "ассетов: $N"
           test "$N" -eq 1
+
+      # INFRA-5 (0.11.0): опциональный дожим до стабильного (Run workflow → promote=true).
+      # Ставит latest и снимает prerelease; заголовок — без «(prerelease)».
+      # Повторная публикация тега (шаг 8) возвращает prerelease — promote вызвать заново.
+      - name: "10. Promote до стабильного (по запросу)"
+        if: ${{ inputs.promote == true }}
+        run: |
+          gh release edit "$TAG" --title "$VER" --prerelease=false --latest=true
+          echo "Релиз $TAG помечен стабильным (latest)"

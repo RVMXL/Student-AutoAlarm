@@ -10,13 +10,17 @@ android {
     namespace = "ru.uniautoalarm.kgeu"
     compileSdk = 35
 
+    // INFRA-9 (0.11.0): build-tools запинен — иначе сборка тихо берёт любую установленную
+    // версию, и aapt/apksigner-поведение может плавать между машинами и CI
+    buildToolsVersion = "35.0.0"
+
     defaultConfig {
         applicationId = "ru.uniautoalarm.kgeu"
         minSdk = 26
         targetSdk = 35
-        // Версионирование: versionCode = major*10000 + minor*100 + patch (0.10.0 -> 1000)
-        versionCode = 1000
-        versionName = "0.10.0"
+        // Версионирование: versionCode = major*10000 + minor*100 + patch (0.11.0 -> 1100)
+        versionCode = 1100
+        versionName = "0.11.0"
     }
 
     buildTypes {
@@ -77,8 +81,12 @@ if (ksPathEnv != null) {
 } else {
     // Ключа нет: релизная сборка запрещена ЯВНО (автогенерация нового ключа
     // сломала бы обновления поверх старых установок).
+    // INFRA-8 (0.11.0): дыра guard закрыта — раньше голый `./gradlew assemble`/
+    // `bundle`/`build` собирал unsigned-release тихо (имена задач не содержат
+    // «Release», и регэксп их не ловил).
     val requested = gradle.startParameter.taskNames.joinToString(" ")
-    val releaseRequested = requested.contains("Release") || Regex("(^|[ :])build$").containsMatchIn(requested)
+    val releaseRequested = requested.contains("Release") ||
+        Regex("(^|[ :])(build|assemble|bundle)$").containsMatchIn(requested)
     if (releaseRequested) {
         throw GradleException(
             "Сборка release без ключа подписи запрещена: KEYSTORE_FILE не задан. " +

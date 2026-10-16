@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "UniAutoAlarm-KGEU"
+rootProject.name = "Student-AutoAlarm" // INFRA-7 (0.11.0): одно имя продукта — раньше было UniAutoAlarm-KGEU при Student-AutoAlarm в GitHub/README/NOTICE
 include(":app")
