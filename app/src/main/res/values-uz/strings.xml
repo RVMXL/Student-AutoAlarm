@@ -279,6 +279,7 @@
     <string name="glass_active">Shisha effekti yoqilgan</string>
     <string name="glass_matteness">Matlik</string>
     <string name="glass_distortion">Deformatsiya</string>
+    <string name="glass_distortion_unsupported">Deformatsiya faqat Android 13 va undan yangida — bu versiyada oyna unsiz chiziladi</string>
     <string name="set_fsi_title">Oyatgich ekranni yoqmaydi</string>
     <string name="set_fsi_desc">Toʻliq ekranli jiringashga ruxsat ber: jiringagananda ekran yonadi, «Oʻchirish» darhol paydo boʻladi. Sozlamalarni ochish uchun bos</string>
 

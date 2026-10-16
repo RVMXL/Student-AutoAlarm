@@ -36,8 +36,6 @@ import androidx.compose.material.icons.rounded.Science
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -83,8 +81,11 @@ import ru.uniautoalarm.kgeu.data.model.SyncInfo
 import ru.uniautoalarm.kgeu.ui.common.LocalAppContainer
 import ru.uniautoalarm.kgeu.ui.common.longDate
 import ru.uniautoalarm.kgeu.ui.common.timeFormat
-import ru.uniautoalarm.kgeu.ui.theme.glassCardColor
-import ru.uniautoalarm.kgeu.ui.theme.glassSurface
+import ru.uniautoalarm.kgeu.ui.theme.GlassCard
+import ru.uniautoalarm.kgeu.ui.theme.GlassPanel
+import ru.uniautoalarm.kgeu.ui.theme.glassContentColor
+import ru.uniautoalarm.kgeu.ui.theme.glassHairlineColor
+import ru.uniautoalarm.kgeu.ui.theme.glassSecondaryColor
 
 /** Скругления карточек (по ТЗ — 20.dp, статус-карточка крупнее). */
 private val CardShape = RoundedCornerShape(20.dp)
@@ -295,6 +296,9 @@ fun HomeScreen() {
 
 @Composable
 private fun HeaderRow(settings: Settings?, busy: Boolean, onRefresh: () -> Unit) {
+    // 0.17.0: заголовок — стеклянная панель с адаптивным цветом (над тёмным
+    // участком фона — светлый текст, над светлым — тёмный); без стекла — обычный Row
+    GlassPanel(RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth()) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             stringResource(R.string.home_title),
@@ -312,6 +316,7 @@ private fun HeaderRow(settings: Settings?, busy: Boolean, onRefresh: () -> Unit)
         // не реагировал; режим один — «одна ночь вперёд», см. RELEASE-0.8.0),
         // ключ mode_standard_chip вычищен из всех 15 локалей (SET-8-хвост)
     }
+    }
 }
 
 // --- Главная статус-карточка ---
@@ -324,13 +329,12 @@ private fun StatusCard(
     tomorrowLessons: List<Lesson>,
     onLoad: () -> Unit
 ) {
-    Card(
+    // 0.17.0: стеклянная карточка с адаптивным цветом содержимого (GlassCard):
+    // без стекла — прежняя primaryContainer-карта
+    GlassCard(
         shape = StatusCardShape,
-        colors = CardDefaults.cardColors(
-            containerColor = glassCardColor(MaterialTheme.colorScheme.primaryContainer),
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ),
-        modifier = Modifier.fillMaxWidth().glassSurface(StatusCardShape)
+        fallbackContainer = MaterialTheme.colorScheme.primaryContainer,
+        fallbackContent = MaterialTheme.colorScheme.onPrimaryContainer
     ) {
         Column(
             modifier = Modifier
@@ -351,7 +355,7 @@ private fun StatusCard(
                     Text(
                         stringResource(R.string.alarm_off_subtitle),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
+                        color = glassSecondaryColor(MaterialTheme.colorScheme.onPrimaryContainer)
                     )
                 }
 
@@ -378,7 +382,7 @@ private fun StatusCard(
                     Text(
                         stringResource(R.string.not_loaded_hint),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
+                        color = glassSecondaryColor(MaterialTheme.colorScheme.onPrimaryContainer)
                     )
                     Spacer(Modifier.height(4.dp))
                     Button(onClick = onLoad) { Text(stringResource(R.string.action_load)) }
@@ -389,7 +393,7 @@ private fun StatusCard(
                     Text(
                         stringResource(R.string.tomorrow_free_sub),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
+                        color = glassSecondaryColor(MaterialTheme.colorScheme.onPrimaryContainer)
                     )
                 }
             }
@@ -406,7 +410,7 @@ private fun PlanContent(plan: AlarmPlan) {
     Text(
         stringResource(R.string.fmt_time_alarm_will_ring),
         style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
+        color = glassSecondaryColor(MaterialTheme.colorScheme.onPrimaryContainer)
     )
     Text(
         plan.wakeAt.format(timeFormat()),
@@ -414,7 +418,7 @@ private fun PlanContent(plan: AlarmPlan) {
     )
     HorizontalDivider(
         modifier = Modifier.padding(vertical = 10.dp),
-        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.2f)
+        color = glassHairlineColor(MaterialTheme.colorScheme.onPrimaryContainer)
     )
     val lesson = plan.lesson
     val event = plan.customEvent
@@ -443,13 +447,13 @@ private fun PlanContent(plan: AlarmPlan) {
                 Text(
                     details,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
+                    color = glassSecondaryColor(MaterialTheme.colorScheme.onPrimaryContainer)
                 )
             }
             Text(
                 stringResource(R.string.lesson_at, lesson.start.format(timeFormat())),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
+                color = glassSecondaryColor(MaterialTheme.colorScheme.onPrimaryContainer)
             )
         }
 
@@ -458,7 +462,7 @@ private fun PlanContent(plan: AlarmPlan) {
             Text(
                 stringResource(R.string.own_event_at, event.time.format(timeFormat())),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
+                color = glassSecondaryColor(MaterialTheme.colorScheme.onPrimaryContainer)
             )
         }
 
@@ -470,13 +474,11 @@ private fun PlanContent(plan: AlarmPlan) {
 
 @Composable
 private fun ToggleCard(enabled: Boolean, busy: Boolean, onToggle: (Boolean) -> Unit) {
-    Card(
+    // 0.17.0: стеклянная карточка с адаптивным цветом содержимого
+    GlassCard(
         shape = CardShape,
-        colors = CardDefaults.cardColors(
-            containerColor = glassCardColor(MaterialTheme.colorScheme.surfaceVariant),
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-        ),
-        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+        fallbackContainer = MaterialTheme.colorScheme.surfaceVariant,
+        fallbackContent = MaterialTheme.colorScheme.onSurfaceVariant
     ) {
         Column(
             modifier = Modifier
@@ -505,7 +507,7 @@ private fun ToggleCard(enabled: Boolean, busy: Boolean, onToggle: (Boolean) -> U
                 Text(
                     stringResource(R.string.home_auto_title),
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = glassContentColor(MaterialTheme.colorScheme.onSurface),
                     modifier = Modifier.weight(1f)
                 )
                 if (busy) {
@@ -544,13 +546,11 @@ private fun AlarmsCard(
     onCancelTest: () -> Unit,
     onOpenClock: () -> Unit,
 ) {
-    Card(
+    // 0.17.0: стеклянная карточка с адаптивным цветом содержимого
+    GlassCard(
         shape = CardShape,
-        colors = CardDefaults.cardColors(
-            containerColor = glassCardColor(MaterialTheme.colorScheme.surfaceVariant),
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-        ),
-        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+        fallbackContainer = MaterialTheme.colorScheme.surfaceVariant,
+        fallbackContent = MaterialTheme.colorScheme.onSurfaceVariant
     ) {
         Column(
             modifier = Modifier
@@ -690,13 +690,11 @@ private fun UpcomingCard(todayLessons: List<Lesson>, tomorrowLessons: List<Lesso
     }
     val todayUpcoming = todayLessons.filter { it.end > now }
 
-    Card(
+    // 0.17.0: стеклянная карточка с адаптивным цветом содержимого
+    GlassCard(
         shape = CardShape,
-        colors = CardDefaults.cardColors(
-            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
-            contentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+        fallbackContainer = MaterialTheme.colorScheme.surface,
+        fallbackContent = MaterialTheme.colorScheme.onSurface
     ) {
         Column(
             modifier = Modifier
@@ -709,7 +707,7 @@ private fun UpcomingCard(todayLessons: List<Lesson>, tomorrowLessons: List<Lesso
                 Text(
                     stringResource(R.string.home_no_pairs),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                 )
             } else {
                 if (todayUpcoming.isNotEmpty()) {
@@ -739,7 +737,7 @@ private fun UpcomingRow(lesson: Lesson) {
         Text(
             "${lesson.start.format(timeFormat())}–${lesson.end.format(timeFormat())}",
             style = MaterialTheme.typography.bodyMedium.copy(fontFeatureSettings = "tnum"),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
         )
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
@@ -752,7 +750,7 @@ private fun UpcomingRow(lesson: Lesson) {
                 Text(
                     details,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                 )
             }
         }
@@ -779,13 +777,11 @@ private fun WarningCard(
     } else {
         MaterialTheme.colorScheme.onTertiaryContainer
     }
-    Card(
+    // 0.17.0: стеклянная карточка с адаптивным цветом содержимого
+    GlassCard(
         shape = CardShape,
-        colors = CardDefaults.cardColors(
-            containerColor = glassCardColor(container),
-            contentColor = content
-        ),
-        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+        fallbackContainer = container,
+        fallbackContent = content
     ) {
         Column(
             modifier = Modifier

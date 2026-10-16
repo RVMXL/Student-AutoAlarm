@@ -279,6 +279,7 @@
     <string name="glass_active">Шыны эффектісі қосулы</string>
     <string name="glass_matteness">Бұлыңғырлық</string>
     <string name="glass_distortion">Бұрмалану</string>
+    <string name="glass_distortion_unsupported">Бұрмалану Android 13 және одан жаңасында ғана — бұл нұсқада әйнек онысыз салынады</string>
     <string name="set_fsi_title">Оятқыш экранды қоспайды</string>
     <string name="set_fsi_desc">Толық экранды шырылға рұқсат ет: шырыл кезінде экран жанып, «Өшіру» бірден қолжетімді болады. Параметрлерді ашу үшін түрт</string>
 

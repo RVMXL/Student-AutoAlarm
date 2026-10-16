@@ -279,6 +279,7 @@
     <string name="glass_active">Шиша фаъол аст</string>
     <string name="glass_matteness">Муттароӣ</string>
     <string name="glass_distortion">Тағйири шакл</string>
+    <string name="glass_distortion_unsupported">Тағйири шакл танҳо Android 13 ва навтарам питоянда — дар ин версия шиша бе он кашида мешавад</string>
     <string name="set_fsi_title">Оякунанда экранро фурӯзон намекунад</string>
     <string name="set_fsi_desc">Равон сохтани занг дар тамоми экран роҳ диҳед: ҳангоми занг экран фурӯзон мешавад ва «Хомӯш кардан» фавран дастрас аст. Барои кушодани танзимот зер кунед</string>
 

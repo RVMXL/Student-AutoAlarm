@@ -279,6 +279,7 @@
     <string name="glass_active">Effet verre activé</string>
     <string name="glass_matteness">Effet givré</string>
     <string name="glass_distortion">Distorsion</string>
+    <string name="glass_distortion_unsupported">La distorsion nécessite Android 13 ou plus récent — sur cette version, le verre est rendu sans elle</string>
     <string name="set_fsi_title">Le réveil n\'allume pas l\'écran</string>
     <string name="set_fsi_desc">Autorisez la sonnerie plein écran : l\'écran s\'allumera à la sonnerie et « Désactiver » sera disponible aussitôt. Touchez pour ouvrir les paramètres</string>
 

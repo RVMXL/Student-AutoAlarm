@@ -80,8 +80,10 @@ import ru.uniautoalarm.kgeu.ui.common.dayShortName
 import ru.uniautoalarm.kgeu.ui.common.timeFormat
 import ru.uniautoalarm.kgeu.ui.theme.CalendarDecor
 import ru.uniautoalarm.kgeu.ui.theme.CalendarSkin
+import ru.uniautoalarm.kgeu.ui.theme.GlassPanel
 import ru.uniautoalarm.kgeu.ui.theme.glassCardColor
-import ru.uniautoalarm.kgeu.ui.theme.glassSurface
+import ru.uniautoalarm.kgeu.ui.theme.glassContentColor
+import ru.uniautoalarm.kgeu.ui.theme.glassSecondaryColor
 import ru.uniautoalarm.kgeu.ui.theme.skin
 
 private val CardShape = RoundedCornerShape(20.dp)
@@ -193,26 +195,11 @@ fun ScheduleScreen() {
                     SkinCalendarHeader(skin, monthTitle)
                 }
                 // FIX 0.15.0: в стандартном стиле шапка жила прямо на фоне — с картинкой
-                // текст мог слиться. Теперь это поверхность surfaceContainer; при активном
-                // стекле — стеклянная (glassCardColor возвращает прозрачный + glassSurface
-                // рисует фрагмент фона). В скинах шапка живёт на листе скина — как было.
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
-                        .then(
-                            if (skin == null) {
-                                Modifier
-                                    .background(
-                                        glassCardColor(MaterialTheme.colorScheme.surfaceContainer),
-                                        RoundedCornerShape(16.dp)
-                                    )
-                                    .glassSurface(RoundedCornerShape(16.dp))
-                            } else {
-                                Modifier
-                            }
-                        )
-                ) {
+                // текст мог слиться. 0.15 — поверхность surfaceContainer; 0.17 — стеклянная
+                // панель (GlassPanel) с АДАПТИВНЫМ цветом содержимого: по яркости фрагмента
+                // фона под шапкой — светлый текст на тёмном участке, тёмный на светлом.
+                // В скинах шапка живёт на листе скина — как было.
+                val weekHeader: @Composable () -> Unit = {
                 Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -236,7 +223,7 @@ fun ScheduleScreen() {
                         textAlign = TextAlign.Center,
                         // текущая неделя выделена акцентом — из неё чаще всего и «уезжают»
                         color = if (isCurrentWeek) accent
-                            else skin?.ink ?: MaterialTheme.colorScheme.onSurface
+                            else skin?.ink ?: glassContentColor(MaterialTheme.colorScheme.onSurface)
                     )
                     if (isCurrentWeek) {
                         SmallBadge(
@@ -264,7 +251,8 @@ fun ScheduleScreen() {
                         contentDescription = stringResource(R.string.cd_go_today),
                         // подсвечена, пока пользователь «уехал» с текущей недели
                         tint = if (!isCurrentWeek) accent
-                            else skin?.inkSoft ?: MaterialTheme.colorScheme.onSurfaceVariant
+                            else skin?.inkSoft
+                                ?: glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                     )
                 }
                 IconButton(onClick = {
@@ -278,6 +266,33 @@ fun ScheduleScreen() {
                     )
                 }
             }
+                }
+                if (skin == null) {
+                    GlassPanel(
+                        RoundedCornerShape(16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    glassCardColor(MaterialTheme.colorScheme.surfaceContainer),
+                                    RoundedCornerShape(16.dp)
+                                )
+                        ) {
+                            weekHeader()
+                        }
+                    }
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                    ) {
+                        weekHeader()
+                    }
                 }
 
             if (sync.busy && dayLessons.isEmpty()) {

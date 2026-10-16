@@ -279,6 +279,7 @@
     <string name="glass_active">玻璃效果已开启</string>
     <string name="glass_matteness">磨砂度</string>
     <string name="glass_distortion">畸变</string>
+    <string name="glass_distortion_unsupported">畸变仅在 Android 13 及以上版本可用；当前版本的玻璃不绘制畸变</string>
     <string name="set_fsi_title">闹钟无法唤醒屏幕</string>
     <string name="set_fsi_desc">请允许全屏响铃：响铃时屏幕会点亮，“关闭”按钮立即可用。点击打开设置</string>
 

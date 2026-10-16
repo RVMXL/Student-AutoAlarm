@@ -279,6 +279,7 @@
     <string name="glass_active">Айнек эффектиси күйгүзүлгөн</string>
     <string name="glass_matteness">Булдурактык</string>
     <string name="glass_distortion">Бурмалануу</string>
+    <string name="glass_distortion_unsupported">Бурмалануу Android 13 жана андан жаңысында гана — бул версияда айнек анысыз тартылат</string>
     <string name="set_fsi_title">Ояткыч экранды күйгүзбөйт</string>
     <string name="set_fsi_desc">Толук экранду күүгө уруксат бер: күү кезинде экран жанып, «Өчүрүү» дароо колго кирет. Параметрлерди ачуу үчүн бас</string>
 

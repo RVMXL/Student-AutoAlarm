@@ -279,6 +279,7 @@
     <string name="glass_active">Чыбык актив</string>
     <string name="glass_matteness">Болытлану</string>
     <string name="glass_distortion">Бозылу</string>
+    <string name="glass_distortion_unsupported">Бозылу Android 13 һәм аннан яңыракта гына — бу версияда быяла анысыз сызыла</string>
     <string name="set_fsi_title">Уяткыч экраны кабызмый</string>
     <string name="set_fsi_desc">Тулы экранлы кыңгырауга рөхсәт бир: кыңгырау вакытында экран кабыныр, «Сүндерү» шул ук минутта була. Көйләүләрне ачар өчен бас</string>
 

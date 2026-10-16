@@ -279,6 +279,7 @@
     <string name="glass_active">Стекло хастар</string>
     <string name="glass_matteness">Пӑтӑхлӑх</string>
     <string name="glass_distortion">Деформация</string>
+    <string name="glass_distortion_unsupported">Деформация вырăнлă тек Android 13 тата каялла — ку версире кантра унсӑ ӳкерет</string>
     <string name="set_fsi_title">Ояткӑч экрана хутармасть</string>
     <string name="set_fsi_desc">Пӗтӗм экранлӑ сасӑ ирӗк пар: сасӑ чухне экран хутарать, «Сӳнтер» пултах пулать. Пуҫлавсене уҫма пич пани</string>
 

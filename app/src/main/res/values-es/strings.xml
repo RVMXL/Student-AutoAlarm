@@ -279,6 +279,7 @@
     <string name="glass_active">Vidrio activado</string>
     <string name="glass_matteness">Esmerilado</string>
     <string name="glass_distortion">Distorsión</string>
+    <string name="glass_distortion_unsupported">La distorsión requiere Android 13 o posterior; en esta versión el cristal se dibuja sin ella</string>
     <string name="set_fsi_title">La alarma no enciende la pantalla</string>
     <string name="set_fsi_desc">Permite el timbre a pantalla completa: la pantalla se encenderá al sonar y Apagar estará disponible al instante. Toca para abrir los ajustes</string>
 

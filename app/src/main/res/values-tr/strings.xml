@@ -279,6 +279,7 @@
     <string name="glass_active">Cam efekti açık</string>
     <string name="glass_matteness">Matlık</string>
     <string name="glass_distortion">Çarpıtma</string>
+    <string name="glass_distortion_unsupported">Çarpıtma yalnızca Android 13 ve üzerinde — bu sürümde cam onunsuz çizilir</string>
     <string name="set_fsi_title">Alarm ekranı açmıyor</string>
     <string name="set_fsi_desc">Tam ekran zili izni verin: zil çalınca ekran yanar ve Kapat hemen kullanılabilir. Ayarları açmak için dokunun</string>
 

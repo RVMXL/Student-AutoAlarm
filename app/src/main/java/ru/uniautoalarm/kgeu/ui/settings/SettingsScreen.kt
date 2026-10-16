@@ -78,6 +78,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
@@ -162,11 +163,14 @@ import ru.uniautoalarm.kgeu.ui.common.formatOffset
 import ru.uniautoalarm.kgeu.ui.common.hhmm
 import ru.uniautoalarm.kgeu.ui.theme.ACCENT_PALETTES
 import ru.uniautoalarm.kgeu.ui.theme.CUSTOM_ACCENT_INDEX
+import ru.uniautoalarm.kgeu.ui.theme.GlassCard
 import ru.uniautoalarm.kgeu.ui.theme.argbToHsv
 import ru.uniautoalarm.kgeu.ui.theme.customAccentPalette
 import ru.uniautoalarm.kgeu.ui.theme.LocalGlassBackdrop
 import ru.uniautoalarm.kgeu.ui.theme.glassCardColor
-import ru.uniautoalarm.kgeu.ui.theme.glassSurface
+import ru.uniautoalarm.kgeu.ui.theme.glassContentColor
+import ru.uniautoalarm.kgeu.ui.theme.glassHairlineColor
+import ru.uniautoalarm.kgeu.ui.theme.glassSecondaryColor
 import ru.uniautoalarm.kgeu.ui.theme.hsvToArgb
 import ru.uniautoalarm.kgeu.ui.theme.resolveDarkTheme
 import ru.uniautoalarm.kgeu.ui.theme.skin
@@ -367,14 +371,12 @@ private fun PillLabel(text: String) {
 
 @Composable
 private fun ProfileCard(settings: Settings, onChangeTarget: () -> Unit) {
-    Card(
+    // 0.17.0: стеклянная карточка с адаптивным цветом содержимого (по яркости
+    // фрагмента фона под карточкой); без стекла — прежняя surface-карта
+    GlassCard(
         shape = CardShape,
-        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
-        colors = CardDefaults.cardColors(
-            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
-            contentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+        fallbackContainer = MaterialTheme.colorScheme.surface,
+        fallbackContent = MaterialTheme.colorScheme.onSurface
     ) {
         Row(
             modifier = Modifier
@@ -393,7 +395,7 @@ private fun ProfileCard(settings: Settings, onChangeTarget: () -> Unit) {
                 Text(
                     stringResource(R.string.profile_change_note),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                 )
             }
             TextButton(onClick = onChangeTarget) { Text(stringResource(R.string.action_change)) }
@@ -416,14 +418,11 @@ private fun AlarmSettingsCard(
     // UI-11: пока engine-работа тумблера/смены движка идёт, переключатели заблокированы
     val toggling by vm.toggling.collectAsStateWithLifecycle()
 
-    Card(
+    // 0.17.0: стеклянная карточка с адаптивным цветом содержимого
+    GlassCard(
         shape = CardShape,
-        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
-        colors = CardDefaults.cardColors(
-            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
-            contentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+        fallbackContainer = MaterialTheme.colorScheme.surface,
+        fallbackContent = MaterialTheme.colorScheme.onSurface
     ) {
         Column(
             modifier = Modifier
@@ -464,7 +463,7 @@ private fun AlarmSettingsCard(
                     Switch(checked = settings.autoAlarmEnabled, onCheckedChange = null)
                 }
             }
-            HorizontalDivider()
+            HorizontalDivider(color = glassHairlineColor(MaterialTheme.colorScheme.outlineVariant))
 
             // --- Куда ставится будильник (0.7.0): часы телефона или приложение ---
             Text(
@@ -492,9 +491,9 @@ private fun AlarmSettingsCard(
             Text(
                 stringResource(R.string.alarm_target_desc),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
             )
-            HorizontalDivider()
+            HorizontalDivider(color = glassHairlineColor(MaterialTheme.colorScheme.outlineVariant))
 
             // 0.14.0: если движку «В приложении» не выдан full-screen intent (Android 14+,
             // пользователь мог отозвать) — звонок не включает экран и не разворачивается
@@ -543,11 +542,11 @@ private fun AlarmSettingsCard(
                             Text(
                                 stringResource(R.string.set_fsi_desc),
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                             )
                         }
                     }
-                    HorizontalDivider()
+                    HorizontalDivider(color = glassHairlineColor(MaterialTheme.colorScheme.outlineVariant))
                 }
             }
 
@@ -576,12 +575,12 @@ private fun AlarmSettingsCard(
                         Text(
                             stringResource(R.string.set_show_clock_desc),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                         )
                     }
                     Switch(checked = settings.alarmShowClockUi, onCheckedChange = null)
                 }
-                HorizontalDivider()
+                HorizontalDivider(color = glassHairlineColor(MaterialTheme.colorScheme.outlineVariant))
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -604,14 +603,14 @@ private fun AlarmSettingsCard(
                             exampleWakeTime(settings.wakeOffsetMinutes).hhmm()
                         ),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                     )
                 }
                 TextButton(onClick = { showOffsetDialog = true }) {
                     Text(stringResource(R.string.action_edit))
                 }
             }
-            HorizontalDivider()
+            HorizontalDivider(color = glassHairlineColor(MaterialTheme.colorScheme.outlineVariant))
 
             // --- Подъём под каждую пару: свой запас на сборы для каждого времени первой пары ---
             Text(
@@ -621,13 +620,13 @@ private fun AlarmSettingsCard(
             Text(
                 stringResource(R.string.set_per_pair_desc),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
             )
             if (pairStartTimes.isEmpty()) {
                 Text(
                     stringResource(R.string.set_pairs_after_sync),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                 )
             } else {
                 pairStartTimes.forEach { pairStart ->
@@ -656,7 +655,7 @@ private fun AlarmSettingsCard(
                                     )
                                 },
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                             )
                         }
                         if (custom != null) {
@@ -670,7 +669,7 @@ private fun AlarmSettingsCard(
                     }
                 }
             }
-            HorizontalDivider()
+            HorizontalDivider(color = glassHairlineColor(MaterialTheme.colorScheme.outlineVariant))
 
             // Кнопка гигиены: снять будильники приложения в стоковых часах по меткам
             // «Авто: …» (оболочка может проигнорировать DISMISS — тогда список часов
@@ -684,7 +683,7 @@ private fun AlarmSettingsCard(
             Text(
                 stringResource(R.string.disable_alarms_desc),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
             )
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -806,7 +805,7 @@ private fun OffsetDialog(
                     Text(
                         stringResource(R.string.dialog_offset_example, exampleWakeTime(value).hhmm()),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                     )
                 }
             )
@@ -855,7 +854,7 @@ private fun PairOffsetDialog(
                             pairStart.minusMinutes(value.toLong()).hhmm()
                         ),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                     )
                 }
             )
@@ -887,14 +886,11 @@ private fun PairOffsetDialog(
 private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
     var showTimePicker by rememberSaveable { mutableStateOf(false) }
 
-    Card(
+    // 0.17.0: стеклянная карточка с адаптивным цветом содержимого
+    GlassCard(
         shape = CardShape,
-        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
-        colors = CardDefaults.cardColors(
-            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
-            contentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+        fallbackContainer = MaterialTheme.colorScheme.surface,
+        fallbackContent = MaterialTheme.colorScheme.onSurface
     ) {
         Column(
             modifier = Modifier
@@ -926,7 +922,7 @@ private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
                     Text(
                         stringResource(R.string.set_reminder_desc),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                     )
                 }
                 Switch(checked = settings.reminderEnabled, onCheckedChange = null)
@@ -934,7 +930,7 @@ private fun ReminderCard(settings: Settings, vm: SettingsViewModel) {
             Text(
                 stringResource(R.string.set_reminder_fallback),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
             )
             if (settings.reminderEnabled) {
                 OutlinedButton(onClick = { showTimePicker = true }) {
@@ -1010,14 +1006,11 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
             .take(5)
     }
 
-    Card(
+    // 0.17.0: стеклянная карточка с адаптивным цветом содержимого
+    GlassCard(
         shape = CardShape,
-        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
-        colors = CardDefaults.cardColors(
-            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
-            contentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+        fallbackContainer = MaterialTheme.colorScheme.surface,
+        fallbackContent = MaterialTheme.colorScheme.onSurface
     ) {
         Column(
             modifier = Modifier
@@ -1028,13 +1021,13 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
             Text(
                 stringResource(R.string.exceptions_title_desc),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
             )
             if (exceptions.isEmpty()) {
                 Text(
                     stringResource(R.string.exceptions_empty),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                 )
             }
             exceptions.forEach { rule ->
@@ -1059,7 +1052,7 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                     }
                 }
             }
-            HorizontalDivider()
+            HorizontalDivider(color = glassHairlineColor(MaterialTheme.colorScheme.outlineVariant))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -1069,7 +1062,16 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                     onValueChange = { newText = it },
                     label = { Text(stringResource(R.string.hint_subject_name)) },
                     singleLine = true,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    // 0.17.0: поле лежит НА стекле — текст/подпись/кайма адаптивные
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = glassContentColor(MaterialTheme.colorScheme.onSurface),
+                        unfocusedTextColor = glassContentColor(MaterialTheme.colorScheme.onSurface),
+                        focusedLabelColor = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant),
+                        unfocusedLabelColor = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant),
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = glassSecondaryColor(MaterialTheme.colorScheme.outline)
+                    )
                 )
                 IconButton(
                     onClick = {
@@ -1088,7 +1090,7 @@ private fun ExceptionsCard(exceptions: List<ExceptionRule>, vm: SettingsViewMode
                 Text(
                     stringResource(R.string.exceptions_found),
                     style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                 )
                 suggestions.forEach { subject ->
                     TextButton(
@@ -1118,14 +1120,11 @@ private fun CustomEventsCard(events: List<CustomEvent>, vm: SettingsViewModel) {
     // SET-2: переживает поворот — открытый диалог не закрывается
     var showAddDialog by rememberSaveable { mutableStateOf(false) }
 
-    Card(
+    // 0.17.0: стеклянная карточка с адаптивным цветом содержимого
+    GlassCard(
         shape = CardShape,
-        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
-        colors = CardDefaults.cardColors(
-            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
-            contentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+        fallbackContainer = MaterialTheme.colorScheme.surface,
+        fallbackContent = MaterialTheme.colorScheme.onSurface
     ) {
         Column(
             modifier = Modifier
@@ -1136,13 +1135,13 @@ private fun CustomEventsCard(events: List<CustomEvent>, vm: SettingsViewModel) {
             Text(
                 stringResource(R.string.custom_events_desc),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
             )
             if (events.isEmpty()) {
                 Text(
                     stringResource(R.string.custom_empty),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                 )
             }
             events.forEach { event ->
@@ -1155,7 +1154,7 @@ private fun CustomEventsCard(events: List<CustomEvent>, vm: SettingsViewModel) {
                         Text(
                             describeCustomEvent(event),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                         )
                     }
                     Switch(
@@ -1430,14 +1429,11 @@ private fun AppearanceCard(
         }
     }
 
-    Card(
+    // 0.17.0: стеклянная карточка с адаптивным цветом содержимого
+    GlassCard(
         shape = CardShape,
-        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
-        colors = CardDefaults.cardColors(
-            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
-            contentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+        fallbackContainer = MaterialTheme.colorScheme.surface,
+        fallbackContent = MaterialTheme.colorScheme.onSurface
     ) {
         Column(
             modifier = Modifier
@@ -1467,11 +1463,11 @@ private fun AppearanceCard(
                         if (currentLanguage != null) currentLanguage.displayName()
                         else stringResource(R.string.lang_system),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                     )
                 }
             }
-            HorizontalDivider()
+            HorizontalDivider(color = glassHairlineColor(MaterialTheme.colorScheme.outlineVariant))
 
             Text(stringResource(R.string.set_theme), style = MaterialTheme.typography.bodyLarge)
             SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
@@ -1575,7 +1571,7 @@ private fun AppearanceCard(
                     )
                 }
             }
-            HorizontalDivider()
+            HorizontalDivider(color = glassHairlineColor(MaterialTheme.colorScheme.outlineVariant))
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -1594,7 +1590,7 @@ private fun AppearanceCard(
             Text(
                 stringResource(R.string.bg_opacity),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
             )
             Slider(
                 value = opacity,
@@ -1603,7 +1599,7 @@ private fun AppearanceCard(
                 valueRange = 0f..1f
             )
 
-            HorizontalDivider()
+            HorizontalDivider(color = glassHairlineColor(MaterialTheme.colorScheme.outlineVariant))
 
             Row(
                 modifier = Modifier
@@ -1629,7 +1625,7 @@ private fun AppearanceCard(
                     Text(
                         stringResource(R.string.set_glass_desc),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                     )
                 }
                 Switch(checked = settings.glassEnabled, onCheckedChange = null)
@@ -1638,7 +1634,7 @@ private fun AppearanceCard(
                 Text(
                     stringResource(R.string.glass_matteness),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                 )
                 Slider(
                     value = glassBlur,
@@ -1653,8 +1649,11 @@ private fun AppearanceCard(
                 Text(
                     stringResource(R.string.glass_distortion),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                 )
+                // 0.17.0: искажение — только AGSL (Android 13+); ниже API 33 искажения нет
+                // вовсе (полосный фолбэк удалён — выглядел как артефакты), ползунок неактивен
+                val distortionSupported = Build.VERSION.SDK_INT >= 33
                 Slider(
                     value = glassDistortion,
                     onValueChange = {
@@ -1663,8 +1662,16 @@ private fun AppearanceCard(
                         glassState?.distortion = it
                     },
                     onValueChangeFinished = { vm.setGlassDistortion(glassDistortion) },
-                    valueRange = 0f..1f
+                    valueRange = 0f..1f,
+                    enabled = distortionSupported
                 )
+                if (!distortionSupported) {
+                    Text(
+                        stringResource(R.string.glass_distortion_unsupported),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
+                    )
+                }
                 Text(
                     if (settings.backgroundImagePath == null) {
                         stringResource(R.string.glass_tip)
@@ -1672,7 +1679,7 @@ private fun AppearanceCard(
                         stringResource(R.string.glass_active)
                     },
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                 )
             }
         }
@@ -1948,7 +1955,7 @@ private fun AccentColorPickerDialog(
                     Text(
                         stringResource(R.string.accent_custom_preview),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                     )
                 }
             }
@@ -1990,14 +1997,11 @@ private fun SystemCard(
     onFixBattery: () -> Unit,
     onAutostart: () -> Unit
 ) {
-    Card(
+    // 0.17.0: стеклянная карточка с адаптивным цветом содержимого
+    GlassCard(
         shape = CardShape,
-        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
-        colors = CardDefaults.cardColors(
-            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
-            contentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+        fallbackContainer = MaterialTheme.colorScheme.surface,
+        fallbackContent = MaterialTheme.colorScheme.onSurface
     ) {
         Column(
             modifier = Modifier
@@ -2040,7 +2044,7 @@ private fun SystemCard(
                     onAction = onFixBattery
                 )
             }
-            HorizontalDivider()
+            HorizontalDivider(color = glassHairlineColor(MaterialTheme.colorScheme.outlineVariant))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     Icons.Rounded.Info,
@@ -2056,7 +2060,7 @@ private fun SystemCard(
                     Text(
                         stringResource(R.string.autostart_desc),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                     )
                 }
                 TextButton(onClick = onAutostart) {
@@ -2156,7 +2160,7 @@ private fun AutostartDialog(onDismiss: () -> Unit) {
                 Text(
                     stringResource(R.string.autostart_standard_note),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
                 )
             }
         },
@@ -2170,14 +2174,11 @@ private fun AutostartDialog(onDismiss: () -> Unit) {
 
 @Composable
 private fun AboutCard(versionName: String?, context: Context) {
-    Card(
+    // 0.17.0: стеклянная карточка с адаптивным цветом содержимого
+    GlassCard(
         shape = CardShape,
-        // стекло 2.1: заливка прозрачная при активном стекле — фрагмент фона рисует glassSurface
-        colors = CardDefaults.cardColors(
-            containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
-            contentColor = MaterialTheme.colorScheme.onSurface
-        ),
-        modifier = Modifier.fillMaxWidth().glassSurface(CardShape)
+        fallbackContainer = MaterialTheme.colorScheme.surface,
+        fallbackContent = MaterialTheme.colorScheme.onSurface
     ) {
         Column(
             modifier = Modifier
@@ -2195,12 +2196,12 @@ private fun AboutCard(versionName: String?, context: Context) {
             Text(
                 stringResource(R.string.copyright_line),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
             )
             Text(
                 stringResource(R.string.about_data),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = glassSecondaryColor(MaterialTheme.colorScheme.onSurfaceVariant)
             )
             TextButton(onClick = {
                 try {

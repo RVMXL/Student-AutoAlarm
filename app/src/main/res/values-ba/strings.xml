@@ -279,6 +279,7 @@
     <string name="glass_active">Быяла ҡабыҙылған</string>
     <string name="glass_matteness">Болотланыу</string>
     <string name="glass_distortion">Бормаланыу</string>
+    <string name="glass_distortion_unsupported">Бормаланыу Android 13 һәм унан яңыраҡта ғына — был версияла быяла уныһыҙ һыҙола</string>
     <string name="set_fsi_title">Уяғыс экраны ҡабыҙмай</string>
     <string name="set_fsi_desc">Тулы экранлы урғауға рөхсәт бир: урғау ваҡытында экран ҡабынар, «Һүндереү» шул уҡ минутта була. Көйләүҙәрҙе асыр өсөн баҫ</string>
 

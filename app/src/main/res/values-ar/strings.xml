@@ -279,6 +279,7 @@
     <string name="glass_active">تأثير الزجاج مفعّل</string>
     <string name="glass_matteness">الزجاج المصنفر</string>
     <string name="glass_distortion">التشويه</string>
+    <string name="glass_distortion_unsupported">التشويه متاح على أندرويد 13 وأحدث — في هذه النسخة يُرسم الزجاج بدونه</string>
     <string name="set_fsi_title">المنبّه لا يُشغّل الشاشة</string>
     <string name="set_fsi_desc">اسمح بالرنين في ملء الشاشة: ستُضاء الشاشة عند الرنين وسيصبح زر «إيقاف» متاحًا فورًا. انقر لفتح الإعدادات</string>
 

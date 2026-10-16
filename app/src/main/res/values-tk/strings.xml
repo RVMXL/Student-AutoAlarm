@@ -279,6 +279,7 @@
     <string name="glass_active">Aýna effekt işleýär</string>
     <string name="glass_matteness">Bulanzyklyk</string>
     <string name="glass_distortion">Bozulma</string>
+    <string name="glass_distortion_unsupported">Bozulma diňe Android 13 we ondan ýokarda — bu wersiýada aýna onsuz çyzylyar</string>
     <string name="set_fsi_title">Oýatgyjy ekrany ýakynok</string>
     <string name="set_fsi_desc">Doly ekranly zyňska rugsat ber: zyň wagtynda ekran ýanar, «Öçürmek» şuw wagt peýda bolur. Saýlawlary açmak üçin bas</string>
 

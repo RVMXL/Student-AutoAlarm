@@ -11,6 +11,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarMonth
@@ -25,6 +26,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -66,9 +68,11 @@ import ru.uniautoalarm.kgeu.ui.settings.SettingsScreen
 import ru.uniautoalarm.kgeu.ui.setup.SetupScreen
 import ru.uniautoalarm.kgeu.ui.theme.AutoAlarmTheme
 import ru.uniautoalarm.kgeu.ui.theme.GlassBackdropState
+import ru.uniautoalarm.kgeu.ui.theme.GlassPanel
 import ru.uniautoalarm.kgeu.ui.theme.LocalGlassBackdrop
 import ru.uniautoalarm.kgeu.ui.theme.glassCardColor
-import ru.uniautoalarm.kgeu.ui.theme.glassSurface
+import ru.uniautoalarm.kgeu.ui.theme.glassContentColor
+import ru.uniautoalarm.kgeu.ui.theme.glassSecondaryColor
 import ru.uniautoalarm.kgeu.ui.theme.resolveDarkTheme
 
 /**
@@ -171,11 +175,13 @@ private val TOP_DESTINATIONS = listOf(
  * Своя фоновая картинка: если задана — Scaffold рисуется прозрачным,
  * а картинка (файл из filesDir) кладётся под NavHost с пользовательской прозрачностью.
  *
- * Стекло 2.2 (0.16.0): фоновая картинка ВСЕГДА резкая; [LocalGlassBackdrop]
- * поставляет ЛЕСТНИЦУ копий (резкая + 4 уровня размытия), [glassSurface] на
- * карточках/нижней панели рисует под ними точные фрагменты: мáтовость 0 —
- * стекло прозрачное, 1 — мутный блёр (каждая ступень лестницы заметна);
- * искажение — AGSL на Android 13+ (см. ui.theme.GlassBackdrop).
+ * Стекло 2.3 (0.17.0): фоновая картинка ВСЕГДА резкая; [LocalGlassBackdrop]
+ * поставляет ЛЕСТНИЦУ копий (резкая + 4 уровня размытия) и ПРОБУ яркости;
+ * [GlassPanel] на карточках/нижней панели рисует под ними точные фрагменты
+ * (0.17.0: исправлена математика фрагмента — без «отпечатка» и горизонтальных
+ * полос) и подбирает адаптивный цвет содержимого по яркости фрагмента;
+ * мáтовость 0 — прозрачное стекло, 1 — мутный блёр; искажение — только AGSL
+ * на Android 13+ (см. ui.theme.GlassBackdrop).
  * Провайдер оборачивает ВЕСЬ Scaffold: нижняя панель тоже стеклянная
  * (в 0.15.0 провайдер стоял только вокруг NavHost — панель оставалась плотной).
  *
@@ -201,16 +207,19 @@ private fun MainScaffold(settings: Settings) {
 
     // 0.16.0: лестница уровней фона (резкая ~1600px + 4 размытых) строится
     // один раз на файл — ползунки не перезапускают декодирование, мáтовость
-    // лишь выбирает пару соседних уровней при отрисовке
+    // лишь выбирает пару соседних уровней при отрисовке.
+    // 0.17.0: рядом строится ПРОБА (маленькая копия резкого уровня) — по ней
+    // GlassPanel оценивает яркость фрагмента ПОД каждой панелью и подбирает
+    // светлый/тёмный цвет текста (стекло остаётся бесцветным)
     LaunchedEffect(backgroundFile) {
         val file = backgroundFile
-        glassState.levels = if (file == null) {
+        val art = if (file == null) {
             null
         } else {
-            withContext(Dispatchers.IO) {
-                produceBackdrop(file)?.map { it.asImageBitmap() }
-            }
+            withContext(Dispatchers.IO) { produceBackdrop(file) }
         }
+        glassState.levels = art?.levels?.map { it.asImageBitmap() }
+        glassState.probe = art?.probe?.asImageBitmap()
     }
     SideEffect {
         glassState.matteness = settings.glassBlur
@@ -218,9 +227,8 @@ private fun MainScaffold(settings: Settings) {
         glassState.dark = darkTheme
     }
 
-    // 0.16.0: провайдер вокруг ВСЕГО Scaffold — glassCardColor/glassSurface в
-    // bottomBar видят состояние стекла (в 0.15.0 панель была вне провайдера:
-    // LocalGlassBackdrop == null → плотная не-стеклянная панель)
+    // 0.17.0: провайдер вокруг ВСЕГО Scaffold — стеклянные панели в bottomBar и
+    // на экранах видят состояние стекла (в 0.15.0 провайдер стоял только вокруг NavHost)
     CompositionLocalProvider(
         LocalGlassBackdrop provides if (glassActive) glassState else null
     ) {
@@ -231,38 +239,54 @@ private fun MainScaffold(settings: Settings) {
                 MaterialTheme.colorScheme.background
             },
             bottomBar = {
-                NavigationBar(
-                    // стекло 2.2: нижняя панель — стеклянная поверхность; заливка
-                    // прозрачная, фрагмент фона рисует glassSurface
-                    containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
-                    modifier = Modifier.glassSurface(RectangleShape)
-                ) {
-                    for (destination in TOP_DESTINATIONS) {
-                        val selected = currentRoute == destination.route
-                        NavigationBarItem(
-                            selected = selected,
-                            onClick = {
-                                navController.navigate(destination.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
+                // стекло 2.3 (0.17.0): панель навигации — стеклянная, цвет пунктов
+                // АДАПТИВНЫЙ (по яркости фрагмента под панелью): на тёмном фоне —
+                // светлые подписи/иконки, на светлом — тёмные. Без стекла —
+                // ровно прежние цвета темы.
+                GlassPanel(RectangleShape, Modifier.fillMaxWidth()) {
+                    NavigationBar(
+                        // заливка прозрачная при стекле — фрагмент рисует GlassPanel
+                        containerColor = glassCardColor(MaterialTheme.colorScheme.surface),
+                        contentColor = glassContentColor(MaterialTheme.colorScheme.onSurface)
+                    ) {
+                        for (destination in TOP_DESTINATIONS) {
+                            val selected = currentRoute == destination.route
+                            NavigationBarItem(
+                                selected = selected,
+                                onClick = {
+                                    navController.navigate(destination.route) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            icon = {
-                                val label = stringResource(destination.labelRes)
-                                Icon(
-                                    imageVector = if (selected) {
-                                        destination.selectedIcon
-                                    } else {
-                                        destination.unselectedIcon
-                                    },
-                                    contentDescription = label
-                                )
-                            },
-                            label = { Text(stringResource(destination.labelRes)) }
-                        )
+                                },
+                                colors = NavigationBarItemDefaults.colors(
+                                    selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    selectedTextColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    indicatorColor = MaterialTheme.colorScheme.secondaryContainer,
+                                    unselectedIconColor = glassSecondaryColor(
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                    ),
+                                    unselectedTextColor = glassSecondaryColor(
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                ),
+                                icon = {
+                                    val label = stringResource(destination.labelRes)
+                                    Icon(
+                                        imageVector = if (selected) {
+                                            destination.selectedIcon
+                                        } else {
+                                            destination.unselectedIcon
+                                        },
+                                        contentDescription = label
+                                    )
+                                },
+                                label = { Text(stringResource(destination.labelRes)) }
+                            )
+                        }
                     }
                 }
             }
@@ -304,15 +328,18 @@ private fun MainScaffold(settings: Settings) {
 }
 
 /**
- * Лестница копий фоновой картинки для стекла (0.16.0): [GlassMath.LEVEL_COUNT]
- * уровней от резкого до предельно мутного:
+ * Лестница копий фоновой картинки для стекла (0.17.0) + проба яркости:
  *  0) резкая — декод с прореживанием до ~1600px по большей стороне (стекло при
  *     мáтовости 0 показывает фон «один в один» — настоящая прозрачность);
  *  1..4) размытые — из копии 720px: ÷2 (лёгкая дымка), ÷6 (средний блёр),
  *     ÷14 ×2 прохода (сильный), ÷14 ×3 (предельная муть).
+ *  probe) копия резкого уровня шириной 72px — по ней GlassPanel оценивает
+ *     яркость фрагмента под каждой панелью (адаптивный цвет текста).
  * null — файл не читается (стеклянные поверхности рисуют плотную заглушку).
  */
-private fun produceBackdrop(file: File): List<Bitmap>? = runCatching {
+private class BackdropArt(val levels: List<Bitmap>, val probe: Bitmap)
+
+private fun produceBackdrop(file: File): BackdropArt? = runCatching {
     val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
     BitmapFactory.decodeFile(file.absolutePath, bounds)
     if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return@runCatching null
@@ -322,6 +349,13 @@ private fun produceBackdrop(file: File): List<Bitmap>? = runCatching {
         file.absolutePath,
         BitmapFactory.Options().apply { inSampleSize = sample }
     ) ?: return@runCatching null
+    val probeWidth = 72
+    val probe = Bitmap.createScaledBitmap(
+        sharp,
+        probeWidth,
+        maxOf(1, (sharp.height * probeWidth.toFloat() / sharp.width).roundToInt()),
+        true
+    )
     val base = if (sharp.width > 720) {
         Bitmap.createScaledBitmap(
             sharp, 720, (sharp.height * 720f / sharp.width).roundToInt(), true
@@ -329,12 +363,15 @@ private fun produceBackdrop(file: File): List<Bitmap>? = runCatching {
     } else {
         sharp
     }
-    listOf(
-        sharp,
-        blurred(base, divisor = 2, passes = 1),
-        blurred(base, divisor = 6, passes = 1),
-        blurred(base, divisor = 14, passes = 2),
-        blurred(base, divisor = 14, passes = 3)
+    BackdropArt(
+        listOf(
+            sharp,
+            blurred(base, divisor = 2, passes = 1),
+            blurred(base, divisor = 6, passes = 1),
+            blurred(base, divisor = 14, passes = 2),
+            blurred(base, divisor = 14, passes = 3)
+        ),
+        probe
     )
 }.getOrNull()
 
