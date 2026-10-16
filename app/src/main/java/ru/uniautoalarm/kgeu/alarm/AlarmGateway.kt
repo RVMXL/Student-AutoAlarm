@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.uniautoalarm.kgeu.R
@@ -49,6 +50,13 @@ import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
  * AL-21: время — через инжектируемый [AppClock]. Метка будильника APP-движка
  * локализуется (SET-5): в часы метка пишется как раньше — «Авто: …» (стабильный
  * канал DISMISS), на звонке приложения — на языке интерфейса.
+ *
+ * 0.13.0: (Bug F) интерактивные постановки ([setNextUpcoming] — тумблер, смена
+ * движка, мастер) ставят в часы ТИХО (SKIP_UI=true) — часы не открываются при
+ * переключении; «Показывать часы при постановке» остался для ночной сверки и
+ * тестового. (Bug G) тестовый будильник сохраняется в настройках: карточка
+ * «Мои будильники» показывает его и даёт снять ДО звона ([cancelTestAlarm]),
+ * а не только из шторки после срабатывания.
  */
 class AlarmGateway(
     private val context: Context,
@@ -75,11 +83,16 @@ class AlarmGateway(
      * тумблера, смене цели и после онбординга. Повторная постановка того же момента
      * блокируется маркером lastScheduledWakeEpochMinute (SET_ALARM создаёт НОВЫЙ
      * будильник, не обновляет) — НО только если слот реально стоит (AL-1).
+     *
+     * Bug F (0.13.0): [quietClockSet] по умолчанию true — интерактивные перестановки
+     * ставят в часы ТИХО (SKIP_UI=true), часы не выпрыгивают при переключении движка;
+     * ночная сверка идёт отдельным путём ([reconcileUpcoming]) и по-прежнему учитывает
+     * настройку «Показывать часы при постановке».
      */
-    suspend fun setNextUpcoming(notify: Boolean = true): AlarmPlan? =
-        gate.withLock { setNextUpcomingLocked(notify) }
+    suspend fun setNextUpcoming(notify: Boolean = true, quietClockSet: Boolean = true): AlarmPlan? =
+        gate.withLock { setNextUpcomingLocked(notify, quietClockSet) }
 
-    private suspend fun setNextUpcomingLocked(notify: Boolean): AlarmPlan? {
+    private suspend fun setNextUpcomingLocked(notify: Boolean, quietClockSet: Boolean = true): AlarmPlan? {
         val s = settings.current()
         val next = findNextUpcoming()
         if (next == null) {
@@ -111,7 +124,11 @@ class AlarmGateway(
         return if (s.alarmTarget == AlarmTarget.APP) {
             setForDateInAppLocked(next, notify)
         } else {
-            stock.setForDate(next.date, notify)
+            // Bug F: тихая постановка для интерактивных перестановок (по умолчанию)
+            stock.setForDate(
+                next.date, notify,
+                showClockUiOverride = if (quietClockSet) false else null
+            )
         }
     }
 
@@ -205,14 +222,43 @@ class AlarmGateway(
         // часы тоже чистим (могли остаться от прежнего режима/цели); в сами часы
         // не переходим — объясняем итог снекбаром, список часов открывает пользователь
         val res = stock.dismissAppAlarms()
+        // Bug G (0.13.0): тестовый слот снят — маркер карточки тоже сбрасываем
+        settings.update { it.copy(testAlarmEpochMs = 0L) }
         return res.copy(inAppCancelled = appEngine)
     }
 
-    /** Тестовый будильник «через 2 минуты» активным движком (проверка из настроек). */
+    /**
+     * Тестовый будильник «через 2 минуты» активным движком (проверка из настроек).
+     * Bug G (0.13.0): момент звона сохраняется в настройках — карточка «Мои будильники»
+     * показывает тестовый слот; момент считается ОДИН раз здесь и передаётся обоим
+     * движкам (раньше каждый движок считал его сам).
+     */
     suspend fun setTestAlarm(): Boolean =
         gate.withLock {
-            if (target() == AlarmTarget.APP) inApp.scheduleTest()
-            else stock.setTestAlarm()
+            val at = LocalDateTime.now().plusMinutes(2)
+            val ok = if (target() == AlarmTarget.APP) inApp.scheduleTest(at) else stock.setTestAlarm(at)
+            if (ok) {
+                settings.update {
+                    it.copy(
+                        testAlarmEpochMs =
+                            at.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    )
+                }
+            }
+            ok
+        }
+
+    /**
+     * Снять тестовый будильник движка «В приложении» ДО звона (Bug G, 0.13.0):
+     * раньше снять его можно было только из шторки после срабатывания.
+     * Маркер сбрасывается — строка теста исчезает из карточки. Движок «В часах»
+     * кнопки не имеет: там тест снимается в самих часах (DISMISS-канал
+     * на части оболочек открывает приложение — Bug F).
+     */
+    suspend fun cancelTestAlarm() =
+        gate.withLock {
+            inApp.cancelTest()
+            settings.update { it.copy(testAlarmEpochMs = 0L) }
         }
 
     /**

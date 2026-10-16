@@ -32,6 +32,7 @@ import androidx.compose.material.icons.rounded.Alarm
 import androidx.compose.material.icons.rounded.AlarmOn
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.Science
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -108,6 +109,7 @@ fun HomeScreen() {
     val toggling by vm.toggling.collectAsStateWithLifecycle()
     // 0.10.0 (Bug E): поставленный будильник — для карточки «Мои будильники»
     val nextAlarm by vm.nextAlarm.collectAsStateWithLifecycle()
+    val testAlarm by vm.testAlarm.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -216,12 +218,14 @@ fun HomeScreen() {
                 // часы открываются только явной кнопкой в движке «В часах»
                 AlarmsCard(
                     alarm = nextAlarm,
+                    test = testAlarm,
                     target = settings?.alarmTarget,
                     onDismiss = {
                         vm.dismissAlarmsFromCard { msg ->
                             scope.launch { snackbarHostState.showSnackbar(msg) }
                         }
                     },
+                    onCancelTest = { vm.cancelTestAlarm() },
                     onOpenClock = {
                         vm.openClockList { msg ->
                             if (msg != null) scope.launch { snackbarHostState.showSnackbar(msg) }
@@ -526,12 +530,16 @@ private fun ToggleCard(enabled: Boolean, busy: Boolean, onToggle: (Boolean) -> U
  * Поставленные будильники теперь видны в приложении: время звонка, дата, метка,
  * движок и живой ли слот. Кнопка «Снять» гасит будильники обоих движков; в движке
  * «В часах» доступна ЯВНАЯ кнопка списка часов — приложение само часы не открывает.
+ * С 0.13.0 (Bug G) карточка показывает и тестовый будильник — в движке «В приложении»
+ * с кнопкой снятия до звона (раньше тест был виден только в шторке после срабатывания).
  */
 @Composable
 private fun AlarmsCard(
     alarm: ScheduledAlarm?,
+    test: TestAlarmUi?,
     target: AlarmTarget?,
     onDismiss: () -> Unit,
+    onCancelTest: () -> Unit,
     onOpenClock: () -> Unit,
 ) {
     Card(
@@ -632,6 +640,36 @@ private fun AlarmsCard(
                 if (alarm.target == AlarmTarget.CLOCK) {
                     TextButton(onClick = onOpenClock) {
                         Text(stringResource(R.string.btn_alarm_list))
+                    }
+                }
+            }
+            // Bug G (0.13.0): тестовый будильник — отдельной строкой, в обоих движках;
+            // кнопка снятия — только в движке «В приложении» (там снятие гарантированное;
+            // в часах тест снимается в самих часах — явная кнопка списка выше)
+            if (test != null) {
+                HorizontalDivider()
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Rounded.Science,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(Modifier.width(12.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            stringResource(R.string.alarms_test_row),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            test.triggerAt.format(timeFormat()),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    if (test.target == AlarmTarget.APP) {
+                        TextButton(onClick = onCancelTest) {
+                            Text(stringResource(R.string.alarms_test_cancel))
+                        }
                     }
                 }
             }

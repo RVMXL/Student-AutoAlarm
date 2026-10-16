@@ -35,6 +35,14 @@ data class DismissResult(
  * выпрыгивали на передний план, в том числе посреди смены движка на «В приложении».
  * Теперь неуспех снятия объясняется снекбаром/уведомлением, а список будильников часов
  * открывается ТОЛЬКО явной кнопкой пользователя — [openAlarmList].
+ *
+ * 0.13.0 (Bug F, продолжение той же истории): выяснилось, что часы oplus/ColorOS
+ * не просто молча игнорируют DISMISS_ALARM — они ОТКРЫВАЮТ приложение часов.
+ * Поэтому в эти пакеты DISMISS больше не отправляется вовсе ([dismissSupported]);
+ * кроме того, интерактивные перестановки (тумблер/смена движка/мастер) ставят
+ * будильник тихо (SKIP_UI=true) — часы не открываются и при постановке;
+ * тумблер «Показывать часы при постановке» остался только для ночной сверки
+ * и тестового будильника, где экран часов действительно нужен пользователю.
  */
 
 /**
@@ -127,6 +135,10 @@ class StockAlarmSetter(
         /** AL-17 (0.11.0): ночная сверка глушит «отложено до ночи» — иначе тики 00:05 и
          *  01:00–03:00 ночи заваливали шторку ежедневным спамом в ожидании постановки. */
         notifyDeferred: Boolean = true,
+        /** Bug F (0.13.0): принудительно тихая постановка (SKIP_UI=true) — интерактивные
+         *  перестановки не открывают часы даже при включённом «Показывать часы при
+         *  постановке». null — как настроено (ночная сверка и тестовый будильник). */
+        showClockUiOverride: Boolean? = null,
     ): AlarmPlan? =
         withContext(Dispatchers.Default) {
             val s = settings.current()
@@ -179,7 +191,10 @@ class StockAlarmSetter(
                     }
                     false
                 }
-                Delivery.DELIVER -> deliver(plan.wakeAt.hour, plan.wakeAt.minute, plan.label, s.alarmShowClockUi)
+                Delivery.DELIVER -> deliver(
+                    plan.wakeAt.hour, plan.wakeAt.minute, plan.label,
+                    showClockUiOverride ?: s.alarmShowClockUi
+                )
             }
 
             if (delivered) {
@@ -232,22 +247,28 @@ class StockAlarmSetter(
         }
 
         var sent = 0
-        for (label in labels) {
-            sent += try {
-                context.startActivity(
-                    Intent(AlarmClock.ACTION_DISMISS_ALARM).apply {
-                        putExtra(AlarmClock.EXTRA_ALARM_SEARCH_MODE, AlarmClock.ALARM_SEARCH_MODE_LABEL)
-                        putExtra(AlarmClock.EXTRA_MESSAGE, label)
-                        // тихо, без UI на каждый будильник: это фоновая гигиена, не кнопка
-                        putExtra(AlarmClock.EXTRA_SKIP_UI, true)
-                        if (clockPackage != null) setPackage(clockPackage)
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    }
-                )
-                1
-            } catch (_: Exception) {
-                0
+        // Bug F (0.13.0): в часы oplus/ColorOS DISMISS не отправляем вовсе — они не
+        // снимают будильник, а ОТКРЫВАЮТ приложение (выпрыгивали при смене движка).
+        if (dismissSupported(clockPackage)) {
+            for (label in labels) {
+                sent += try {
+                    context.startActivity(
+                        Intent(AlarmClock.ACTION_DISMISS_ALARM).apply {
+                            putExtra(AlarmClock.EXTRA_ALARM_SEARCH_MODE, AlarmClock.ALARM_SEARCH_MODE_LABEL)
+                            putExtra(AlarmClock.EXTRA_MESSAGE, label)
+                            // тихо, без UI на каждый будильник: это фоновая гигиена, не кнопка
+                            putExtra(AlarmClock.EXTRA_SKIP_UI, true)
+                            if (clockPackage != null) setPackage(clockPackage)
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
+                    )
+                    1
+                } catch (_: Exception) {
+                    0
+                }
             }
+        } else {
+            Log.i(TAG, "DISMISS на часах $clockPackage не поддерживается (открывают приложение) — не дёргаю")
         }
 
         // 0.10.0: никаких авто-переходов в часы при отказе оболочки — итог объясняется
@@ -296,6 +317,11 @@ class StockAlarmSetter(
     suspend fun dismissSingleLabel(label: String): Boolean = withContext(Dispatchers.Default) {
         if (label.isBlank()) return@withContext false
         val clockPackage = detectClockPackage()
+        // Bug F (0.13.0): oplus/ColorOS на DISMISS открывают приложение — не дёргаем
+        if (!dismissSupported(clockPackage)) {
+            Log.i(TAG, "DISMISS по метке на $clockPackage не поддерживается — пропускаю")
+            return@withContext false
+        }
         try {
             context.startActivity(
                 Intent(AlarmClock.ACTION_DISMISS_ALARM).apply {
@@ -314,12 +340,12 @@ class StockAlarmSetter(
     }
 
     /**
-     * Тестовый будильник через [minutesFromNow] минут (кнопка «Проверить будильник» в настройках).
-     * Ставится напрямую, без планировщика, с меткой «Тест».
+     * Тестовый будильник на [at] (кнопка «Проверить будильник» в настройках).
+     * Ставится напрямую, без планировщика, с меткой «Тест». Момент принимает
+     * [AlarmGateway] — он же сохраняет его в настройках для карточки «Мои будильники».
      * @return true, если будильник передан часам.
      */
-    suspend fun setTestAlarm(minutesFromNow: Int = 2): Boolean {
-        val at = LocalDateTime.now().plusMinutes(minutesFromNow.toLong())
+    suspend fun setTestAlarm(at: LocalDateTime): Boolean {
         val showUi = settings.current().alarmShowClockUi
         return deliver(
             at.hour, at.minute,
@@ -375,6 +401,21 @@ class StockAlarmSetter(
 
     companion object {
         private const val TAG = "StockAlarmSetter"
+
+        /**
+         * Часы, которые НЕ поддерживают DISMISS_ALARM (Bug F, 0.13.0): oplus/ColorOS
+         * (Realme/Oppo/OnePlus) не снимают будильник, а ОТКРЫВАЮТ своё приложение —
+         * в эти пакеты DISMISS не отправляется вовсе. В 0.10.0 это поведение
+         * описывалось как «молча игнорируют» — на деле часы выпрыгивали на передний
+         * план при переключении движка и снятии будильников.
+         */
+        val DISMISS_BROKEN_PACKAGES: Set<String> =
+            setOf("com.oplus.alarmclock", "com.coloros.alarmclock")
+
+        /** Чистое решение: отправлять ли DISMISS в часы [clockPackage] (юнит-тест —
+         *  StockDismissSupportTest). null/неизвестный пакет — пробуем: хуже не станет. */
+        fun dismissSupported(clockPackage: String?): Boolean =
+            clockPackage !in DISMISS_BROKEN_PACKAGES
         /**
          * Чистая функция решения доставки: пригодна для юнит-тестов без Android.
          * Правило 0.8.0: сегодня — разовый; завтра — только когда время подъёма

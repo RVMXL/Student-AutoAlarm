@@ -90,11 +90,12 @@ class InAppAlarmScheduler(private val context: Context) {
     fun scheduleOneShot(wakeAt: LocalDateTime, label: String): Boolean =
         schedule(REQ_ONE_SHOT, wakeAt, label)
 
-    /** Тестовый звонок «через 2 минуты» с меткой «Тест» (проверка движка из настроек). */
-    fun scheduleTest(minutesFromNow: Int = 2): Boolean =
+    /** Тестовый звонок на [at] с меткой «Тест» (проверка движка из настроек).
+     *  0.13.0: момент принимает гейт — он же сохраняет его в настройках для карточки. */
+    fun scheduleTest(at: LocalDateTime): Boolean =
         schedule(
             REQ_TEST,
-            LocalDateTime.now().plusMinutes(minutesFromNow.toLong()),
+            at,
             LocaleHelper.string(context, R.string.test_alarm_label)
         )
 
@@ -116,6 +117,10 @@ class InAppAlarmScheduler(private val context: Context) {
      * [AlarmGateway.setNextUpcoming] проверяет слот фактическим состоянием системы.
      */
     fun hasOneShot(): Boolean = slotProbe(REQ_ONE_SHOT) != null
+
+    /** Стоит ли сейчас слот тестового будильника (0.13.0): карточка скрывает строку
+     *  теста, если слот умер (ребут/force-stop) — как [hasOneShot] для авто-будильника. */
+    fun hasTest(): Boolean = slotProbe(REQ_TEST) != null
 
     /** Проба слота: тот же интент-образец, что и при постановке, но без создания. */
     private fun slotProbe(requestCode: Int): PendingIntent? =

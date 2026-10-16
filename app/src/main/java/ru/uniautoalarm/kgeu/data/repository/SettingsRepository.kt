@@ -69,6 +69,7 @@ class SettingsRepository(private val context: Context) {
         val GLASS_INTENSITY = floatPreferencesKey("glass_intensity")
         val LAST_SCHEDULED_WAKE = longPreferencesKey("last_scheduled_wake_epoch_minute")
         val LAST_SCHEDULED_LABEL = stringPreferencesKey("last_scheduled_label")
+        val TEST_ALARM_EPOCH_MS = longPreferencesKey("test_alarm_epoch_ms")
         val MIGRATED_APP_ENGINE = booleanPreferencesKey("migrated_app_engine_071")
         val MIGRATED_SINGLE_NIGHT = booleanPreferencesKey("migrated_single_night_080")
         val MIGRATED_RULES_090 = booleanPreferencesKey("migrated_exception_rules_090")
@@ -190,7 +191,8 @@ class SettingsRepository(private val context: Context) {
         glassEnabled = this[Keys.GLASS_ENABLED] ?: false,
         glassIntensity = this[Keys.GLASS_INTENSITY] ?: 0.5f,
         lastScheduledWakeEpochMinute = this[Keys.LAST_SCHEDULED_WAKE] ?: -1L,
-        lastScheduledLabel = this[Keys.LAST_SCHEDULED_LABEL] ?: ""
+        lastScheduledLabel = this[Keys.LAST_SCHEDULED_LABEL] ?: "",
+        testAlarmEpochMs = this[Keys.TEST_ALARM_EPOCH_MS] ?: 0L
     )
 
     // --- Запись: setXxx для каждого поля Settings ---
@@ -232,6 +234,7 @@ class SettingsRepository(private val context: Context) {
         this[Keys.GLASS_INTENSITY] = s.glassIntensity
         this[Keys.LAST_SCHEDULED_WAKE] = s.lastScheduledWakeEpochMinute
         this[Keys.LAST_SCHEDULED_LABEL] = s.lastScheduledLabel
+        this[Keys.TEST_ALARM_EPOCH_MS] = s.testAlarmEpochMs
     }
 
     // --- Утилиты парсинга (битые значения молча заменяются дефолтом) ---

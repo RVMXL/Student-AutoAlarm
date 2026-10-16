@@ -84,7 +84,11 @@ data class Settings(val setupComplete: Boolean = false,
     val lastScheduledWakeEpochMinute: Long = -1,
     /** Метка последнего поставленного разового будильника — под DISMISS_ALARM по метке
      *  при выключении тумблера (метки «Авто: …» ищутся в часах точным совпадением). */
-    val lastScheduledLabel: String = "")
+    val lastScheduledLabel: String = "",
+    /** Эпоха-мс момента тестового будильника (0 — тестового нет). 0.13.0: карточка
+     *  «Мои будильники» показывает тестовый слот и даёт снять его до звона — раньше
+     *  тестовый будильник движка «В приложении» не был виден нигде, кроме шторки. */
+    val testAlarmEpochMs: Long = 0)
 
 /** План пробуждения на дату: победивший кандидат (пара или своё событие). */
 data class AlarmPlan(val date: LocalDate, val wakeAt: LocalDateTime,

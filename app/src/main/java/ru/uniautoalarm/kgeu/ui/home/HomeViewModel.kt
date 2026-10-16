@@ -29,7 +29,9 @@ import ru.uniautoalarm.kgeu.data.model.Target
 import ru.uniautoalarm.kgeu.di.AppContainer
 import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
 import ru.uniautoalarm.kgeu.ui.common.refreshErrorMessage
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 
 /**
  * Поставленный будильник для карточки «Мои будильники» (Bug E, 0.10.0):
@@ -41,6 +43,12 @@ data class ScheduledAlarm(
     val target: AlarmTarget,
     val slotAlive: Boolean,
     val autoEnabled: Boolean,
+)
+
+/** Тестовый будильник для карточки (Bug G, 0.13.0): момент и движок. */
+data class TestAlarmUi(
+    val triggerAt: LocalDateTime,
+    val target: AlarmTarget,
 )
 
 /**
@@ -214,6 +222,33 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
         resumeTick
     ) { s, _ -> scheduledAlarm(s) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    /**
+     * Тестовый будильник для карточки (Bug G, 0.13.0): раньше слот теста
+     * не был виден нигде, кроме шторки после срабатывания. Виден, пока:
+     * маркер стоит И момент в будущем; в движке «В приложении» дополнительно
+     * проба живого слота (ребут/force-stop — строка честно исчезает);
+     * «В часах» — маркеру доверяем (проба невозможна, как и для авто-будильника).
+     */
+    val testAlarm: StateFlow<TestAlarmUi?> = combine(
+        settings.filterNotNull(),
+        resumeTick
+    ) { s, _ -> testAlarmUi(s) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    private fun testAlarmUi(s: Settings): TestAlarmUi? {
+        if (s.testAlarmEpochMs <= 0) return null
+        val at = Instant.ofEpochMilli(s.testAlarmEpochMs)
+            .atZone(ZoneId.systemDefault()).toLocalDateTime()
+        if (!at.isAfter(LocalDateTime.now())) return null // прозвенел/устарел — не показываем
+        if (s.alarmTarget == AlarmTarget.APP && !container.inAppAlarms.hasTest()) return null
+        return TestAlarmUi(triggerAt = at, target = s.alarmTarget)
+    }
+
+    /** Снять тестовый будильник из карточки (движок «В приложении») — до звона. */
+    fun cancelTestAlarm() {
+        viewModelScope.launch { container.alarm.cancelTestAlarm() }
+    }
 
     /** Снять все будильники из карточки «Мои будильники»; итог — в снекбар. */
     fun dismissAlarmsFromCard(onResult: (String) -> Unit) {
