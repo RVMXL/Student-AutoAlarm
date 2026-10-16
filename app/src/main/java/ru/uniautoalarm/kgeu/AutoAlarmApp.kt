@@ -54,7 +54,7 @@ class AutoAlarmApp : Application() {
                 }
             }
         }
-        // Ночная сверка (00:05 + страховка 06:00), напоминание о будильнике и
+        // Ночная сверка (00:05 + страховки 01:00–03:00 ночи), напоминание о будильнике и
         // периодический sync WorkManager (всё идемпотентно, планировщики сами читают настройки)
         NightlyScheduler.scheduleNext(this)
         ReminderScheduler.scheduleNext(this)

@@ -124,8 +124,8 @@ class StockAlarmSetter(
     suspend fun setForDate(
         date: LocalDate,
         notify: Boolean = true,
-        /** AL-17 (0.11.0): ночная сверка глушит «отложено до ночи» — иначе тик 00:05 и
-         *  страховка 06:00 заваливали шторку ежедневным спамом в ожидании постановки. */
+        /** AL-17 (0.11.0): ночная сверка глушит «отложено до ночи» — иначе тики 00:05 и
+         *  01:00–03:00 ночи заваливали шторку ежедневным спамом в ожидании постановки. */
         notifyDeferred: Boolean = true,
     ): AlarmPlan? =
         withContext(Dispatchers.Default) {

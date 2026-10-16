@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Уведомления «будильник поставлен» (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!-- Точные будильники: ночная сверка 00:05 + страховка 06:00.
+    <!-- Точные будильники: ночная сверка 00:05 + страховки 01:00–03:00 ночи (AL-23).
          API 31–32: SCHEDULE_EXACT_ALARM выдан по умолчанию (отзываем пользователем);
          API 33+: USE_EXACT_ALARM — нормальное разрешение для приложений-будильников,
          выдаётся автоматически — проверщик просыпается каждый день без лишних настроек.

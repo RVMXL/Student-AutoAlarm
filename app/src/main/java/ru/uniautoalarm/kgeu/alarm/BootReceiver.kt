@@ -13,7 +13,7 @@ import ru.uniautoalarm.kgeu.work.WorkScheduler
 
 /**
  * После перезагрузки: будильники AlarmManager теряются, WorkManager — нет.
- * Восстанавливаем обе ночные сверки (00:05 + 06:00) и, при включённом тумблере,
+ * Восстанавливаем все ночные сверки (00:05 + 01:00/02:00/03:00, AL-23) и, при включённом тумблере,
  * разовый будильник движка приложения (будильники часов перезагрузку переживают сами).
  */
 class BootReceiver : BroadcastReceiver() {
@@ -32,7 +32,7 @@ class BootReceiver : BroadcastReceiver() {
         val pending = goAsync()
         CoroutineScope(Dispatchers.Default).launch {
             try {
-                // 1) восстановить обе ночные сверки, напоминание и разовую синхронизацию
+                // 1) восстановить все ночные сверки, напоминание и разовую синхронизацию
                 NightlyScheduler.scheduleNext(appContext)
                 ReminderScheduler.scheduleNext(appContext)
                 WorkScheduler.enqueueSyncNow(appContext)
@@ -42,7 +42,7 @@ class BootReceiver : BroadcastReceiver() {
                 //    дедупликации — переживает: без сброса маркера постановка
                 //    «подтвердила» бы мёртвый слот (AL-1). Будильники стоковых
                 //    часов перезагрузку переживают, но если телефон был выключен
-                //    ВСЮ НОЧЬ, тики 00:05/06:00 пропущены и будильник на сегодня
+                //    ВСЮ НОЧЬ, тики 00:05/01:00–03:00 пропущены и будильник на сегодня
                 //    никто не ставил — сверка ставит его, пока время подъёма
                 //    не прошло (AL-3).
                 val container = (appContext as AutoAlarmApp).container
