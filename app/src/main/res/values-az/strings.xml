@@ -333,4 +333,14 @@
     <string name="lang_name_hy">erməni dili</string>
     <string name="lang_name_ka">gürcü dili</string>
     <string name="lang_name_zh">çin dili</string>
+
+    <!-- 0.22.0: отложенный звонок + звонок поверх экрана блокировки -->
+    <string name="ring_snooze">Təxirə sal</string>
+    <string name="ring_snoozed_title">Siqnal təxirə salındı</string>
+    <string name="ring_snoozed_text">Yenə zəng edəcək: %1$s</string>
+    <string name="autostart_lock_title">Kilid ekranı üzərində zəng</string>
+    <string name="autostart_lock_xiaomi">Xiaomi / Redmi / POCO (MIUI, HyperOS):\nParametrlər → Tətbiqlər → Bütün tətbiqlər → Avto-siqnal → Digər icazələr: «Kilid ekranında göstər» və «Tətbiq fonda olanda pop-up pəncərələri göstər» icazələrini açın — əks halda zəng kilid ekranı üzərində görünməyəcək.</string>
+    <string name="autostart_lock_huawei">Huawei / Honor:\nParametrlər → Batareya → Tətbiq başladılması → Avto-siqnal → Əl ilə idarəetmə: «Dolayı başlatmaya icazə» daxil bütün açarları açın; varsa «Kilid ekranında göstər» icazəsini verin.</string>
+    <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nParametrlər → Tətbiqlər → Tətbiq idarəetməsi → Avto-siqnal → Avto-başlatma icazələri: «Avto-başlatmaya icazə», «Pop-up pəncərələrə icazə» və «Kilid ekranında göstər» açın.</string>
+    <string name="autostart_lock_generic">Digər qabıqlar:\ntətbiq xüsusiyyətlərində «Kilid ekranında göstər» və «Digər pəncərələrin üzərində» icazələrini verin — əks halda zəng yalnız kilidi açdıqdan sonra görünəcək.</string>
 </resources>

@@ -332,4 +332,14 @@
     <string name="lang_name_hy">Armenian</string>
     <string name="lang_name_ka">Georgian</string>
     <string name="lang_name_zh">Chinese</string>
+
+    <!-- 0.22.0: отложенный звонок + звонок поверх экрана блокировки -->
+    <string name="ring_snooze">Snooze</string>
+    <string name="ring_snoozed_title">Alarm snoozed</string>
+    <string name="ring_snoozed_text">Rings again at %1$s</string>
+    <string name="autostart_lock_title">Ringing over the lock screen</string>
+    <string name="autostart_lock_xiaomi">Xiaomi / Redmi / POCO (MIUI, HyperOS):\nSettings → Apps → All apps → Auto-Alarm → Other permissions: enable «Show on lock screen» and «Display pop-up windows while running in the background» — otherwise the ring won\'t appear over the lock screen.</string>
+    <string name="autostart_lock_huawei">Huawei / Honor:\nSettings → Battery → App launch → Auto-Alarm → Manage manually: turn on all toggles, including «Allow indirect launch», and grant «Show on lock screen» if available.</string>
+    <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nSettings → Apps → App management → Auto-Alarm → Auto-launch permissions: enable «Allow auto-launch», «Allow pop-up windows» and «Show on lock screen».</string>
+    <string name="autostart_lock_generic">Other shells:\nin the app\'s settings enable «Show on lock screen» and «Display over other apps» permissions if available — otherwise the ring appears only after unlock.</string>
 </resources>

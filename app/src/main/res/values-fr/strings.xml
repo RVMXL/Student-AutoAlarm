@@ -332,4 +332,14 @@
     <string name="lang_name_hy">arménien</string>
     <string name="lang_name_ka">géorgien</string>
     <string name="lang_name_zh">chinois</string>
+
+    <!-- 0.22.0: отложенный звонок + звонок поверх экрана блокировки -->
+    <string name="ring_snooze">Répéter</string>
+    <string name="ring_snoozed_title">Réveil répété</string>
+    <string name="ring_snoozed_text">Sonne à nouveau à %1$s</string>
+    <string name="autostart_lock_title">Sonnerie par-dessus l\'écran de verrouillage</string>
+    <string name="autostart_lock_xiaomi">Xiaomi / Redmi / POCO (MIUI, HyperOS):\nParamètres → Applications → Toutes les applis → Auto-réveil → Autres autorisations : activez « Afficher sur l\'écran de verrouillage » et « Afficher les fenêtres contextuelles en arrière-plan » — sinon la sonnerie ne s\'affiche pas par-dessus le verrouillage.</string>
+    <string name="autostart_lock_huawei">Huawei / Honor :\nParamètres → Batterie → Lancement des applis → Auto-réveil → Gérer manuellement : activez tous les interrupteurs, y compris « Autoriser le lancement indirect », et accordez « Afficher sur l\'écran de verrouillage » si présent.</string>
+    <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nParamètres → Applications → Gestion des applications → Auto-réveil → Autorisations de lancement automatique : activez « Autoriser le lancement automatique », « Autoriser les fenêtres contextuelles » et « Afficher sur l\'écran de verrouillage ».</string>
+    <string name="autostart_lock_generic">Autres surcouches :\ndans les propriétés de l\'appli, activez « Afficher sur l\'écran de verrouillage » et « Par-dessus les autres fenêtres », si disponibles — sinon la sonnerie n\'apparaît qu\'après déverrouillage.</string>
 </resources>

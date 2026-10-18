@@ -23,6 +23,7 @@ import androidx.compose.material.icons.rounded.Alarm
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,7 +55,9 @@ import ru.uniautoalarm.kgeu.ui.theme.resolveDarkTheme
  * Поднимается по full-screen intent из звонящего уведомления поверх экрана
  * блокировки (showWhenLocked + turnScreenOn). Кнопка «Отключить» глушит сервис
  * звонка; следующий будильник ставится сервисом сразу после стопа
- * (AL-20: док больше не упоминает удалённый режим «Стандарт»).
+ * (AL-20: док больше не упоминает удалённый режим «Стандарт»). Кнопка
+ * «Отложить» (0.22.0) глушит звонок и ставит отложенный слот на +5 минут
+ * ([SnoozePolicy]) — полная цепочка срабатывания повторится, а не тихий «пропущен».
  */
 class RingActivity : ComponentActivity() {
 
@@ -116,6 +119,12 @@ class RingActivity : ComponentActivity() {
                     onDismiss = {
                         runCatching { startService(InAppAlarmScheduler.stopRingingIntent(this)) }
                         finish()
+                    },
+                    onSnooze = {
+                        runCatching {
+                            startService(InAppAlarmScheduler.snoozeRingingIntent(this, label))
+                        }
+                        finish()
                     }
                 )
             }
@@ -123,7 +132,12 @@ class RingActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun RingScreen(label: String, wakeAt: LocalDateTime, onDismiss: () -> Unit) {
+    private fun RingScreen(
+        label: String,
+        wakeAt: LocalDateTime,
+        onDismiss: () -> Unit,
+        onSnooze: () -> Unit
+    ) {
         Surface(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
@@ -171,6 +185,20 @@ class RingActivity : ComponentActivity() {
                     Text(
                         stringResource(R.string.ring_dismiss),
                         style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                // 0.22.0: «Отложить» — вторичный выход из звонка: тишина сейчас,
+                // полный звонок повторится через [SnoozePolicy.MINUTES] минут
+                Spacer(Modifier.height(12.dp))
+                OutlinedButton(
+                    onClick = onSnooze,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                ) {
+                    Text(
+                        stringResource(R.string.ring_snooze),
+                        style = MaterialTheme.typography.titleSmall
                     )
                 }
             }

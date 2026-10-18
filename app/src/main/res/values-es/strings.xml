@@ -332,4 +332,14 @@
     <string name="lang_name_hy">armenio</string>
     <string name="lang_name_ka">georgiano</string>
     <string name="lang_name_zh">chino</string>
+
+    <!-- 0.22.0: отложенный звонок + звонок поверх экрана блокировки -->
+    <string name="ring_snooze">Posponer</string>
+    <string name="ring_snoozed_title">Alarma pospuesta</string>
+    <string name="ring_snoozed_text">Suena de nuevo a las %1$s</string>
+    <string name="autostart_lock_title">Sonido sobre la pantalla de bloqueo</string>
+    <string name="autostart_lock_xiaomi">Xiaomi / Redmi / POCO (MIUI, HyperOS):\nAjustes → Aplicaciones → Todas las apps → Auto-alarma → Otros permisos: activa «Mostrar en la pantalla de bloqueo» y «Mostrar ventanas emergentes con la app en segundo plano» — sin ellos la alarma no aparece sobre el bloqueo.</string>
+    <string name="autostart_lock_huawei">Huawei / Honor:\nAjustes → Batería → Inicio de aplicaciones → Auto-alarma → Gestionar manualmente: activa todos los interruptores, incluido «Permitir inicio indirecto», y concede «Mostrar en la pantalla de bloqueo» si existe.</string>
+    <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nAjustes → Aplicaciones → Gestión de aplicaciones → Auto-alarma → Permisos de inicio automático: activa «Permitir inicio automático», «Permitir ventanas emergentes» y «Mostrar en la pantalla de bloqueo».</string>
+    <string name="autostart_lock_generic">Otras capas:\nen las propiedades de la app activa los permisos «Mostrar en la pantalla de bloqueo» y «Aparecer encima», si existen — de lo contrario la alarma aparecerá solo tras desbloquear.</string>
 </resources>

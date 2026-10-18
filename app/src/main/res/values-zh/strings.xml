@@ -332,4 +332,18 @@
     <string name="lang_name_hy">亚美尼亚语</string>
     <string name="lang_name_ka">格鲁吉亚语</string>
     <string name="lang_name_zh">中文</string>
+
+    <!-- 0.22.0: отложенный звонок + звонок поверх экрана блокировки -->
+    <string name="ring_snooze">稍后提醒</string>
+    <string name="ring_snoozed_title">闹钟已延后</string>
+    <string name="ring_snoozed_text">将在 %1$s 再次响铃</string>
+    <string name="autostart_lock_title">在锁屏界面响铃</string>
+    <string name="autostart_lock_xiaomi">Xiaomi / Redmi / POCO（MIUI、HyperOS）：
+设置 → 应用 → 全部应用 → 自动闹钟 → 其他权限：开启「锁屏显示」和「后台弹出界面」— 否则响铃不会出现在锁屏上方。</string>
+    <string name="autostart_lock_huawei">Huawei / Honor：
+设置 → 电池 → 应用启动管理 → 自动闹钟 → 手动管理：打开全部开关（含「允许间接启动」），如有「锁屏显示」权限请一并开启。</string>
+    <string name="autostart_lock_oppo">OPPO / Realme / OnePlus（ColorOS）：
+设置 → 应用 → 应用管理 → 自动闹钟 → 允许自动启动：开启「允许自动启动」「允许悬浮窗」和「锁屏显示」。</string>
+    <string name="autostart_lock_generic">其他系统：
+在应用信息中开启「锁屏显示」和「显示在其他应用上层」权限（如有）— 否则响铃只会在解锁后出现。</string>
 </resources>

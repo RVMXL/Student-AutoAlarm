@@ -333,4 +333,18 @@
     <string name="lang_name_hy">სომხური</string>
     <string name="lang_name_ka">ქართული</string>
     <string name="lang_name_zh">ჩინური</string>
+
+    <!-- 0.22.0: отложенный звонок + звонок поверх экрана блокировки -->
+    <string name="ring_snooze">გადადება</string>
+    <string name="ring_snoozed_title">მაღვიძლი გადადებულია</string>
+    <string name="ring_snoozed_text">კვლავ დარეკავს %1$s-ზე</string>
+    <string name="autostart_lock_title">დარეკვა ჩაკეტილ ეკრანზე</string>
+    <string name="autostart_lock_xiaomi">Xiaomi / Redmi / POCO (MIUI, HyperOS):
+პარამეტრები → აპები → ყველა აპი → ავტომაღვიძლი → სხვა ნებართვები: ჩართეთ „ჩაკეტილ ეკრანზე ჩვენება“ და „ფონურ მუშაობაში პოპაპ ფანჯრების ჩვენება“ — წინააღმდეგ შემთხვევაში ზარი ჩაკეტილ ეკრანზე არ აიწევს.</string>
+    <string name="autostart_lock_huawei">Huawei / Honor:
+პარამეტრები → ბატარეა → აპების გაშვება → ავტომაღვიძლი → ხელით მართვა: ჩართეთ ყველა ტოგლი, მათ შორის „არაპირდაპირი გაშვების დაშვება“; არსებობის შემთხვევაში მიეცით „ჩაკეტილ ეკრანზე ჩვენება“.</string>
+    <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):
+პარამეტრები → აპები → აპების მართვა → ავტომაღვიძლი → ავტოგაშვების ნებართვები: ჩართეთ „ავტოგაშვების დაშვება“, „პოპაპ ფანჯრების დაშვება“ და „ჩაკეტილ ეკრანზე ჩვენება“.</string>
+    <string name="autostart_lock_generic">სხვა გარსები:
+აპის თვისებებში მიეცით „ჩაკეტილ ეკრანზე ჩვენება“ და „სხვა ფანჯრებზე ჩვენება“ ნებართვები, თუ არსებობს — წინააღმდეგ შემთხვევაში ზარი გამოჩნდება მხოლოდ განბლოკვის შემდეგ.</string>
 </resources>

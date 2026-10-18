@@ -332,4 +332,14 @@
     <string name="lang_name_hy">эрмен чĕлхи</string>
     <string name="lang_name_ka">грузин чĕлхи</string>
     <string name="lang_name_zh">китай чĕлхи</string>
+
+    <!-- 0.22.0: отложенный звонок + звонок поверх экрана блокировки -->
+    <string name="ring_snooze">Каярах хăвар</string>
+    <string name="ring_snoozed_title">Будильник каярах хăварăнчĕ</string>
+    <string name="ring_snoozed_text">Тепĕр хут сас тапратать: %1$s</string>
+    <string name="autostart_lock_title">Блокировка экранĕ çинчен сас тăвасси</string>
+    <string name="autostart_lock_xiaomi">Xiaomi / Redmi / POCO (MIUI, HyperOS):\nПуçламаш → Усă курăмсем → Пурте → Авто-будильник → Урăх ирĕксем: «Блокировка экранĕ çинче кăтартни» тата «Фонта çеç тăнă чух popup чӳречесем кăтартни» уçăр — вĕсенсĕр сас блокировка çинчен тăмасть.</string>
+    <string name="autostart_lock_huawei">Huawei / Honor:\nПуçламаш → Батаре → Усă курăмсене янтăру → Авто-будильник → Алла тытса пыни: пур тĕпписене те, «Василевле янтăрама ирĕк пани» те, уçăр; пулсан «Блокировка экранĕ çинче кăтартни» ирĕкне парăр.</string>
+    <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nПуçламаш → Усă курăмсем → Усă курăмсене тытса пыни → Авто-будильник → Автоянтăру ирĕксем: «Автоянтăрама ирĕк пани», «Popup чӳречесене ирĕк пани» тата «Блокировка экранĕ çинче кăтартни» уçăр.</string>
+    <string name="autostart_lock_generic">Урăх сӳтсем:\nусă курăм палăрăмĕсенче «Блокировка экранĕ çинче кăтартни» тата «Урăх чӳречесем çинче» ирĕксем пулсан парăр — ула пулсан сас кулăç уçăнсенче çеç курăнать.</string>
 </resources>

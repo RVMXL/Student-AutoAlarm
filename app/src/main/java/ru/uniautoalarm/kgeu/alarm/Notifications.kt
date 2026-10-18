@@ -12,7 +12,10 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import ru.uniautoalarm.kgeu.MainActivity
@@ -28,7 +31,18 @@ import ru.uniautoalarm.kgeu.ui.ring.RingActivity
 object Notifications {
 
     const val CHANNEL_ID = "autoalarm_status"
-    const val RINGING_CHANNEL_ID = "autoalarm_ringing"
+
+    /**
+     * 0.22.0: канал звонка v2 — со звуком/вибрацией по умолчанию (старый канал):
+     * системный звук канала накладывался на звук сервиса (двойной старт звонка:
+     * короткий «пик» уведомления, потом настоящий звук будильника), вибрация —
+     * тоже двойная. Звук и вибрацию даёт только AlarmRingingService, канал — молчаливый.
+     * Каналы неизменяемы после создания — заводим НОВЫЙ id и удаляем старый.
+     */
+    const val RINGING_CHANNEL_ID = "autoalarm_ringing_v2"
+
+    /** Канал звонка до 0.21.x — удаляется идемпотентно при каждой отправке. */
+    private const val LEGACY_RINGING_CHANNEL_ID = "autoalarm_ringing"
 
     private const val TAG = "Notifications"
     private const val NOTIF_SET_ID = 1001
@@ -40,6 +54,7 @@ object Notifications {
     // AL-19 (0.10.0): «пропущен» больше не переиспользует ID 1002 (сниск «не поставлен»)
     // — иначе «пропущен» затирал свежее объяснение, почему будильник не стоит
     private const val NOTIF_MISSED_ID = 1007
+    private const val NOTIF_SNOOZED_ID = 1008
 
     // форматтеры — функции, а не val: даты уведомлений должны следовать
     // языку приложения, выбранному в момент отправки
@@ -58,7 +73,12 @@ object Notifications {
         notificationManager(context).createNotificationChannel(channel)
     }
 
-    /** Канал звонка (IMPORTANCE_HIGH — heads-up до подъёма full-screen intent). */
+    /**
+     * Канал звонка (IMPORTANCE_HIGH — heads-up до подъёма full-screen intent).
+     * 0.22.0: v2 — без звука и вибрации (их даёт сервис звонка; звук канала
+     * давал двойной старт), старый канал удаляется. Запрос действия — request codes
+     * 202 (Отключить) / 203 (Отложить) — раздельны, PendingIntent'ы не пересекаются.
+     */
     fun ensureRingingChannel(context: Context) {
         val channel = NotificationChannel(
             RINGING_CHANNEL_ID,
@@ -66,8 +86,12 @@ object Notifications {
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
             description = LocaleHelper.string(context, R.string.ring_channel_desc)
+            setSound(null, null)
+            enableVibration(false)
         }
         notificationManager(context).createNotificationChannel(channel)
+        // одноразовая миграция со старых установок: канал со звуком по умолчанию больше не нужен
+        runCatching { notificationManager(context).deleteNotificationChannel(LEGACY_RINGING_CHANNEL_ID) }
     }
 
     /** «Будильник поставлен на HH:MM», текст «<дата>: <предмет>, ауд. <аудитория>». */
@@ -160,7 +184,7 @@ object Notifications {
 
     // --- Звонок собственного будильника (движок «В приложении», 0.7.0) ---
 
-    /** Базовый строитель звонящего уведомления: FSI → RingActivity + действие «Отключить». */
+    /** Базовый строитель звонящего уведомления: FSI → RingActivity + действия «Отключить»/«Отложить». */
     private fun ringingBuilder(context: Context, label: String): NotificationCompat.Builder {
         val ringIntent = Intent(context, RingActivity::class.java)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -171,6 +195,11 @@ object Notifications {
         val stop = PendingIntent.getService(
             context, 202,
             InAppAlarmScheduler.stopRingingIntent(context),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val snooze = PendingIntent.getService(
+            context, 203,
+            InAppAlarmScheduler.snoozeRingingIntent(context, label),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         return NotificationCompat.Builder(context, RINGING_CHANNEL_ID)
@@ -187,7 +216,18 @@ object Notifications {
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(fullScreen)
             .setFullScreenIntent(fullScreen, true)
-            .addAction(0, LocaleHelper.string(context, R.string.ring_dismiss), stop)
+            // иконки действий заданы явно: часть оболочек не рендерит действия без иконки.
+            // Порядок: «Отключить» первым — оболочки с одной кнопкой показывают именно её
+            .addAction(
+                R.drawable.ic_notification,
+                LocaleHelper.string(context, R.string.ring_dismiss), stop
+            )
+            // 0.22.0: «Отложить» — второй интерактивный элемент на локскрине там,
+            // где действия уведомлений всё же рендерятся (тишина на 5 минут без разблокировки)
+            .addAction(
+                R.drawable.ic_notification,
+                LocaleHelper.string(context, R.string.ring_snooze), snooze
+            )
     }
 
     /** Показать звонящее уведомление (приёмник срабатывания — до подъёма сервиса). */
@@ -200,6 +240,22 @@ object Notifications {
     fun ringing(context: Context, label: String): Notification {
         ensureRingingChannel(context)
         return ringingBuilder(context, label).build()
+    }
+
+    /**
+     * «Будильник отложен — прозвонит в HH:MM» (0.22.0): тихий статусный пуш
+     * после действия «Отложить» — пользователь видит, что звонок вернётся.
+     */
+    fun snoozed(context: Context, atMs: Long) {
+        val at = LocalDateTime.ofInstant(Instant.ofEpochMilli(atMs), ZoneId.systemDefault())
+        val hhmm = String.format(LocaleHelper.locale(context), "%02d:%02d", at.hour, at.minute)
+        val notification = baseBuilder(context)
+            .setContentTitle(LocaleHelper.string(context, R.string.ring_snoozed_title))
+            .setContentText(LocaleHelper.string(context, R.string.ring_snoozed_text, hhmm))
+            .setContentIntent(mainActivityIntent(context))
+            .setAutoCancel(true)
+            .build()
+        post(context, NOTIF_SNOOZED_ID, notification)
     }
 
     /** «Будильник пропущен» — автоглушение после 10 минут без ответа (AL-19: свой ID). */

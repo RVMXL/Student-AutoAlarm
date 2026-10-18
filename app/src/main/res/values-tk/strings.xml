@@ -332,4 +332,14 @@
     <string name="lang_name_hy">ermeni dili</string>
     <string name="lang_name_ka">gruzin dili</string>
     <string name="lang_name_zh">hytaý dili</string>
+
+    <!-- 0.22.0: отложенный звонок + звонок поверх экрана блокировки -->
+    <string name="ring_snooze">Soňa goýmak</string>
+    <string name="ring_snoozed_title">Ýatgyjy soňa goýuldy</string>
+    <string name="ring_snoozed_text">Ýene bir çalar: %1$s</string>
+    <string name="autostart_lock_title">Gulplanan ekranyň üstünde çalmak</string>
+    <string name="autostart_lock_xiaomi">Xiaomi / Redmi / POCO (MIUI, HyperOS):\nSazlamalar → Programmalar → Ähli programmalara → Awtomatik ýatgyjy → Başga rugsatlar: «Gulplanan ekranda görkezmek» we «Programma fonda bolanda popup penjireleri görkezmek» rugsatlaryny ýakyň — bolmasa zyl gulplamanyň üstünde göterilmez.</string>
+    <string name="autostart_lock_huawei">Huawei / Honor:\nSazlamalar → Batareýa → Programmalary goýbermek → Awtomatik ýatgyjy → El bilen dolandyrmak: «Waskanlaýyn goýbermäge rugsat» hem-de beýleki düwmeleri ýakyň; bar bolsa «Gulplanan ekranda görkezmek» rugsadyny beriň.</string>
+    <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nSazlamalar → Programmalar → Programmalary dolandyrmak → Awtomatik ýatgyjy → Awtobashlamaga rugsatlar: «Awtobashlamaga rugsat», «Popup penjirelere rugsat» we «Gulplanan ekranda görkezmek» ýakyň.</string>
+    <string name="autostart_lock_generic">Beýleki gabyklarda:\nprogramma häsiýetlerinde «Gulplanan ekranda görkezmek» we «Beýleki penjireleriň üstünde» rugsatlaryny beriň — bolmasa zyl diňe gulpy açlandan soň görünär.</string>
 </resources>

@@ -14,6 +14,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.Log
+import java.time.ZoneId
 import java.util.concurrent.Executors
 import kotlinx.coroutines.launch
 import ru.uniautoalarm.kgeu.AutoAlarmApp
@@ -27,6 +28,12 @@ import ru.uniautoalarm.kgeu.data.model.AlarmTarget
  * → звонок; кнопка «Отключить» (уведомление / RingActivity) → ACTION_STOP → тишина,
  * «пропущен» при автоглушении, и сразу ставится следующий будильник (AL-20: упоминание
  * удалённого режима «Стандарт» убрано — режим один: «одна ночь вперёд» с 0.8.0).
+ *
+ * 0.22.0 (отложенный звонок): «Отложить» (действие уведомления / кнопка RingActivity)
+ * → ACTION_SNOOZE → тишина без «пропущен», ставится слот REQ_SNOOZE на +5 минут
+ * ([SnoozePolicy]) с ПОЛНОЙ цепочкой срабатывания, маркер lastScheduledWake переносится
+ * на отложенный момент (карточка «Мои будильники» показывает правду); если система
+ * не приняла слот — тихо перевзводится обычное ближайшее пробуждение.
  *
  * 0.10.0 (AL-18): prepare() медиаплеера и подбор звука — на фоновом потоке
  * (главный больше не блокируется чтением кодека в момент звонка), а цепочка
@@ -48,6 +55,13 @@ class AlarmRingingService : Service() {
         when (intent?.action) {
             ACTION_STOP -> {
                 stopRinging(missed = false, rearm = true)
+                return START_NOT_STICKY
+            }
+            ACTION_SNOOZE -> {
+                // 0.22.0: метка может прийти в интенте действия (см. snoozeRingingIntent);
+                // если сервис-инстанс уже звонил — остаётся прежняя
+                intent.getStringExtra(EXTRA_LABEL)?.let { label = it }
+                snoozeRinging()
                 return START_NOT_STICKY
             }
             else -> {
@@ -130,6 +144,44 @@ class AlarmRingingService : Service() {
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
         if (rearm) rearmNext()
+        // страховочная гигиена (0.22.0): отложенного звона при остановке звонка быть
+        // не должно (слот либо уже сработал, либо его ставит snoozeRinging)
+        runCatching { (application as? AutoAlarmApp)?.container?.inAppAlarms?.cancelSnooze() }
+    }
+
+    /**
+     * «Отложить» (0.22.0): тишина БЕЗ «пропущен» и без перевзвода REQ_ONE_SHOT —
+     * вместо этого ставится отдельный слот отложенного звона на +5 минут
+     * ([SnoozePolicy]); маркер постановки переносится на отложенный момент,
+     * чтобы карточка «Мои будильники» и ночная сверка видели правду.
+     * Систему не приняла слот (практически не бывает) — тихо перевзводим
+     * обычное ближайшее пробуждение, движок не остаётся пустым.
+     */
+    private fun snoozeRinging() {
+        stopSoundAndVibration()
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
+
+        val container = (application as? AutoAlarmApp)?.container
+        val atMs = SnoozePolicy.atMs(System.currentTimeMillis())
+        val ok = container?.inAppAlarms?.scheduleSnooze(atMs, label) == true
+        if (ok) {
+            container?.appScope?.launch {
+                runCatching {
+                    container.settings.update {
+                        it.copy(
+                            lastScheduledWakeEpochMinute =
+                                SnoozePolicy.markerMinute(atMs, ZoneId.systemDefault()),
+                            lastScheduledLabel = label
+                        )
+                    }
+                }
+            }
+            runCatching { Notifications.snoozed(this, atMs) }
+        } else {
+            Log.w(TAG, "Слот отложенного звона не принят — перевзвод обычного будильника")
+            rearmNext()
+        }
     }
 
     /** Глушит звук и вибрацию (без уведомлений/stopSelf/rearm) — общий для STOP и повторного старта. */
@@ -179,6 +231,9 @@ class AlarmRingingService : Service() {
 
         /** Остановить звонок (кнопка «Отключить»). */
         const val ACTION_STOP = "ru.uniautoalarm.kgeu.alarm.STOP_RINGING"
+
+        /** Отложить звонок на [SnoozePolicy.MINUTES] минут (0.22.0). */
+        const val ACTION_SNOOZE = "ru.uniautoalarm.kgeu.alarm.SNOOZE_RINGING"
 
         const val EXTRA_LABEL = "extra_label"
         const val EXTRA_TRIGGER_MS = "extra_trigger_ms"

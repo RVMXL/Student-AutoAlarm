@@ -332,4 +332,14 @@
     <string name="lang_name_hy">الأرمنية</string>
     <string name="lang_name_ka">الجورجية</string>
     <string name="lang_name_zh">الصينية</string>
+
+    <!-- 0.22.0: отложенный звонок + звонок поверх экрана блокировки -->
+    <string name="ring_snooze">تأجيل</string>
+    <string name="ring_snoozed_title">تم تأجيل المنبّه</string>
+    <string name="ring_snoozed_text">سيرن مجددًا في %1$s</string>
+    <string name="autostart_lock_title">الرنين فوق شاشة القفل</string>
+    <string name="autostart_lock_xiaomi">Xiaomi / Redmi / POCO (MIUI, HyperOS):\nالإعدادات → التطبيقات → كل التطبيقات → المنبّه التلقائي → أذونات أخرى: فعِّل «العرض على شاشة القفل» و«إظهار النوافذ المنبثقة أثناء العمل في الخلفية» — وإلا فلن يظهر الرنين فوق شاشة القفل.</string>
+    <string name="autostart_lock_huawei">Huawei / Honor:\nالإعدادات → البطارية → تشغيل التطبيقات → المنبّه التلقائي → إدارة يدوية: فعِّل جميع المفاتيح بما فيها «السماح بالتشغيل غير المباشر»، وامنح إذن «العرض على شاشة القفل» إن وُجد.</string>
+    <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nالإعدادات → التطبيقات → إدارة التطبيقات → المنبّه التلقائي → أذونات التشغيل التلقائي: فعِّل «السماح بالتشغيل التلقائي» و«السماح بالنوافذ المنبثقة» و«العرض على شاشة القفل».</string>
+    <string name="autostart_lock_generic">أغلفة أخرى:\nفي خصائص التطبيق امنح إذني «العرض على شاشة القفل» و«العرض فوق التطبيقات الأخرى» إن وُجدا — وإلا فلن يظهر الرنين إلا بعد فتح القفل.</string>
 </resources>

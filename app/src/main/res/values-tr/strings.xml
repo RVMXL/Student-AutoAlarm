@@ -332,4 +332,14 @@
     <string name="lang_name_hy">Ermenice</string>
     <string name="lang_name_ka">Gürcüce</string>
     <string name="lang_name_zh">Çince</string>
+
+    <!-- 0.22.0: отложенный звонок + звонок поверх экрана блокировки -->
+    <string name="ring_snooze">Ertele</string>
+    <string name="ring_snoozed_title">Alarm ertelendi</string>
+    <string name="ring_snoozed_text">Yeniden çalacak: %1$s</string>
+    <string name="autostart_lock_title">Kilit ekranı üzerinde zil</string>
+    <string name="autostart_lock_xiaomi">Xiaomi / Redmi / POCO (MIUI, HyperOS):\nAyarlar → Uygulamalar → Tüm uygulamalar → Oto-alarm → Diğer izinler: «Kilit ekranında göster» ve «Uygulama arka plandayken pop-up pencereleri göster» izinlerini açın — aksi halde zil kilit ekranı üzerinde yükselmez.</string>
+    <string name="autostart_lock_huawei">Huawei / Honor:\nAyarlar → Pil → Uygulama başlatma → Oto-alarm → Elle yönet: «Dolaylı başlatmaya izin ver» dahil tüm anahtarları açın; varsa «Kilit ekranında göster» iznini verin.</string>
+    <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nAyarlar → Uygulamalar → Uygulama yönetimi → Oto-alarm → Otomatik başlatma izinleri: «Otomatik başlatmaya izin ver», «Pop-up pencerelere izin ver» ve «Kilit ekranında göster» seçeneklerini açın.</string>
+    <string name="autostart_lock_generic">Diğer arayüzler:\nuygulama ayarlarında «Kilit ekranında göster» ve «Diğer pencerelerin üzerinde» izinlerini verin — aksi halde zil yalnızca kilit açıldıktan sonra görünür.</string>
 </resources>

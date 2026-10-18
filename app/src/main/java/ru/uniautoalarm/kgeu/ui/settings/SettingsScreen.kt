@@ -1992,32 +1992,63 @@ private fun AutostartDialog(onDismiss: () -> Unit) {
     val manufacturer = remember { Build.MANUFACTURER.lowercase() }
     // ресурс инструкции выбираем по производителю, строку достаём stringResource'ом
     // (stringResource нельзя звать внутри remember{} — там нет composable-контекста)
-    val instructionsRes = when {
+    // 0.22.0: один when на OEM-тип, из него берутся ОБА блока — автозапуск и
+    // «звонок поверх экрана блокировки» (показ на локскрине/всплывающие окна)
+    val oem = when {
         manufacturer.contains("xiaomi") ||
             manufacturer.contains("redmi") ||
-            manufacturer.contains("poco") ->
-            R.string.autostart_xiaomi
+            manufacturer.contains("poco") -> OemKind.XIAOMI
 
-        manufacturer.contains("huawei") || manufacturer.contains("honor") ->
-            R.string.autostart_huawei
+        manufacturer.contains("huawei") || manufacturer.contains("honor") -> OemKind.HUAWEI
 
         manufacturer.contains("oppo") ||
             manufacturer.contains("realme") ||
-            manufacturer.contains("oneplus") ->
-            R.string.autostart_oppo
+            manufacturer.contains("oneplus") -> OemKind.OPPO
 
-        manufacturer.contains("samsung") ->
-            R.string.autostart_samsung
+        manufacturer.contains("samsung") -> OemKind.SAMSUNG
 
-        else -> R.string.autostart_other
+        else -> OemKind.OTHER
+    }
+    val instructionsRes = when (oem) {
+        OemKind.XIAOMI -> R.string.autostart_xiaomi
+        OemKind.HUAWEI -> R.string.autostart_huawei
+        OemKind.OPPO -> R.string.autostart_oppo
+        OemKind.SAMSUNG -> R.string.autostart_samsung
+        OemKind.OTHER -> R.string.autostart_other
     }
     val instructions = stringResource(instructionsRes)
+    // 0.22.0: на MIUI/HyperOS и ColorOS/Realme UI активити звонка не поднимается
+    // поверх экрана блокировки без отдельных разрешений («показ на экране
+    // блокировки», «всплывающие окна в фоне») — локскрин показывает только
+    // уведомление, и «выключить будильник без разблокировки» нечем
+    val lockscreenRes = when (oem) {
+        OemKind.XIAOMI -> R.string.autostart_lock_xiaomi
+        OemKind.HUAWEI -> R.string.autostart_lock_huawei
+        OemKind.OPPO -> R.string.autostart_lock_oppo
+        OemKind.SAMSUNG -> R.string.autostart_lock_generic
+        OemKind.OTHER -> R.string.autostart_lock_generic
+    }
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.autostart_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(instructions, style = MaterialTheme.typography.bodyMedium)
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Rounded.Fullscreen,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        stringResource(R.string.autostart_lock_title),
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                }
+                Text(stringResource(lockscreenRes), style = MaterialTheme.typography.bodyMedium)
                 Text(
                     stringResource(R.string.autostart_standard_note),
                     style = MaterialTheme.typography.bodySmall,
@@ -2030,6 +2061,9 @@ private fun AutostartDialog(onDismiss: () -> Unit) {
         }
     )
 }
+
+/** Тип оболочки для инструкций (0.22.0): блоки автозапуска и локскрин-разрешений. */
+private enum class OemKind { XIAOMI, HUAWEI, OPPO, SAMSUNG, OTHER }
 
 // --- 8. О приложении ---
 

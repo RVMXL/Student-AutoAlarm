@@ -332,4 +332,14 @@
     <string name="lang_name_hy">arman tili</string>
     <string name="lang_name_ka">gruzin tili</string>
     <string name="lang_name_zh">xitoy tili</string>
+
+    <!-- 0.22.0: отложенный звонок + звонок поверх экрана блокировки -->
+    <string name="ring_snooze">Keyinga qoldirish</string>
+    <string name="ring_snoozed_title">Budilnik keyinga qoldirildi</string>
+    <string name="ring_snoozed_text">Yana jiringaydi: %1$s</string>
+    <string name="autostart_lock_title">Blok ekrani ustida jiringash</string>
+    <string name="autostart_lock_xiaomi">Xiaomi / Redmi / POCO (MIUI, HyperOS):\nSozlamalar → Ilovalar → Barcha ilovalar → Avto-budilnik → Boshqa ruxsatlar: «Blok ekranda koʻrsatish» va «Ilova fonda boʻlganda pop-up oynalarni koʻrsatish»ni yoqing — aks holda jiringash blok ekran ustida koʻrinmaydi.</string>
+    <string name="autostart_lock_huawei">Huawei / Honor:\nSozlamalar → Batareya → Ilovalarni ishga tushirish → Avto-budilnik → Qoʻlda boshqarish: barcha kalitlarni, shu jumladan «Bilvosita ishga tushirishga ruxsat»ni yoqing; boʻlsa, «Blok ekranda koʻrsatish» ruxsatini bering.</string>
+    <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nSozlamalar → Ilovalar → Ilovalarni boshqarish → Avto-budilnik → Avtoishga tushirish ruxsatlari: «Avtoishga tushirishga ruxsat», «Pop-up oynalarga ruxsat» va «Blok ekranda koʻrsatish»ni yoqing.</string>
+    <string name="autostart_lock_generic">Boshqa qobiqlar:\nilova xususiyatlarida «Blok ekranda koʻrsatish» va «Boshqa oynalar ustida» ruxsatlarini bering — aks holda jiringash faqat qulfni ochgach paydo boʻladi.</string>
 </resources>

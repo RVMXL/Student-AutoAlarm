@@ -94,6 +94,9 @@ class AlarmGateway(
 
     private suspend fun setNextUpcomingLocked(notify: Boolean, quietClockSet: Boolean = true): AlarmPlan? {
         val s = settings.current()
+        // 0.22.0: движок сменили на часы — отложенный звонок приложения снимаем,
+        // иначе он продолжил бы звенеть движком «В приложении» после смены
+        if (s.alarmTarget != AlarmTarget.APP) inApp.cancelSnooze()
         val next = findNextUpcoming()
         if (next == null) {
             if (notify) {
@@ -169,6 +172,7 @@ class AlarmGateway(
             // на дату ничего не осталось (замены отменили пары) — слот снимаем,
             // иначе продолжил бы звенеть будильник по устаревшему плану
             inApp.cancelOneShot()
+            inApp.cancelSnooze()
             if (notify) {
                 Notifications.alarmSkipped(
                     context, date, LocaleHelper.string(context, R.string.skip_no_lessons)
@@ -219,6 +223,8 @@ class AlarmGateway(
         val appEngine = s.alarmTarget == AlarmTarget.APP
         inApp.cancelOneShot()
         inApp.cancelTest()
+        // 0.22.0: «Отложить» не должен переживать выключение тумблера/гигиену слотов
+        inApp.cancelSnooze()
         // часы тоже чистим (могли остаться от прежнего режима/цели); в сами часы
         // не переходим — объясняем итог снекбаром, список часов открывает пользователь
         val res = stock.dismissAppAlarms()
@@ -304,6 +310,7 @@ class AlarmGateway(
                     if (markerWake != null) {
                         // предстоящих пробуждений в кэше нет — слот фантомный
                         inApp.cancelOneShot()
+                        inApp.cancelSnooze()
                         clearLastScheduledLocked()
                         if (notifyOnChange) {
                             Notifications.alarmSkipped(

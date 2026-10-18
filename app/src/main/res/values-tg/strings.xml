@@ -332,4 +332,14 @@
     <string name="lang_name_hy">арманӣ</string>
     <string name="lang_name_ka">гурҷӣ</string>
     <string name="lang_name_zh">чинӣ</string>
+
+    <!-- 0.22.0: отложенный звонок + звонок поверх экрана блокировки -->
+    <string name="ring_snooze">Пас гузоштан</string>
+    <string name="ring_snoozed_title">Будильник пас гузошта шуд</string>
+    <string name="ring_snoozed_text">Дигар бор дар %1$s занг мехӯрад</string>
+    <string name="autostart_lock_title">Занг болои экрани блоккунӣ</string>
+    <string name="autostart_lock_xiaomi">Xiaomi / Redmi / POCO (MIUI, HyperOS):\nТанзимот → Барномаҳо → Ҳамаи барномаҳо → Авто-будильник → Иҷозатҳои дигар: «Нишон додан дар экрани блоккунӣ» ва «Нишон додани равзанаҳои popup ҳангоми кори фонӣ»-ро фаъол кунед — вагарна занг болои блоккунӣ барнамехезад.</string>
+    <string name="autostart_lock_huawei">Huawei / Honor:\nТанзимот → Батарея → Оғози барномаҳо → Авто-будильник → Идораи дастӣ: ҳамаи тугмаро, аз ҷумла «Иҷозати оғози васеъ», фаъол кунед; агар бошад, «Нишон дар экрани блоккунӣ»-ро иҷозат диҳед.</string>
+    <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nТанзимот → Барномаҳо → Идораи барномаҳо → Авто-будильник → Иҷозатҳои оғози худкор: «Иҷозати оғози худкор», «Иҷозати равзанаҳои popup» ва «Нишон дар экрани блоккунӣ»-ро фаъол кунед.</string>
+    <string name="autostart_lock_generic">Пӯстҳои дигар:\nдар хусусиятҳои барнома иҷозатҳои «Нишон дар экрани блоккунӣ» ва «Болои равзанаҳои дигар»-ро диҳед — вагарна занг танҳо пас аз кушодани қулф пайдо мешавад.</string>
 </resources>

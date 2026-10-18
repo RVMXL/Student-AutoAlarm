@@ -23,7 +23,9 @@ import ru.uniautoalarm.kgeu.ui.common.LocaleHelper
  *
  * Слоты (requestCode):
  *  — [REQ_ONE_SHOT]: разовый будильник ближайшего пробуждения (логика «одна ночь вперёд»);
- *  — [REQ_TEST]: тестовый звонок из настроек.
+ *  — [REQ_TEST]: тестовый звонок из настроек;
+ *  — [REQ_SNOOZE]: отложенный звонок «Отложить» (0.22.0) — отдельный слот, чтобы
+ *    перевзвод следующего будильника (setNextUpcoming → REQ_ONE_SHOT) не затирал его.
  * Повторная постановка с тем же кодом ПЕРЕЗАПИСЫВАЕТ будильник (FLAG_UPDATE_CURRENT) —
  * дедупликация получается сама собой, маркеры нужны только для UI и ночной сверки.
  *
@@ -37,6 +39,9 @@ class InAppAlarmScheduler(private val context: Context) {
         private const val REQ_ONE_SHOT = 101
         private const val REQ_TEST = 102
 
+        /** Отложенный звонок «Отложить» (0.22.0): звонит через [SnoozePolicy.MINUTES] минут. */
+        private const val REQ_SNOOZE = 103
+
         /** Legacy: коды слотов партии прежнего режима «на несколько дней вперёд» (очистка). */
         private const val REQ_WEEK_BASE = 1000
 
@@ -48,6 +53,12 @@ class InAppAlarmScheduler(private val context: Context) {
         fun stopRingingIntent(context: Context): Intent =
             Intent(context, AlarmRingingService::class.java)
                 .setAction(AlarmRingingService.ACTION_STOP)
+
+        /** Intent отложения звонка (кнопка/действие «Отложить», 0.22.0). */
+        fun snoozeRingingIntent(context: Context, label: String): Intent =
+            Intent(context, AlarmRingingService::class.java)
+                .setAction(AlarmRingingService.ACTION_SNOOZE)
+                .putExtra(AlarmRingingService.EXTRA_LABEL, label)
 
         /** Broadcast-интент срабатывания будильника (см. AlarmFireReceiver). */
         private fun fireIntent(context: Context, label: String, triggerAtMs: Long): Intent =
@@ -99,6 +110,36 @@ class InAppAlarmScheduler(private val context: Context) {
             LocaleHelper.string(context, R.string.test_alarm_label)
         )
 
+    /**
+     * Отложенный звонок «Отложить» (0.22.0) на момент [atMs] с меткой [label].
+     * Полная цепочка срабатывания (AlarmFireReceiver): уведомление + сервис +
+     * RingActivity, как у обычного будильника. Слот [REQ_SNOOZE] перезаписывается —
+     * «отложить отложенного» просто переносит звонок.
+     *
+     * @return true, если система приняла будильник (иначе сервис перевзводит
+     *         обычное ближайшее пробуждение — движок не остаётся пустым).
+     */
+    fun scheduleSnooze(atMs: Long, label: String): Boolean {
+        val am = alarmManager() ?: return false
+        val openApp = PendingIntent.getActivity(
+            context, 0,
+            Intent(context, MainActivity::class.java),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val fire = PendingIntent.getBroadcast(
+            context, REQ_SNOOZE,
+            fireIntent(context, label, atMs),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        return try {
+            am.setAlarmClock(AlarmManager.AlarmClockInfo(atMs, openApp), fire)
+            true
+        } catch (e: Exception) {
+            Log.w(TAG, "setAlarmClock (snooze) не принят: ${e.message}")
+            false
+        }
+    }
+
     /** Снять слот по коду, если он стоит. */
     private fun cancel(requestCode: Int) {
         val am = alarmManager() ?: return
@@ -109,6 +150,9 @@ class InAppAlarmScheduler(private val context: Context) {
     fun cancelOneShot() = cancel(REQ_ONE_SHOT)
 
     fun cancelTest() = cancel(REQ_TEST)
+
+    /** Снять отложенный звонок (0.22.0): тумблер выключен/движок сменён/гигиена слотов. */
+    fun cancelSnooze() = cancel(REQ_SNOOZE)
 
     /**
      * Стоит ли сейчас слот разового будильника (AL-1): PendingIntent-проба
