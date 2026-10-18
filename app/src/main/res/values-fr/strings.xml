@@ -121,6 +121,9 @@
     <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
     <string name="dialog_fsi_title">La sonnerie plein écran est limitée par le système</string>
     <string name="dialog_fsi_desc">Le système ne permet pas de déployer la sonnerie par-dessus l\'écran de verrouillage — le signal s\'affichera comme notification. Autorise les « Notifications plein écran » pour l\'appli.</string>
+    <!-- 0.23.0, Bug B -->
+    <string name="dialog_overlay_title">La sonnerie n\'apparaîtra pas si l\'appli est fermée</string>
+    <string name="dialog_overlay_desc">Sans l\'autorisation « Par-dessus les autres fenêtres », le système bloque l\'ouverture de l\'écran de sonnerie depuis l\'arrière-plan : la sonnerie plein écran n\'apparaît que si l\'appli était à l\'écran lors de l\'extinction de l\'écran. Touchez et activez « Par-dessus les autres fenêtres ».</string>
 
     <!-- ==== Снекбары обновления ==== -->
     <string name="err_no_target">Choisis d\'abord un groupe ou un enseignant dans les paramètres</string>
@@ -342,4 +345,5 @@
     <string name="autostart_lock_huawei">Huawei / Honor :\nParamètres → Batterie → Lancement des applis → Auto-réveil → Gérer manuellement : activez tous les interrupteurs, y compris « Autoriser le lancement indirect », et accordez « Afficher sur l\'écran de verrouillage » si présent.</string>
     <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nParamètres → Applications → Gestion des applications → Auto-réveil → Autorisations de lancement automatique : activez « Autoriser le lancement automatique », « Autoriser les fenêtres contextuelles » et « Afficher sur l\'écran de verrouillage ».</string>
     <string name="autostart_lock_generic">Autres surcouches :\ndans les propriétés de l\'appli, activez « Afficher sur l\'écran de verrouillage » et « Par-dessus les autres fenêtres », si disponibles — sinon la sonnerie n\'apparaît qu\'après déverrouillage.</string>
+    <string name="autostart_lock_overlay">Et activez impérativement « Par-dessus les autres fenêtres » (peut s\'appeler « Draw over other apps ») : Paramètres → Applis → Toutes les applis → Auto-réveil KGEU → Autres autorisations. C\'est l\'exception système qui permet à l\'appli d\'ouvrir l\'écran de sonnerie depuis l\'arrière-plan — sans elle, la sonnerie plein écran n\'apparaît que si l\'appli était à l\'écran lors de l\'extinction de l\'écran.</string>
 </resources>

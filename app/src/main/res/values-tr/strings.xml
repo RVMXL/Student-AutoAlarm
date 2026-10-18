@@ -121,6 +121,9 @@
     <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
     <string name="dialog_fsi_title">Tam ekran zil sistem tarafından kısıtlandı</string>
     <string name="dialog_fsi_desc">Sistem, zilin kilit ekranının üzerinde açılmasına izin vermiyor — sinyal bildirim olarak görünecek. Uygulamaya “Tam ekran bildirimleri” iznini ver.</string>
+    <!-- 0.23.0, Bug B -->
+    <string name="dialog_overlay_title">Uygulama kapalıyken zil görünmez</string>
+    <string name="dialog_overlay_desc">«Diğer pencerelerin üzerinde» izni olmadan sistem, zil ekranını arka plandan başlatmayı engeller — tam ekran zil yalnızca ekranı kapatırken uygulama ekrandaysa görünür. Dokunun ve «Diğer pencerelerin üzerinde» iznini verin.</string>
 
     <!-- ==== Снекбары обновления ==== -->
     <string name="err_no_target">Önce ayarlardan grup veya öğretim üyesi seç</string>
@@ -342,4 +345,5 @@
     <string name="autostart_lock_huawei">Huawei / Honor:\nAyarlar → Pil → Uygulama başlatma → Oto-alarm → Elle yönet: «Dolaylı başlatmaya izin ver» dahil tüm anahtarları açın; varsa «Kilit ekranında göster» iznini verin.</string>
     <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nAyarlar → Uygulamalar → Uygulama yönetimi → Oto-alarm → Otomatik başlatma izinleri: «Otomatik başlatmaya izin ver», «Pop-up pencerelere izin ver» ve «Kilit ekranında göster» seçeneklerini açın.</string>
     <string name="autostart_lock_generic">Diğer arayüzler:\nuygulama ayarlarında «Kilit ekranında göster» ve «Diğer pencerelerin üzerinde» izinlerini verin — aksi halde zil yalnızca kilit açıldıktan sonra görünür.</string>
+    <string name="autostart_lock_overlay">Ve mutlaka «Diğer pencerelerin üzerinde» iznini verin (adı «Draw over other apps» olabilir): Ayarlar → Uygulamalar → Tüm uygulamalar → KGEU Otomatik Alarmı → Diğer izinler. Bu, uygulamanın zil ekranını arka plandan açmasına izin veren sistem istisnasıdır — olmadan tam ekran zil yalnızca ekran kapatıldığında uygulama ekrandaysa görünür.</string>
 </resources>

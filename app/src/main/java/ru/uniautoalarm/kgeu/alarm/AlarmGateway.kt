@@ -99,6 +99,21 @@ class AlarmGateway(
         if (s.alarmTarget != AlarmTarget.APP) inApp.cancelSnooze()
         val next = findNextUpcoming()
         if (next == null) {
+            // 0.23.0 (Bug A): предстоящих пробуждений нет — гасим и СТАРЫЙ маркер,
+            // иначе карточка «Мои будильники» продолжает показывать уже прозвеневший
+            // будильник (типичный случай: «Отключить» из шторки вечером пятницы —
+            // на выходных пар нет — карточка с «слот не найден» висит до ночной
+            // сверки 00:05). Семантика — как в APP-ветке reconcileUpcoming.
+            val markerWake = markerToLocalDateTime(s.lastScheduledWakeEpochMinute)
+            if (markerWake != null) {
+                if (s.alarmTarget == AlarmTarget.APP) {
+                    inApp.cancelOneShot()
+                    inApp.cancelSnooze()
+                } else {
+                    stock.dismissSingleLabel(s.lastScheduledLabel)
+                }
+                clearLastScheduledLocked()
+            }
             if (notify) {
                 Notifications.alarmSkipped(
                     context, LocalDate.now(),

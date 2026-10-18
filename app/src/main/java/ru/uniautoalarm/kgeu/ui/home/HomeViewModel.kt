@@ -276,6 +276,16 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
         if (s.lastScheduledWakeEpochMinute <= 0) return null
         val wake = LocalDate.ofEpochDay(s.lastScheduledWakeEpochMinute / 1440L)
             .atStartOfDay().plusMinutes(s.lastScheduledWakeEpochMinute % 1440L)
+        // 0.23.0 (Bug A): уже прозвеневший будильник в карточке не показываем.
+        // Маркер чистится постановкой следующего/гигиеной слотов, но это асинхронно:
+        // открыть приложение в первые секунды после «Отключить» из шторки (или при
+        // отказе постановки) и увидеть прошедший момент было можно. Грейс-окно
+        // 15 минут прячет строку, не задевая живой звонок (сам момент звона и
+        // первые минуты после).
+        val now = LocalDateTime.now()
+        val nowEpochMinute = now.toLocalDate().toEpochDay() * 1440L +
+            now.hour * 60L + now.minute
+        if (!wakeRowVisible(s.lastScheduledWakeEpochMinute, nowEpochMinute)) return null
         val slotAlive = s.alarmTarget != AlarmTarget.APP || container.inAppAlarms.hasOneShot()
         return ScheduledAlarm(
             wakeAt = wake,
@@ -291,8 +301,23 @@ class HomeViewModel(private val container: AppContainer) : ViewModel() {
         resumeTick.value = resumeTick.value + 1
     }
 
-    private companion object {
+    companion object {
         /** Трое суток в миллисекундах — порог «расписание устарело». */
-        const val STALE_AFTER_MS = 3L * 24 * 60 * 60 * 1000
+        private const val STALE_AFTER_MS = 3L * 24 * 60 * 60 * 1000
+
+        /** Сколько минут после момента пробуждения строка ещё считается «живой» (0.23.0). */
+        const val WAKE_ROW_GRACE_MINUTES = 15L
+
+        /**
+         * Чистая логика видимости строки будильника в карточке «Мои будильники»
+         * (0.23.0, Bug A): момент в будущем или в пределах [graceMinutes] после —
+         * видим; глубже в прошлое — строка устарела (прозвенел и снят) — прячем.
+         * Минутное разрешение — как у маркера [AlarmGateway].
+         */
+        fun wakeRowVisible(
+            wakeEpochMinute: Long,
+            nowEpochMinute: Long,
+            graceMinutes: Long = WAKE_ROW_GRACE_MINUTES,
+        ): Boolean = wakeEpochMinute + graceMinutes > nowEpochMinute
     }
 }

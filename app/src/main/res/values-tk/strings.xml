@@ -121,6 +121,9 @@
     <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
     <string name="dialog_fsi_title">Doly ekranly çalşyny ulgam çäklendirýär</string>
     <string name="dialog_fsi_desc">Ulgam çalşyny gulpylanan ekranyň üstünde doly ekranda görkezmäge rugsat bermeýär — signal bildiriş hökmünde görkeziler. Programma üçin «Doly ekranly bildirişler» rugsadyny ber.</string>
+    <!-- 0.23.0, Bug B -->
+    <string name="dialog_overlay_title">Programma ýapyk bolanda zyl görünmez</string>
+    <string name="dialog_overlay_desc">«Beýleki penjireleriň üstünde» rugsady bolmasa, ulgam zyl ekranyň fonstan açylmagyna böwet döredýär — doly ekranly zyl ekrany öçürende programmanyň ekranda duranlygynda çak görünär. Basyp, «Beýleki penjireleriň üstünde» rugsadyny beriň.</string>
 
     <!-- ==== Täzeleme snekbarlary ==== -->
     <string name="err_no_target">Ilki sazlamalardan topar ýa-da mugallym saýla</string>
@@ -342,4 +345,5 @@
     <string name="autostart_lock_huawei">Huawei / Honor:\nSazlamalar → Batareýa → Programmalary goýbermek → Awtomatik ýatgyjy → El bilen dolandyrmak: «Waskanlaýyn goýbermäge rugsat» hem-de beýleki düwmeleri ýakyň; bar bolsa «Gulplanan ekranda görkezmek» rugsadyny beriň.</string>
     <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nSazlamalar → Programmalar → Programmalary dolandyrmak → Awtomatik ýatgyjy → Awtobashlamaga rugsatlar: «Awtobashlamaga rugsat», «Popup penjirelere rugsat» we «Gulplanan ekranda görkezmek» ýakyň.</string>
     <string name="autostart_lock_generic">Beýleki gabyklarda:\nprogramma häsiýetlerinde «Gulplanan ekranda görkezmek» we «Beýleki penjireleriň üstünde» rugsatlaryny beriň — bolmasa zyl diňe gulpy açlandan soň görünär.</string>
+    <string name="autostart_lock_overlay">We hökman «Beýleki penjireleriň üstünde» rugsadyny beriň (adysy «Draw over other apps» bolup biler): Sazlamalar → Programmalar → Ählisi → KGEU awtomatik ýatgyjy → Beýleki rugsatlar. Bu programmanyň zyl ekrany fonstan açmagyna rugsat berýän ulgam muhorsemesi — bolmasa doly ekranly zyl ekrany öçürende programma ekranda bolsa çak görünär.</string>
 </resources>

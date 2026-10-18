@@ -121,6 +121,9 @@
     <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
     <string name="dialog_fsi_title">全屏响铃受系统限制</string>
     <string name="dialog_fsi_desc">系统不允许在锁屏界面上展开响铃 — 信号将以通知形式显示。请允许本应用使用“全屏通知”。</string>
+    <!-- 0.23.0, Bug B -->
+    <string name="dialog_overlay_title">应用关闭时响铃不会弹出</string>
+    <string name="dialog_overlay_desc">如果没有“显示在其他应用上层”权限，系统会阻止从后台启动响铃界面——只有关闭屏幕时应用还在屏幕上，全屏响铃才会出现。点按并开启“显示在其他应用上层”。</string>
 
     <!-- ==== Снекбары обновления ==== -->
     <string name="err_no_target">请先在设置中选择班级或教师</string>
@@ -346,4 +349,5 @@
 设置 → 应用 → 应用管理 → 自动闹钟 → 允许自动启动：开启「允许自动启动」「允许悬浮窗」和「锁屏显示」。</string>
     <string name="autostart_lock_generic">其他系统：
 在应用信息中开启「锁屏显示」和「显示在其他应用上层」权限（如有）— 否则响铃只会在解锁后出现。</string>
+    <string name="autostart_lock_overlay">并且务必开启“显示在其他应用上层”（可能叫“悬浮窗”）：设置 → 应用 → 全部应用 → 喀山动力大学自动闹钟 → 其他权限。这是系统级例外，允许应用从后台打开响铃界面——没有它，全屏响铃只会在关闭屏幕时应用还在屏幕上的情况下出现。</string>
 </resources>

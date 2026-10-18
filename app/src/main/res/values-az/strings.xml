@@ -121,6 +121,9 @@
     <!-- 0.10.0, AL-11: Android 14+ yeni quraşdırmaya tam ekran niyyəti vermədi -->
     <string name="dialog_fsi_title">Tam ekran zəng sistem tərəfindən məhdudlaşıb</string>
     <string name="dialog_fsi_desc">Sistem zəngin ekran kilidi üstündə açılmasına icazə vermir — siqnal bildiriş kimi görünəcək. Tətbiq üçün „Tam ekran bildirişlərinə“ icazə verin.</string>
+    <!-- 0.23.0, Bug B -->
+    <string name="dialog_overlay_title">Tətbiq qapalı olanda zəng görünməyəcək</string>
+    <string name="dialog_overlay_desc">«Digər pəncərələrin üzərində» icazəsi olmadan sistem zəng ekranını fonddan açmağı bloklayır — tam ekran zəng yalnız ekranı söndürəndə tətbiq ekranda olanda görünəcək. Toxunun və «Digər pəncərələrin üzərində» icazəsini verin.</string>
 
     <!-- ==== Yeniləmə snackbar-ları ==== -->
     <string name="err_no_target">Əvvəlcə parametrlərdə qrup və ya müəllim seçin</string>
@@ -343,4 +346,5 @@
     <string name="autostart_lock_huawei">Huawei / Honor:\nParametrlər → Batareya → Tətbiq başladılması → Avto-siqnal → Əl ilə idarəetmə: «Dolayı başlatmaya icazə» daxil bütün açarları açın; varsa «Kilid ekranında göstər» icazəsini verin.</string>
     <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nParametrlər → Tətbiqlər → Tətbiq idarəetməsi → Avto-siqnal → Avto-başlatma icazələri: «Avto-başlatmaya icazə», «Pop-up pəncərələrə icazə» və «Kilid ekranında göstər» açın.</string>
     <string name="autostart_lock_generic">Digər qabıqlar:\ntətbiq xüsusiyyətlərində «Kilid ekranında göstər» və «Digər pəncərələrin üzərində» icazələrini verin — əks halda zəng yalnız kilidi açdıqdan sonra görünəcək.</string>
+    <string name="autostart_lock_overlay">Və mütləq «Digər pəncərələrin üzərində» icazəsini verin (adı «Draw over other apps» ola bilər): Parametrlər → Tətbiqlər → Bütün tətbiqlər → KGEU Avto-siqnal → Digər icazələr. Bu, tətbiqə zəng ekranını fonddan açmağa imkan verən sistem istisnasıdır — olmadan tam ekran zəng yalnız ekranı söndürəndə tətbiq ekranda olanda görünəcək.</string>
 </resources>

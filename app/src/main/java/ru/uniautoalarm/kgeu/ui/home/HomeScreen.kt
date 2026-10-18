@@ -123,6 +123,9 @@ fun HomeScreen() {
     val powerManager = remember { context.getSystemService(Context.POWER_SERVICE) as? PowerManager }
     var needsExactAlarmPermission by remember { mutableStateOf(false) }
     var ignoringBattery by remember { mutableStateOf(true) }
+    // 0.23.0 (Bug B): без «Поверх других окон» оболочки блокируют подъём RingActivity
+    // из фона — звонок виден только когда приложение было на экране при выключении экрана
+    var needsOverlayPermission by remember { mutableStateOf(false) }
     // AL-11 (0.10.0): Android 14+ может не выдать full-screen intent свежей установке —
     // тогда звонок деградирует до тихого heads-up; предупреждаем с кнопкой исправления
     var fsiDenied by remember { mutableStateOf(false) }
@@ -132,6 +135,8 @@ fun HomeScreen() {
             Build.VERSION.SDK_INT >= 31 && alarmManager?.canScheduleExactAlarms() == false
         ignoringBattery =
             powerManager?.isIgnoringBatteryOptimizations(context.packageName) ?: true
+        // 0.23.0: minSdk 26 — canDrawOverlays доступен всегда (API 23+)
+        needsOverlayPermission = !AndroidSettings.canDrawOverlays(context)
         fsiDenied =
             Build.VERSION.SDK_INT >= 34 &&
             (context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager)?.canUseFullScreenIntent() == false
@@ -236,6 +241,21 @@ fun HomeScreen() {
             }
             item {
                 UpcomingCard(todayLessons = todayLessons, tomorrowLessons = tomorrowLessons)
+            }
+            // 0.23.0 (Bug B): «Поверх других окон» — системное исключение из
+            // BAL-политики (Android 10+) и главный способ поднять звонок из фона
+            // на MIUI/ColorOS: без него полноэкранный звонок появляется только
+            // если приложение было на экране в момент выключения экрана
+            if (needsOverlayPermission) {
+                item {
+                    WarningCard(
+                        title = stringResource(R.string.dialog_overlay_title),
+                        description = stringResource(R.string.dialog_overlay_desc),
+                        actionLabel = stringResource(R.string.action_allow),
+                        isError = true,
+                        onAction = { openOverlaySettings(context) }
+                    )
+                }
             }
             if (fsiDenied) {
                 item {
@@ -848,5 +868,21 @@ private fun openFullScreenIntentSettings(context: Context) {
                 .setData(Uri.parse("package:${context.packageName}"))
         )
     } catch (_: Exception) {
+    }
+}
+
+/** 0.23.0 (Bug B): экран разрешения «Поверх других окон» (SYSTEM_ALERT_WINDOW) —
+ *  системное исключение из BAL-политики: с ним RingActivity поднимается из фона
+ *  и на стоковом Android 10+, и на MIUI/ColorOS. */
+private fun openOverlaySettings(context: Context) {
+    try {
+        context.startActivity(
+            Intent(
+                AndroidSettings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:${context.packageName}")
+            )
+        )
+    } catch (_: Exception) {
+        // Экран может отсутствовать на нестандартных прошивках — молча игнорируем
     }
 }

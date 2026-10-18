@@ -121,6 +121,9 @@
     <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
     <string name="dialog_fsi_title">Toʻliq ekranli jiringash tizim tomonidan cheklangan</string>
     <string name="dialog_fsi_desc">Tizim jiringashni ekran qulfi ustida toʻliq ekranda koʻrsatishga ruxsat bermaydi — signal bildirishnoma sifatida koʻrinadi. Ilova uchun «Toʻliq ekranli bildirishnomalar»ga ruxsat ber.</string>
+    <!-- 0.23.0, Bug B -->
+    <string name="dialog_overlay_title">Ilova yopiq boʻlsa, jiringash koʻrinmaydi</string>
+    <string name="dialog_overlay_desc">«Boshqa oynalar ustida» ruxsati boʻlmasa, qobiq jiringash ekranini fonda ishga tushirishni bloklaydi — toʻliq ekranli jiringash ekranni oʻchirganda ilova ekranda turgan boʻlsa faqat paydo boʻladi. Bosing va «Boshqa oynalar ustida» ruxsatini bering.</string>
 
     <!-- ==== Refresh snackbars ==== -->
     <string name="err_no_target">Avval sozlamalarda guruh yoki oʻqituvchini tanla</string>
@@ -342,4 +345,5 @@
     <string name="autostart_lock_huawei">Huawei / Honor:\nSozlamalar → Batareya → Ilovalarni ishga tushirish → Avto-budilnik → Qoʻlda boshqarish: barcha kalitlarni, shu jumladan «Bilvosita ishga tushirishga ruxsat»ni yoqing; boʻlsa, «Blok ekranda koʻrsatish» ruxsatini bering.</string>
     <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nSozlamalar → Ilovalar → Ilovalarni boshqarish → Avto-budilnik → Avtoishga tushirish ruxsatlari: «Avtoishga tushirishga ruxsat», «Pop-up oynalarga ruxsat» va «Blok ekranda koʻrsatish»ni yoqing.</string>
     <string name="autostart_lock_generic">Boshqa qobiqlar:\nilova xususiyatlarida «Blok ekranda koʻrsatish» va «Boshqa oynalar ustida» ruxsatlarini bering — aks holda jiringash faqat qulfni ochgach paydo boʻladi.</string>
+    <string name="autostart_lock_overlay">Va albatta «Boshqa oynalar ustida» ruxsatini bering (nomi «Display over other apps» boʻlishi mumkin): Sozlamalar → Ilovalar → Barcha ilovalar → KGEU avtobudilnigi → Boshqa ruxsatlar. Bu ilovaga fon jiringash ekranini ochishga tizimli ruxsat — boʻlmasa toʻliq ekranli jiringash ekranni oʻchirganda ilova ekranda boʻlsa faqat paydo boʻladi.</string>
 </resources>

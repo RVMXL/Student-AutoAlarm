@@ -36,6 +36,11 @@
          игнорирует full-screen intent — экран всё равно загорится, и кнопка
          «Отключить» будет доступна прямо с заблокированного экрана) -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- 0.23.0 (Bug B): «Поверх других окон» — системное исключение из BAL-политики
+         (Android 10+): с ним RingActivity поднимается из фона, когда приложение
+         НЕ было на экране в момент срабатывания (MIUI/ColorOS блокируют иначе).
+         Само рисование оверлеев приложение не использует — только допуск. -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <!-- Android 11+ (package visibility): видимость стоковых часов для ACTION_SET_ALARM.
          Intent-запись покрывает часы с декларированным intent-filter; явные <package>

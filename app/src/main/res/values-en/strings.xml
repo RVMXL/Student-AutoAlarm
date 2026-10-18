@@ -121,6 +121,9 @@
     <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
     <string name="dialog_fsi_title">Full-screen ringing is restricted by the system</string>
     <string name="dialog_fsi_desc">The system doesn\'t allow the alarm to expand over the lock screen — the signal will appear as a notification. Allow \"Full-screen notifications\" for the app.</string>
+    <!-- 0.23.0, Bug B -->
+    <string name="dialog_overlay_title">The ring will not appear when the app is closed</string>
+    <string name="dialog_overlay_desc">Without the «Display over other apps» permission the shell blocks launching the ring screen from the background — the full-screen ring appears only if the app was on screen when you turned the display off. Tap and enable «Display over other apps».</string>
 
     <!-- ==== Refresh snackbars ==== -->
     <string name="err_no_target">First choose a group or a teacher in Settings</string>
@@ -342,4 +345,5 @@
     <string name="autostart_lock_huawei">Huawei / Honor:\nSettings → Battery → App launch → Auto-Alarm → Manage manually: turn on all toggles, including «Allow indirect launch», and grant «Show on lock screen» if available.</string>
     <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nSettings → Apps → App management → Auto-Alarm → Auto-launch permissions: enable «Allow auto-launch», «Allow pop-up windows» and «Show on lock screen».</string>
     <string name="autostart_lock_generic">Other shells:\nin the app\'s settings enable «Show on lock screen» and «Display over other apps» permissions if available — otherwise the ring appears only after unlock.</string>
+    <string name="autostart_lock_overlay">And be sure to enable «Display over other apps» (may be called «Draw over other apps»): Settings → Apps → All apps → KGEU Auto-Alarm → Other permissions. This is the system-level exemption that lets the app open the ring screen from the background — without it the full-screen ring appears only if the app was on screen when the display was turned off.</string>
 </resources>

@@ -2049,6 +2049,13 @@ private fun AutostartDialog(onDismiss: () -> Unit) {
                     )
                 }
                 Text(stringResource(lockscreenRes), style = MaterialTheme.typography.bodyMedium)
+                // 0.23.0 (Bug B): «Поверх других окон» — системное исключение из
+                // BAL-политики; без него звонок поднимается только когда приложение
+                // было на экране при выключении экрана (жалоба 0.22.0)
+                Text(
+                    stringResource(R.string.autostart_lock_overlay),
+                    style = MaterialTheme.typography.bodyMedium
+                )
                 Text(
                     stringResource(R.string.autostart_standard_note),
                     style = MaterialTheme.typography.bodySmall,

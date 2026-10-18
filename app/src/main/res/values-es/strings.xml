@@ -121,6 +121,9 @@
     <!-- 0.10.0, AL-11: Android 14+ не выдал full-screen intent свежей установке -->
     <string name="dialog_fsi_title">El sonido a pantalla completa está restringido por el sistema</string>
     <string name="dialog_fsi_desc">El sistema no permite desplegar el sonido de la alarma sobre la pantalla de bloqueo — la señal se mostrará como notificación. Permite las \"Notificaciones de pantalla completa\" para la app.</string>
+    <!-- 0.23.0, Bug B -->
+    <string name="dialog_overlay_title">La alarma no aparecerá con la app cerrada</string>
+    <string name="dialog_overlay_desc">Sin el permiso «Aparecer encima», el sistema bloquea la apertura de la pantalla de alarma desde el fondo: la alarma a pantalla completa solo aparece si la app estaba en pantalla al apagar la pantalla. Toca y activa «Aparecer encima».</string>
 
     <!-- ==== Snackbars de actualización ==== -->
     <string name="err_no_target">Primero elige un grupo o un profesor en Ajustes</string>
@@ -342,4 +345,5 @@
     <string name="autostart_lock_huawei">Huawei / Honor:\nAjustes → Batería → Inicio de aplicaciones → Auto-alarma → Gestionar manualmente: activa todos los interruptores, incluido «Permitir inicio indirecto», y concede «Mostrar en la pantalla de bloqueo» si existe.</string>
     <string name="autostart_lock_oppo">OPPO / Realme / OnePlus (ColorOS):\nAjustes → Aplicaciones → Gestión de aplicaciones → Auto-alarma → Permisos de inicio automático: activa «Permitir inicio automático», «Permitir ventanas emergentes» y «Mostrar en la pantalla de bloqueo».</string>
     <string name="autostart_lock_generic">Otras capas:\nen las propiedades de la app activa los permisos «Mostrar en la pantalla de bloqueo» y «Aparecer encima», si existen — de lo contrario la alarma aparecerá solo tras desbloquear.</string>
+    <string name="autostart_lock_overlay">Y activa también «Aparecer encima» (puede llamarse «Mostrar sobre otras apps»): Ajustes → Aplicaciones → Todas las aplicaciones → Autoalarma KGEU → Otros permisos. Es la excepción del sistema que permite a la app abrir la pantalla de alarma desde el fondo — sin ella la alarma a pantalla completa solo aparece si la app estaba en pantalla al apagar la pantalla.</string>
 </resources>
