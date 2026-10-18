@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== Ümumi ==== -->
+    <string name="app_name">KGEU Avto-siqnal</string>
+    <string name="action_cancel">Ləğv et</string>
+    <string name="action_ok">OK</string>
+    <string name="action_save">Yadda saxla</string>
+    <string name="action_done">Hazırdır</string>
+    <string name="action_edit">Redaktə et</string>
+    <string name="action_reset">Sıfırla</string>
+    <string name="action_retry">Yenidən cəhd et</string>
+    <string name="action_allow">İcazə ver</string>
+    <string name="action_fix">Düzəlt</string>
+    <string name="action_refresh">Yenilə</string>
+    <string name="action_change">Dəyiş</string>
+    <string name="action_next">Davam et</string>
+    <string name="action_back">Geri</string>
+    <string name="action_start">Başla</string>
+    <string name="action_add">Əlavə et</string>
+    <string name="action_load">Yüklə</string>
+    <string name="action_understood">Anladım</string>
+
+    <!-- ==== Aşağı naviqasiya ==== -->
+    <string name="nav_home">Ana səhifə</string>
+    <string name="nav_schedule">Cədvəl</string>
+    <string name="nav_settings">Parametrlər</string>
+
+    <!-- ==== Vahidlər və formatlar ==== -->
+    <string name="fmt_offset_m">%1$d dəq</string>
+    <string name="fmt_offset_h">%1$d saat</string>
+    <string name="fmt_offset_hm">%1$d saat %2$d dəq</string>
+    <string name="fmt_time_alarm_will_ring">siqnal çalacaq saat</string>
+
+    <!-- ==== Həftə günləri (qısa, təqvim çipləri) ==== -->
+    <string name="day_short_1">Be</string>
+    <string name="day_short_2">Ça</string>
+    <string name="day_short_3">Çə</string>
+    <string name="day_short_4">Ca</string>
+    <string name="day_short_5">Cü</string>
+    <string name="day_short_6">Şən</string>
+    <string name="day_short_7">Baz</string>
+
+    <!-- ==== Dil ==== -->
+    <string name="lang_title">Dil</string>
+    <string name="lang_subtitle">Tətbiq dilini seçin — sonra parametrlərdə dəyişmək olar</string>
+    <string name="lang_system">Sistemin dili</string>
+    <string name="set_language">Dil</string>
+
+    <!-- ==== Quraşdırma ustası ==== -->
+    <string name="setup_step_of">Addım %1$d / %2$d</string>
+    <string name="setup_welcome_subtitle">Universitet cədvəlinə görə ilk dərsdən əvvəl telefonun saatında siqnal qoyur. Quraşdırma bir dəqiqə çəkəcək.</string>
+    <string name="setup_university">Kazan Dövlət Energetika Universiteti (KGEU)</string>
+    <string name="setup_official_api">rəsmi kabinet.kgeu.ru API-si</string>
+    <string name="setup_who_are_you">Siz kimsiniz?</string>
+    <string name="role_student">Tələbə</string>
+    <string name="role_student_subtitle">Qrupumun cədvəlinə görə siqnal</string>
+    <string name="role_teacher">Müəllim</string>
+    <string name="role_teacher_subtitle">Dərslərimin cədvəlinə görə siqnal</string>
+    <string name="setup_search_hint">Yazmağa başlayın: А-1-23 …</string>
+    <string name="setup_found">Tapıldı: %1$d</string>
+    <string name="setup_found_capped">Tapıldı: %1$d (ilk %2$d göstərilir)</string>
+    <string name="setup_load_failed">Siyahını yükləmək olmadı</string>
+    <string name="setup_check_internet">İnterneti yoxlayın və yenidən cəhd edin</string>
+    <string name="setup_nothing_found">Heç nə tapılmadı</string>
+    <string name="setup_pick_role_first">Əvvəlcə seçin ki, siz kimsiniz</string>
+    <string name="setup_course">%1$d kurs</string>
+    <string name="setup_wake_question">İlk dərsdən nə qədər əvvəl adətən oyanırsınız?</string>
+    <string name="setup_example">İlk dərs 08:30-da → siqnal %1$s</string>
+    <string name="setup_done_all">Hər şey hazırdır!</string>
+    <string name="setup_finish_mode_note">„Standart“ rejimi: hər gecə sabah üçün siqnal qoyulur. Sonra parametrlərdə dəyişmək olar.</string>
+    <string name="setup_no_target">Hədəf seçilməyib — geri qayıdıb qrup və ya müəllim seçin</string>
+    <string name="summary_group">Qrup</string>
+    <string name="summary_teacher">Müəllim</string>
+    <string name="summary_wake_offset">İlk dərsdən əvvəl oyanış</string>
+    <string name="profile_no_target">Hədəf seçilməyib</string>
+
+    <!-- ==== Ana səhifə ==== -->
+    <string name="home_title">Avto-siqnal</string>
+    <string name="cd_refresh_schedule">Cədvəli yenilə</string>
+    <string name="loading_settings">Parametrlər yüklənir…</string>
+    <string name="alarm_off_title">Siqnal söndürülüb</string>
+    <string name="alarm_off_subtitle">Aşağıdakı açarla yandırın</string>
+    <string name="refreshing">Cədvəl yenilənir…</string>
+    <string name="not_loaded_title">Cədvəl hələ yüklənməyib</string>
+    <string name="not_loaded_hint">Dərsləri kabinet.kgeu.ru-dan çəkin — burada oyanma vaxtı görünəcək</string>
+    <string name="tomorrow_free_title">Sabah dərs yoxdur</string>
+    <string name="tomorrow_free_sub">siqnal qoyulmur</string>
+    <string name="tomorrow_label">Sabah · %1$s</string>
+    <string name="today_label">Bu gün</string>
+    <string name="tomorrow_label_short">Sabah</string>
+    <string name="badge_replacement">əvəzləmə</string>
+    <string name="room_prefix">otaq %1$s</string>
+    <string name="lesson_at">dərs saat %1$s</string>
+    <string name="own_event_at">öz məşğələniz saat %1$s</string>
+    <string name="home_auto_title">Avto-siqnal</string>
+    <string name="home_auto_subtitle">Cədvələ görə ilk dərsdən əvvəl siqnal qoyur</string>
+    <string name="home_upcoming_title">Yaxın dərslər</string>
+    <string name="home_no_pairs">Dərs yoxdur</string>
+
+    <!-- ==== 0.10.0, Bug E: «Mənim siqnallarım» kartı ==== -->
+    <string name="alarms_card_title">Siqnallarım</string>
+    <string name="alarms_empty">Siqnal yoxdur</string>
+    <string name="alarms_active">Siqnal qoyulub — cədvələ görə çalacaq</string>
+    <string name="alarms_slot_missing">Siqnal sistemdə tapılmadı — avtomatik yenidən qoyulacaq</string>
+    <string name="alarms_engine_app">„Tətbiqdə“ mühərriki</string>
+    <string name="alarms_engine_clock">„Saatda“ mühərriki</string>
+    <string name="action_dismiss_alarms">Siqnalları söndür</string>
+    <string name="alarms_test_row">Sınaq siqnalı</string>
+    <string name="alarms_test_cancel">Sınağı söndür</string>
+
+    <!-- ==== Toplu qoyma nəticələri (ana səhifə + parametrlər) ==== -->
+
+    <!-- ==== Ana səhifədə diaqnostika ==== -->
+    <string name="dialog_exact_alarms_title">Dəqiq siqnallara icazə verilməyib</string>
+    <string name="dialog_exact_alarms_desc">İcazə olmadan sistem siqnalı hesablanan dəqiq vaxtda qoymağa imkan vermir.</string>
+    <string name="dialog_battery_title">Batareya optimizasiyası mane ola bilər</string>
+    <string name="dialog_battery_desc">Aqressiv enerji qənaəti rejimi gecə yoxlamasını ləğv edə bilər.</string>
+    <string name="dialog_stale_title">Cədvəl 3 gündən çoxdur yenilənmir</string>
+    <string name="dialog_stale_desc">Universitet cədvəli tez-tez dəyişir — təzə məlumat çəkin.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ yeni quraşdırmaya tam ekran niyyəti vermədi -->
+    <string name="dialog_fsi_title">Tam ekran zəng sistem tərəfindən məhdudlaşıb</string>
+    <string name="dialog_fsi_desc">Sistem zəngin ekran kilidi üstündə açılmasına icazə vermir — siqnal bildiriş kimi görünəcək. Tətbiq üçün „Tam ekran bildirişlərinə“ icazə verin.</string>
+
+    <!-- ==== Yeniləmə snackbar-ları ==== -->
+    <string name="err_no_target">Əvvəlcə parametrlərdə qrup və ya müəllim seçin</string>
+    <string name="msg_refreshed">Cədvəl yeniləndi</string>
+    <string name="refresh_empty_week">Yeniləndi: bu həftə dərs yoxdur</string>
+    <string name="refresh_ok_count">Cədvəl yeniləndi — həftədəki dərslər: %1$d</string>
+    <string name="refresh_no_connection">kabinet.kgeu.ru ilə əlaqə yoxdur — saxlanılan keş göstərilir</string>
+    <string name="refresh_network">Şəbəkə əlçatmazdır — saxlanılan keş göstərilir</string>
+    <string name="refresh_error">Yeniləmə xətası: %1$s</string>
+    <string name="err_unknown_cause">bilinməyən səbəb</string>
+
+    <!-- ==== Cədvəl ekranı ==== -->
+    <string name="cd_prev_week">Əvvəlki həftə</string>
+    <string name="cd_next_week">Növbəti həftə</string>
+    <string name="cd_go_today">Cari həftəyə və bu günə keç</string>
+    <string name="cd_refresh_week">Həftəni yenilə</string>
+    <string name="badge_this_week">bu həftə</string>
+    <string name="snackbar_excluded_on">„%1$s“ qabağı siqnal qoyulmur</string>
+    <string name="snackbar_excluded_off">İstisna silindi</string>
+    <string name="cd_enable_alarm">Bu dərsdən əvvəl siqnalı yandır</string>
+    <string name="cd_disable_alarm">Bu dərsdən əvvəl siqnal qoyma</string>
+    <string name="cd_day_pairs">Bu gündəki dərslər: %1$d</string>
+    <string name="cd_day_marked">Bu gündə işarələnmiş bölmələr: %1$d</string>
+    <string name="empty_no_lessons">Dərs yoxdur</string>
+    <string name="empty_no_alarm_needed">Bu gün siqnal lazım olmayacaq</string>
+
+    <!-- ==== Bildirişlər ==== -->
+    <string name="notif_channel_name">Avto-siqnalın vəziyyəti</string>
+    <string name="notif_channel_desc">Qoyulmuş və buraxılmış siqnallar haqqında mesajlar</string>
+    <string name="notif_alarm_set">Siqnal %1$s-a qoyuldu</string>
+    <string name="notif_skipped_title">Siqnal qoyulmadı</string>
+    <string name="notif_reminder_title">Siqnal qoymağı unutmayın</string>
+    <string name="notif_reminder_text">Sabah, %1$s: dərs saat %2$s — %3$s. Siqnal qoymağı unutmayın.</string>
+    <string name="notif_sync_title">Cədvəlin sinxronizasiyası</string>
+    <string name="notif_sync_text">KGEU cədvəli yenilənir</string>
+    <string name="notif_details_room">%1$s, otaq %2$s</string>
+    <string name="notif_missed_title">Siqnal buraxıldı</string>
+
+    <!-- ==== Siqnal buraxılma səbəbləri (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">dərs yoxdur</string>
+    <string name="skip_no_upcoming">bu gün və sabah dərs yoxdur — gecə yoxlaması hər gün işləyir</string>
+    <string name="skip_deferred_to_night">dərs sabahdır — siqnal gecə 00:05-də qoyulacaq (indi qoysaq, bu gün çalardı)</string>
+    <string name="skip_clock_refused">telefonun saatı əmri qəbul etmədi — parametrlərdə „Siqnal xatırlatmasını“ yandırın</string>
+    <string name="skip_too_far">dərs bir həftədən uzaqdır — siqnal yaxınlaşanda avtomatik qoyulacaq</string>
+    <!-- 0.10.0, AL-9: DISMISS qəbul edilmədi, yeni SET ləğv edildi — ikiqat zəng xəbərdarlığı -->
+    <string name="notif_dismiss_not_accepted">saat tətbiqi köhnə siqnalın söndürülməsini qəbul etmədi — onu saatda əl ilə söndürün, yoxsa hər ikisi çala bilər</string>
+    <string name="test_alarm_label">Sınaq: Avto-siqnal işləyir!</string>
+    <string name="test_alarm_ok">Siqnal 2 dəqiqəyə qoyuldu — saata baxın</string>
+    <string name="test_alarm_fail">Sınaq siqnalını qoymaq olmadı — saat tətbiqi cavab vermir</string>
+
+    <!-- ==== Parametrlər: bölmələr ==== -->
+    <string name="sec_profile">Profil</string>
+    <string name="sec_alarm">Siqnal</string>
+    <string name="sec_reminder">Siqnal xatırlatması</string>
+    <string name="sec_exceptions">İstisnalar</string>
+    <string name="sec_custom_events">Öz məşğələləri</string>
+    <string name="sec_appearance">Görünüş</string>
+    <string name="sec_system">Sistem</string>
+    <string name="sec_about">Tətbiq haqqında</string>
+
+    <!-- ==== Parametrlər: profil ==== -->
+    <string name="profile_change_note">Hədəfin dəyişməsi oyanma vaxtını və parametrləri sıfırlamayacaq</string>
+
+    <!-- ==== Parametrlər: siqnal ==== -->
+    <string name="set_auto_title">Avto-siqnal</string>
+    <string name="alarm_target_title">Siqnal harada çalır</string>
+    <string name="alarm_target_desc">„Saatda“ — telefonun saatındakı adət siqnal (qabıqlar əmrləri bloklaya bilər). „Tətbiqdə“ — tətbiq özü tam ekranda çalır: açar, söndürmə və cədvəl dəyişiklikləri qarantiya ilə işləyir.</string>
+    <string name="alarm_target_clock">Saatda</string>
+    <string name="alarm_target_app">Tətbiqdə</string>
+    <string name="set_show_clock">Qoyulanda saati göstər</string>
+    <string name="set_show_clock_desc">Siqnallar öz-özünə qoyulmursa yandırın (Realme, Oppo, Huawei): gecə yoxlaması və sınaq siqnalı hazır siqnalla saatı açacaq — „Yadda saxla“ düyməsi ilə təsdiqləyin. Əsas açar və mühərrik dəyişimi saati açmadan susaraq qoyur.</string>
+    <string name="set_wake_offset">İlk dərsdən %1$s əvvəl oyanış</string>
+    <string name="set_offset_example">İlk dərs 08:30-da → siqnal %1$s</string>
+    <string name="set_per_pair">Hər dərs üçün oyanış</string>
+    <string name="set_per_pair_desc">Hər günün ilk dərsi üçün ayrı yığılma vaxtı: erkən dərs qabağı az, gec qabağı çox — səhər yeməyinə çatmaq üçün. Öz dəyəri olmayan dərslər yuxarıdakı ümumi oyanışdan istifadə edir.</string>
+    <string name="set_pairs_after_sync">Dərs vaxtları cədvəlin sinxronizasiyasından sonra görünəcək</string>
+    <string name="pair_at">Dərs saat %1$s</string>
+    <string name="pair_custom_offset">%1$s əvvəl oyanış → siqnal %2$s</string>
+    <string name="pair_common_offset">Ümumi oyanış: %1$s əvvəl</string>
+    <string name="btn_disable_app_alarms">Tətbiqin siqnallarını söndür</string>
+    <string name="disable_alarms_desc">Düymə saat tətbiqinə „Avto: Be“…„Avto: Baz“ dəqiq etiketləri və bir dəfəlik siqnalın etiketi ilə söndürmə əmri göndərir. Qabıq əmri qəbul etmirsə (bəzi Realme UI/ColorOS — sistemin məhdudiyyəti), „Siqnal siyahısı“ düyməsi ilə „Avto:“ etiketlərini əl ilə söndürün — tətbiq saatı özü açmır.</string>
+    <string name="btn_test_alarm">Siqnalı yoxla</string>
+    <string name="btn_alarm_list">Siqnal siyahısı</string>
+    <string name="alarms_list_open_failed">Saat tətbiqi siqnal siyahısını açmadı</string>
+    <string name="dismiss_alarms_sent">Söndürmə əmri saat tətbiqinə göndərildi (%1$d / %2$d). „Avto: …“ siqnalları qalıbsa, „Siqnal siyahısı“ ilə söndürün</string>
+    <string name="dismiss_unsupported_manual">Saat tətbiqi söndürmə əmrini dəstəkləmir (qabığın məhdudiyyəti) — siqnalları „Siqnal siyahısı“ düyməsi ilə açıb „Avto:“ etiketlərini əl ilə söndürün</string>
+
+    <!-- ==== Parametr diaqloqları: oyanma vaxtı ==== -->
+    <string name="dialog_offset_title">Dərsdən əvvəl oyanış</string>
+    <string name="dialog_offset_example">İlk dərs 08:30-da → siqnal %1$s çalacaq</string>
+    <string name="dialog_pair_title">Dərs saat %1$s</string>
+    <string name="dialog_pair_example">Dərs saat %1$s → siqnal %2$s çalacaq</string>
+
+    <!-- ==== Parametrlər: xatırlatma ==== -->
+    <string name="set_reminder_desc">Öz bildirişiniz: „sabah saat nə vaxtda dərs var — siqnal qoymağı unutmayın“</string>
+    <string name="set_reminder_fallback">Saat tətbiqinin tətbiqin əmrlərini qəbul etmədiyi hallar üçün ehtiyat — Realme, Huawei, Xiaomi-də (xüsusən Çin proqram təminatı) rast gəlinir. Xatırlatma sabah dərs varsa, hər gün seçilən vaxtda gəlir.</string>
+    <string name="reminder_time">Xatırlatma vaxtı: %1$s</string>
+    <string name="dialog_reminder_title">Xatırlatma vaxtı</string>
+
+    <!-- ==== Parametrlər: istisnalar ==== -->
+    <string name="exceptions_title_desc">Adı dəqiq belə olan dərslər qabağı siqnal qoyulmur — tip prefiksi ilə birlikdə: „l. materialşünaslıq“ yalnız mühazirəni, „pr. materialşünaslıq“ yalnız praktikanı istisna edir</string>
+    <string name="exceptions_empty">Hələ boşdur — qabağından oyanmaq istəmədiyiniz fənləri əlavə edin</string>
+    <string name="cd_delete_named">„%1$s“ sil</string>
+    <string name="hint_subject_name">Fənnin adı</string>
+    <string name="cd_add_exception">İstisna əlavə et</string>
+    <string name="exceptions_found">Cədvəldə tapıldı:</string>
+    <string name="toggle_off_dismissed">Avto-siqnal söndürüldü, tətbiqin siqnalları saatdan silindi</string>
+    <string name="toggle_off_manual">Avto-siqnal söndürüldü. Saat tətbiqi söndürməni qəbul etmədi (qabığın məhdudiyyəti) — „Avto:“ etiketli siqnalları „Siqnal siyahısı“ ilə əl ilə silin</string>
+    <string name="toggle_off_app_cancelled">Avto-siqnal söndürüldü, tətbiqin siqnalları silindi</string>
+
+    <!-- ==== Parametrlər: öz məşğələləri ==== -->
+    <string name="custom_events_desc">Ayrıca siqnal vaxtı olan öz tədbirləriniz — bölmə məşğələləri, məşqlər, bir dəfəlik işlər</string>
+    <string name="custom_empty">Hələ heç nə əlavə edilməyib</string>
+    <string name="dialog_event_title">Öz məşğələsi</string>
+    <string name="hint_name">Ad</string>
+    <string name="event_days_mode">Həftə günlərinə görə</string>
+    <string name="event_date_mode">Tək tarix</string>
+    <string name="btn_pick_date">Tarix seç</string>
+    <string name="event_time">Vaxt: %1$s</string>
+    <string name="event_offset_suffix">· %1$s əvvəl</string>
+    <string name="event_wake_before">Tədbirdən %1$s əvvəl oyat</string>
+    <string name="dialog_event_time_title">Tədbirin vaxtı</string>
+
+    <!-- ==== Parametrlər: görünüş ==== -->
+    <string name="set_theme">Tema</string>
+    <string name="theme_system">Sistem</string>
+    <string name="theme_light">Açıq</string>
+    <string name="theme_dark">Tünd</string>
+    <string name="dynamic_color">Material You (sistem rəngləri)</string>
+    <string name="set_accent">Aksent</string>
+    <string name="accent_amber">Kəhrəba</string>
+    <string name="accent_orange">Narıncı</string>
+    <string name="accent_red">Qırmızı</string>
+    <string name="accent_green">Yaşıl</string>
+    <string name="accent_pink">Çəhrayı</string>
+    <string name="accent_purple">Bənövşəyi</string>
+    <string name="accent_custom">Öz rəngi</string>
+    <string name="accent_custom_preview">Rəng „Hazırdır“dan sonra tətbiq olunacaq</string>
+    <string name="schedule_style">Cədvəlin üslubu</string>
+    <string name="style_standard">Standart</string>
+    <string name="style_paper">Kağız təqvim</string>
+    <string name="style_chalk">Təbaşir və lövhə</string>
+    <string name="style_neon">Neon</string>
+    <string name="style_terminal">Terminal</string>
+    <string name="style_aqua">Sulu boya</string>
+    <string name="style_retro">Retro çap</string>
+    <string name="set_background">Fon</string>
+    <string name="btn_pick_image">Şəkil seç</string>
+    <string name="btn_remove">Sil</string>
+    <string name="bg_opacity">Altlığın şəffaflığı</string>
+    <!-- 0.11.0, SEC-11: seçilmiş fayl fon şəklinə uyğun deyil -->
+    <string name="bg_image_rejected">Fayl uyğun gəlmir: 20 MB-dək şəkil lazımdır (JPG/PNG/WebP)</string>
+    <string name="set_fsi_title">Siqnal ekranı yandırmır</string>
+    <string name="set_fsi_desc">Tam ekran zəngə icazə verin: çalanda ekran yanacaq, „Söndür“ dərhal əlçatan olacaq. Parametrləri açmaq üçün toxunun</string>
+
+    <!-- ==== Tətbiq siqnalının zəngi („Tətbiqdə“ mühərriki, 0.7.0) ==== -->
+    <string name="ring_title">Qalxmaq vaxtıdır!</string>
+    <string name="ring_dismiss">Söndür</string>
+    <string name="ring_channel_name">Siqnal zəngi</string>
+    <string name="ring_channel_desc">Tətbiq siqnalının tam ekran zəngi</string>
+
+    <!-- ==== Parametrlər: sistem ==== -->
+    <string name="status_exact_allowed">Dəqiq siqnallara icazə verilib</string>
+    <string name="dialog_exact_off_title">Dəqiq siqnallar sistem tərəfindən söndürülüb</string>
+    <string name="dialog_exact_off_desc">Gecə planlaşdırıcısı siqnalı yalnız ±10 dəqiqə xətası ilə qoya bilər.</string>
+    <string name="dialog_battery2_title">Batareya optimizasiyası mane ola bilər</string>
+    <string name="dialog_battery2_desc">Gecə yoxlamasının alınmaması üçün tətbiqi optimizasiyadan çıxarın.</string>
+    <string name="action_disable_optimization">Optimizasiyanı söndür</string>
+    <string name="autostart_title">Avtoyandırma və aqressiv qabıqlar</string>
+    <string name="autostart_desc">MIUI, HarmonyOS və başqa qabıqlar fon tətbiqlərini söndürür</string>
+    <string name="btn_instructions">Təlimat</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nTəhlükəsizlik → Tətbiqlər → Avtoyandırma: Avto-siqnalı yandır; tətbiqin batareya parametrlərində „məhdudiyyət yoxdur“ seç.</string>
+    <string name="autostart_huawei">Huawei / Honor:\nParametrlər → Batareya → Tətbiqin işə salınması → Avto-siqnal → Əl ilə idarə et: bütün açarları yandır.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nParametrlər → Batareya → Əlavə parametrlər → Enerji sərfi optimizasiyası → tətbiq üçün optimizasiyanı qadağan et; Tətbiq meneceri → Avtoyandırma.</string>
+    <string name="autostart_samsung">Samsung:\nParametrlər → Batareya → Fon məhdudiyyətləri → Yatmayan tətbiqlər → Avto-siqnalı əlavə et.</string>
+    <string name="autostart_other">Başqa qabıq:\nTətbiqi avtoyandırmaya əlavə et və sistem parametrlərində batareya optimizasiyalarını götür.</string>
+    <string name="autostart_standard_note">„Standart“ rejim siqnalı hər gecə yenidən qoyur — tətbiqə 00:05-də fonda işləmək lazımdır.</string>
+
+    <!-- ==== Parametrlər: tətbiq haqqında ==== -->
+    <string name="about_version">KGEU Avto-siqnal · v%1$s</string>
+    <string name="about_data">Cədvəl məlumatları: rəsmi kabinet.kgeu.ru API-si. Tətbiq KGEU ilə əlaqəli deyil.</string>
+    <!-- 0.11.0, SET-16: müəllif hüququ resurslardan (bütün dillərdə eyni — brend/lisenziya) -->
+    <string name="copyright_line">© 2026 RVMXL · Apache License 2.0</string>
+    <string name="btn_github">GitHub repozitoriyası</string>
+
+    <!-- 0.9.0, DATA-1: keş saxlanılıykən serverin boş cavabları -->
+    <string name="notif_group_check_title">Qrupu yoxlayın</string>
+    <string name="notif_group_check_text">Cədvəl boş gəlir — köhnə keş saxlanılıb. Qrupu parametrlərdə yoxlayın.</string>
+
+    <!-- 0.10.0, SET-5: APP mühərrikinin siqnal etiketinin lokal prefiksi -->
+    <string name="auto_label_prefix">Avto:</string>
+
+    <!-- ==== 0.21.0: dillərin adları cari dildə (dil seçimi) ==== -->
+    <string name="lang_name_ru">rus dili</string>
+    <string name="lang_name_tt">tatar dili</string>
+    <string name="lang_name_en">ingilis dili</string>
+    <string name="lang_name_ar">ərəb dili</string>
+    <string name="lang_name_az">Azərbaycan dili</string>
+    <string name="lang_name_ba">başqırd dili</string>
+    <string name="lang_name_es">ispan dili</string>
+    <string name="lang_name_fr">fransız dili</string>
+    <string name="lang_name_kk">qazax dili</string>
+    <string name="lang_name_ky">qırğız dili</string>
+    <string name="lang_name_mn">monqol dili</string>
+    <string name="lang_name_uz">özbək dili</string>
+    <string name="lang_name_tg">tacik dili</string>
+    <string name="lang_name_tr">türk dili</string>
+    <string name="lang_name_tk">türkmən dili</string>
+    <string name="lang_name_cv">çuvaş dili</string>
+    <string name="lang_name_hy">erməni dili</string>
+    <string name="lang_name_ka">gürcü dili</string>
+    <string name="lang_name_zh">çin dili</string>
+</resources>

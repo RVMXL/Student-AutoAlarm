@@ -311,4 +311,25 @@
 
     <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
     <string name="auto_label_prefix">Авто:</string>
+
+    <!-- ==== 0.21.0: тилдер аталышы азыркы тилде (тил тандагыч) ==== -->
+    <string name="lang_name_ru">орус тили</string>
+    <string name="lang_name_tt">татар тили</string>
+    <string name="lang_name_en">англис тили</string>
+    <string name="lang_name_ar">араб тили</string>
+    <string name="lang_name_az">азербайжан тили</string>
+    <string name="lang_name_ba">башкурт тили</string>
+    <string name="lang_name_es">испан тили</string>
+    <string name="lang_name_fr">француз тили</string>
+    <string name="lang_name_kk">казак тили</string>
+    <string name="lang_name_ky">кыргыз тили</string>
+    <string name="lang_name_mn">моңгол тили</string>
+    <string name="lang_name_uz">өзбек тили</string>
+    <string name="lang_name_tg">тажик тили</string>
+    <string name="lang_name_tr">түрк тили</string>
+    <string name="lang_name_tk">түркмөн тили</string>
+    <string name="lang_name_cv">чуаш тили</string>
+    <string name="lang_name_hy">армян тили</string>
+    <string name="lang_name_ka">грузин тили</string>
+    <string name="lang_name_zh">кытай тили</string>
 </resources>

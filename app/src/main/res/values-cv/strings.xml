@@ -311,4 +311,25 @@
 
     <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
     <string name="auto_label_prefix">Авто:</string>
+
+    <!-- ==== 0.21.0: чӗлхесен ятсем хальхи чӗлхепе (чӗлхе суйламалли) ==== -->
+    <string name="lang_name_ru">вырăс чĕлхи</string>
+    <string name="lang_name_tt">тутар чĕлхи</string>
+    <string name="lang_name_en">акăлчан чĕлхи</string>
+    <string name="lang_name_ar">арап чĕлхи</string>
+    <string name="lang_name_az">азербайджан чĕлхи</string>
+    <string name="lang_name_ba">пушкăрт чĕлхи</string>
+    <string name="lang_name_es">испан чĕлхи</string>
+    <string name="lang_name_fr">француз чĕлхи</string>
+    <string name="lang_name_kk">казах чĕлхи</string>
+    <string name="lang_name_ky">кыргыз чĕлхи</string>
+    <string name="lang_name_mn">монгол чĕлхи</string>
+    <string name="lang_name_uz">узбек чĕлхи</string>
+    <string name="lang_name_tg">таджик чĕлхи</string>
+    <string name="lang_name_tr">турккă чĕлхи</string>
+    <string name="lang_name_tk">туркмен чĕлхи</string>
+    <string name="lang_name_cv">чăваш чĕлхи</string>
+    <string name="lang_name_hy">эрмен чĕлхи</string>
+    <string name="lang_name_ka">грузин чĕлхи</string>
+    <string name="lang_name_zh">китай чĕлхи</string>
 </resources>

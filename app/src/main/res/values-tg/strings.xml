@@ -311,4 +311,25 @@
 
     <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
     <string name="auto_label_prefix">Авто:</string>
+
+    <!-- ==== 0.21.0: номҳои забонҳо ба забони ҷорӣ (интихобкунандаи забон) ==== -->
+    <string name="lang_name_ru">русӣ</string>
+    <string name="lang_name_tt">тоторӣ</string>
+    <string name="lang_name_en">англисӣ</string>
+    <string name="lang_name_ar">арабӣ</string>
+    <string name="lang_name_az">озарбойҷонӣ</string>
+    <string name="lang_name_ba">бошқирдӣ</string>
+    <string name="lang_name_es">испанӣ</string>
+    <string name="lang_name_fr">фаронсавӣ</string>
+    <string name="lang_name_kk">қазоқӣ</string>
+    <string name="lang_name_ky">қирғизӣ</string>
+    <string name="lang_name_mn">муғулӣ</string>
+    <string name="lang_name_uz">ӯзбекӣ</string>
+    <string name="lang_name_tg">тоҷикӣ</string>
+    <string name="lang_name_tr">туркӣ</string>
+    <string name="lang_name_tk">туркманӣ</string>
+    <string name="lang_name_cv">чувашӣ</string>
+    <string name="lang_name_hy">арманӣ</string>
+    <string name="lang_name_ka">гурҷӣ</string>
+    <string name="lang_name_zh">чинӣ</string>
 </resources>

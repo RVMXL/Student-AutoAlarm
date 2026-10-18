@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== საერთო ==== -->
+    <string name="app_name">KGEU ავტომაღვიძლი</string>
+    <string name="action_cancel">გაუქმება</string>
+    <string name="action_ok">კარგი</string>
+    <string name="action_save">შენახვა</string>
+    <string name="action_done">მზადაა</string>
+    <string name="action_edit">რედაქტირება</string>
+    <string name="action_reset">განულება</string>
+    <string name="action_retry">ხელახლა ცდა</string>
+    <string name="action_allow">დაშვება</string>
+    <string name="action_fix">გასწორება</string>
+    <string name="action_refresh">განახლება</string>
+    <string name="action_change">შეცვლა</string>
+    <string name="action_next">შემდეგ</string>
+    <string name="action_back">უკან</string>
+    <string name="action_start">დაწყება</string>
+    <string name="action_add">დამატება</string>
+    <string name="action_load">ჩატვირთვა</string>
+    <string name="action_understood">გასაგებია</string>
+
+    <!-- ==== ქვედა ნავიგაცია ==== -->
+    <string name="nav_home">მთავარი</string>
+    <string name="nav_schedule">განრიგი</string>
+    <string name="nav_settings">პარამეტრები</string>
+
+    <!-- ==== ერთეულები და ფორმატები ==== -->
+    <string name="fmt_offset_m">%1$d წთ</string>
+    <string name="fmt_offset_h">%1$d სთ</string>
+    <string name="fmt_offset_hm">%1$d სთ %2$d წთ</string>
+    <string name="fmt_time_alarm_will_ring">მაღვიძლი დარეკავს საათზე</string>
+
+    <!-- ==== კვირის დღეები (მოკლე, კალენდარის ჩიპები) ==== -->
+    <string name="day_short_1">ორშ</string>
+    <string name="day_short_2">სამ</string>
+    <string name="day_short_3">ოთხ</string>
+    <string name="day_short_4">ხუთ</string>
+    <string name="day_short_5">პარ</string>
+    <string name="day_short_6">შაბ</string>
+    <string name="day_short_7">კვ</string>
+
+    <!-- ==== ენა ==== -->
+    <string name="lang_title">ენა</string>
+    <string name="lang_subtitle">აირჩიეთ აპლიკაციის ენა — შემდეგ შეიძლება შეიცვალოს პარამეტრებში</string>
+    <string name="lang_system">სისტემის ენა</string>
+    <string name="set_language">ენა</string>
+
+    <!-- ==== მორგების ოსტატი ==== -->
+    <string name="setup_step_of">ნაბიჯი %1$d / %2$d</string>
+    <string name="setup_welcome_subtitle">უნივერსიტეტის განრიგის მიხედვით დებს მაღვიძლს ტელეფონის საათში პირველ გაკვეთილამდე. მორგება ერთ წუთში ჩავა.</string>
+    <string name="setup_university">ყაზანის სახელმწიფო ენერგეტიკული უნივერსიტეტი (KGEU)</string>
+    <string name="setup_official_api">ოფიციალური kabinet.kgeu.ru API</string>
+    <string name="setup_who_are_you">ვინ ხართ?</string>
+    <string name="role_student">სტუდენტი</string>
+    <string name="role_student_subtitle">მაღვიძლი ჩემი ჯგუფის განრიგით</string>
+    <string name="role_teacher">ლექტორი</string>
+    <string name="role_teacher_subtitle">მაღვიძლი ჩემი გაკვეთილების განრიგით</string>
+    <string name="setup_search_hint">დაიწყეთ აკრეფა: А-1-23 …</string>
+    <string name="setup_found">ნაპოვნია: %1$d</string>
+    <string name="setup_found_capped">ნაპოვნია: %1$d (ნაჩვენებია პირველი %2$d)</string>
+    <string name="setup_load_failed">სიის ჩატვირთვა ვერ მოხერხდა</string>
+    <string name="setup_check_internet">შეამოწმეთ ინტერნეტი და სცადეთ ხელახლა</string>
+    <string name="setup_nothing_found">ვერაფერი მოიძებნა</string>
+    <string name="setup_pick_role_first">ჯერ აირჩიეთ, ვინ ხართ</string>
+    <string name="setup_course">%1$d კურსი</string>
+    <string name="setup_wake_question">როგორც წესი, რამდენით ადრე იღვიძებთ პირველ გაკვეთილამდე?</string>
+    <string name="setup_example">პირველი გაკვეთილი 08:30-ზე → მაღვიძლი %1$s-ზე</string>
+    <string name="setup_done_all">ყველაფერი მზადაა!</string>
+    <string name="setup_finish_mode_note">„სტანდარტული“ რეჟიმი: ყოველ ღამე მაღვიძლი იდება ხვალისთვის. შემდეგ შეგიძლიათ შეცვალოთ პარამეტრებში.</string>
+    <string name="setup_no_target">მიზანი არჩეული არაა — დაბრუნდით უკან და აირჩიეთ ჯგუფი ან ლექტორი</string>
+    <string name="summary_group">ჯგუფი</string>
+    <string name="summary_teacher">ლექტორი</string>
+    <string name="summary_wake_offset">გაღვიძება პირველ გაკვეთილამდე</string>
+    <string name="profile_no_target">მიზანი არჩეული არაა</string>
+
+    <!-- ==== მთავარი ეკრანი ==== -->
+    <string name="home_title">ავტომაღვიძლი</string>
+    <string name="cd_refresh_schedule">განრიგის განახლება</string>
+    <string name="loading_settings">პარამეტრების ჩატვირთვა…</string>
+    <string name="alarm_off_title">მაღვიძლი გამორთულია</string>
+    <string name="alarm_off_subtitle">ჩართეთ ქვემოთა გადამრთველით</string>
+    <string name="refreshing">განრიგი ახლდება…</string>
+    <string name="not_loaded_title">განრიგი ჯერ ჩატვირთული არაა</string>
+    <string name="not_loaded_hint">გაკვეთილები მიიტანეთ kabinet.kgeu.ru-დან — აქ გამოჩნდება აღდგომის დრო</string>
+    <string name="tomorrow_free_title">ხვალ გაკვეთილები არ არის</string>
+    <string name="tomorrow_free_sub">მაღვიძლი არ დაიდება</string>
+    <string name="tomorrow_label">ხვალ · %1$s</string>
+    <string name="today_label">დღეს</string>
+    <string name="tomorrow_label_short">ხვალ</string>
+    <string name="badge_replacement">ჩანაცვლება</string>
+    <string name="room_prefix">აუდ. %1$s</string>
+    <string name="lesson_at">გაკვეთილი %1$s-ზე</string>
+    <string name="own_event_at">თქვენი გაკვეთილი %1$s-ზე</string>
+    <string name="home_auto_title">ავტომაღვიძლი</string>
+    <string name="home_auto_subtitle">განრიგის მიხედვით პირველ გაკვეთილამდე მაღვიძლს დებს</string>
+    <string name="home_upcoming_title">მომავალი გაკვეთილები</string>
+    <string name="home_no_pairs">გაკვეთილები არ არის</string>
+
+    <!-- ==== 0.10.0, Bug E: „ჩემი მაღვიძლების“ ბარათი ==== -->
+    <string name="alarms_card_title">ჩემი მაღვიძლები</string>
+    <string name="alarms_empty">მაღვიძლები არ არის</string>
+    <string name="alarms_active">მაღვიძლი დადებულია — დარეკავს განრიგით</string>
+    <string name="alarms_slot_missing">მაღვიძლი სისტემაში ვერ მოიძებნა — ავტომატურად ხელახლა დაიდება</string>
+    <string name="alarms_engine_app">„აპლიკაციაში“ ძრავა</string>
+    <string name="alarms_engine_clock">„საათში“ ძრავა</string>
+    <string name="action_dismiss_alarms">მაღვიძლების მოხსნა</string>
+    <string name="alarms_test_row">სატესტო მაღვიძლი</string>
+    <string name="alarms_test_cancel">სატესტოს მოხსნა</string>
+
+    <!-- ==== მასობრივი დადების შედეგები (მთავარი + პარამეტრები) ==== -->
+
+    <!-- ==== დიაგნოსტიკა მთავარზე ==== -->
+    <string name="dialog_exact_alarms_title">ზუსტი მაღვიძლები აკრძალულია</string>
+    <string name="dialog_exact_alarms_desc">ნებართვის გარეშე სისტემა მაღვიძლის ზუსტად დათვლილ დროს დადებას არ დაუშვებს.</string>
+    <string name="dialog_battery_title">ბატარეის ოპტიმიზაციამ ხელი შეიძლება შეგიშალოს</string>
+    <string name="dialog_battery_desc">აგრესიულმა ენერგოდამზოგმა რეჟიმმა ღამის ხელახალი შემოწმება შეიძლება გააუქმოს.</string>
+    <string name="dialog_stale_title">განრიგი 3 დღეზე მეტხანს არ განახლებულა</string>
+    <string name="dialog_stale_desc">უნივერსიტეტის განრიგს ხშირად ცვლიან — მიიტანეთ ახალი მონაცემები.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ ახალ ინსტალაციას full-screen intent არ მისცა -->
+    <string name="dialog_fsi_title">სრულეკრანიანი ზარი სისტემამ შეზღუდა</string>
+    <string name="dialog_fsi_desc">სისტემა ზარის ეკრანის ჩამკეტზე გაშლის ნებას არ იძლევა — სიგნალი შეტყობინებად გამოჩნდება. დართეთ „სრულეკრანიანი შეტყობინებების“ ნება აპლიკაციისთვის.</string>
+
+    <!-- ==== განახლების სნეკბარები ==== -->
+    <string name="err_no_target">ჯერ აირჩიეთ ჯგუფი ან ლექტორი პარამეტრებში</string>
+    <string name="msg_refreshed">განრიგი განახლდა</string>
+    <string name="refresh_empty_week">განახლდა: ამ კვირაში გაკვეთილები არ არის</string>
+    <string name="refresh_ok_count">განრიგი განახლდა — გაკვეთილები კვირაში: %1$d</string>
+    <string name="refresh_no_connection">kabinet.kgeu.ru-სთან კავშირი არ არის — ნაჩვენებია შენახული კეში</string>
+    <string name="refresh_network">ქსელი მიუწვდომელია — ნაჩვენებია შენახული კეში</string>
+    <string name="refresh_error">განახლების შეცდომა: %1$s</string>
+    <string name="err_unknown_cause">უცნობი მიზეზი</string>
+
+    <!-- ==== განრიგის ეკრანი ==== -->
+    <string name="cd_prev_week">წინა კვირა</string>
+    <string name="cd_next_week">მომდევნო კვირა</string>
+    <string name="cd_go_today">მიმდინარე კვირასა და დღეს გადასვლა</string>
+    <string name="cd_refresh_week">კვირის განახლება</string>
+    <string name="badge_this_week">ეს კვირა</string>
+    <string name="snackbar_excluded_on">„%1$s“-მდე მაღვიძლი არ დაიდება</string>
+    <string name="snackbar_excluded_off">გამონაკლისი მოხსნილია</string>
+    <string name="cd_enable_alarm">მაღვიძლის ჩართვა ამ გაკვეთილამდე</string>
+    <string name="cd_disable_alarm">მაღვიძლის არდება ამ გაკვეთილამდე</string>
+    <string name="cd_day_pairs">გაკვეთილები ამ დღეს: %1$d</string>
+    <string name="cd_day_marked">მონიშნული სექციები ამ დღეს: %1$d</string>
+    <string name="empty_no_lessons">გაკვეთილები არ არის</string>
+    <string name="empty_no_alarm_needed">ამ დღეს მაღვიძლი არ დაგჭირდებათ</string>
+
+    <!-- ==== შეტყობინებები ==== -->
+    <string name="notif_channel_name">ავტომაღვიძლის სტატუსი</string>
+    <string name="notif_channel_desc">შეტყობინებები დადებულ და გამოტოვებულ მაღვიძლებზე</string>
+    <string name="notif_alarm_set">მაღვიძლი დადებულია %1$s-ზე</string>
+    <string name="notif_skipped_title">მაღვიძლი არ დადებულა</string>
+    <string name="notif_reminder_title">არ დაივიწყოთ მაღვიძლის დადება</string>
+    <string name="notif_reminder_text">ხვალ, %1$s: გაკვეთილი %2$s — %3$s. არ დაივიწყოთ მაღვიძლის დადება.</string>
+    <string name="notif_sync_title">განრიგის სინქრონიზაცია</string>
+    <string name="notif_sync_text">ახლდება KGEU-ის განრიგი</string>
+    <string name="notif_details_room">%1$s, აუდ. %2$s</string>
+    <string name="notif_missed_title">მაღვიძლი გამოტოვებულია</string>
+
+    <!-- ==== მაღვიძლის გამოტოვების მიზეზები (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">გაკვეთილები არ არის</string>
+    <string name="skip_no_upcoming">დღეს და ხვალ გაკვეთილები არ არის — ღამის შემოწმება ყოველდღე მუშაობს</string>
+    <string name="skip_deferred_to_night">გაკვეთილი ხვალაა — მაღვიძლი ღამით 00:05-ზე დაიდება (ახლა დაიდოს, დღეს დარეკავდა)</string>
+    <string name="skip_clock_refused">ტელეფონის საათმა ბრძანება არ მიიღო — ჩართეთ „მაღვიძლის შეხსენება“ პარამეტრებში</string>
+    <string name="skip_too_far">გაკვეთილი კვირაზე შორსაა — მაღვიძლი ავტომატურად დაიდება მიახლოებისას</string>
+    <!-- 0.10.0, AL-9: DISMISS არ მიიღეს, ახალი SET გაუქმდა — ორმაგი ზარის გაფრთხილება -->
+    <string name="notif_dismiss_not_accepted">საათმა ძველი მაღვიძლის მოხსნა არ მიიღო — ხელით მოხსენით საათში, თორემ ორივე შეიძლება დარეკოს</string>
+    <string name="test_alarm_label">ტესტი: ავტომაღვიძლი მუშაობს!</string>
+    <string name="test_alarm_ok">მაღვიძლი 2 წუთზეა დადებული — შეამოწმეთ საათი</string>
+    <string name="test_alarm_fail">სატესტო მაღვიძლის დადება ვერ მოხერხდა — საათი არ პასუხობს</string>
+
+    <!-- ==== პარამეტრები: განყოფილებები ==== -->
+    <string name="sec_profile">პროფილი</string>
+    <string name="sec_alarm">მაღვიძლი</string>
+    <string name="sec_reminder">მაღვიძლის შეხსენება</string>
+    <string name="sec_exceptions">გამონაკლისები</string>
+    <string name="sec_custom_events">საკუთარი გაკვეთილები</string>
+    <string name="sec_appearance">გარეგნობა</string>
+    <string name="sec_system">სისტემა</string>
+    <string name="sec_about">აპლიკაციის შესახებ</string>
+
+    <!-- ==== პარამეტრები: პროფილი ==== -->
+    <string name="profile_change_note">მიზნის შეცვლა აღდგომის დროსა და პარამეტრებს არ გაანულებს</string>
+
+    <!-- ==== პარამეტრები: მაღვიძლი ==== -->
+    <string name="set_auto_title">ავტომაღვიძლი</string>
+    <string name="alarm_target_title">სად რეკავს მაღვიძლი</string>
+    <string name="alarm_target_desc">„საათში“ — ჩვეულებრივი სიგნალი ტელეფონის საათში (გარსებმა შეიძლება ბრძანებები დაბლოკონ). „აპლიკაციაში“ — აპლიკაცია თავად რეკავს სრულ ეკრანზე: გადამრთველი, მოხსნა და განრიგის ცვლილებები გარანტირებულად მუშაობს.</string>
+    <string name="alarm_target_clock">საათში</string>
+    <string name="alarm_target_app">აპლიკაციაში</string>
+    <string name="set_show_clock">საათის ჩვენება დადებისას</string>
+    <string name="set_show_clock_desc">ჩართეთ, თუ მაღვიძლები თავისით არ იდება (Realme, Oppo, Huawei). ღამის შემოწმება და სატესტო მაღვიძლი საათს მზად მაღვიძლით გახსნიან — დაადასტურეთ „შენახვა“ ღილაკით. მთავარი გადამრთველი და ძრავის შეცვლა დუმად დებს, საათის გახსნის გარეშე.</string>
+    <string name="set_wake_offset">აღდგომა პირველ გაკვეთილამდე %1$s ადრე</string>
+    <string name="set_offset_example">პირველი გაკვეთილი 08:30-ზე → მაღვიძლი %1$s-ზე</string>
+    <string name="set_per_pair">აღდგომა თითოეული გაკვეთილისთვის</string>
+    <string name="set_per_pair_desc">საკუთარი მოსამზადებელი დრო ყოველდღიური პირველი გაკვეთილისთვის: ადრიანამდე — ნაკლები, გვიანიანამდე — მეტი, საუზმეზე მოსასწრებლად. საკუთარი მნიშვნელობის გარეშე გაკვეთილები ზემოთა საერთო აღდგომას იყენებს.</string>
+    <string name="set_pairs_after_sync">გაკვეთილების დროები გამოჩნდება განრიგის სინქრონიზაციის შემდეგ</string>
+    <string name="pair_at">გაკვეთილი %1$s-ზე</string>
+    <string name="pair_custom_offset">აღდგომა %1$s ადრე → მაღვიძლი %2$s-ზე</string>
+    <string name="pair_common_offset">საერთო აღდგომა: %1$s ადრე</string>
+    <string name="btn_disable_app_alarms">აპლიკაციის მაღვიძლების გამორთვა</string>
+    <string name="disable_alarms_desc">ღილაკი საათს უგზავნის მოხსნის ბრძანებას „ავტო: ორშ“…„ავტო: კვ“ ზუსტი ეტიკეტებით და ერთჯერადი მაღვიძლის ეტიკეტით. თუ გარსი ბრძანებას არ იღებს (ზოგიერთი Realme UI/ColorOS — სისტემის შეზღუდვა), მოხსენით „ავტო:“ ეტიკეტები ხელით „მაღვიძლების სია“ ღილაკით — აპლიკაცია საათს თავად არ ხსნის.</string>
+    <string name="btn_test_alarm">მაღვიძლის შემოწმება</string>
+    <string name="btn_alarm_list">მაღვიძლების სია</string>
+    <string name="alarms_list_open_failed">საათმა მაღვიძლების სია არ გახსნა</string>
+    <string name="dismiss_alarms_sent">მოხსნის ბრძანება საათს გაეგზავნა (%1$d %2$d-დან). თუ „ავტო: …“ მაღვიძლები დარჩა — მოხსენით „მაღვიძლების სიით“</string>
+    <string name="dismiss_unsupported_manual">საათი მოხსნის ბრძანებას არ უჭერს მხარს (გარსის შეზღუდვა) — გახსენით მაღვიძლები „მაღვიძლების სია“ ღილაკით და „ავტო:“ ეტიკეტები ხელით მოხსენით</string>
+
+    <!-- ==== პარამეტრების დიალოგები: აღდგომის დრო ==== -->
+    <string name="dialog_offset_title">აღდგომა გაკვეთილამდე</string>
+    <string name="dialog_offset_example">პირველი გაკვეთილი 08:30-ზე → მაღვიძლი დარეკავს %1$s-ზე</string>
+    <string name="dialog_pair_title">გაკვეთილი %1$s-ზე</string>
+    <string name="dialog_pair_example">გაკვეთილი %1$s-ზე → მაღვიძლი დარეკავს %2$s-ზე</string>
+
+    <!-- ==== პარამეტრები: შეხსენება ==== -->
+    <string name="set_reminder_desc">საკუთარი შეტყობინება: „ხვალ ამ დროზე გაკვეთილია — არ დაივიწყოთ მაღვიძლის დადება“</string>
+    <string name="set_reminder_fallback">სათადარიგო, როცა საათი აპლიკაციის ბრძანებებს არ იღებს — გვხვდება Realme, Huawei, Xiaomi-ზე (განსაკუთრებით ჩინურ ფირმვერებზე). შეხსენება მოდის ყოველდღე არჩეულ დროზე, თუ ხვალ გაკვეთილია.</string>
+    <string name="reminder_time">შეხსენების დრო: %1$s</string>
+    <string name="dialog_reminder_title">შეხსენების დრო</string>
+
+    <!-- ==== პარამეტრები: გამონაკლისები ==== -->
+    <string name="exceptions_title_desc">მაღვიძლი არ იდება ზუსტად ამ სახელწოდების გაკვეთილებამდე — ტიპის პრეფიქსთან ერთად: „ლ. მასალათმცოდნეობა“ მხოლოდ ლექციას გამორიცხავს, „პრაქტ. მასალათმცოდნეობა“ — მხოლოდ პრაქტიკას</string>
+    <string name="exceptions_empty">ჯერ ცარიელია — დაამატეთ საგნები, რომლებამდე გაღვიძება არ გსურთ</string>
+    <string name="cd_delete_named">წაშლა „%1$s“</string>
+    <string name="hint_subject_name">საგნის დასახელება</string>
+    <string name="cd_add_exception">გამონაკლისის დამატება</string>
+    <string name="exceptions_found">ნაპოვნია განრიგში:</string>
+    <string name="toggle_off_dismissed">ავტომაღვიძლი გამორთულია, აპლიკაციის მაღვიძლები საათიდან მოხსნილია</string>
+    <string name="toggle_off_manual">ავტომაღვიძლი გამორთულია. საათმა მოხსნა არ მიიღო (გარსის შეზღუდვა) — „ავტო:“ ეტიკეტიანი მაღვიძლები ხელით მოხსენით „მაღვიძლების სიით“</string>
+    <string name="toggle_off_app_cancelled">ავტომაღვიძლი გამორთულია, აპლიკაციის მაღვიძლები მოხსნილია</string>
+
+    <!-- ==== პარამეტრები: საკუთარი გაკვეთილები ==== -->
+    <string name="custom_events_desc">საკუთარი ღონისძიებები ცალკე მაღვიძლის დროით — სექციები, რეპეტიციები, ერთჯერადი საქმეები</string>
+    <string name="custom_empty">ჯერ არაფერია დამატებული</string>
+    <string name="dialog_event_title">საკუთარი გაკვეთილი</string>
+    <string name="hint_name">დასახელება</string>
+    <string name="event_days_mode">კვირის დღეებით</string>
+    <string name="event_date_mode">ერთი თარიღი</string>
+    <string name="btn_pick_date">თარიღის არჩევა</string>
+    <string name="event_time">დრო: %1$s</string>
+    <string name="event_offset_suffix">· %1$s ადრე</string>
+    <string name="event_wake_before">გაღვიძება ღონისძიებამდე %1$s ადრე</string>
+    <string name="dialog_event_time_title">ღონისძიების დრო</string>
+
+    <!-- ==== პარამეტრები: გარეგნობა ==== -->
+    <string name="set_theme">თემა</string>
+    <string name="theme_system">სისტემური</string>
+    <string name="theme_light">ღია</string>
+    <string name="theme_dark">მუქი</string>
+    <string name="dynamic_color">Material You (სისტემის ფერები)</string>
+    <string name="set_accent">აქცენტი</string>
+    <string name="accent_amber">ქარაფისფერი</string>
+    <string name="accent_orange">ნარინჯისფერი</string>
+    <string name="accent_red">წითელი</string>
+    <string name="accent_green">მწვანე</string>
+    <string name="accent_pink">ვარდისფერი</string>
+    <string name="accent_purple">იისფერი</string>
+    <string name="accent_custom">საკუთარი ფერი</string>
+    <string name="accent_custom_preview">ფერი „მზადაა“-ს შემდეგ დაყენდება</string>
+    <string name="schedule_style">განრიგის სტილი</string>
+    <string name="style_standard">სტანდარტული</string>
+    <string name="style_paper">ქაღალდის კალენდარი</string>
+    <string name="style_chalk">ცარცი და დაფა</string>
+    <string name="style_neon">ნეონი</string>
+    <string name="style_terminal">ტერმინალი</string>
+    <string name="style_aqua">აკვარელი</string>
+    <string name="style_retro">რეტრო ბეჭდვა</string>
+    <string name="set_background">ფონი</string>
+    <string name="btn_pick_image">სურათის არჩევა</string>
+    <string name="btn_remove">მოცილება</string>
+    <string name="bg_opacity">საფარის გამჭვირვალობა</string>
+    <!-- 0.11.0, SEC-11: არჩეული ფაილი ფონის სურათად არ ვარგა -->
+    <string name="bg_image_rejected">ფაილი ვარგისი არაა: საჭიროა 20 მბ-მდე სურათი (JPG/PNG/WebP)</string>
+    <string name="set_fsi_title">მაღვიძლი ეკრანს არ რთავს</string>
+    <string name="set_fsi_desc">დართეთ სრულეკრანიანი ზარი: ეკრანი აინთება ზარისას, ხოლო „მოხსნა“ მაშინვე იქნება ხელმისაწვდომი. შეეხეთ პარამეტრების გასახსნელად</string>
+
+    <!-- ==== აპლიკაციის მაღვიძლის ზარი („აპლიკაციაში“ ძრავა, 0.7.0) ==== -->
+    <string name="ring_title">აღდგომის დროა!</string>
+    <string name="ring_dismiss">მოხსნა</string>
+    <string name="ring_channel_name">მაღვიძლის ზარი</string>
+    <string name="ring_channel_desc">აპლიკაციის მაღვიძლის სრულეკრანიანი სიგნალი</string>
+
+    <!-- ==== პარამეტრები: სისტემა ==== -->
+    <string name="status_exact_allowed">ზუსტი მაღვიძლები დაშვებულია</string>
+    <string name="dialog_exact_off_title">ზუსტი მაღვიძლები სისტემამ გამორთო</string>
+    <string name="dialog_exact_off_desc">ღამის დამგეგმავი მაღვიძლს მხოლოდ ±10 წუთი დაშვებით შეძლებს დადებას.</string>
+    <string name="dialog_battery2_title">ბატარეის ოპტიმიზაციამ ხელი შეიძლება შეგიშალოს</string>
+    <string name="dialog_battery2_desc">გამოიყვანეთ აპლიკაცია ოპტიმიზაციიდან, რომ ღამის ხელახალი შემოწმება არ ჩაიშალოს.</string>
+    <string name="action_disable_optimization">ოპტიმიზაციის გამორთვა</string>
+    <string name="autostart_title">ავტოჩართვა და აგრესიული გარსები</string>
+    <string name="autostart_desc">MIUI, HarmonyOS და სხვა გარსები ფონურ აპლიკაციებს ხოცავენ</string>
+    <string name="btn_instructions">ინსტრუქცია</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nუსაფრთხოება → აპლიკაციები → ავტოჩართვა: ჩართეთ ავტომაღვიძლი, აპლიკაციის ბატარეის პარამეტრებში აირჩიეთ „შეზღუდვების გარეშე“.</string>
+    <string name="autostart_huawei">Huawei / Honor:\nპარამეტრები → ბატარეა → აპლიკაციების გაშვება → ავტომაღვიძლი → ხელით მართვა: ჩართეთ ყველა გადამრთველი.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nპარამეტრები → ბატარეა → დამატებითი პარამეტრები → ენერგიის მოხმარების ოპტიმიზაცია → აკრძალეთ ოპტიმიზაცია აპლიკაციისთვის, აპლიკაციების მენეჯერი → ავტოჩართვა.</string>
+    <string name="autostart_samsung">Samsung:\nპარამეტრები → ბატარეა → ფონური შეზღუდვები → არმძინარი აპლიკაციები → დაამატეთ ავტომაღვიძლი.</string>
+    <string name="autostart_other">სხვა გარსი:\nდაამატეთ აპლიკაცია ავტოჩართვაში და მოხსენით ბატარეის ოპტიმიზაციები სისტემის პარამეტრებში.</string>
+    <string name="autostart_standard_note">„სტანდარტული“ რეჟიმი მაღვიძლს ყოველ ღამე გადადებს — აპლიკაციას 00:05-ზე ფონური მუშაობა სჭირდება.</string>
+
+    <!-- ==== პარამეტრები: აპლიკაციის შესახებ ==== -->
+    <string name="about_version">KGEU ავტომაღვიძლი · v%1$s</string>
+    <string name="about_data">განრიგის მონაცემები: ოფიციალური kabinet.kgeu.ru API. აპლიკაცია KGEU-სთან არ არის დაკავშირებული.</string>
+    <!-- 0.11.0, SET-16: საავტორო უფლება რესურსებიდან (ყველა ენაზე ერთნაირი — ბრენდი/ლიცენზია) -->
+    <string name="copyright_line">© 2026 RVMXL · Apache License 2.0</string>
+    <string name="btn_github">GitHub-რეპოზიტორია</string>
+
+    <!-- 0.9.0, DATA-1: სერვერის ცარიელი პასუხების სერია შენახული კეშით -->
+    <string name="notif_group_check_title">შეამოწმეთ ჯგუფი</string>
+    <string name="notif_group_check_text">განრიგი ცარიელი მოდის — ძველი კეში შენახულია. შეამოწმეთ ჯგუფი პარამეტრებში.</string>
+
+    <!-- 0.10.0, SET-5: APP ძრავის მაღვიძლის ეტიკეტის ლოკალიზებული პრეფიქსი -->
+    <string name="auto_label_prefix">ავტო:</string>
+
+    <!-- ==== 0.21.0: ენების სახელები მიმდინარე ენაზე (ენის ამომრჩეველი) ==== -->
+    <string name="lang_name_ru">რუსული</string>
+    <string name="lang_name_tt">თათრული</string>
+    <string name="lang_name_en">ინგლისური</string>
+    <string name="lang_name_ar">არაბული</string>
+    <string name="lang_name_az">აზერბაიჯანული</string>
+    <string name="lang_name_ba">ბაშკირული</string>
+    <string name="lang_name_es">ესპანური</string>
+    <string name="lang_name_fr">ფრანგული</string>
+    <string name="lang_name_kk">ყაზახური</string>
+    <string name="lang_name_ky">ყირგიზული</string>
+    <string name="lang_name_mn">მონღოლური</string>
+    <string name="lang_name_uz">უზბეკური</string>
+    <string name="lang_name_tg">ტაჯიკური</string>
+    <string name="lang_name_tr">თურქული</string>
+    <string name="lang_name_tk">თურქმენული</string>
+    <string name="lang_name_cv">ჩუვაშური</string>
+    <string name="lang_name_hy">სომხური</string>
+    <string name="lang_name_ka">ქართული</string>
+    <string name="lang_name_zh">ჩინური</string>
+</resources>

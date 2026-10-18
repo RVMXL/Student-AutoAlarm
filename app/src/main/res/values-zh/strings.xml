@@ -311,4 +311,25 @@
 
     <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
     <string name="auto_label_prefix">自动：</string>
+
+    <!-- ==== 0.21.0: 语言名称以当前语言显示（语言选择器） ==== -->
+    <string name="lang_name_ru">俄语</string>
+    <string name="lang_name_tt">鞑靼语</string>
+    <string name="lang_name_en">英语</string>
+    <string name="lang_name_ar">阿拉伯语</string>
+    <string name="lang_name_az">阿塞拜疆语</string>
+    <string name="lang_name_ba">巴什基尔语</string>
+    <string name="lang_name_es">西班牙语</string>
+    <string name="lang_name_fr">法语</string>
+    <string name="lang_name_kk">哈萨克语</string>
+    <string name="lang_name_ky">吉尔吉斯语</string>
+    <string name="lang_name_mn">蒙古语</string>
+    <string name="lang_name_uz">乌兹别克语</string>
+    <string name="lang_name_tg">塔吉克语</string>
+    <string name="lang_name_tr">土耳其语</string>
+    <string name="lang_name_tk">土库曼语</string>
+    <string name="lang_name_cv">楚瓦什语</string>
+    <string name="lang_name_hy">亚美尼亚语</string>
+    <string name="lang_name_ka">格鲁吉亚语</string>
+    <string name="lang_name_zh">中文</string>
 </resources>

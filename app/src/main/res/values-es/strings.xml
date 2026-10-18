@@ -311,4 +311,25 @@
 
     <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
     <string name="auto_label_prefix">Auto:</string>
+
+    <!-- ==== 0.21.0: nombres de idiomas en el idioma actual (selector de idioma) ==== -->
+    <string name="lang_name_ru">ruso</string>
+    <string name="lang_name_tt">tártaro</string>
+    <string name="lang_name_en">inglés</string>
+    <string name="lang_name_ar">árabe</string>
+    <string name="lang_name_az">azerbaiyano</string>
+    <string name="lang_name_ba">baskir</string>
+    <string name="lang_name_es">español</string>
+    <string name="lang_name_fr">francés</string>
+    <string name="lang_name_kk">kazajo</string>
+    <string name="lang_name_ky">kirguís</string>
+    <string name="lang_name_mn">mongol</string>
+    <string name="lang_name_uz">uzbeco</string>
+    <string name="lang_name_tg">tayiko</string>
+    <string name="lang_name_tr">turco</string>
+    <string name="lang_name_tk">turcomano</string>
+    <string name="lang_name_cv">chuvasio</string>
+    <string name="lang_name_hy">armenio</string>
+    <string name="lang_name_ka">georgiano</string>
+    <string name="lang_name_zh">chino</string>
 </resources>

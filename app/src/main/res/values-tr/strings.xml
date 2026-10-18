@@ -311,4 +311,25 @@
 
     <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
     <string name="auto_label_prefix">Oto:</string>
+
+    <!-- ==== 0.21.0: dil adları geçerli dilde (dil seçici) ==== -->
+    <string name="lang_name_ru">Rusça</string>
+    <string name="lang_name_tt">Tatarca</string>
+    <string name="lang_name_en">İngilizce</string>
+    <string name="lang_name_ar">Arapça</string>
+    <string name="lang_name_az">Azerice</string>
+    <string name="lang_name_ba">Başkurtça</string>
+    <string name="lang_name_es">İspanyolca</string>
+    <string name="lang_name_fr">Fransızca</string>
+    <string name="lang_name_kk">Kazakça</string>
+    <string name="lang_name_ky">Kırgızca</string>
+    <string name="lang_name_mn">Moğolca</string>
+    <string name="lang_name_uz">Özbekçe</string>
+    <string name="lang_name_tg">Tacikçe</string>
+    <string name="lang_name_tr">Türkçe</string>
+    <string name="lang_name_tk">Türkmençe</string>
+    <string name="lang_name_cv">Çuvaşça</string>
+    <string name="lang_name_hy">Ermenice</string>
+    <string name="lang_name_ka">Gürcüce</string>
+    <string name="lang_name_zh">Çince</string>
 </resources>

@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== Ընդհանուր ==== -->
+    <string name="app_name">KGEU Ավտոզարթուցիչ</string>
+    <string name="action_cancel">Չեղարկել</string>
+    <string name="action_ok">Լավ</string>
+    <string name="action_save">Պահպանել</string>
+    <string name="action_done">Պատրաստ է</string>
+    <string name="action_edit">Խմբագրել</string>
+    <string name="action_reset">Զրոյացնել</string>
+    <string name="action_retry">Կրկին փորձել</string>
+    <string name="action_allow">Թույլատրել</string>
+    <string name="action_fix">Ուղղել</string>
+    <string name="action_refresh">Թարմացնել</string>
+    <string name="action_change">Փոխել</string>
+    <string name="action_next">Առաջ</string>
+    <string name="action_back">Հետ</string>
+    <string name="action_start">Սկսել</string>
+    <string name="action_add">Ավելացնել</string>
+    <string name="action_load">Բեռնել</string>
+    <string name="action_understood">Հասկանալի է</string>
+
+    <!-- ==== Ստորին նավիգացիա ==== -->
+    <string name="nav_home">Գլխավոր</string>
+    <string name="nav_schedule">Դասացուցակ</string>
+    <string name="nav_settings">Կարգավորումներ</string>
+
+    <!-- ==== Միավորներ և ֆորմատավորումներ ==== -->
+    <string name="fmt_offset_m">%1$d ր</string>
+    <string name="fmt_offset_h">%1$d ժ</string>
+    <string name="fmt_offset_hm">%1$d ժ %2$d ր</string>
+    <string name="fmt_time_alarm_will_ring">զարթուցիչը կզնգի ժամը</string>
+
+    <!-- ==== Շաբաթվա օրեր (կարճ, օրացույցի չիպեր) ==== -->
+    <string name="day_short_1">Երկ</string>
+    <string name="day_short_2">Երք</string>
+    <string name="day_short_3">Չրք</string>
+    <string name="day_short_4">Հնգ</string>
+    <string name="day_short_5">ՈՒր</string>
+    <string name="day_short_6">Շաբ</string>
+    <string name="day_short_7">Կիր</string>
+
+    <!-- ==== Լեզու ==== -->
+    <string name="lang_title">Լեզու</string>
+    <string name="lang_subtitle">Ընտրեք հավելվածի լեզուն — հետո կարող եք փոխել կարգավորումներում</string>
+    <string name="lang_system">Համակարգի լեզու</string>
+    <string name="set_language">Լեզու</string>
+
+    <!-- ==== Կարգավորման վարպետ ==== -->
+    <string name="setup_step_of">Քայլ %1$d / %2$d</string>
+    <string name="setup_welcome_subtitle">Համալսարանի դասացուցակով զարթուցիչ է դնում հեռախոսի ժամացույցում՝ առաջին դասից առաջ: Կարգավորումը կտևի րոպե:</string>
+    <string name="setup_university">Կազանի պետական էներգետիկական համալսարան (KGEU)</string>
+    <string name="setup_official_api">kabinet.kgeu.ru պաշտոնական API</string>
+    <string name="setup_who_are_you">Ո՞վ եք դուք:</string>
+    <string name="role_student">Ուսանող</string>
+    <string name="role_student_subtitle">Զարթուցիչ իմ խմբի դասացուցակով</string>
+    <string name="role_teacher">Դասախոս</string>
+    <string name="role_teacher_subtitle">Զարթուցիչ իմ դասերի դասացուցակով</string>
+    <string name="setup_search_hint">Սկսեք մուտքագրել՝ А-1-23 …</string>
+    <string name="setup_found">Գտնվեց՝ %1$d</string>
+    <string name="setup_found_capped">Գտնվեց՝ %1$d (ցուցադրվում են առաջին %2$d-ը)</string>
+    <string name="setup_load_failed">Չհաջողվեց բեռնել ցանկը</string>
+    <string name="setup_check_internet">Ստուգեք ինտերնետը և փորձեք կրկին</string>
+    <string name="setup_nothing_found">Ոչինչ չգտնվեց</string>
+    <string name="setup_pick_role_first">Նախ ընտրեք՝ ով եք</string>
+    <string name="setup_course">%1$d կուրս</string>
+    <string name="setup_wake_question">Սովորաբար որքանո՞վ եք արթնանում առաջին դասից առաջ:</string>
+    <string name="setup_example">Առաջին դասը 08:30-ին → զարթուցիչը՝ %1$s</string>
+    <string name="setup_done_all">Ամեն ինչ պատրաստ է:</string>
+    <string name="setup_finish_mode_note">«Ստանդարտ» ռեժիմ. ամեն գիշեր զարթուցիչը դրվում է վաղվա համար: Հետո կարող եք փոխել կարգավորումներում:</string>
+    <string name="setup_no_target">Թիրախը ընտրված չէ — վերադարձեք և ընտրեք խումբ կամ դասախոս</string>
+    <string name="summary_group">Խումբ</string>
+    <string name="summary_teacher">Դասախոս</string>
+    <string name="summary_wake_offset">Արթնացում առաջին դասից առաջ</string>
+    <string name="profile_no_target">Թիրախը ընտրված չէ</string>
+
+    <!-- ==== Գլխավոր էկրան ==== -->
+    <string name="home_title">Ավտոզարթուցիչ</string>
+    <string name="cd_refresh_schedule">Թարմացնել դասացուցակը</string>
+    <string name="loading_settings">Կարգավորումները բեռնվում են…</string>
+    <string name="alarm_off_title">Զարթուցիչն անջատված է</string>
+    <string name="alarm_off_subtitle">Միացրեք ներքևի անջատիչով</string>
+    <string name="refreshing">Թարմացվում է դասացուցակը…</string>
+    <string name="not_loaded_title">Դասացուցակը դեռ բեռնված չէ</string>
+    <string name="not_loaded_hint">Քաշեք դասերը kabinet.kgeu.ru-ից — այստեղ կհայտնվի արթնացման ժամանակը</string>
+    <string name="tomorrow_free_title">Վաղը դաս չկա</string>
+    <string name="tomorrow_free_sub">զարթուցիչ չի դրվում</string>
+    <string name="tomorrow_label">Վաղը · %1$s</string>
+    <string name="today_label">Այսօր</string>
+    <string name="tomorrow_label_short">Վաղը</string>
+    <string name="badge_replacement">փոխարինում</string>
+    <string name="room_prefix">սենյակ %1$s</string>
+    <string name="lesson_at">դասը ժամը %1$s</string>
+    <string name="own_event_at">քո պարապմունքը ժամը %1$s</string>
+    <string name="home_auto_title">Ավտոզարթուցիչ</string>
+    <string name="home_auto_subtitle">Դասացուցակով զարթուցիչ է դնում առաջին դասից առաջ</string>
+    <string name="home_upcoming_title">Մոտակա դասեր</string>
+    <string name="home_no_pairs">Դաս չկա</string>
+
+    <!-- ==== 0.10.0, Bug E: «Իմ զարթուցիչները» քարտը ==== -->
+    <string name="alarms_card_title">Իմ զարթուցիչները</string>
+    <string name="alarms_empty">Զարթուցիչներ չկան</string>
+    <string name="alarms_active">Զարթուցիչը դրված է — կզնգի ըստ դասացուցակի</string>
+    <string name="alarms_slot_missing">Զարթուցիչը չի գտնվել համակարգում — ավտոմատ կրկին կդրվի</string>
+    <string name="alarms_engine_app">«Հավելվածում» շարժիչ</string>
+    <string name="alarms_engine_clock">«Ժամացույցում» շարժիչ</string>
+    <string name="action_dismiss_alarms">Անջատել զարթուցիչները</string>
+    <string name="alarms_test_row">Թեստային զարթուցիչ</string>
+    <string name="alarms_test_cancel">Հանել թեստայինը</string>
+
+    <!-- ==== Զանգվածային դրման արդյունքներ (գլխավոր + կարգավորումներ) ==== -->
+
+    <!-- ==== Ախտորոշում գլխավորում ==== -->
+    <string name="dialog_exact_alarms_title">Ճշգրիտ զարթուցիչներն արգելված են</string>
+    <string name="dialog_exact_alarms_desc">Առանց թույլտվության համակարգը թույլ չի տա զարթուցիչ դնել ճշգրտորեն հաշվարկված ժամին:</string>
+    <string name="dialog_battery_title">Մարտկոցի օպտիմիզացիան կարող է խանգարել</string>
+    <string name="dialog_battery_desc">Էներգախնայող ագրեսիվ ռեժիմը կարող է չեղարկել գիշերային ստուգումը:</string>
+    <string name="dialog_stale_title">Դասացուցակը 3 օրից ավել չի թարմացվել</string>
+    <string name="dialog_stale_desc">Համալսարանի դասացուցակը հաճախ են փոխում — թարմացրեք տվյալները:</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ թարմ տեղադրմանը full-screen intent չտվեց -->
+    <string name="dialog_fsi_title">Ամբողջ էկրանով զանգը սահմանափակված է համակարգով</string>
+    <string name="dialog_fsi_desc">Համակարգը թույլ չի տալիս զանգը բացել կողպեքի էկրանի վրա — ազդանշանը կհայտնվի որպես ծանուցում: Թույլատրեք «Ամբողջ էկրանով ծանուցումները» հավելվածի համար:</string>
+
+    <!-- ==== Թարմացման սնեկբարներ ==== -->
+    <string name="err_no_target">Նախ ընտրեք խումբ կամ դասախոս կարգավորումներում</string>
+    <string name="msg_refreshed">Դասացուցակը թարմացված է</string>
+    <string name="refresh_empty_week">Թարմացված է. այս շաբաթ դաս չկա</string>
+    <string name="refresh_ok_count">Դասացուցակը թարմացված է — դասեր այս շաբաթ. %1$d</string>
+    <string name="refresh_no_connection">kabinet.kgeu.ru-ի հետ կապ չկա — ցուցադրվում է պահված քեշը</string>
+    <string name="refresh_network">Ցանցը հասանելի չէ — ցուցադրվում է պահված քեշը</string>
+    <string name="refresh_error">Թարմացման սխալ. %1$s</string>
+    <string name="err_unknown_cause">անհայտ պատճառ</string>
+
+    <!-- ==== Դասացուցակի էկրան ==== -->
+    <string name="cd_prev_week">Նախորդ շաբաթ</string>
+    <string name="cd_next_week">Հաջորդ շաբաթ</string>
+    <string name="cd_go_today">Անցնել ընթացիկ շաբաթ և այսօր</string>
+    <string name="cd_refresh_week">Թարմացնել շաբաթը</string>
+    <string name="badge_this_week">այս շաբաթ</string>
+    <string name="snackbar_excluded_on">«%1$s»-ից առաջ զարթուցիչ չի դրվում</string>
+    <string name="snackbar_excluded_off">Բացառությունը հանված է</string>
+    <string name="cd_enable_alarm">Միացնել զարթուցիչը այս դասից առաջ</string>
+    <string name="cd_disable_alarm">Չդնել զարթուցիչ այս դասից առաջ</string>
+    <string name="cd_day_pairs">Այդ օրվա դասերը. %1$d</string>
+    <string name="cd_day_marked">Նշված բաժիններ այդ օրը. %1$d</string>
+    <string name="empty_no_lessons">Դասեր չկան</string>
+    <string name="empty_no_alarm_needed">Այս օրը զարթուցիչ պետք չի գա</string>
+
+    <!-- ==== Ծանուցումներ ==== -->
+    <string name="notif_channel_name">Ավտոզարթուցիչի կարգավիճակ</string>
+    <string name="notif_channel_desc">Հաղորդագրություններ դրված և բաց թողնված զարթուցիչների մասին</string>
+    <string name="notif_alarm_set">Զարթուցիչը դրված է %1$s-ի վրա</string>
+    <string name="notif_skipped_title">Զարթուցիչը չի դրվել</string>
+    <string name="notif_reminder_title">Մի մոռացեք զարթուցիչ դնել</string>
+    <string name="notif_reminder_text">Վաղը, %1$s. դասը ժամը %2$s — %3$s: Մի մոռացեք զարթուցիչ դնել:</string>
+    <string name="notif_sync_title">Դասացուցակի համաժամեցում</string>
+    <string name="notif_sync_text">Թարմացվում է KGEU-ի դասացուցակը</string>
+    <string name="notif_details_room">%1$s, սենյակ %2$s</string>
+    <string name="notif_missed_title">Զարթուցիչը բաց թողնված է</string>
+
+    <!-- ==== Զարթուցիչը բաց թողնելու պատճառներ (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">դաս չկա</string>
+    <string name="skip_no_upcoming">այսօր և վաղը դաս չկա — գիշերային ստուգումն աշխատում է ամեն օր</string>
+    <string name="skip_deferred_to_night">դասը վաղն է — զարթուցիչը կդրվի գիշերը 00:05-ին (հիմա դնելու դեպքում կզնգեր այսօր)</string>
+    <string name="skip_clock_refused">հեռախոսի ժամացույցը չընդունեց հրամանը — միացրեք «Զարթուցիչի հիշեցումը» կարգավորումներում</string>
+    <string name="skip_too_far">դասը շաբաթից հեռու է — զարթուցիչը ավտոմատ կդրվի մոտենալիս</string>
+    <!-- 0.10.0, AL-9: DISMISS չընդունվեց, նոր SET չեղարկվեց — կրկնակի զանգի նախազգուշացում -->
+    <string name="notif_dismiss_not_accepted">ժամացույցը չընդունեց հին զարթուցիչի անջատումը — հանեք այն ձեռքով ժամացույցում, այլապես երկուսն էլ կարող են զնգել</string>
+    <string name="test_alarm_label">Թեստ. Ավտոզարթուցիչն աշխատում է:</string>
+    <string name="test_alarm_ok">Զարթուցիչը դրված է 2 րոպեից — ստուգեք ժամացույցը</string>
+    <string name="test_alarm_fail">Չհաջողվեց դնել թեստային զարթուցիչ — ժամացույցը չի պատասխանում</string>
+
+    <!-- ==== Կարգավորումներ. բաժիններ ==== -->
+    <string name="sec_profile">Պրոֆիլ</string>
+    <string name="sec_alarm">Զարթուցիչ</string>
+    <string name="sec_reminder">Զարթուցիչի հիշեցում</string>
+    <string name="sec_exceptions">Բացառություններ</string>
+    <string name="sec_custom_events">Սեփական պարապմունքներ</string>
+    <string name="sec_appearance">Տեսք</string>
+    <string name="sec_system">Համակարգ</string>
+    <string name="sec_about">Հավելվածի մասին</string>
+
+    <!-- ==== Կարգավորումներ. պրոֆիլ ==== -->
+    <string name="profile_change_note">Թիրախի փոփոխությունը չի զրոյացնի արթնացման ժամանակը և կարգավորումները</string>
+
+    <!-- ==== Կարգավորումներ. զարթուցիչ ==== -->
+    <string name="set_auto_title">Ավտոզարթուցիչ</string>
+    <string name="alarm_target_title">Որտեղ է զնգում զարթուցիչը</string>
+    <string name="alarm_target_desc">«Ժամացույցում» — սովորական ազդանշան հեռախոսի ժամացույցում (ինտերֆեյսները կարող են արգելափակել հրամանները): «Հավելվածում» — հավելվածն ինքն է զնգում ամբողջ էկրանով. անջատիչը, անջատումը և դասացուցակի փոփոխություններն աշխատում են երաշխավորված:</string>
+    <string name="alarm_target_clock">Ժամացույցում</string>
+    <string name="alarm_target_app">Հավելվածում</string>
+    <string name="set_show_clock">Ցույց տալ ժամացույցը դնելիս</string>
+    <string name="set_show_clock_desc">Միացրեք, եթե զարթուցիչներն ինքնուրույն չեն դրվում (Realme, Oppo, Huawei). Գիշերային ստուգումը և թեստային զարթուցիչը կբացեն ժամացույցը պատրաստի զարթուցիչով — հաստատեք «Պահպանել» կոճակով: Հիմնական անջատիչը և շարժիչի փոփոխությունը դնում են լուռ, առանց ժամացույցը բացելու:</string>
+    <string name="set_wake_offset">Արթնանալ առաջին դասից %1$s առաջ</string>
+    <string name="set_offset_example">Առաջին դասը 08:30-ին → զարթուցիչը՝ %1$s</string>
+    <string name="set_per_pair">Արթնացում յուրաքանչյուր դասի համար</string>
+    <string name="set_per_pair_desc">Սեփական պատրաստվելու ժամանակ յուրաքանչյուր օրվա առաջին դասի համար. վաղ դասից առաջ՝ պակաս, ուշից առաջ՝ ավելի շատ, որ հասցնեք նախաճաշել: Առանց սեփական արժեքի դասերը օգտագործում են վերևի ընդհանուր արթնացումը:</string>
+    <string name="set_pairs_after_sync">Դասերի ժամերը կհայտնվեն դասացուցակի համաժամեցումից հետո</string>
+    <string name="pair_at">Դասը ժամը %1$s</string>
+    <string name="pair_custom_offset">Արթնանալ %1$s առաջ → զարթուցիչը՝ %2$s</string>
+    <string name="pair_common_offset">Ընդհանուր արթնացում. %1$s առաջ</string>
+    <string name="btn_disable_app_alarms">Անջատել հավելվածի զարթուցիչները</string>
+    <string name="disable_alarms_desc">Կոճակը ժամացույցին ուղարկում է անջատման հրաման «Ավտո: Երկ»…«Ավտո: Կիր» ճշգրիտ պիտակներով և մեկանգամյա զարթուցիչի պիտակով: Եթե ինտերֆեյսը հրամանը չի ընդունում (որոշ Realme UI/ColorOS — համակարգի սահմանափակում), հանեք «Ավտո:» պիտակները ձեռքով «Զարթուցիչների ցանկ» կոճակով — հավելվածն ինքնուրույն ժամացույց չի բացում:</string>
+    <string name="btn_test_alarm">Ստուգել զարթուցիչը</string>
+    <string name="btn_alarm_list">Զարթուցիչների ցանկ</string>
+    <string name="alarms_list_open_failed">Ժամացույցը չբացեց զարթուցիչների ցանկը</string>
+    <string name="dismiss_alarms_sent">Անջատման հրամանն ուղարկված է ժամացույցին (%1$d %2$d-ից): Եթե «Ավտո: …» զարթուցիչներ մնացել են — անջատեք «Զարթուցիչների ցանկ»-ով</string>
+    <string name="dismiss_unsupported_manual">Ժամացույցը չի աջակցում անջատման հրամանին (ինտերֆեյսի սահմանափակում) — բացեք զարթուցիչները «Զարթուցիչների ցանկ» կոճակով և հանեք «Ավտո:» պիտակները ձեռքով</string>
+
+    <!-- ==== Կարգավորումների երկխոսություններ. արթնացման ժամանակ ==== -->
+    <string name="dialog_offset_title">Արթնացում դասից առաջ</string>
+    <string name="dialog_offset_example">Առաջին դասը 08:30-ին → զարթուցիչը կզնգի %1$s</string>
+    <string name="dialog_pair_title">Դասը ժամը %1$s</string>
+    <string name="dialog_pair_example">Դասը ժամը %1$s → զարթուցիչը կզնգի %2$s</string>
+
+    <!-- ==== Կարգավորումներ. հիշեցում ==== -->
+    <string name="set_reminder_desc">Սեփական ծանուցում. «վաղը ժամը այսքանին դաս կա — մի մոռացեք զարթուցիչ դնել»</string>
+    <string name="set_reminder_fallback">Պահեստային տարբերակ, երբ ժամացույցը չի ընդունում հավելվածի հրամանները — հանդիպում է Realme, Huawei, Xiaomi-ում (հատկապես չինական ֆիրմվերներում): Հիշեցումը գալիս է ամեն օր ընտրված ժամին, եթե վաղը դաս կա:</string>
+    <string name="reminder_time">Հիշեցման ժամանակը. %1$s</string>
+    <string name="dialog_reminder_title">Հիշեցման ժամանակ</string>
+
+    <!-- ==== Կարգավորումներ. բացառություններ ==== -->
+    <string name="exceptions_title_desc">Զարթուցիչ չի դրվում ճշգրտորեն այսպես կոչված դասերից առաջ — տիպի նախածանցի հետ միասին. «լ. նյութագիտություն» կբացառի միայն դասախոսությունը, «գործն. նյութագիտություն» — միայն գործնականը</string>
+    <string name="exceptions_empty">Դեռ դատարկ է — ավելացրեք առարկաներ, որոնցից առաջ արթնացնել պետք չէ</string>
+    <string name="cd_delete_named">Հեռացնել «%1$s»-ը</string>
+    <string name="hint_subject_name">Առարկայի անվանում</string>
+    <string name="cd_add_exception">Ավելացնել բացառություն</string>
+    <string name="exceptions_found">Գտնվել է դասացուցակում.</string>
+    <string name="toggle_off_dismissed">Ավտոզարթուցիչն անջատված է, հավելվածի զարթուցիչները հանված են ժամացույցից</string>
+    <string name="toggle_off_manual">Ավտոզարթուցիչն անջատված է: Ժամացույցը չընդունեց անջատումը (ինտերֆեյսի սահմանափակում) — հանեք «Ավտո:» պիտակով զարթուցիչները «Զարթուցիչների ցանկ»-ով ձեռքով</string>
+    <string name="toggle_off_app_cancelled">Ավտոզարթուցիչն անջատված է, հավելվածի զարթուցիչները հանված են</string>
+
+    <!-- ==== Կարգավորումներ. սեփական պարապմունքներ ==== -->
+    <string name="custom_events_desc">Սեփական միջոցառումներ առանձին զարթուցիչի ժամանակով — խմբակներ, փորձեր, մեկանգամյա գործեր</string>
+    <string name="custom_empty">Դեռ ոչինչ ավելացված չէ</string>
+    <string name="dialog_event_title">Սեփական պարապմունք</string>
+    <string name="hint_name">Անվանում</string>
+    <string name="event_days_mode">Շաբաթվա օրերով</string>
+    <string name="event_date_mode">Մեկ ամսաթիվ</string>
+    <string name="btn_pick_date">Ընտրել ամսաթիվ</string>
+    <string name="event_time">Ժամանակ. %1$s</string>
+    <string name="event_offset_suffix">· %1$s առաջ</string>
+    <string name="event_wake_before">Արթնացնել միջոցառումից %1$s առաջ</string>
+    <string name="dialog_event_time_title">Միջոցառման ժամանակ</string>
+
+    <!-- ==== Կարգավորումներ. տեսք ==== -->
+    <string name="set_theme">Թեմա</string>
+    <string name="theme_system">Համակարգային</string>
+    <string name="theme_light">Բաց</string>
+    <string name="theme_dark">Մուգ</string>
+    <string name="dynamic_color">Material You (համակարգի գույներ)</string>
+    <string name="set_accent">Շեշտագույն</string>
+    <string name="accent_amber">Սաթագույն</string>
+    <string name="accent_orange">Նարնջագույն</string>
+    <string name="accent_red">Կարմիր</string>
+    <string name="accent_green">Կանաչ</string>
+    <string name="accent_pink">Վարդագույն</string>
+    <string name="accent_purple">Մանուշակագույն</string>
+    <string name="accent_custom">Սեփական գույն</string>
+    <string name="accent_custom_preview">Գույնը կկիրառվի «Պատրաստ է»-ից հետո</string>
+    <string name="schedule_style">Դասացուցակի ոճ</string>
+    <string name="style_standard">Ստանդարտ</string>
+    <string name="style_paper">Թղթե օրացույց</string>
+    <string name="style_chalk">Կավիճ և գրատախտակ</string>
+    <string name="style_neon">Նեոն</string>
+    <string name="style_terminal">Տերմինալ</string>
+    <string name="style_aqua">Ջրաներկ</string>
+    <string name="style_retro">Ռետրո տպագրություն</string>
+    <string name="set_background">Ֆոն</string>
+    <string name="btn_pick_image">Ընտրել նկար</string>
+    <string name="btn_remove">Հեռացնել</string>
+    <string name="bg_opacity">Շերտի թափանցիկություն</string>
+    <!-- 0.11.0, SEC-11: ընտրված ֆայլը ֆոնային նկարի համար պիտանի չէ -->
+    <string name="bg_image_rejected">Ֆայլը պիտանի չէ. անհրաժեշտ է մինչև 20 ՄԲ նկար (JPG/PNG/WebP)</string>
+    <string name="set_fsi_title">Զարթուցիչը էկրանը չի միացնում</string>
+    <string name="set_fsi_desc">Թույլատրեք ամբողջ էկրանով զանգը. էկրանը կվառվի զանգի ժամանակ, իսկ «Անջատել»-ը անմիջապես հասանելի կլինի: Հպեք՝ կարգավորումները բացելու համար</string>
+
+    <!-- ==== Հավելվածի զարթուցիչի զանգ («Հավելվածում» շարժիչ, 0.7.0) ==== -->
+    <string name="ring_title">Ժամանակն է վեր կենալ:</string>
+    <string name="ring_dismiss">Անջատել</string>
+    <string name="ring_channel_name">Զարթուցիչի զանգ</string>
+    <string name="ring_channel_desc">Հավելվածի զարթուցիչի ամբողջ էկրանով ազդանշան</string>
+
+    <!-- ==== Կարգավորումներ. համակարգ ==== -->
+    <string name="status_exact_allowed">Ճշգրիտ զարթուցիչները թույլատրված են</string>
+    <string name="dialog_exact_off_title">Ճշգրիտ զարթուցիչներն անջատված են համակարգի կողմից</string>
+    <string name="dialog_exact_off_desc">Գիշերային պլանավորողը կկարողանա զարթուցիչ դնել միայն ±10 րոպե շեղումով:</string>
+    <string name="dialog_battery2_title">Մարտկոցի օպտիմիզացիան կարող է խանգարել</string>
+    <string name="dialog_battery2_desc">Բացառեք հավելվածը օպտիմիզացիայից, որ գիշերային ստուգումը չխափանվի:</string>
+    <string name="action_disable_optimization">Անջատել օպտիմիզացիան</string>
+    <string name="autostart_title">Ավտոմեկնարկ և ագրեսիվ ինտերֆեյսներ</string>
+    <string name="autostart_desc">MIUI, HarmonyOS և այլ ինտերֆեյսներ սպանում են ֆոնային հավելվածներին</string>
+    <string name="btn_instructions">Հրահանգ</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nԱնվտանգություն → Հավելվածներ → Ավտոմեկնարկ. միացրեք Ավտոզարթուցիչը, հավելվածի մարտկոցի կարգավորումներում ընտրեք «սահմանափակումներ չկան»:</string>
+    <string name="autostart_huawei">Huawei / Honor:\nԿարգավորումներ → Մարտկոց → Հավելվածների մեկնարկ → Ավտոզարթուցիչ → Կառավարել ձեռքով. միացրեք բոլոր անջատիչները:</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nԿարգավորումներ → Մարտկոց → Լրացուցիչ կարգավորումներ → Էներգիայի սպառման օպտիմիզացիա → արգելեք օպտիմիզացիան հավելվածի համար, Հավելվածների կառավարիչ → Ավտոմեկնարկ:</string>
+    <string name="autostart_samsung">Samsung:\nԿարգավորումներ → Մարտկոց → Ֆոնի սահմանափակումներ → Չքնող հավելվածներ → ավելացրեք Ավտոզարթուցիչը:</string>
+    <string name="autostart_other">Այլ ինտերֆեյս.\nԱվելացրեք հավելվածը ավտոմեկնարկում և հանեք մարտկոցի օպտիմիզացիաները համակարգի կարգավորումներում:</string>
+    <string name="autostart_standard_note">«Ստանդարտ» ռեժիմը ամեն գիշեր վերադնում է զարթուցիչը — հավելվածին անհրաժեշտ է աշխատել ֆոնում 00:05-ին:</string>
+
+    <!-- ==== Կարգավորումներ. հավելվածի մասին ==== -->
+    <string name="about_version">KGEU Ավտոզարթուցիչ · v%1$s</string>
+    <string name="about_data">Դասացուցակի տվյալներ. kabinet.kgeu.ru պաշտոնական API: Հավելվածը կապված չէ KGEU-ի հետ:</string>
+    <!-- 0.11.0, SET-16: հեղինակային իրավունքը ռեսուրսներից (բոլոր լեզուներով նույնը՝ բրենդ/լիցենզիա) -->
+    <string name="copyright_line">© 2026 RVMXL · Apache License 2.0</string>
+    <string name="btn_github">GitHub ռեպոզիտորիա</string>
+
+    <!-- 0.9.0, DATA-1. սերվերի դատարկ պատասխանների շարք՝ պահված քեշի դեպքում -->
+    <string name="notif_group_check_title">Ստուգեք խումբը</string>
+    <string name="notif_group_check_text">Դասացուցակը գալիս է դատարկ — հին քեշը պահված է: Ստուգեք խումբը կարգավորումներում:</string>
+
+    <!-- 0.10.0, SET-5. APP շարժիչի զարթուցիչի պիտակի տեղայնացված նախածանց -->
+    <string name="auto_label_prefix">Ավտո:</string>
+
+    <!-- ==== 0.21.0. լեզուների անունները ընթացիկ լեզվով (լեզվի ընտրիչ) ==== -->
+    <string name="lang_name_ru">ռուսերեն</string>
+    <string name="lang_name_tt">թաթարերեն</string>
+    <string name="lang_name_en">անգլերեն</string>
+    <string name="lang_name_ar">արաբերեն</string>
+    <string name="lang_name_az">ադրբեջաներեն</string>
+    <string name="lang_name_ba">բաշկիրերեն</string>
+    <string name="lang_name_es">իսպաներեն</string>
+    <string name="lang_name_fr">ֆրանսերեն</string>
+    <string name="lang_name_kk">ղազախերեն</string>
+    <string name="lang_name_ky">ղըրղզերեն</string>
+    <string name="lang_name_mn">մոնղոլերեն</string>
+    <string name="lang_name_uz">ուզբեկերեն</string>
+    <string name="lang_name_tg">տաջիկերեն</string>
+    <string name="lang_name_tr">թուրքերեն</string>
+    <string name="lang_name_tk">թուրքմեներեն</string>
+    <string name="lang_name_cv">չուվաշերեն</string>
+    <string name="lang_name_hy">հայերեն</string>
+    <string name="lang_name_ka">վրացերեն</string>
+    <string name="lang_name_zh">չինարեն</string>
+</resources>

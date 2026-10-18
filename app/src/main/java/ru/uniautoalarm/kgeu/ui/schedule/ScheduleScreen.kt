@@ -721,9 +721,16 @@ private fun DayChip(
                     )
                 }
             }
+            // 0.21.0: стиль подписи закреплён (labelLarge, строка 20sp) — раньше
+            // подпись наследовала bodyLarge (строка 24sp) и колонка контента
+            // (6+24+13 = 43dp) не влезала в чип 32dp: Column прижимался к верху,
+            // и нижний слот с точками обрезался краем чипа («точки наполовину
+            // скрыты»). Теперь чип 40dp, а контент 6+20+13 = 39dp — точки
+            // целиком внутри даже при увеличенном системном шрифте
             Text(
                 label,
                 color = labelColor,
+                style = MaterialTheme.typography.labelLarge,
                 fontWeight = if (isToday) FontWeight.Bold else null
             )
             Box(
@@ -757,6 +764,9 @@ private fun DayChip(
                                 markedCount.toString(),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontSize = 9.sp,
+                                // 0.21.0: явная высота строки 11sp — дефолтные 16sp
+                                // labelSmall вылезали из слота маркеров 13dp
+                                lineHeight = 11.sp,
                                 color = sectionMark
                             )
                         }
@@ -777,10 +787,13 @@ private fun DayChip(
     // 0.20.0: компактный чип вместо FilterChip — тот держал минимальную ширину
     // touch-target 48dp и внутренние паддинги, из-за чего 7 дней не помещались
     // в экран и ряд приходилось перематывать.
+    // 0.21.0: высота 32→40dp — контент чипа (6dp полоска + 20sp подпись +
+    // 13dp слот маркеров = 39dp) больше не обрезается: точки пар видны целиком
+    // (фикс фидбека 0.20.0 «точки наполовину скрыты»)
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(32.dp)
+            .height(40.dp)
             .semantics { contentDescription = description }
             .clip(ChipShape)
             .background(containerColor)

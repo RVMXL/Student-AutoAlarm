@@ -311,4 +311,25 @@
 
     <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
     <string name="auto_label_prefix">Авто:</string>
+
+    <!-- ==== 0.21.0: телдәр исемдәре ағымдағы телдә (тел һайлау) ==== -->
+    <string name="lang_name_ru">урыҫ теле</string>
+    <string name="lang_name_tt">татар теле</string>
+    <string name="lang_name_en">инглиз теле</string>
+    <string name="lang_name_ar">ғәрәп теле</string>
+    <string name="lang_name_az">әзербайжан теле</string>
+    <string name="lang_name_ba">башҡорт теле</string>
+    <string name="lang_name_es">испан теле</string>
+    <string name="lang_name_fr">француз теле</string>
+    <string name="lang_name_kk">ҡаҙаҡ теле</string>
+    <string name="lang_name_ky">ҡырғыҙ теле</string>
+    <string name="lang_name_mn">монгол теле</string>
+    <string name="lang_name_uz">үзбәк теле</string>
+    <string name="lang_name_tg">таҗик теле</string>
+    <string name="lang_name_tr">төрөк теле</string>
+    <string name="lang_name_tk">төркмән теле</string>
+    <string name="lang_name_cv">сыуаш теле</string>
+    <string name="lang_name_hy">әрмән теле</string>
+    <string name="lang_name_ka">грузин теле</string>
+    <string name="lang_name_zh">ҡытай теле</string>
 </resources>

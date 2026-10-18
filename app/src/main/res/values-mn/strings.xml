@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==== Ерөнхий ==== -->
+    <string name="app_name">KGEU Авто сэрүүлэг</string>
+    <string name="action_cancel">Цуцлах</string>
+    <string name="action_ok">ОК</string>
+    <string name="action_save">Хадгалах</string>
+    <string name="action_done">Боллоо</string>
+    <string name="action_edit">Засварлах</string>
+    <string name="action_reset">Цэвэрлэх</string>
+    <string name="action_retry">Дахин оролдох</string>
+    <string name="action_allow">Зөвшөөрөх</string>
+    <string name="action_fix">Засах</string>
+    <string name="action_refresh">Шинэчлэх</string>
+    <string name="action_change">Өөрчлөх</string>
+    <string name="action_next">Үргэлжлүүлэх</string>
+    <string name="action_back">Буцах</string>
+    <string name="action_start">Эхлэх</string>
+    <string name="action_add">Нэмэх</string>
+    <string name="action_load">Ачих</string>
+    <string name="action_understood">Ойлголоо</string>
+
+    <!-- ==== Доод навигаци ==== -->
+    <string name="nav_home">Нүүр</string>
+    <string name="nav_schedule">Хуваарь</string>
+    <string name="nav_settings">Тохиргоо</string>
+
+    <!-- ==== Нэгж ба формат ==== -->
+    <string name="fmt_offset_m">%1$d мин</string>
+    <string name="fmt_offset_h">%1$d ц</string>
+    <string name="fmt_offset_hm">%1$d ц %2$d мин</string>
+    <string name="fmt_time_alarm_will_ring">сэрүүлэг дуугарна</string>
+
+    <!-- ==== Долоо хоногийн өдрүүд (товч, хуанлийн чип) ==== -->
+    <string name="day_short_1">Дав</string>
+    <string name="day_short_2">Мяг</string>
+    <string name="day_short_3">Лха</string>
+    <string name="day_short_4">Пүр</string>
+    <string name="day_short_5">Баа</string>
+    <string name="day_short_6">Бям</string>
+    <string name="day_short_7">Ням</string>
+
+    <!-- ==== Хэл ==== -->
+    <string name="lang_title">Хэл</string>
+    <string name="lang_subtitle">Аппын хэлийг сонгоно уу — дараа тохиргооноос өөрчилж болно</string>
+    <string name="lang_system">Системийн хэл</string>
+    <string name="set_language">Хэл</string>
+
+    <!-- ==== Тохиргооны шидтэн ==== -->
+    <string name="setup_step_of">Алхам %1$d / %2$d</string>
+    <string name="setup_welcome_subtitle">Их сургуулийн хуваариар анхны хичээлийн өмнө утасны цагт сэрүүлэг тавьдаг. Нэг минутад тохируулна.</string>
+    <string name="setup_university">Казанийн улсын эрчим хүчний их сургууль (KGEU)</string>
+    <string name="setup_official_api">албан ёсны kabinet.kgeu.ru API</string>
+    <string name="setup_who_are_you">Та хэн бэ?</string>
+    <string name="role_student">Оюутан</string>
+    <string name="role_student_subtitle">Миний бүлгийн хуваариар сэрүүлэг</string>
+    <string name="role_teacher">Багш</string>
+    <string name="role_teacher_subtitle">Миний хичээлийн хуваариар сэрүүлэг</string>
+    <string name="setup_search_hint">Бичиж эхлэх: А-1-23 …</string>
+    <string name="setup_found">Олдсон: %1$d</string>
+    <string name="setup_found_capped">Олдсон: %1$d (эхний %2$d харагдаж байна)</string>
+    <string name="setup_load_failed">Жагсаалт ачигдсангүй</string>
+    <string name="setup_check_internet">Интернэтээ шалгаад дахин оролдоно уу</string>
+    <string name="setup_nothing_found">Олдсонгүй</string>
+    <string name="setup_pick_role_first">Эхлээд хэн болохоо сонгоно уу</string>
+    <string name="setup_course">%1$d курс</string>
+    <string name="setup_wake_question">Анхны хичээлээс хэр удаан өмнө босдог вэ?</string>
+    <string name="setup_example">Анхны хичээл 08:30-д → сэрүүлэг %1$s</string>
+    <string name="setup_done_all">Бүх зүйл бэлэн!</string>
+    <string name="setup_finish_mode_note">«Стандарт» горим: шөнө бүр маргаашид сэрүүлэг тавигдана. Дараа тохиргооноос өөрчилж болно.</string>
+    <string name="setup_no_target">Зорилт сонгогдоогүй — буцаж очоод бүлэг эсвэл багш сонгоно уу</string>
+    <string name="summary_group">Бүлэг</string>
+    <string name="summary_teacher">Багш</string>
+    <string name="summary_wake_offset">Анхны хичээлээс өмнө босох</string>
+    <string name="profile_no_target">Зорилт сонгогдоогүй</string>
+
+    <!-- ==== Нүүр дэлгэц ==== -->
+    <string name="home_title">Авто сэрүүлэг</string>
+    <string name="cd_refresh_schedule">Хуваарийг шинэчлэх</string>
+    <string name="loading_settings">Тохиргоог ачаалж байна…</string>
+    <string name="alarm_off_title">Сэрүүлэг унтраалттай</string>
+    <string name="alarm_off_subtitle">Доорх сэлгүүрээр асаана уу</string>
+    <string name="refreshing">Хуваарийг шинэчилж байна…</string>
+    <string name="not_loaded_title">Хуваарь ачаагүй байна</string>
+    <string name="not_loaded_hint">Хичээлүүдийг kabinet.kgeu.ru-оос тат — энд босох цаг гарч ирнэ</string>
+    <string name="tomorrow_free_title">Маргааш хичээл байхгүй</string>
+    <string name="tomorrow_free_sub">сэрүүлэг тавигдахгүй</string>
+    <string name="tomorrow_label">Маргааш · %1$s</string>
+    <string name="today_label">Өнөөдөр</string>
+    <string name="tomorrow_label_short">Маргааш</string>
+    <string name="badge_replacement">солилт</string>
+    <string name="room_prefix">өрөө %1$s</string>
+    <string name="lesson_at">хичээл %1$s-д</string>
+    <string name="own_event_at">өөрийн хичээл %1$s-д</string>
+    <string name="home_auto_title">Авто сэрүүлэг</string>
+    <string name="home_auto_subtitle">Хуваариар анхны хичээлийн өмнө сэрүүлэг тавьдаг</string>
+    <string name="home_upcoming_title">Удаах хичээлүүд</string>
+    <string name="home_no_pairs">Хичээл байхгүй</string>
+
+    <!-- ==== 0.10.0, Bug E: «Миний сэрүүлгүүд» карт ==== -->
+    <string name="alarms_card_title">Миний сэрүүлгүүд</string>
+    <string name="alarms_empty">Сэрүүлэг байхгүй</string>
+    <string name="alarms_active">Сэрүүлэг тавигдсан — хуваариар дуугарна</string>
+    <string name="alarms_slot_missing">Сэрүүлэг системд олдсонгүй — автоматаар дахин тавигдана</string>
+    <string name="alarms_engine_app">«Аппад» хөдөлгүүр</string>
+    <string name="alarms_engine_clock">«Цагт» хөдөлгүүр</string>
+    <string name="action_dismiss_alarms">Сэрүүлгүүдийг унтраах</string>
+    <string name="alarms_test_row">Туршилтын сэрүүлэг</string>
+    <string name="alarms_test_cancel">Туршилтыг болиулах</string>
+
+    <!-- ==== Бөгөөд тавилтын үр дүн (нүүр + тохиргоо) ==== -->
+
+    <!-- ==== Нүүр дэлгэцийн оношилгоо ==== -->
+    <string name="dialog_exact_alarms_title">Нарийвчилсан сэрүүлэг хориглогдсон</string>
+    <string name="dialog_exact_alarms_desc">Зөвшөөрөлгүй бол систем сэрүүлгийг тооцоолсон нарийвчилсан цагт тавихыг зөвшөөрөхгүй.</string>
+    <string name="dialog_battery_title">Батарейн оновчлол саад болож магадгүй</string>
+    <string name="dialog_battery_desc">Эрчимтэй эрчим хэмнэлт горим шөнийн шалгалтыг цуцалж магадгүй.</string>
+    <string name="dialog_stale_title">Хуваарь 3 хоногоос илүү хугацаанд шинэчлэгдээгүй</string>
+    <string name="dialog_stale_desc">Их сургуулийн хуваарийг байнга өөрчилдөг — шинэ өгөгдөл тат.</string>
+
+    <!-- 0.10.0, AL-11: Android 14+ шинэ суулгалтад full-screen intent өгсөнгүй -->
+    <string name="dialog_fsi_title">Бүтэн дэлгэцийн хонхныг систем хязгаарласан</string>
+    <string name="dialog_fsi_desc">Систем түгжээний дэлгэц дээр хонхыг дэлгэхийг зөвшөөрөхгүй — дохио мэдэгдэл болж харагдана. Аппад «Бүтэн дэлгэцийн мэдэгдэл»-ийг зөвшөөрөөрэй.</string>
+
+    <!-- ==== Шинэчлэлийн снекбар ==== -->
+    <string name="err_no_target">Эхлээд тохиргооноос бүлэг эсвэл багш сонгоно уу</string>
+    <string name="msg_refreshed">Хуваарь шинэчлэгдлээ</string>
+    <string name="refresh_empty_week">Шинэчлэгдлээ: энэ долоо хоногт хичээл байхгүй</string>
+    <string name="refresh_ok_count">Хуваарь шинэчлэгдлээ — долоо хоногийн хичээл: %1$d</string>
+    <string name="refresh_no_connection">kabinet.kgeu.ru-тай холбогдохгүй байна — хадгалсан кэш харагдаж байна</string>
+    <string name="refresh_network">Сүлжээ боломжгүй — хадгалсан кэш харагдаж байна</string>
+    <string name="refresh_error">Шинэчлэлийн алдаа: %1$s</string>
+    <string name="err_unknown_cause">үл мэдэгдэх шалтгаан</string>
+
+    <!-- ==== Хуваарийн дэлгэц ==== -->
+    <string name="cd_prev_week">Өмнөх долоо хоног</string>
+    <string name="cd_next_week">Дараагийн долоо хоног</string>
+    <string name="cd_go_today">Одоогийн долоо хоног, өнөөдөрлүү шилжих</string>
+    <string name="cd_refresh_week">Долоо хоногийг шинэчлэх</string>
+    <string name="badge_this_week">энэ долоо хоног</string>
+    <string name="snackbar_excluded_on">«%1$s»-ийн өмнө сэрүүлэг тавигдахгүй</string>
+    <string name="snackbar_excluded_off">Үл хамаарах зүйл хасагдлаа</string>
+    <string name="cd_enable_alarm">Энэ хичээлийн өмнө сэрүүлэг асаах</string>
+    <string name="cd_disable_alarm">Энэ хичээлийн өмнө сэрүүлэг тавихгүй</string>
+    <string name="cd_day_pairs">Энэ өдрийн хичээл: %1$d</string>
+    <string name="cd_day_marked">Энэ өдрийн тэмдэглэсэн хэсэг: %1$d</string>
+    <string name="empty_no_lessons">Хичээл байхгүй</string>
+    <string name="empty_no_alarm_needed">Энэ өдөр сэрүүлэг хэрэггүй болно</string>
+
+    <!-- ==== Мэдэгдэл ==== -->
+    <string name="notif_channel_name">Авто сэрүүлгийн төлөв</string>
+    <string name="notif_channel_desc">Тавигдсан, алгассан сэрүүлгийн мэдээ</string>
+    <string name="notif_alarm_set">Сэрүүлэг %1$s-д тавигдлаа</string>
+    <string name="notif_skipped_title">Сэрүүлэг тавигдсангүй</string>
+    <string name="notif_reminder_title">Сэрүүлэг тавихаа мартуузай</string>
+    <string name="notif_reminder_text">Маргааш, %1$s: хичээл %2$s — %3$s. Сэрүүлэг тавихаа мартуузай.</string>
+    <string name="notif_sync_title">Хуваарийн синхрончлал</string>
+    <string name="notif_sync_text">KGEU-ийн хуваарийг шинэчилж байна</string>
+    <string name="notif_details_room">%1$s, өрөө %2$s</string>
+    <string name="notif_missed_title">Сэрүүлэг алгассан</string>
+
+    <!-- ==== Сэрүүлэг алгасах шалтгаанууд (StockAlarmSetter) ==== -->
+    <string name="skip_no_lessons">хичээл байхгүй</string>
+    <string name="skip_no_upcoming">өнөөдөр, маргааш хичээл байхгүй — шөнийн шалгалт өдөр бүр ажилладаг</string>
+    <string name="skip_deferred_to_night">хичээл маргааш — сэрүүлэг шөнө 00:05-д тавигдана (одоо тавибал өнөөдөр дуугарах байсан)</string>
+    <string name="skip_clock_refused">утасны цаг тушаал хүлээж авсангүй — тохиргооноос «Сэрүүлгийн сануулгыг» асаана уу</string>
+    <string name="skip_too_far">хичээл долоо хоногоос хол — сэрүүлэг ойртоход автоматаар тавигдана</string>
+    <!-- 0.10.0, AL-9: DISMISS-ийг хүлээж авсангүй, шинэ SET цуцлагдлаа — хос хонхны анхааруулга -->
+    <string name="notif_dismiss_not_accepted">цаг хуучин сэрүүлгийг унтраахыг хүлээж авсангүй — цагнаас гараар унтраа, эс тэгвэл хоёулаа дуугарч магадгүй</string>
+    <string name="test_alarm_label">Туршилт: Авто сэрүүлэг ажиллаж байна!</string>
+    <string name="test_alarm_ok">Сэрүүлэг 2 минутын дараа тавигдлаа — цагаа шалга</string>
+    <string name="test_alarm_fail">Туршилтын сэрүүлэг тавигдсангүй — цаг хариу өгөхгүй байна</string>
+
+    <!-- ==== Тохиргоо: хэсгүүд ==== -->
+    <string name="sec_profile">Профайл</string>
+    <string name="sec_alarm">Сэрүүлэг</string>
+    <string name="sec_reminder">Сэрүүлгийн сануулга</string>
+    <string name="sec_exceptions">Үл хамаарах зүйлс</string>
+    <string name="sec_custom_events">Өөрийн хичээлүүд</string>
+    <string name="sec_appearance">Харагдац</string>
+    <string name="sec_system">Систем</string>
+    <string name="sec_about">Аппын тухай</string>
+
+    <!-- ==== Тохиргоо: профайл ==== -->
+    <string name="profile_change_note">Зорилт өөрчлөхөд босох хугацаа, тохиргоо хадгалагдана</string>
+
+    <!-- ==== Тохиргоо: сэрүүлэг ==== -->
+    <string name="set_auto_title">Авто сэрүүлэг</string>
+    <string name="alarm_target_title">Сэрүүлэг хаана дуугардаг вэ</string>
+    <string name="alarm_target_desc">«Цагт» — утасны цагийн апп дахь ердийн дохио (зарим загварууд тушаалыг блоклож болно). «Аппад» — апп өөрөө бүтэн дэлгэцээр дуугардаг: сэлгүүр, унтраалга, хуваарийн өөрчлөлт баталгаатай ажилладаг.</string>
+    <string name="alarm_target_clock">Цагт</string>
+    <string name="alarm_target_app">Аппад</string>
+    <string name="set_show_clock">Тавихдаа цагийг харуулах</string>
+    <string name="set_show_clock_desc">Сэрүүлэг өөрөө тавигдахгүй бол асаана уу (Realme, Oppo, Huawei). Шөнийн шалгалт, туршилтын сэрүүлэг бэлэн сэрүүлэгтэй цагийг нээнэ — «Хадгалах» товчоор баталгаажуул. Үндсэн сэлгүүр, хөдөлгүүр солилт цагийг нээлгүй чимээгүй тавина.</string>
+    <string name="set_wake_offset">Анхны хичээлээс %1$s өмнө босох</string>
+    <string name="set_offset_example">Анхны хичээл 08:30-д → сэрүүлэг %1$s</string>
+    <string name="set_per_pair">Хичээл бүрт босох</string>
+    <string name="set_per_pair_desc">Өдөр бүрийн анхны хичээлд бэлдэх өөрийн хугацаа: эрт хичээлийн өмнө бага, оройн өмнө их — өглөөний хоолоо идэхэд. Өөрийн утгагүй хичээлүүд дээрх нийт босолтыг ашиглана.</string>
+    <string name="set_pairs_after_sync">Хичээлийн цагууд хуваарийн синхрончлалын дараа гарна</string>
+    <string name="pair_at">Хичээл %1$s</string>
+    <string name="pair_custom_offset">%1$s өмнө босох → сэрүүлэг %2$s</string>
+    <string name="pair_common_offset">Нийт босолт: %1$s өмнө</string>
+    <string name="btn_disable_app_alarms">Аппын сэрүүлгүүдийг унтраах</string>
+    <string name="disable_alarms_desc">Товч цагийн аппад «Авто: Дав»…«Авто: Ням» нарийвчилсан шошго, нэг удаагийн сэрүүлгийн шошгоор унтраах тушаал илгээнэ. Загвар тушаал хүлээж авахгүй бол (зарим Realme UI/ColorOS — системийн хязгаарлалт) «Сэрүүлгийн жагсаалт» товчоор «Авто:» шошгоыг гараар унтраа — апп цагийг өөрөө нээдэггүй.</string>
+    <string name="btn_test_alarm">Сэрүүлгийг шалгах</string>
+    <string name="btn_alarm_list">Сэрүүлгийн жагсаалт</string>
+    <string name="alarms_list_open_failed">Цаг сэрүүлгийн жагсаалтыг нээсэнгүй</string>
+    <string name="dismiss_alarms_sent">Унтраах тушаал цагт илгээгдлээ (%1$d / %2$d). «Авто: …» сэрүүлэг үлдсэн бол «Сэрүүлгийн жагсаалт»-аар унтраа</string>
+    <string name="dismiss_unsupported_manual">Цаг унтраах тушаалыг дэмждэггүй (загварын хязгаарлалт) — «Сэрүүлгийн жагсаалт» товчоор сэрүүлгүүдийг нээгээд «Авто:» шошгоыг гараар унтраа</string>
+
+    <!-- ==== Тохиргооны харилцан цонх: босох хугацаа ==== -->
+    <string name="dialog_offset_title">Хичээлээс өмнө босох</string>
+    <string name="dialog_offset_example">Анхны хичээл 08:30-д → сэрүүлэг %1$s дуугарна</string>
+    <string name="dialog_pair_title">Хичээл %1$s</string>
+    <string name="dialog_pair_example">Хичээл %1$s → сэрүүлэг %2$s дуугарна</string>
+
+    <!-- ==== Тохиргоо: сануулга ==== -->
+    <string name="set_reminder_desc">Өөрийн мэдэгдэл: «маргааш энэ цагт хичээл байна — сэрүүлэг тавихаа мартуузай»</string>
+    <string name="set_reminder_fallback">Цаг аппын тушаалыг хүлээж авахгүй үед хэрэглэх нөөц — Realme, Huawei, Xiaomi дээр (ялангуяа Хятад программ хангамжтай) тохиолддог. Сануулга маргааш хичээл байвал өдөр бүр сонгосон цагт ирнэ.</string>
+    <string name="reminder_time">Сануулгын цаг: %1$s</string>
+    <string name="dialog_reminder_title">Сануулгын цаг</string>
+
+    <!-- ==== Тохиргоо: үл хамаарах зүйлс ==== -->
+    <string name="exceptions_title_desc">Яг ийм нэртэй хичээлийн өмнө сэрүүлэг тавигдахгүй — төрлийн угтвартай хамт: «л. материал судлал» лекцийг л, «пр. материал судлал» дадлагыг л хасна</string>
+    <string name="exceptions_empty">Одоогоор хоосон — өмнө нь сэрээхгүй хичээлүүдийг нэмээрэй</string>
+    <string name="cd_delete_named">«%1$s» устгах</string>
+    <string name="hint_subject_name">Хичээлийн нэр</string>
+    <string name="cd_add_exception">Үл хамаарах зүйл нэмэх</string>
+    <string name="exceptions_found">Хуваарьт олдсон:</string>
+    <string name="toggle_off_dismissed">Авто сэрүүлэг унтраалттай, аппын сэрүүлгүүд цагнаас хасагдлаа</string>
+    <string name="toggle_off_manual">Авто сэрүүлэг унтраалттай. Цаг унтраахыг хүлээж авсангүй (загварын хязгаарлалт) — «Авто:» шошготой сэрүүлгүүдийг «Сэрүүлгийн жагсаалт»-аар гараар хас</string>
+    <string name="toggle_off_app_cancelled">Авто сэрүүлэг унтраалттай, аппын сэрүүлгүүд хасагдлаа</string>
+
+    <!-- ==== Тохиргоо: өөрийн хичээлүүд ==== -->
+    <string name="custom_events_desc">Тусдаа сэрүүлгийн цагтай өөрийн арга хэмжээ — секц, дасгал, нэг удаагийн хэрэг</string>
+    <string name="custom_empty">Одоогоор юу ч нэмэгдээгүй</string>
+    <string name="dialog_event_title">Өөрийн хичээл</string>
+    <string name="hint_name">Нэр</string>
+    <string name="event_days_mode">Долоо хоногийн өдрөөр</string>
+    <string name="event_date_mode">Нэг огноо</string>
+    <string name="btn_pick_date">Огноо сонгох</string>
+    <string name="event_time">Цаг: %1$s</string>
+    <string name="event_offset_suffix">· %1$s өмнө</string>
+    <string name="event_wake_before">Арга хэмжээнээс %1$s өмнө сэрээх</string>
+    <string name="dialog_event_time_title">Арга хэмжээний цаг</string>
+
+    <!-- ==== Тохиргоо: харагдац ==== -->
+    <string name="set_theme">Загвар</string>
+    <string name="theme_system">Системийн</string>
+    <string name="theme_light">Гэгээлэг</string>
+    <string name="theme_dark">Бараан</string>
+    <string name="dynamic_color">Material You (системийн өнгө)</string>
+    <string name="set_accent">Тод өнгө</string>
+    <string name="accent_amber">Амбер</string>
+    <string name="accent_orange">Улбар шар</string>
+    <string name="accent_red">Улаан</string>
+    <string name="accent_green">Ногоон</string>
+    <string name="accent_pink">Ягаан</string>
+    <string name="accent_purple">Нил</string>
+    <string name="accent_custom">Өөрийн өнгө</string>
+    <string name="accent_custom_preview">Өнгө «Боллоо»-гийн дараа хэрэглэгдэнэ</string>
+    <string name="schedule_style">Хуваарийн загвар</string>
+    <string name="style_standard">Стандарт</string>
+    <string name="style_paper">Цаасан хуанли</string>
+    <string name="style_chalk">Тэсэг ба самбар</string>
+    <string name="style_neon">Неон</string>
+    <string name="style_terminal">Терминал</string>
+    <string name="style_aqua">Усан будаг</string>
+    <string name="style_retro">Ретро хэвлэл</string>
+    <string name="set_background">Дэвсгэр</string>
+    <string name="btn_pick_image">Зураг сонгох</string>
+    <string name="btn_remove">Хасах</string>
+    <string name="bg_opacity">Дэвсгэрийн тунгалагшил</string>
+    <!-- 0.11.0, SEC-11: сонгосон файл дэвсгэрийн зурагт тохирохгүй -->
+    <string name="bg_image_rejected">Файл тохирохгүй: 20 МБ хүртэл зураг хэрэгтэй (JPG/PNG/WebP)</string>
+    <string name="set_fsi_title">Сэрүүлэг дэлгэцийг асаахгүй</string>
+    <string name="set_fsi_desc">Бүтэн дэлгэцийн хонхыг зөвшөөр: дуугарахад дэлгэц асна, «Унтраах» товч шууд харагдана. Тохиргоог нээхийн тулд хүрнэ үү</string>
+
+    <!-- ==== Аппын сэрүүлгийн хонх («Аппад» хөдөлгүүр, 0.7.0) ==== -->
+    <string name="ring_title">Босох цаг боллоо!</string>
+    <string name="ring_dismiss">Унтраах</string>
+    <string name="ring_channel_name">Сэрүүлгийн хонх</string>
+    <string name="ring_channel_desc">Аппын сэрүүлгийн бүтэн дэлгэцийн дохио</string>
+
+    <!-- ==== Тохиргоо: систем ==== -->
+    <string name="status_exact_allowed">Нарийвчилсан сэрүүлэг зөвшөөрөгдсөн</string>
+    <string name="dialog_exact_off_title">Нарийвчилсан сэрүүлгийг систем унтраасан</string>
+    <string name="dialog_exact_off_desc">Шөнийн төлөвлөгч сэрүүлгийг зөвхөн ±10 минутын зөрүүтэй тавих болно.</string>
+    <string name="dialog_battery2_title">Батарейн оновчлол саад болож магадгүй</string>
+    <string name="dialog_battery2_desc">Шөнийн шалгалт алдагдахгүйн тулд аппыг оновчлолоос хас.</string>
+    <string name="action_disable_optimization">Оновчлолыг унтраах</string>
+    <string name="autostart_title">Автоматаар эхлэх, ширүүн загварууд</string>
+    <string name="autostart_desc">MIUI, HarmonyOS болон бусад загварууд дэвсгэрийн аппуудыг устгадаг</string>
+    <string name="btn_instructions">Заавар</string>
+    <string name="autostart_xiaomi">Xiaomi / Redmi / POCO:\nАюулгүй байдал → Аппууд → Автоматаар эхлэх: Авто сэрүүлгийг асаа; аппын батарейн тохиргоонд «хязгаарлалтгүй»-г сонго.</string>
+    <string name="autostart_huawei">Huawei / Honor:\nТохиргоо → Батерей → Аппууд эхлэх → Авто сэрүүлэг → Гараар удирдах: бүх сэлгүүрийг асаа.</string>
+    <string name="autostart_oppo">OPPO / Realme / OnePlus:\nТохиргоо → Батерей → Нэмэлт тохиргоо → Эрчим хүчний оновчлол → аппад оновчлолыг хоригло; Апп менеджер → Автоматаар эхлэх.</string>
+    <string name="autostart_samsung">Samsung:\nТохиргоо → Батерей → Дэвсгэрийн хязгаарлалт → Унтахгүй аппууд → Авто сэрүүлгийг нэм.</string>
+    <string name="autostart_other">Өөр загвар:\nАппыг автоматаар эхлэхэд нэмээд системийн тохиргооноос батарейн оновчлолыг хас.</string>
+    <string name="autostart_standard_note">«Стандарт» горим сэрүүлгийг шөнө бүр дахин тавьдаг — аппад 00:05-д дэвсгэрт ажиллах хэрэгтэй.</string>
+
+    <!-- ==== Тохиргоо: аппын тухай ==== -->
+    <string name="about_version">KGEU Авто сэрүүлэг · v%1$s</string>
+    <string name="about_data">Хуваарийн өгөгдөл: албан ёсны kabinet.kgeu.ru API. Апп нь KGEU-тэй холбоогүй.</string>
+    <!-- 0.11.0, SET-16: зохиогчийн эрх нөөцөөс (бүх хэл дээр ижил — брэнд/лиценз) -->
+    <string name="copyright_line">© 2026 RVMXL · Apache License 2.0</string>
+    <string name="btn_github">GitHub репозитор</string>
+
+    <!-- 0.9.0, DATA-1: кэштэй үед серверийн хоосон хариултууд -->
+    <string name="notif_group_check_title">Бүлгээ шалгана уу</string>
+    <string name="notif_group_check_text">Хуваарь хоосон ирдэг байна — хуучин кэш хадгалагдсан. Бүлгээ тохиргооноос шалга.</string>
+
+    <!-- 0.10.0, SET-5: APP хөдөлгүүрийн сэрүүлгийн шошгоны локал угтвар -->
+    <string name="auto_label_prefix">Авто:</string>
+
+    <!-- ==== 0.21.0: хэлүүдийн нэрс одоогийн хэлээр (хэл сонгогч) ==== -->
+    <string name="lang_name_ru">орос хэл</string>
+    <string name="lang_name_tt">татар хэл</string>
+    <string name="lang_name_en">англи хэл</string>
+    <string name="lang_name_ar">араб хэл</string>
+    <string name="lang_name_az">азербайжан хэл</string>
+    <string name="lang_name_ba">башкир хэл</string>
+    <string name="lang_name_es">испани хэл</string>
+    <string name="lang_name_fr">франц хэл</string>
+    <string name="lang_name_kk">казах хэл</string>
+    <string name="lang_name_ky">киргиз хэл</string>
+    <string name="lang_name_mn">Монгол</string>
+    <string name="lang_name_uz">узбек хэл</string>
+    <string name="lang_name_tg">тажик хэл</string>
+    <string name="lang_name_tr">турок хэл</string>
+    <string name="lang_name_tk">туркмен хэл</string>
+    <string name="lang_name_cv">чуаш хэл</string>
+    <string name="lang_name_hy">арми хэл</string>
+    <string name="lang_name_ka">гүрж хэл</string>
+    <string name="lang_name_zh">хятад хэл</string>
+</resources>

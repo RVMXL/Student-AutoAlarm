@@ -9,6 +9,7 @@ import org.junit.Test
  * SET-11 (0.11.0): порядок языков в пикере — сначала топ-3 КГЭУ (ru, tt, en),
  * дальше по алфавиту родных имён. Раньше «Oʻzbekcha» (O) стояла после
  * «Тоҷикӣ»/«Türkçe» (Т) — список не соответствовал собственному комментарию.
+ * 0.21.0: +4 языка (армянский, азербайджанский, грузинский, монгольский).
  */
 class LanguageOptionsTest {
 
@@ -19,18 +20,28 @@ class LanguageOptionsTest {
 
     @Test
     fun `хвост списка — по алфавиту родных имён (SET-11)`() {
-        // Порядок курируемый (скрипты идут группами: арабица → кириллица → латиница → иероглифы),
-        // как и задумано; фиксирует именно баг SET-11: «Oʻzbekcha» (O) стояла среди «Т…»
+        // Порядок курируемый (0.21.0): азербайджанский — в начало латинского
+        // блока (A), монгольский — между кириллическими К и O; армянский и
+        // грузинский (нелатиница/некириллица) — перед иероглифами, в конце
         assertEquals(
-            listOf("ar", "ba", "es", "fr", "kk", "ky", "uz", "tg", "tr", "tk", "cv", "zh"),
+            listOf(
+                "ar", "az", "ba", "es", "fr", "kk", "ky", "mn", "uz", "tg",
+                "tr", "tk", "cv", "hy", "ka", "zh"
+            ),
             SUPPORTED_LANGUAGES.drop(3).map { it.tag }
         )
     }
 
     @Test
-    fun `языков ровно 15 и теги уникальны`() {
-        assertEquals(15, SUPPORTED_LANGUAGES.size)
+    fun `языков ровно 19 и теги уникальны`() {
+        assertEquals(19, SUPPORTED_LANGUAGES.size)
         assertEquals(SUPPORTED_LANGUAGES.size, SUPPORTED_LANGUAGES.map { it.tag }.toSet().size)
         assertTrue(SUPPORTED_LANGUAGES.none { it.tag.isBlank() })
+    }
+
+    @Test
+    fun `новые языки 0-21-0 присутствуют в списке`() {
+        val tags = SUPPORTED_LANGUAGES.map { it.tag }.toSet()
+        assertTrue(tags.containsAll(setOf("hy", "az", "ka", "mn")))
     }
 }

@@ -311,4 +311,25 @@
 
     <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
     <string name="auto_label_prefix">Auto:</string>
+
+    <!-- ==== 0.21.0: tillar nomlari joriy tilda (til tanlagich) ==== -->
+    <string name="lang_name_ru">rus tili</string>
+    <string name="lang_name_tt">tatar tili</string>
+    <string name="lang_name_en">ingliz tili</string>
+    <string name="lang_name_ar">arab tili</string>
+    <string name="lang_name_az">ozarbayjon tili</string>
+    <string name="lang_name_ba">boshqird tili</string>
+    <string name="lang_name_es">ispan tili</string>
+    <string name="lang_name_fr">fransuz tili</string>
+    <string name="lang_name_kk">qozoq tili</string>
+    <string name="lang_name_ky">qirgʻiz tili</string>
+    <string name="lang_name_mn">mongol tili</string>
+    <string name="lang_name_uz">oʻzbek tili</string>
+    <string name="lang_name_tg">tojik tili</string>
+    <string name="lang_name_tr">turk tili</string>
+    <string name="lang_name_tk">turkman tili</string>
+    <string name="lang_name_cv">chuvash tili</string>
+    <string name="lang_name_hy">arman tili</string>
+    <string name="lang_name_ka">gruzin tili</string>
+    <string name="lang_name_zh">xitoy tili</string>
 </resources>

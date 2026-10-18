@@ -311,4 +311,25 @@
 
     <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
     <string name="auto_label_prefix">تلقائي:</string>
+
+    <!-- ==== 0.21.0: أسماء اللغات باللغة الحالية (منتقي اللغة) ==== -->
+    <string name="lang_name_ru">الروسية</string>
+    <string name="lang_name_tt">التتارية</string>
+    <string name="lang_name_en">الإنجليزية</string>
+    <string name="lang_name_ar">العربية</string>
+    <string name="lang_name_az">الأذرية</string>
+    <string name="lang_name_ba">الباشكيرية</string>
+    <string name="lang_name_es">الإسبانية</string>
+    <string name="lang_name_fr">الفرنسية</string>
+    <string name="lang_name_kk">الكازاخية</string>
+    <string name="lang_name_ky">القيرغيزية</string>
+    <string name="lang_name_mn">المنغولية</string>
+    <string name="lang_name_uz">الأوزبكية</string>
+    <string name="lang_name_tg">الطاجيكية</string>
+    <string name="lang_name_tr">التركية</string>
+    <string name="lang_name_tk">التركمية</string>
+    <string name="lang_name_cv">التشوفاشية</string>
+    <string name="lang_name_hy">الأرمنية</string>
+    <string name="lang_name_ka">الجورجية</string>
+    <string name="lang_name_zh">الصينية</string>
 </resources>

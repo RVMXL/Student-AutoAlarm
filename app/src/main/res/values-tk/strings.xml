@@ -311,4 +311,25 @@
 
     <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
     <string name="auto_label_prefix">Awtomatik:</string>
+
+    <!-- ==== 0.21.0: dilleriň atlary häsiýetli dilde (dil saýlaýjy) ==== -->
+    <string name="lang_name_ru">rus dili</string>
+    <string name="lang_name_tt">tatar dili</string>
+    <string name="lang_name_en">iňlis dili</string>
+    <string name="lang_name_ar">arap dili</string>
+    <string name="lang_name_az">azerbaýjan dili</string>
+    <string name="lang_name_ba">başkurt dili</string>
+    <string name="lang_name_es">ispan dili</string>
+    <string name="lang_name_fr">fransuz dili</string>
+    <string name="lang_name_kk">kazak dili</string>
+    <string name="lang_name_ky">gyrgyz dili</string>
+    <string name="lang_name_mn">mongol dili</string>
+    <string name="lang_name_uz">özbek dili</string>
+    <string name="lang_name_tg">tojik dili</string>
+    <string name="lang_name_tr">türk dili</string>
+    <string name="lang_name_tk">türkmen dili</string>
+    <string name="lang_name_cv">çuwaş dili</string>
+    <string name="lang_name_hy">ermeni dili</string>
+    <string name="lang_name_ka">gruzin dili</string>
+    <string name="lang_name_zh">hytaý dili</string>
 </resources>

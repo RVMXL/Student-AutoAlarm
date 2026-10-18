@@ -311,4 +311,25 @@
 
     <!-- 0.10.0, SET-5: локализуемый префикс метки будильника APP-движка -->
     <string name="auto_label_prefix">Авто:</string>
+
+    <!-- ==== 0.21.0: тілдер атаулары ағымдағы тілде (тіл таңдағыш) ==== -->
+    <string name="lang_name_ru">орыс тілі</string>
+    <string name="lang_name_tt">татар тілі</string>
+    <string name="lang_name_en">ағылшын тілі</string>
+    <string name="lang_name_ar">араб тілі</string>
+    <string name="lang_name_az">әзірбайжан тілі</string>
+    <string name="lang_name_ba">башқұрт тілі</string>
+    <string name="lang_name_es">испан тілі</string>
+    <string name="lang_name_fr">француз тілі</string>
+    <string name="lang_name_kk">қазақ тілі</string>
+    <string name="lang_name_ky">қырғыз тілі</string>
+    <string name="lang_name_mn">моңғол тілі</string>
+    <string name="lang_name_uz">өзбек тілі</string>
+    <string name="lang_name_tg">тәжік тілі</string>
+    <string name="lang_name_tr">түрік тілі</string>
+    <string name="lang_name_tk">түрікмен тілі</string>
+    <string name="lang_name_cv">чуаш тілі</string>
+    <string name="lang_name_hy">армян тілі</string>
+    <string name="lang_name_ka">грузин тілі</string>
+    <string name="lang_name_zh">қытай тілі</string>
 </resources>
