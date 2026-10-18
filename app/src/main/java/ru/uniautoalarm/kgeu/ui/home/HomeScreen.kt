@@ -503,12 +503,20 @@ private fun ToggleCard(enabled: Boolean, busy: Boolean, onToggle: (Boolean) -> U
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(Modifier.width(12.dp))
-                Text(
-                    stringResource(R.string.home_auto_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.weight(1f)
-                )
+                // FIX 0.19.0: заголовок и подпись в одном столбце с weight(1f) —
+                // подпись больше не заходит ПОД тумблер, переносится до него
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        stringResource(R.string.home_auto_title),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        stringResource(R.string.home_auto_subtitle),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 1.dp)
+                    )
+                }
                 if (busy) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(22.dp),
@@ -518,11 +526,7 @@ private fun ToggleCard(enabled: Boolean, busy: Boolean, onToggle: (Boolean) -> U
                     Switch(checked = enabled, onCheckedChange = null)
                 }
             }
-            Text(
-                stringResource(R.string.home_auto_subtitle),
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(start = 36.dp, bottom = 8.dp)
-            )
+            Spacer(Modifier.height(8.dp))
         }
     }
 }

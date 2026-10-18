@@ -203,7 +203,11 @@ fun ScheduleScreen() {
                 IconButton(onClick = { vm.prevWeek() }) {
                     Icon(
                         Icons.Rounded.ChevronLeft,
-                        contentDescription = stringResource(R.string.cd_prev_week)
+                        contentDescription = stringResource(R.string.cd_prev_week),
+                        // FIX 0.19.0: без явного цвета иконки брали LocalContentColor ТЕМЫ
+                        // приложения — в тёмной теме на светлых листах скинов (бумажный,
+                        // акварель, ретро-печать) они почти сливались с фоном
+                        tint = skin?.ink ?: MaterialTheme.colorScheme.onSurface
                     )
                 }
                 Column(
@@ -236,7 +240,8 @@ fun ScheduleScreen() {
                 }, enabled = !sync.busy) {
                     Icon(
                         Icons.Rounded.ChevronRight,
-                        contentDescription = stringResource(R.string.cd_next_week)
+                        contentDescription = stringResource(R.string.cd_next_week),
+                        tint = skin?.ink ?: MaterialTheme.colorScheme.onSurface
                     )
                 }
                 IconButton(onClick = { vm.goToToday() }) {
@@ -256,7 +261,8 @@ fun ScheduleScreen() {
                 }) {
                     Icon(
                         Icons.Rounded.Refresh,
-                        contentDescription = stringResource(R.string.cd_refresh_week)
+                        contentDescription = stringResource(R.string.cd_refresh_week),
+                        tint = skin?.ink ?: MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
