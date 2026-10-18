@@ -142,7 +142,7 @@
     <string name="snackbar_excluded_off">Исключени кӑларса пӑрахнӑ</string>
     <string name="cd_enable_alarm">Ку пара умӗнче будильник хуш</string>
     <string name="cd_disable_alarm">Ку пара умӗнче будильник лартма</string>
-    <string name="cd_day_lessons">Ку кунта вӗренӳсем пур</string>
+    <string name="cd_day_pairs">Ку кунта вӗренӳсем: %1$d</string>
     <string name="cd_day_marked">Ку кунта палӑртнӑ вӗренӳсем: %1$d</string>
     <string name="empty_no_lessons">Заняти çук</string>
     <string name="empty_no_alarm_needed">Ку кунта будильник кирлӗ мар</string>

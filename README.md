@@ -154,7 +154,7 @@ yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null
 ./gradlew :app:assembleDebug
 # результат: app/build/outputs/apk/debug/app-debug.apk
 
-# 4. Юнит-тесты (63: AlarmPlanner, правила доставки, парсер API, паритет 15 локалей, порядок языков, ночные тики, DISMISS-канал, маркеры дней, скины/«свой цвет»)
+# 4. Юнит-тесты (67: AlarmPlanner, правила доставки, парсер API, паритет 15 локалей, порядок языков, ночные тики, DISMISS-канал, маркеры дней/слоты пар, скины/«свой цвет»)
 ./gradlew :app:testDebugUnitTest
 
 # 5. Релизная сборка — ТОЛЬКО со стабильным ключом подписи (обновления поверх):

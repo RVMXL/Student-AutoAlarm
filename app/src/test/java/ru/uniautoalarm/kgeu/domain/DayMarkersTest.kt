@@ -11,6 +11,8 @@ import ru.uniautoalarm.kgeu.data.model.Lesson
  * 0.14.0: маркеры дней в расписании — считаем «обозначенные (исключённые) секции»
  * дня: РАЗЛИЧНЫЕ дисциплины, попавшие под активные правила (нормализация как в
  * isExceptional: регистр/пробелы игнорируются, правило — точное полное название).
+ * 0.20.0: точки дней = числу ПАР — уникальные слоты времени (start, end):
+ * лабы двух подгрупп в одно и то же время (разные преподаватели) — ОДНА пара.
  */
 class DayMarkersTest {
 
@@ -18,6 +20,16 @@ class DayMarkersTest {
         date = LocalDate.of(2026, 10, 20),
         start = LocalTime.of(8, 30), end = LocalTime.of(10, 0),
         subject = subject, teacher = "", room = "",
+        kind = "", isReplacement = false, group = ""
+    )
+
+    private fun lessonAt(
+        startH: Int, startM: Int, endH: Int, endM: Int,
+        subject: String = "пр. Физика", teacher: String = ""
+    ) = Lesson(
+        date = LocalDate.of(2026, 10, 20),
+        start = LocalTime.of(startH, startM), end = LocalTime.of(endH, endM),
+        subject = subject, teacher = teacher, room = "",
         kind = "", isReplacement = false, group = ""
     )
 
@@ -74,5 +86,40 @@ class DayMarkersTest {
         val rules = listOf(ExceptionRule(subject = "л. математика"))
         // «пр. математика» != «л. математика» — точное совпадение с приставкой типа
         assertEquals(0, DayMarkers.countMarked(lessons, rules))
+    }
+
+    @Test
+    fun `empty day has zero pairs`() {
+        assertEquals(0, DayMarkers.countPairs(emptyList()))
+    }
+
+    @Test
+    fun `subgroup labs in the same slot count as one pair`() {
+        // 0.20.0: две записи расписания в ОДНО время (лабы двух подгрупп,
+        // разные преподаватели/кабинеты) — одна пара, одна точка
+        val lessons = listOf(
+            lessonAt(8, 30, 10, 0, "л. Химия", "Иванова А.А."),
+            lessonAt(8, 30, 10, 0, "л. Химия", "Петров Б.Б.")
+        )
+        assertEquals(1, DayMarkers.countPairs(lessons))
+    }
+
+    @Test
+    fun `different slots count separately`() {
+        val lessons = listOf(
+            lessonAt(8, 30, 10, 0),
+            lessonAt(10, 10, 11, 40),
+            lessonAt(12, 0, 13, 30)
+        )
+        assertEquals(3, DayMarkers.countPairs(lessons))
+    }
+
+    @Test
+    fun `same start with different end is a separate slot`() {
+        val lessons = listOf(
+            lessonAt(8, 30, 10, 0),
+            lessonAt(8, 30, 9, 50)
+        )
+        assertEquals(2, DayMarkers.countPairs(lessons))
     }
 }

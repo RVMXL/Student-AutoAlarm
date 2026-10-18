@@ -142,7 +142,7 @@
     <string name="snackbar_excluded_off">Исключение снято</string>
     <string name="cd_enable_alarm">Включить будильник перед этой парой</string>
     <string name="cd_disable_alarm">Не ставить будильник перед этой парой</string>
-    <string name="cd_day_lessons">В этот день есть пары</string>
+    <string name="cd_day_pairs">Пар в этот день: %1$d</string>
     <string name="cd_day_marked">Обозначенных секций в этот день: %1$d</string>
     <string name="empty_no_lessons">Занятий нет</string>
     <string name="empty_no_alarm_needed">В этот день будильник не понадобится</string>

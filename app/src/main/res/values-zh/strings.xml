@@ -142,7 +142,7 @@
     <string name="snackbar_excluded_off">已取消例外</string>
     <string name="cd_enable_alarm">开启这节课前的闹钟</string>
     <string name="cd_disable_alarm">这节课前不设置闹钟</string>
-    <string name="cd_day_lessons">这一天有课</string>
+    <string name="cd_day_pairs">这一天有 %1$d 节课</string>
     <string name="cd_day_marked">这一天已标记的科目：%1$d</string>
     <string name="empty_no_lessons">没有课程</string>
     <string name="empty_no_alarm_needed">这一天不需要闹钟</string>

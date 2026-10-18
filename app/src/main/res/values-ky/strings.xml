@@ -142,7 +142,7 @@
     <string name="snackbar_excluded_off">Өзгөчөлүк өчүрүлдү</string>
     <string name="cd_enable_alarm">Ушул жуптун алдында ояткычты күйгүзүү</string>
     <string name="cd_disable_alarm">Ушул жуптун алдында ояткыч койбоо</string>
-    <string name="cd_day_lessons">Бул күндө сабактар бар</string>
+    <string name="cd_day_pairs">Бул күндөгү сабактар: %1$d</string>
     <string name="cd_day_marked">Бул күндөгү белгиленген бөлүмдөр: %1$d</string>
     <string name="empty_no_lessons">Сабак жок</string>
     <string name="empty_no_alarm_needed">Бул күнү ояткыч керек эмес</string>

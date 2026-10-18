@@ -142,7 +142,7 @@
     <string name="snackbar_excluded_off">Истисно бардошта шуд</string>
     <string name="cd_enable_alarm">Пеш аз ин пара будильникро фаъол кардан</string>
     <string name="cd_disable_alarm">Пеш аз ин пара будильник нагузоштан</string>
-    <string name="cd_day_lessons">Дар рӯзи ин дарсҳо ҳастанд</string>
+    <string name="cd_day_pairs">Дар рӯзи ин дарсҳо: %1$d</string>
     <string name="cd_day_marked">Бахшҳои нишоншуда дар ин рӯз: %1$d</string>
     <string name="empty_no_lessons">Машғулият нест</string>
     <string name="empty_no_alarm_needed">Дар ин рӯз будильник лозим намеояд</string>

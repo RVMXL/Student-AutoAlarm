@@ -142,7 +142,7 @@
     <string name="snackbar_excluded_off">أُلغي الاستثناء</string>
     <string name="cd_enable_alarm">تفعيل المنبّه قبل هذه الحصة</string>
     <string name="cd_disable_alarm">عدم ضبط المنبّه قبل هذه الحصة</string>
-    <string name="cd_day_lessons">توجد محاضرات في هذا اليوم</string>
+    <string name="cd_day_pairs">عدد الحصص في هذا اليوم: %1$d</string>
     <string name="cd_day_marked">الأقسام المُعلَّمة في هذا اليوم: %1$d</string>
     <string name="empty_no_lessons">لا توجد دروس</string>
     <string name="empty_no_alarm_needed">في هذا اليوم لن تحتاج إلى منبّه</string>

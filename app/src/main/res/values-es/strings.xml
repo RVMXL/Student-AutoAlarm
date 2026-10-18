@@ -142,7 +142,7 @@
     <string name="snackbar_excluded_off">Excepción eliminada</string>
     <string name="cd_enable_alarm">Activar la alarma antes de esta clase</string>
     <string name="cd_disable_alarm">No programar alarma antes de esta clase</string>
-    <string name="cd_day_lessons">Hay clases este día</string>
+    <string name="cd_day_pairs">Clases ese día: %1$d</string>
     <string name="cd_day_marked">Secciones marcadas este día: %1$d</string>
     <string name="empty_no_lessons">No hay clases</string>
     <string name="empty_no_alarm_needed">Este día no necesitarás alarma</string>

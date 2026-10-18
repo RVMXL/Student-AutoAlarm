@@ -142,7 +142,7 @@
     <string name="snackbar_excluded_off">Exception removed</string>
     <string name="cd_enable_alarm">Enable the alarm before this class</string>
     <string name="cd_disable_alarm">Don\'t set an alarm before this class</string>
-    <string name="cd_day_lessons">Has classes on this day</string>
+    <string name="cd_day_pairs">Classes that day: %1$d</string>
     <string name="cd_day_marked">Marked sections on this day: %1$d</string>
     <string name="empty_no_lessons">No classes</string>
     <string name="empty_no_alarm_needed">No alarm will be needed on this day</string>

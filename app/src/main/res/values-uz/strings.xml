@@ -142,7 +142,7 @@
     <string name="snackbar_excluded_off">Istisno olib tashlandi</string>
     <string name="cd_enable_alarm">Bu paradan oldin budilnikni yoqish</string>
     <string name="cd_disable_alarm">Bu paradan oldin budilnik qoʻymaslik</string>
-    <string name="cd_day_lessons">Bu kunda darslar bor</string>
+    <string name="cd_day_pairs">Bu kundagi darslar: %1$d</string>
     <string name="cd_day_marked">Bu kunda belgilangan boʻlimlar: %1$d</string>
     <string name="empty_no_lessons">Mashgʻulotlar yoʻq</string>
     <string name="empty_no_alarm_needed">Bu kunda budilnik kerak boʻlmaydi</string>

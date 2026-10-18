@@ -142,7 +142,7 @@
     <string name="snackbar_excluded_off">Istisna aýryldy</string>
     <string name="cd_enable_alarm">Bu sapakdan öň ýatgyjyny ýak</string>
     <string name="cd_disable_alarm">Bu sapakdan öň ýatgyjy goýma</string>
-    <string name="cd_day_lessons">Bu gününde sapaklar bar</string>
+    <string name="cd_day_pairs">Bu günündeki sapaklar: %1$d</string>
     <string name="cd_day_marked">Bu gününde bellenen bölümler: %1$d</string>
     <string name="empty_no_lessons">Sapak ýok</string>
     <string name="empty_no_alarm_needed">Bu güne ýatgyjy gerek bolmaz</string>

@@ -142,7 +142,7 @@
     <string name="snackbar_excluded_off">Айырым осраҡ алынды</string>
     <string name="cd_enable_alarm">Был параның алдында будильникты ҡабыҙыу</string>
     <string name="cd_disable_alarm">Был параның алдында будильник ҡуймау</string>
-    <string name="cd_day_lessons">Был көндә дәрестәр бар</string>
+    <string name="cd_day_pairs">Был көндә дәрестәр: %1$d</string>
     <string name="cd_day_marked">Был көндә билдәләнгән дәрестәр: %1$d</string>
     <string name="empty_no_lessons">Дәрестәр юҡ</string>
     <string name="empty_no_alarm_needed">Был көндө будильник кәрәкмәйәсәк</string>

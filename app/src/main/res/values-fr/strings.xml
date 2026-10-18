@@ -142,7 +142,7 @@
     <string name="snackbar_excluded_off">Exception retirée</string>
     <string name="cd_enable_alarm">Activer le réveil avant ce cours</string>
     <string name="cd_disable_alarm">Ne pas programmer de réveil avant ce cours</string>
-    <string name="cd_day_lessons">Il y a des cours ce jour-là</string>
+    <string name="cd_day_pairs">Cours ce jour-là : %1$d</string>
     <string name="cd_day_marked">Sections marquées ce jour-là : %1$d</string>
     <string name="empty_no_lessons">Aucun cours</string>
     <string name="empty_no_alarm_needed">Ce jour-là, pas besoin de réveil</string>

@@ -142,7 +142,7 @@
     <string name="snackbar_excluded_off">İstisna kaldırıldı</string>
     <string name="cd_enable_alarm">Bu dersten önce alarmı aç</string>
     <string name="cd_disable_alarm">Bu dersten önce alarm kurma</string>
-    <string name="cd_day_lessons">Bu günde ders var</string>
+    <string name="cd_day_pairs">Bu gündeki dersler: %1$d</string>
     <string name="cd_day_marked">Bu günde işaretlenen dersler: %1$d</string>
     <string name="empty_no_lessons">Ders yok</string>
     <string name="empty_no_alarm_needed">Bu gün için alarm gerekmez</string>

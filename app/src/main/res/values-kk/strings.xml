@@ -142,7 +142,7 @@
     <string name="snackbar_excluded_off">Ерекшелік өшірілді</string>
     <string name="cd_enable_alarm">Осы жұптың алдында оятқышты қосу</string>
     <string name="cd_disable_alarm">Осы жұптың алдында оятқыш қоймау</string>
-    <string name="cd_day_lessons">Бұл күні сабақтар бар</string>
+    <string name="cd_day_pairs">Бұл күнгі сабақтар: %1$d</string>
     <string name="cd_day_marked">Бұл күндегі белгіленген бөлімдер: %1$d</string>
     <string name="empty_no_lessons">Сабақ жоқ</string>
     <string name="empty_no_alarm_needed">Бұл күні оятқыш қажет емес</string>

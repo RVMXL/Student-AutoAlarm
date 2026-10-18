@@ -16,8 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,8 +31,6 @@ import androidx.compose.material.icons.rounded.Today
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -44,15 +42,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
@@ -303,23 +304,33 @@ fun ScheduleScreen() {
             // шапки) — с фоновой картинкой подписи не сливаются. В скинах чипы
             // живут на листе скина. Подписи дней — на одной высоте
             // (фиксированные слоты в dayLabel).
+            // 0.20.0: ряд дней НЕ прокручивается — 7 чипов распределены равномерно
+            // по ширине экрана (weight(1f)), перематывать не нужно. Раньше был
+            // LazyRow: минимальная ширина touch-target FilterChip (48dp) не давала
+            // семи дням влезть на экран. Точки дня = числу ПАР (0.20.0):
+            // уникальные слоты времени — лабы двух подгрупп в одно время = одна пара
             val dayChipRow: @Composable () -> Unit = {
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
-                    items((0..6).toList(), key = { it }) { offset -> // UI-12: key — переиспользование состояния чипов
-                        val date = weekMonday.plusDays(offset.toLong())
-                        val dateLessons = weekLessons[date].orEmpty()
-                        DayChip(
-                            date = date,
-                            selected = date == selectedDate,
-                            isToday = date == today,
-                            skin = skin,
-                            hasLessons = dateLessons.isNotEmpty(),
-                            markedCount = DayMarkers.countMarked(dateLessons, exceptions),
-                            onClick = { vm.selectDate(date) }
-                        )
+                    (0..6).forEach { offset ->
+                        key(offset) { // UI-12: key — переиспользование состояния чипов
+                            val date = weekMonday.plusDays(offset.toLong())
+                            val dateLessons = weekLessons[date].orEmpty()
+                            DayChip(
+                                date = date,
+                                selected = date == selectedDate,
+                                isToday = date == today,
+                                skin = skin,
+                                pairCount = DayMarkers.countPairs(dateLessons),
+                                markedCount = DayMarkers.countMarked(dateLessons, exceptions),
+                                onClick = { vm.selectDate(date) },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
                     }
                 }
             }
@@ -650,9 +661,10 @@ private fun DayChip(
     selected: Boolean,
     isToday: Boolean,
     skin: CalendarSkin?,
-    hasLessons: Boolean,
+    pairCount: Int,
     markedCount: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val accent = skin?.accent ?: MaterialTheme.colorScheme.primary
     val onAccentColor = skin?.onAccent ?: MaterialTheme.colorScheme.onPrimary
@@ -660,10 +672,31 @@ private fun DayChip(
     val neutralMark = skin?.inkSoft ?: MaterialTheme.colorScheme.onSurfaceVariant
     val sectionMark = skin?.mark ?: MaterialTheme.colorScheme.tertiary
     val label = "${dayShortName(date.dayOfWeek)} ${date.dayOfMonth}"
+    // 0.20.0: цвета чипа объявлены ДО локальной dayLabel — она их использует
+    // (визуал прежний: контейнер / заливка выбранного = акцент, кромка скина,
+    // у стандартного стиля — surfaceContainer/outline)
+    val containerColor = if (selected) {
+        accent
+    } else {
+        skin?.card ?: MaterialTheme.colorScheme.surfaceContainer
+    }
+    val labelColor = if (selected) {
+        onAccentColor
+    } else {
+        skin?.inkSoft ?: MaterialTheme.colorScheme.onSurface
+    }
+    val borderColor = if (selected) {
+        accent
+    } else {
+        skin?.line ?: MaterialTheme.colorScheme.outline
+    }
+    val borderWidth = if (selected) 1.5.dp else 1.dp
     // 0.15.0: «сегодня» — скруглённая полоска (толщиной в точку) НАД названием дня
     // внутри кнопки; раньше точка «сегодня» стояла в ряду маркеров и сливалась
     // с точкой «есть пары». Ряд маркеров под числом теперь только про расписание:
-    // серая точка «есть пары», цветная с числом «исключённых секций».
+    // ТОЧКИ ПАР (0.20.0) — по одной на каждый уникальный слот времени
+    // (лабы двух подгрупп в одно время = одна точка), цветной маркер
+    // с числом «исключённых секций».
     // Маркеры скрываются у выбранного дня — чип и так залит акцентом.
     // FIX 0.17.0: слоты над и под названием ФИКСИРОВАННОЙ высоты — подпись дня
     // стоит на одной высоте у ВСЕХ чипов, независимо от того, есть ли сверху
@@ -688,18 +721,26 @@ private fun DayChip(
                     )
                 }
             }
-            Text(label, fontWeight = if (isToday) FontWeight.Bold else null)
+            Text(
+                label,
+                color = labelColor,
+                fontWeight = if (isToday) FontWeight.Bold else null
+            )
             Box(
                 modifier = Modifier.height(13.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
-                if (!selected && (hasLessons || markedCount > 0)) {
+                if (!selected && (pairCount > 0 || markedCount > 0)) {
                     Row(
                         modifier = Modifier.padding(top = 1.dp),
                         horizontalArrangement = Arrangement.spacedBy(2.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if (hasLessons) {
+                        // точки пар — по одной на каждый уникальный слот (start,end);
+                        // при исключённых секциях точек меньше (4), чтобы влез
+                        // цветной маркер с числом; точное число всегда в description
+                        val pairCap = if (markedCount > 0) 4 else 6
+                        repeat(minOf(pairCount, pairCap)) {
                             Box(
                                 modifier = Modifier
                                     .size(4.dp)
@@ -726,48 +767,28 @@ private fun DayChip(
     }
     val description = buildString {
         append(label)
-        if (hasLessons) append(". ").append(stringResource(R.string.cd_day_lessons))
+        if (pairCount > 0) {
+            append(". ").append(stringResource(R.string.cd_day_pairs, pairCount))
+        }
         if (markedCount > 0) {
             append(". ").append(stringResource(R.string.cd_day_marked, markedCount))
         }
     }
-    val chipModifier = Modifier.semantics { contentDescription = description }
-    if (skin != null) {
-        FilterChip(
-            selected = selected,
-            onClick = onClick,
-            label = { dayLabel() },
-            shape = ChipShape,
-            modifier = chipModifier,
-            border = if (selected) {
-                BorderStroke(1.5.dp, skin.accent)
-            } else {
-                BorderStroke(1.dp, skin.line)
-            },
-            colors = FilterChipDefaults.filterChipColors(
-                containerColor = skin.card,
-                labelColor = skin.inkSoft,
-                selectedContainerColor = skin.accent,
-                selectedLabelColor = skin.onAccent
-            )
-        )
-    } else {
-        // чип стандартного стиля на плотной полосе surfaceContainer: контейнер
-        // surfaceContainer, подпись onSurface, выбранный день залит акцентом
-        // (как в скинах); кромка — дефолтная M3
-        FilterChip(
-            selected = selected,
-            onClick = onClick,
-            label = { dayLabel() },
-            shape = ChipShape,
-            modifier = chipModifier,
-            colors = FilterChipDefaults.filterChipColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                labelColor = MaterialTheme.colorScheme.onSurface,
-                selectedContainerColor = accent,
-                selectedLabelColor = onAccentColor
-            )
-        )
+    // 0.20.0: компактный чип вместо FilterChip — тот держал минимальную ширину
+    // touch-target 48dp и внутренние паддинги, из-за чего 7 дней не помещались
+    // в экран и ряд приходилось перематывать.
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(32.dp)
+            .semantics { contentDescription = description }
+            .clip(ChipShape)
+            .background(containerColor)
+            .border(borderWidth, borderColor, ChipShape)
+            .selectable(selected = selected, role = Role.Tab, onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        dayLabel()
     }
 }
 
