@@ -8,7 +8,10 @@ plugins {
 
 android {
     namespace = "ru.uniautoalarm.kgeu"
-    compileSdk = 35
+    // 36 (Android 16): требуется линией androidx 2026 года (compose-bom 2026.09,
+    // core-ktx 1.19). targetSdk сознательно остался 35: поведенческие изменения
+    // Android 16 не принимаем до проверки на устройствах.
+    compileSdk = 36
 
     // INFRA-9 (0.11.0): build-tools запинен — иначе сборка тихо берёт любую установленную
     // версию, и aapt/apksigner-поведение может плавать между машинами и CI
@@ -18,9 +21,9 @@ android {
         applicationId = "ru.uniautoalarm.kgeu"
         minSdk = 26
         targetSdk = 35
-        // Версионирование: versionCode = major*10000 + minor*100 + patch (0.23.0 -> 2300)
-        versionCode = 2300
-        versionName = "0.23.0"
+        // Версионирование: versionCode = major*10000 + minor*100 + patch (0.24.0 -> 2400)
+        versionCode = 2400
+        versionName = "0.24.0"
     }
 
     buildTypes {
