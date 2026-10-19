@@ -9,6 +9,12 @@ updates:
       interval: "weekly"
     labels: ["dependencies"]
     open-pull-requests-limit: 5
+    # Враппер зафиксирован на 9.5.1: AGP 8.x несовместим с Gradle ≥9.6
+    # (внутренний API InternalProblems удалён в 9.6.0 — конфигурация падает).
+    # Игнор до миграции на AGP 9 (отдельная задача, см. CHANGELOG 0.24.0).
+    ignore:
+      - dependency-name: "gradle"
+        versions: [">=9.6"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
