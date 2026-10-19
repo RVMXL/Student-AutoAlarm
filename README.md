@@ -135,12 +135,12 @@ Student-AutoAlarm: Android-приложение (Kotlin, Jetpack Compose), ко�
 | `…/alarm/` | Движки будильника: StockAlarmSetter (`ACTION_SET_ALARM` в часы), InAppAlarmScheduler + AlarmFireReceiver + AlarmRingingService + SnoozePolicy (собственный звонок и «Отложить»), AlarmGateway (маршрутизация по цели), ночная сверка, BootReceiver, уведомления |
 | `…/work/` | WorkManager: периодический синк расписания |
 | `…/ui/` | Compose: мастер настройки, главный экран, расписание, настройки, темы |
-| `gradle/libs.versions.toml` | Version catalog (AGP 8.13.2, Kotlin 2.2.21, Compose BOM 2026.09.00) |
+| `gradle/libs.versions.toml` | Version catalog (AGP 9.4.1, Kotlin 2.2.21, Compose BOM 2026.09.00) |
 
 ## Сборка из исходников
 
 ```bash
-# 1. JDK 17+, Android SDK (platform 36, build-tools 35.0.0)
+# 1. JDK 17+, Android SDK (platform 37, build-tools 36.0.0)
 git clone https://github.com/rvmxl/Student-AutoAlarm.git
 cd Student-AutoAlarm
 

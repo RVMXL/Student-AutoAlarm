@@ -8,14 +8,15 @@ plugins {
 
 android {
     namespace = "ru.uniautoalarm.kgeu"
-    // 36 (Android 16): требуется линией androidx 2026 года (compose-bom 2026.09,
-    // core-ktx 1.19). targetSdk сознательно остался 35: поведенческие изменения
-    // Android 16 не принимаем до проверки на устройствах.
-    compileSdk = 36
+    // 37: требуется линией androidx 2026.09 (navigation 2.10.2, compose 1.12 —
+    // AAR-метаданные требуют compileSdk ≥37 и AGP ≥9.1). targetSdk сознательно
+    // остался 35: поведенческие изменения новых Android не принимаем до проверки
+    // на устройствах.
+    compileSdk = 37
 
     // INFRA-9 (0.11.0): build-tools запинен — иначе сборка тихо берёт любую установленную
     // версию, и aapt/apksigner-поведение может плавать между машинами и CI
-    buildToolsVersion = "35.0.0"
+    buildToolsVersion = "36.0.0"
 
     defaultConfig {
         applicationId = "ru.uniautoalarm.kgeu"
