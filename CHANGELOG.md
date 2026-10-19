@@ -16,12 +16,14 @@ compileSdk 37 и AGP ≥9.1, поэтому бамп делается одним
 
 ### Обновлено
 
-- **Тулчейн**: AGP 8.7.3 → 9.4.1 — миграция на AGP 9 с флагом
-  `android.builtInKotlin=false` (built-in Kotlin AGP 9 не поддерживает компилятор-плагины
-  kotlin-compose/kotlin-serialization; флаг живёт до AGP 10, переезд на built-in —
-  отдельная задача); Kotlin 2.0.21 → 2.3.21 (KGP 2.3 — первая линия с поддержкой AGP 9:
-  KGP 2.2.21 падает кастом к BaseExtension, удалённому в AGP 9), KSP → 2.3.12 (KSP2,
-  независимая нумерация), jvmTarget переведён на `compilerOptions` DSL, compileSdk 35 → 37,
+- **Тулчейн**: AGP 8.7.3 → 9.4.1 — миграция на AGP 9 с двумя escape-hatch
+  (`android.builtInKotlin=false` + `android.newDsl=false`): внешний KGP
+  (org.jetbrains.kotlin.android 2.3.21) несовместим с new DSL AGP 9 (каст к
+  BaseExtension), а built-in Kotlin не поддерживает компилятор-плагины
+  kotlin-compose/kotlin-serialization; оба флага живут до AGP 10, переезд на
+  built-in — отдельная задача; Kotlin 2.0.21 → 2.3.21 (KGP 2.3 — первая линия
+  с поддержкой AGP 9), KSP → 2.3.12 (KSP2, независимая нумерация), jvmTarget
+  переведён на `compilerOptions` DSL, compileSdk 35 → 37,
   build-tools 35.0.0 → 36.0.0. targetSdk сознательно остался 35: поведенческие
   изменения новых Android не принимаем до проверки на устройствах.
 - **Gradle wrapper**: остаётся 9.8.1 — AGP 8.x с ним несовместим (промежуточная попытка
