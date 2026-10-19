@@ -48,7 +48,12 @@ jobs:
 
       - name: "Сборка для анализа (debug)"
         if: matrix.language == 'java-kotlin'
-        run: ./gradlew --no-daemon :app:assembleDebug
+        # scheduled-ран 2026-10-19 упал exit 32 («didn't build any of it»):
+        # kotlinc по умолчанию живёт в отдельном Kotlin-daemon JVM, который
+        # стартует вне перехвата экстрактора CodeQL (гонка — push-раны ловили,
+        # scheduled — нет). Стратегия in-process прижимает компиляцию к JVM
+        # Gradle с агентом экстрактора; clean страхует от up-to-date задач.
+        run: ./gradlew --no-daemon -Dkotlin.compiler.execution.strategy=in-process clean :app:assembleDebug
 
       - uses: github/codeql-action/analyze@ce5e7eeac396d720fe2d802714996c8ce561e311 # v3.39.0
         with:
