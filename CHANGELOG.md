@@ -19,9 +19,11 @@ compileSdk 37 и AGP ≥9.1, поэтому бамп делается одним
 - **Тулчейн**: AGP 8.7.3 → 9.4.1 — миграция на AGP 9 с флагом
   `android.builtInKotlin=false` (built-in Kotlin AGP 9 не поддерживает компилятор-плагины
   kotlin-compose/kotlin-serialization; флаг живёт до AGP 10, переезд на built-in —
-  отдельная задача); Kotlin 2.0.21 → 2.2.21, KSP 2.0.21-1.0.27 → 2.2.21-2.0.5 (KSP2),
-  compileSdk 35 → 37, build-tools 35.0.0 → 36.0.0. targetSdk сознательно остался 35:
-  поведенческие изменения новых Android не принимаем до проверки на устройствах.
+  отдельная задача); Kotlin 2.0.21 → 2.3.21 (KGP 2.3 — первая линия с поддержкой AGP 9:
+  KGP 2.2.21 падает кастом к BaseExtension, удалённому в AGP 9), KSP → 2.3.12 (KSP2,
+  независимая нумерация), jvmTarget переведён на `compilerOptions` DSL, compileSdk 35 → 37,
+  build-tools 35.0.0 → 36.0.0. targetSdk сознательно остался 35: поведенческие
+  изменения новых Android не принимаем до проверки на устройствах.
 - **Gradle wrapper**: остаётся 9.8.1 — AGP 8.x с ним несовместим (промежуточная попытка
   AGP 8.13.2 падала: внутренний API Gradle, удалённый в 9.6.0), AGP 9.4.1 построен
   под новую линию API; связка AGP-Gradle проверяется CI.
@@ -34,8 +36,8 @@ compileSdk 37 и AGP ≥9.1, поэтому бамп делается одним
 
 ### Технические детали
 
-- `kotlinOptions.jvmTarget` оставлен на deprecated-пути — переезд на `compilerOptions`
-  отдельной технической задачей.
+- `kotlinOptions.jvmTarget` переведён на `compilerOptions` DSL (старый DSL deprecated
+  и выброшен из KGP 2.3).
 - build-tools запинены на 36.0.0 (INFRA-9): aapt2 не привязан к платформе,
   поведение сборки стабильно между машинами и CI.
 - CodeQL java-kotlin: компиляция Kotlin прижата in-process к JVM Gradle — фикс
