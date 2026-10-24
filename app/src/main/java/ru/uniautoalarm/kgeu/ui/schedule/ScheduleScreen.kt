@@ -266,42 +266,54 @@ fun ScheduleScreen() {
                     HorizontalPager(
                         state = pagerState,
                         modifier = Modifier.fillMaxWidth(),
+                        // FIX 0.25.1: страницы — к верхнему краю: дефолтный у пейджера
+                        // CenterVertically центрировал короткие страницы в высоком
+                        // пейджере; при равных высотах страниц это не видно, но
+                        // защищает от «падения» содержимого в середину при расхождении
+                        verticalAlignment = Alignment.Top,
                         beyondViewportPageCount = 1
                     ) { page ->
                         val pageMonday = remember(page) {
                             pagerBase.plusDays(page.toLong())
                                 .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
                         }
-                        if (skin != null) {
-                            SkinCalendarHeader(
-                                skin,
-                                remember(page) { monthTitleOf(pageMonday) }
+                        // FIX 0.25.1: страница пейджера имеет Box-семантику — несколько
+                        // корневых composables НАКЛАДЫВАЮТСЯ друг на друга: у скинов
+                        // месяц/кольца рисовались ПОВЕРХ шапки недели. Обёртка в Column
+                        // возвращает порядок обычной колонки до свайпов (кольца → месяц →
+                        // разделитель → неделя)
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            if (skin != null) {
+                                SkinCalendarHeader(
+                                    skin,
+                                    remember(page) { monthTitleOf(pageMonday) }
+                                )
+                            }
+                            WeekHeaderBox(
+                                monday = pageMonday,
+                                currentWeekMonday = currentWeekMonday,
+                                skin = skin,
+                                accent = accent,
+                                onAccent = onAccent,
+                                busy = sync.busy,
+                                onPrevWeek = {
+                                    vm.prevWeek { msg ->
+                                        scope.launch { snackbarHostState.showSnackbar(msg) }
+                                    }
+                                },
+                                onNextWeek = {
+                                    vm.nextWeek { msg ->
+                                        scope.launch { snackbarHostState.showSnackbar(msg) }
+                                    }
+                                },
+                                onGoToday = vm::goToToday,
+                                onRefresh = {
+                                    vm.refreshCurrent { msg ->
+                                        scope.launch { snackbarHostState.showSnackbar(msg) }
+                                    }
+                                }
                             )
                         }
-                        WeekHeaderBox(
-                            monday = pageMonday,
-                            currentWeekMonday = currentWeekMonday,
-                            skin = skin,
-                            accent = accent,
-                            onAccent = onAccent,
-                            busy = sync.busy,
-                            onPrevWeek = {
-                                vm.prevWeek { msg ->
-                                    scope.launch { snackbarHostState.showSnackbar(msg) }
-                                }
-                            },
-                            onNextWeek = {
-                                vm.nextWeek { msg ->
-                                    scope.launch { snackbarHostState.showSnackbar(msg) }
-                                }
-                            },
-                            onGoToday = vm::goToToday,
-                            onRefresh = {
-                                vm.refreshCurrent { msg ->
-                                    scope.launch { snackbarHostState.showSnackbar(msg) }
-                                }
-                            }
-                        )
                     }
                 } else {
                     // Дата вне окна пейджера (стрелками «уехали» дальше года) — прямой
@@ -399,6 +411,11 @@ fun ScheduleScreen() {
                     HorizontalPager(
                         state = pagerState,
                         modifier = Modifier.fillMaxSize(),
+                        // FIX 0.25.1: страницы — к верхнему краю. Дефолтный у пейджера
+                        // CenterVertically центрировал короткую страницу пустого дня
+                        // в пейджере fillMaxSize — плашка «Занятий нет» «падала»
+                        // в середину экрана на ВСЕХ темах вместо позиции под чипами
+                        verticalAlignment = Alignment.Top,
                         beyondViewportPageCount = 1
                     ) { page ->
                         DayPage(
