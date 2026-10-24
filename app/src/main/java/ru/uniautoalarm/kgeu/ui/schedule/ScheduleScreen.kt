@@ -81,7 +81,6 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
 import java.util.Locale
-import kotlin.math.abs
 import kotlinx.coroutines.launch
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.model.CalendarStyle
@@ -104,9 +103,6 @@ private const val PAGER_SPAN_DAYS = 366
 
 /** Всего страниц пейджера: окно в обе стороны + неделя вперёд в запасе. */
 private const val PAGER_PAGE_COUNT = PAGER_SPAN_DAYS * 2 + 8
-
-/** Прыжки длиннее этого числа страниц («сегодня» издалека) — без анимации. */
-private const val PAGER_INSTANT_JUMP_PAGES = 10
 
 /** Индекс страницы пейджера для даты (страницы = дни от базового понедельника). */
 private fun pagerIndexOf(base: LocalDate, date: LocalDate): Int =
@@ -159,8 +155,12 @@ private fun CalendarSkin.frameInsetDp(): androidx.compose.ui.unit.Dp = when (dec
  * перелистывается сама; у скинов вместе с ней уезжает «шапка листа» с месяцем.
  * Ряд чипов дней стоит на месте — выделение ПЛАВНО ПЕРЕТЕКАЕТ цветом с
  * предыдущего чипа на новый (см. [DayChip]). Лист скина (рамка/фон) — статичный
- * «прибор», страницы уезжают из-под него. Стрелки недель и «сегодня» ведут
- * себя как раньше, но тоже едут с анимацией.
+ * «прибор», страницы уезжают из-под него. 0.25.2: день фиксируется ПО ФАКТУ
+ * пересечения страницей середины (currentPage, не settledPage) — чипы и неделя
+ * меняются в такт пальцу, без задержки на дожим; кнопочная навигация (чипы,
+ * стрелки, «сегодня») — МГНОВЕННАЯ (scrollToPage без анимации): анимированный
+ * проезд через промежуточные недели тормозил смену надписи и мог застревать
+ * при отмене/гонках с settle-каскадом.
  */
 @Composable
 fun ScheduleScreen() {
@@ -206,27 +206,28 @@ fun ScheduleScreen() {
     )
     val usePager = pagerIndexOf(pagerBase, selectedDate) in 0 until PAGER_PAGE_COUNT
 
-    // Страница установилась → фиксируем день в VM (свайп или завершение анимации).
-    // Если день из другой недели, VM сдвигает неделю следом и тихо подтягивает
-    // её из API (как при стрелках недель).
+    // День фиксируется по currentPage (0.25.2): страница пересекла середину — день,
+    // чипы и неделя меняются В ТАКТ СВАЙПУ, без ожидания дожима (settledPage
+    // запаздывал на всю snap-анимацию — «ощутимая задержка» из фидбека 0.25.0).
+    // Обратный жест корректно возвращает выбор; промежуточные дни при дальнем
+    // флинге безвредны (settleOn идемпотентен, тихий refresh недели дедуплицирован).
     LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.settledPage }.collect { page ->
+        snapshotFlow { pagerState.currentPage }.collect { page ->
             vm.settleOn(pagerBase.plusDays(page.toLong())) { msg ->
                 scope.launch { snackbarHostState.showSnackbar(msg) }
             }
         }
     }
-    // Внешняя смена дня (чипы, стрелки недель, «сегодня») → доводим пейджер:
-    // ближние прыжки — с анимацией, дальние («сегодня» из другого месяца) — мгновенно.
+    // Внешняя смена дня (чипы, стрелки недель, «сегодня») → пейджер ставится
+    // МГНОВЕННО (0.25.2): scrollToPage без анимации. Анимированный проезд через
+    // промежуточные недели тормозил шапку и контент (~600 мс) и мог застревать
+    // (надпись недели не менялась до пересборки данных — фидбек 0.25.0);
+    // с контактом currentPage/settleOn петли нет: после прыжка currentPage == idx
     LaunchedEffect(selectedDate, usePager) {
         if (!usePager) return@LaunchedEffect
         val idx = pagerIndexOf(pagerBase, selectedDate)
         if (idx in 0 until PAGER_PAGE_COUNT && pagerState.currentPage != idx) {
-            if (abs(idx - pagerState.currentPage) > PAGER_INSTANT_JUMP_PAGES) {
-                pagerState.scrollToPage(idx)
-            } else {
-                pagerState.animateScrollToPage(idx)
-            }
+            pagerState.scrollToPage(idx)
         }
     }
 
@@ -306,7 +307,11 @@ fun ScheduleScreen() {
                                         scope.launch { snackbarHostState.showSnackbar(msg) }
                                     }
                                 },
-                                onGoToday = vm::goToToday,
+                                onGoToday = {
+                                    vm.goToToday { msg ->
+                                        scope.launch { snackbarHostState.showSnackbar(msg) }
+                                    }
+                                },
                                 onRefresh = {
                                     vm.refreshCurrent { msg ->
                                         scope.launch { snackbarHostState.showSnackbar(msg) }
@@ -338,7 +343,11 @@ fun ScheduleScreen() {
                                 scope.launch { snackbarHostState.showSnackbar(msg) }
                             }
                         },
-                        onGoToday = vm::goToToday,
+                        onGoToday = {
+                            vm.goToToday { msg ->
+                                scope.launch { snackbarHostState.showSnackbar(msg) }
+                            }
+                        },
                         onRefresh = {
                             vm.refreshCurrent { msg ->
                                 scope.launch { snackbarHostState.showSnackbar(msg) }

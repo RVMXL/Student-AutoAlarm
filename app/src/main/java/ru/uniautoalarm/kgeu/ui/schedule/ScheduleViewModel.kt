@@ -131,11 +131,16 @@ class ScheduleViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch { refreshQuietly(newMonday, onError) }
     }
 
-    /** Вернуться к текущей неделе и выбрать сегодня (кнопка «сегодня» в шапке календаря). */
-    fun goToToday() {
-        _weekMonday.value =
-            LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+    /**
+     * Вернуться к текущей неделе и выбрать сегодня (кнопка «сегодня» в шапке календаря).
+     * 0.25.2: неделя тихо подтягивается из API — как у стрелок и свайпа через
+     * границу: все пути смены недели ведут себя одинаково.
+     */
+    fun goToToday(onError: (String) -> Unit = {}) {
+        val monday = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        _weekMonday.value = monday
         _selectedDate.value = LocalDate.now()
+        viewModelScope.launch { refreshQuietly(monday, onError) }
     }
 
     /**
@@ -151,11 +156,25 @@ class ScheduleViewModel(private val container: AppContainer) : ViewModel() {
         viewModelScope.launch { refreshQuietly(newMonday, onError) }
     }
 
-    /** Тихая подгрузка недели из API (цели нет — просто работаем с кэшем). */
+    /**
+     * Тихая подгрузка недели из API (цели нет — просто работаем с кэшем).
+     * 0.25.2: дедупликация — повторный вызов для ТАКОЙ ЖЕ недели, пока прошлый
+     * ещё не завершился, не запускает второй запрос: быстрые флинги через
+     * границу недели и многократные пересечения середины currentPage больше
+     * не штормят API (ошибка всё равно долетит до снекбара один раз).
+     */
+    private var quietRefreshMonday: LocalDate? = null
+
     private suspend fun refreshQuietly(monday: LocalDate, onError: (String) -> Unit) {
-        val target = container.settings.current().toTarget() ?: return
-        container.scheduleRepository.refreshWeek(target, monday)
-            .onFailure { e -> onError(refreshErrorMessage(container.appContext, e)) }
+        if (quietRefreshMonday == monday) return
+        quietRefreshMonday = monday
+        try {
+            val target = container.settings.current().toTarget() ?: return
+            container.scheduleRepository.refreshWeek(target, monday)
+                .onFailure { e -> onError(refreshErrorMessage(container.appContext, e)) }
+        } finally {
+            if (quietRefreshMonday == monday) quietRefreshMonday = null
+        }
     }
 
     /** Обновить выбранную неделю из API; onResult — текст для снекбара (успех/причина). */
