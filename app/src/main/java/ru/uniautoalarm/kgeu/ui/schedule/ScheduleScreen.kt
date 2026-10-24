@@ -1,5 +1,9 @@
 package ru.uniautoalarm.kgeu.ui.schedule
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,6 +21,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,14 +47,17 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -69,8 +78,10 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
 import java.util.Locale
+import kotlin.math.abs
 import kotlinx.coroutines.launch
 import ru.uniautoalarm.kgeu.R
 import ru.uniautoalarm.kgeu.data.model.CalendarStyle
@@ -85,6 +96,29 @@ import ru.uniautoalarm.kgeu.ui.theme.skin
 
 private val CardShape = RoundedCornerShape(20.dp)
 private val ChipShape = RoundedCornerShape(8.dp)
+
+// --- 0.25.0: свайп-навигация по дням и неделям ---
+
+/** Окно пейджера: ±366 дней от текущего понедельника (≈ год в каждую сторону). */
+private const val PAGER_SPAN_DAYS = 366
+
+/** Всего страниц пейджера: окно в обе стороны + неделя вперёд в запасе. */
+private const val PAGER_PAGE_COUNT = PAGER_SPAN_DAYS * 2 + 8
+
+/** Прыжки длиннее этого числа страниц («сегодня» издалека) — без анимации. */
+private const val PAGER_INSTANT_JUMP_PAGES = 10
+
+/** Индекс страницы пейджера для даты (страницы = дни от базового понедельника). */
+private fun pagerIndexOf(base: LocalDate, date: LocalDate): Int =
+    ChronoUnit.DAYS.between(base, date).toInt()
+
+/** «Октябрь · 2025» из понедельника недели. */
+private fun monthTitleOf(monday: LocalDate): String {
+    val month = monday.month
+        .getDisplayName(java.time.format.TextStyle.FULL, Locale.getDefault())
+        .replaceFirstChar { it.uppercase() }
+    return "$month · ${monday.year}"
+}
 
 /** «12 октября» — функция, а не синглтон: локаль на момент вызова (SET-4/UI-5). */
 private fun monthDay(): DateTimeFormatter =
@@ -117,6 +151,16 @@ private fun CalendarSkin.frameInsetDp(): androidx.compose.ui.unit.Dp = when (dec
  * 0.15.0: «сегодня» — скруглённая полоска НАД названием дня (акцентный цвет,
  * толщина точки); точки под числом — только про расписание: серая «есть пары»,
  * цветная с числом «обозначенных (исключённых) секций».
+ *
+ * 0.25.0: перелистывание дней и недель СВАЙПОМ. Контент дня и шапка (месяц +
+ * неделя) — два синхронизированных пейджера на ОДНОЙ PagerState: двигаются
+ * одним жестом. Внутри недели страницы шапки идентичны — она визуально
+ * неподвижна, а на границе недели (воскресенье → понедельник и обратно)
+ * перелистывается сама; у скинов вместе с ней уезжает «шапка листа» с месяцем.
+ * Ряд чипов дней стоит на месте — выделение ПЛАВНО ПЕРЕТЕКАЕТ цветом с
+ * предыдущего чипа на новый (см. [DayChip]). Лист скина (рамка/фон) — статичный
+ * «прибор», страницы уезжают из-под него. Стрелки недель и «сегодня» ведут
+ * себя как раньше, но тоже едут с анимацией.
  */
 @Composable
 fun ScheduleScreen() {
@@ -148,14 +192,42 @@ fun ScheduleScreen() {
     }
     val currentWeekMonday =
         remember(today) { today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)) }
-    val isCurrentWeek = weekMonday == currentWeekMonday
     val accent = skin?.accent ?: MaterialTheme.colorScheme.primary
     val onAccent = skin?.onAccent ?: MaterialTheme.colorScheme.onPrimary
-    val monthTitle = remember(weekMonday) {
-        val month = weekMonday.month
-            .getDisplayName(java.time.format.TextStyle.FULL, Locale.getDefault())
-            .replaceFirstChar { it.uppercase() }
-        "$month · ${weekMonday.year}"
+
+    // Страницы пейджера = дни в окне ±PAGER_SPAN_DAYS от текущего понедельника.
+    val pagerBase = remember {
+        LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+            .minusDays(PAGER_SPAN_DAYS.toLong())
+    }
+    val pagerState = rememberPagerState(
+        initialPage = pagerIndexOf(pagerBase, LocalDate.now()),
+        pageCount = { PAGER_PAGE_COUNT }
+    )
+    val usePager = pagerIndexOf(pagerBase, selectedDate) in 0 until PAGER_PAGE_COUNT
+
+    // Страница установилась → фиксируем день в VM (свайп или завершение анимации).
+    // Если день из другой недели, VM сдвигает неделю следом и тихо подтягивает
+    // её из API (как при стрелках недель).
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.settledPage }.collect { page ->
+            vm.settleOn(pagerBase.plusDays(page.toLong())) { msg ->
+                scope.launch { snackbarHostState.showSnackbar(msg) }
+            }
+        }
+    }
+    // Внешняя смена дня (чипы, стрелки недель, «сегодня») → доводим пейджер:
+    // ближние прыжки — с анимацией, дальние («сегодня» из другого месяца) — мгновенно.
+    LaunchedEffect(selectedDate, usePager) {
+        if (!usePager) return@LaunchedEffect
+        val idx = pagerIndexOf(pagerBase, selectedDate)
+        if (idx in 0 until PAGER_PAGE_COUNT && pagerState.currentPage != idx) {
+            if (abs(idx - pagerState.currentPage) > PAGER_INSTANT_JUMP_PAGES) {
+                pagerState.scrollToPage(idx)
+            } else {
+                pagerState.animateScrollToPage(idx)
+            }
+        }
     }
 
     Scaffold(
@@ -169,7 +241,8 @@ fun ScheduleScreen() {
         ) {
             if (skin?.background != null) {
                 // Лист стиля (фон) с собственным оформлением стиля — 0.15.0:
-                // у каждого скина своя рамка (дерево/монитор/свечение/кайма/линейки)
+                // у каждого скина своя рамка (дерево/монитор/свечение/кайма/линейки).
+                // Статичен при свайпах: «прибор», страницы уезжают из-под него.
                 SkinSheet(skin!!, Modifier.matchParentSize())
             }
             Column(
@@ -188,89 +261,124 @@ fun ScheduleScreen() {
                         }
                     )
             ) {
-                if (skin != null) {
-                    SkinCalendarHeader(skin, monthTitle)
-                }
-                // FIX 0.15.0: в стандартном стиле шапка жила прямо на фоне — с картинкой
-                // текст мог слиться; у шапки плотная поверхность surfaceContainer.
-                // В скинах шапка живёт на листе скина — как было.
-                val weekHeader: @Composable () -> Unit = {
-                Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 2.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = { vm.prevWeek() }) {
-                    Icon(
-                        Icons.Rounded.ChevronLeft,
-                        contentDescription = stringResource(R.string.cd_prev_week),
-                        // FIX 0.19.0: без явного цвета иконки брали LocalContentColor ТЕМЫ
-                        // приложения — в тёмной теме на светлых листах скинов (бумажный,
-                        // акварель, ретро-печать) они почти сливались с фоном
-                        tint = skin?.ink ?: MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                Column(
-                    modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        "${weekMonday.format(monthDay())} – " +
-                            weekMonday.plusDays(6).format(monthDay()),
-                        style = MaterialTheme.typography.titleMedium,
-                        textAlign = TextAlign.Center,
-                        // текущая неделя выделена акцентом — из неё чаще всего и «уезжают»
-                        color = if (isCurrentWeek) accent
-                            else skin?.ink ?: MaterialTheme.colorScheme.onSurface
-                    )
-                    if (isCurrentWeek) {
-                        SmallBadge(
-                            text = stringResource(R.string.badge_this_week),
-                            container = accent,
-                            content = onAccent
+                // --- Шапка: месяц (скины) + неделя. Пейджер — перелистывается ---
+                if (usePager) {
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier.fillMaxWidth(),
+                        beyondViewportPageCount = 1
+                    ) { page ->
+                        val pageMonday = remember(page) {
+                            pagerBase.plusDays(page.toLong())
+                                .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+                        }
+                        if (skin != null) {
+                            SkinCalendarHeader(
+                                skin,
+                                remember(page) { monthTitleOf(pageMonday) }
+                            )
+                        }
+                        WeekHeaderBox(
+                            monday = pageMonday,
+                            currentWeekMonday = currentWeekMonday,
+                            skin = skin,
+                            accent = accent,
+                            onAccent = onAccent,
+                            busy = sync.busy,
+                            onPrevWeek = {
+                                vm.prevWeek { msg ->
+                                    scope.launch { snackbarHostState.showSnackbar(msg) }
+                                }
+                            },
+                            onNextWeek = {
+                                vm.nextWeek { msg ->
+                                    scope.launch { snackbarHostState.showSnackbar(msg) }
+                                }
+                            },
+                            onGoToday = vm::goToToday,
+                            onRefresh = {
+                                vm.refreshCurrent { msg ->
+                                    scope.launch { snackbarHostState.showSnackbar(msg) }
+                                }
+                            }
                         )
                     }
-                }
-                // UI-14 (0.10.0): перелистывание вперёд не гейтится по busy —
-                // но кнопка отключена во время загрузки, чтобы не штормить API подряд
-                IconButton(onClick = {
-                    vm.nextWeek { msg ->
-                        scope.launch { snackbarHostState.showSnackbar(msg) }
+                } else {
+                    // Дата вне окна пейджера (стрелками «уехали» дальше года) — прямой
+                    // рендер без пейджера, чтобы ничего не падало на крайних значениях
+                    if (skin != null) {
+                        SkinCalendarHeader(skin, monthTitleOf(weekMonday))
                     }
-                }, enabled = !sync.busy) {
-                    Icon(
-                        Icons.Rounded.ChevronRight,
-                        contentDescription = stringResource(R.string.cd_next_week),
-                        tint = skin?.ink ?: MaterialTheme.colorScheme.onSurface
+                    WeekHeaderBox(
+                        monday = weekMonday,
+                        currentWeekMonday = currentWeekMonday,
+                        skin = skin,
+                        accent = accent,
+                        onAccent = onAccent,
+                        busy = sync.busy,
+                        onPrevWeek = {
+                            vm.prevWeek { msg ->
+                                scope.launch { snackbarHostState.showSnackbar(msg) }
+                            }
+                        },
+                        onNextWeek = {
+                            vm.nextWeek { msg ->
+                                scope.launch { snackbarHostState.showSnackbar(msg) }
+                            }
+                        },
+                        onGoToday = vm::goToToday,
+                        onRefresh = {
+                            vm.refreshCurrent { msg ->
+                                scope.launch { snackbarHostState.showSnackbar(msg) }
+                            }
+                        }
                     )
                 }
-                IconButton(onClick = { vm.goToToday() }) {
-                    Icon(
-                        Icons.Rounded.Today,
-                        contentDescription = stringResource(R.string.cd_go_today),
-                        // подсвечена, пока пользователь «уехал» с текущей недели
-                        tint = if (!isCurrentWeek) accent
-                            else skin?.inkSoft
-                                ?: MaterialTheme.colorScheme.onSurfaceVariant
+
+                if (sync.busy && dayLessons.isEmpty()) {
+                    LinearProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
                     )
                 }
-                IconButton(onClick = {
-                    vm.refreshCurrent { msg ->
-                        scope.launch { snackbarHostState.showSnackbar(msg) }
+
+                // у ряда дней в стандартном стиле плотный фон surfaceContainer (как у
+                // шапки) — с фоновой картинкой подписи не сливаются. В скинах чипы
+                // живут на листе скина. Подписи дней — на одной высоте
+                // (фиксированные слоты в dayLabel).
+                // 0.20.0: ряд дней НЕ прокручивается — 7 чипов распределены равномерно
+                // по ширине экрана (weight(1f)), перематывать не нужно.
+                // 0.25.0: ряд стоит на месте и при свайпах — «перелистывается» только
+                // выделение (плавный переход цвета со старого чипа на новый).
+                // Точки дня = числу ПАР (0.20.0): уникальные слоты времени —
+                // лабы двух подгрупп в одно время = одна пара
+                val dayChipRow: @Composable () -> Unit = {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        (0..6).forEach { offset ->
+                            key(offset) { // UI-12: key — переиспользование состояния чипов
+                                val date = weekMonday.plusDays(offset.toLong())
+                                val dateLessons = weekLessons[date].orEmpty()
+                                DayChip(
+                                    date = date,
+                                    selected = date == selectedDate,
+                                    isToday = date == today,
+                                    skin = skin,
+                                    pairCount = DayMarkers.countPairs(dateLessons),
+                                    markedCount = DayMarkers.countMarked(dateLessons, exceptions),
+                                    onClick = { vm.selectDate(date) },
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                        }
                     }
-                }) {
-                    Icon(
-                        Icons.Rounded.Refresh,
-                        contentDescription = stringResource(R.string.cd_refresh_week),
-                        tint = skin?.ink ?: MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            }
                 }
                 if (skin == null) {
-                    // у шапки стандартного стиля плотная поверхность — с фоновой
-                    // картинкой текст больше не сливается
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -280,141 +388,241 @@ fun ScheduleScreen() {
                                 RoundedCornerShape(16.dp)
                             )
                     ) {
-                        weekHeader()
+                        dayChipRow()
                     }
                 } else {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 2.dp)
-                    ) {
-                        weekHeader()
-                    }
-                }
-
-            if (sync.busy && dayLessons.isEmpty()) {
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-            }
-
-            // у ряда дней в стандартном стиле плотный фон surfaceContainer (как у
-            // шапки) — с фоновой картинкой подписи не сливаются. В скинах чипы
-            // живут на листе скина. Подписи дней — на одной высоте
-            // (фиксированные слоты в dayLabel).
-            // 0.20.0: ряд дней НЕ прокручивается — 7 чипов распределены равномерно
-            // по ширине экрана (weight(1f)), перематывать не нужно. Раньше был
-            // LazyRow: минимальная ширина touch-target FilterChip (48dp) не давала
-            // семи дням влезть на экран. Точки дня = числу ПАР (0.20.0):
-            // уникальные слоты времени — лабы двух подгрупп в одно время = одна пара
-            val dayChipRow: @Composable () -> Unit = {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    (0..6).forEach { offset ->
-                        key(offset) { // UI-12: key — переиспользование состояния чипов
-                            val date = weekMonday.plusDays(offset.toLong())
-                            val dateLessons = weekLessons[date].orEmpty()
-                            DayChip(
-                                date = date,
-                                selected = date == selectedDate,
-                                isToday = date == today,
-                                skin = skin,
-                                pairCount = DayMarkers.countPairs(dateLessons),
-                                markedCount = DayMarkers.countMarked(dateLessons, exceptions),
-                                onClick = { vm.selectDate(date) },
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-                }
-            }
-            if (skin == null) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
-                        .background(
-                            MaterialTheme.colorScheme.surfaceContainer,
-                            RoundedCornerShape(16.dp)
-                        )
-                ) {
                     dayChipRow()
                 }
-            } else {
-                dayChipRow()
-            }
 
-            if (dayLessons.isEmpty()) {
-                if (sync.busy && sync.lastSyncEpochMs == 0L) {
-                    // UI-15 (0.10.0): первая загрузка — вместо ложного «нет пар» показываем
-                    // индикатор; EmptyDayCard рисуем только когда данные уже приходили
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(32.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        CircularProgressIndicator()
-                        Text(
-                            stringResource(R.string.refreshing),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = skin?.inkSoft ?: MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                } else {
-                    EmptyDayCard(
-                        skin = skin,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    )
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(
-                        start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    // UI-12: стабильный составной key — пересортировка/замены не пересоздают карточки заново
-                    items(dayLessons, key = { lesson ->
-                        "${lesson.date}:${lesson.start}:${lesson.end}:${lesson.subject}:" +
-                            "${lesson.room}:${lesson.kind}:${lesson.group}"
-                    }) { lesson ->
-                        // строки снекбара вынесены в композицию: внутри scope.launch
-                        // composable-функции (stringResource) вызывать нельзя
-                        val msgExcludedOn =
-                            stringResource(R.string.snackbar_excluded_on, lesson.subject)
-                        val msgExcludedOff = stringResource(R.string.snackbar_excluded_off)
-                        LessonCard(
-                            lesson = lesson,
+                // --- Контент дня: страницы-дни пейджера (свайп влево — день вперёд) ---
+                if (usePager) {
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier.fillMaxSize(),
+                        beyondViewportPageCount = 1
+                    ) { page ->
+                        DayPage(
+                            date = pagerBase.plusDays(page.toLong()),
+                            weekLessons = weekLessons,
                             skin = skin,
-                            excluded = vm.isExceptional(lesson.subject, exceptions),
-                            onToggleException = {
-                                val willExclude =
-                                    !vm.isExceptional(lesson.subject, exceptions)
-                                vm.toggleException(lesson.subject)
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        if (willExclude) msgExcludedOn else msgExcludedOff
-                                    )
-                                }
+                            busy = sync.busy,
+                            firstSync = sync.lastSyncEpochMs == 0L,
+                            isExceptional = { subject -> vm.isExceptional(subject, exceptions) },
+                            onToggleException = { subject -> vm.toggleException(subject) },
+                            onShowSnackbar = { msg ->
+                                scope.launch { snackbarHostState.showSnackbar(msg) }
                             }
                         )
                     }
+                } else {
+                    DayPage(
+                        date = selectedDate,
+                        weekLessons = weekLessons,
+                        skin = skin,
+                        busy = sync.busy,
+                        firstSync = sync.lastSyncEpochMs == 0L,
+                        isExceptional = { subject -> vm.isExceptional(subject, exceptions) },
+                        onToggleException = { subject -> vm.toggleException(subject) },
+                        onShowSnackbar = { msg ->
+                            scope.launch { snackbarHostState.showSnackbar(msg) }
+                        }
+                    )
                 }
             }
         }
     }
 }
+
+// --- Шапка недели (страница верхнего пейджера, 0.25.0) ---
+
+/**
+ * Шапка недели: стрелки, «12 – 18 октября», бейдж «идёт текущая неделя»,
+ * «сегодня», обновить. Рисуется на КАЖДОЙ странице верхнего пейджера:
+ * внутри недели все страницы идентичны (перелистывание незаметно), при
+ * переходе через границу недели шапка уезжает вместе с контентом дня.
+ *
+ * 0.25.0: бейдж текущей недели всегда занимает место, видимость — плавной
+ * альфой: высота шапки постоянна, страницы пейджера строго одной высоты
+ * (иначе при перелистывании «прыгала» бы вся колонка).
+ */
+@Composable
+private fun WeekHeaderBox(
+    monday: LocalDate,
+    currentWeekMonday: LocalDate,
+    skin: CalendarSkin?,
+    accent: Color,
+    onAccent: Color,
+    busy: Boolean,
+    onPrevWeek: () -> Unit,
+    onNextWeek: () -> Unit,
+    onGoToday: () -> Unit,
+    onRefresh: () -> Unit
+) {
+    val isCurrentWeek = monday == currentWeekMonday
+    // FIX 0.19.0: без явного цвета иконки брали LocalContentColor ТЕМЫ приложения —
+    // в тёмной теме на светлых листах скинов (бумажный, акварель, ретро-печать)
+    // они почти сливались с фоном
+    val ink = skin?.ink ?: MaterialTheme.colorScheme.onSurface
+    val badgeAlpha by animateFloatAsState(
+        targetValue = if (isCurrentWeek) 1f else 0f,
+        animationSpec = tween(280),
+        label = "weekBadgeAlpha"
+    )
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 2.dp)
+            .then(
+                if (skin == null) {
+                    // FIX 0.15.0: у шапки стандартного стиля плотная поверхность —
+                    // с фоновой картинкой текст больше не сливается
+                    Modifier.background(
+                        MaterialTheme.colorScheme.surfaceContainer,
+                        RoundedCornerShape(16.dp)
+                    )
+                } else {
+                    Modifier
+                }
+            )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 2.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onPrevWeek) {
+                Icon(
+                    Icons.Rounded.ChevronLeft,
+                    contentDescription = stringResource(R.string.cd_prev_week),
+                    tint = ink
+                )
+            }
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "${monday.format(monthDay())} – ${monday.plusDays(6).format(monthDay())}",
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                    // текущая неделя выделена акцентом — из неё чаще всего и «уезжают»
+                    color = if (isCurrentWeek) accent else ink
+                )
+                Box(Modifier.alpha(badgeAlpha)) {
+                    SmallBadge(
+                        text = stringResource(R.string.badge_this_week),
+                        container = accent,
+                        content = onAccent
+                    )
+                }
+            }
+            // UI-14 (0.10.0): кнопка отключена во время загрузки, чтобы не штормить API
+            IconButton(onClick = onNextWeek, enabled = !busy) {
+                Icon(
+                    Icons.Rounded.ChevronRight,
+                    contentDescription = stringResource(R.string.cd_next_week),
+                    tint = ink
+                )
+            }
+            IconButton(onClick = onGoToday) {
+                Icon(
+                    Icons.Rounded.Today,
+                    contentDescription = stringResource(R.string.cd_go_today),
+                    // подсвечена, пока пользователь «уехал» с текущей недели
+                    tint = if (!isCurrentWeek) accent
+                        else skin?.inkSoft
+                            ?: MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            IconButton(onClick = onRefresh) {
+                Icon(
+                    Icons.Rounded.Refresh,
+                    contentDescription = stringResource(R.string.cd_refresh_week),
+                    tint = ink
+                )
+            }
+        }
+    }
+}
+
+// --- Страница дня (контент нижнего пейджера, 0.25.0) ---
+
+/**
+ * Содержимое ОДНОГО дня — страница нижнего пейджера: карточки пар или пустое
+ * состояние. Данные берутся из окна трёх недель [weekLessons]: страницы
+ * соседних дней (в том числе за границей недели) уже наполнены во время свайпа.
+ * Тап по иконке пары гасит/возвращает будильник (исключения).
+ */
+@Composable
+private fun DayPage(
+    date: LocalDate,
+    weekLessons: Map<LocalDate, List<Lesson>>,
+    skin: CalendarSkin?,
+    busy: Boolean,
+    firstSync: Boolean,
+    isExceptional: (String) -> Boolean,
+    onToggleException: (String) -> Unit,
+    onShowSnackbar: (String) -> Unit
+) {
+    val dayLessons = weekLessons[date].orEmpty()
+    if (dayLessons.isEmpty()) {
+        if (busy && firstSync) {
+            // UI-15 (0.10.0): первая загрузка — вместо ложного «нет пар» показываем
+            // индикатор; EmptyDayCard рисуем только когда данные уже приходили
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                CircularProgressIndicator()
+                Text(
+                    stringResource(R.string.refreshing),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = skin?.inkSoft ?: MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        } else {
+            EmptyDayCard(
+                skin = skin,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            // UI-12: стабильный составной key — пересортировка/замены не пересоздают карточки заново
+            items(dayLessons, key = { lesson ->
+                "${lesson.date}:${lesson.start}:${lesson.end}:${lesson.subject}:" +
+                    "${lesson.room}:${lesson.kind}:${lesson.group}"
+            }) { lesson ->
+                // строки снекбара вынесены в композицию: внутри scope.launch
+                // composable-функции (stringResource) вызывать нельзя
+                val msgExcludedOn =
+                    stringResource(R.string.snackbar_excluded_on, lesson.subject)
+                val msgExcludedOff = stringResource(R.string.snackbar_excluded_off)
+                LessonCard(
+                    lesson = lesson,
+                    skin = skin,
+                    excluded = isExceptional(lesson.subject),
+                    onToggleException = {
+                        val willExclude = !isExceptional(lesson.subject)
+                        onToggleException(lesson.subject)
+                        onShowSnackbar(if (willExclude) msgExcludedOn else msgExcludedOff)
+                    }
+                )
+            }
+        }
+    }
 }
 
 // --- Лист стиля: рамка по декору скина (0.15.0) ---
@@ -672,32 +880,63 @@ private fun DayChip(
     val neutralMark = skin?.inkSoft ?: MaterialTheme.colorScheme.onSurfaceVariant
     val sectionMark = skin?.mark ?: MaterialTheme.colorScheme.tertiary
     val label = "${dayShortName(date.dayOfWeek)} ${date.dayOfMonth}"
-    // 0.20.0: цвета чипа объявлены ДО локальной dayLabel — она их использует
-    // (визуал прежний: контейнер / заливка выбранного = акцент, кромка скина,
-    // у стандартного стиля — surfaceContainer/outline)
-    val containerColor = if (selected) {
-        accent
-    } else {
-        skin?.card ?: MaterialTheme.colorScheme.surfaceContainer
-    }
-    val labelColor = if (selected) {
-        onAccentColor
-    } else {
-        skin?.inkSoft ?: MaterialTheme.colorScheme.onSurface
-    }
-    val borderColor = if (selected) {
-        accent
-    } else {
-        skin?.line ?: MaterialTheme.colorScheme.outline
-    }
-    val borderWidth = if (selected) 1.5.dp else 1.dp
+    // 0.25.0: переход выделения АНИМИРОВАН — при перелистывании дня (свайп или тап
+    // по соседнему чипу) заливка/подпись/кромка плавно «перетекают» с предыдущего
+    // чипа на следующий: старый выбранный гаснет из акцента, новый разгорается.
+    // Визуальный прежний: контейнер / заливка выбранного = акцент, кромка скина,
+    // у стандартного стиля — surfaceContainer/outline
+    val colorSpec = tween<Color>(280)
+    val containerColor by animateColorAsState(
+        targetValue = if (selected) {
+            accent
+        } else {
+            skin?.card ?: MaterialTheme.colorScheme.surfaceContainer
+        },
+        animationSpec = colorSpec,
+        label = "dayChipContainer"
+    )
+    val labelColor by animateColorAsState(
+        targetValue = if (selected) {
+            onAccentColor
+        } else {
+            skin?.inkSoft ?: MaterialTheme.colorScheme.onSurface
+        },
+        animationSpec = colorSpec,
+        label = "dayChipLabel"
+    )
+    val borderColor by animateColorAsState(
+        targetValue = if (selected) {
+            accent
+        } else {
+            skin?.line ?: MaterialTheme.colorScheme.outline
+        },
+        animationSpec = colorSpec,
+        label = "dayChipBorder"
+    )
+    val borderWidth by animateDpAsState(
+        targetValue = if (selected) 1.5.dp else 1.dp,
+        animationSpec = tween(280),
+        label = "dayChipBorderWidth"
+    )
+    // полоска «сегодня» и точки маркеров проявляются/тают плавно, а не скачком:
+    // слоты фиксированной высоты, layout чипа не прыгает при перелистывании
+    val todayBarColor by animateColorAsState(
+        targetValue = if (selected) onAccentColor else accent,
+        animationSpec = colorSpec,
+        label = "dayChipTodayBar"
+    )
+    val hasMarks = pairCount > 0 || markedCount > 0
+    val marksAlpha by animateFloatAsState(
+        targetValue = if (selected || !hasMarks) 0f else 1f,
+        animationSpec = tween(280),
+        label = "dayChipMarks"
+    )
     // 0.15.0: «сегодня» — скруглённая полоска (толщиной в точку) НАД названием дня
     // внутри кнопки; раньше точка «сегодня» стояла в ряду маркеров и сливалась
     // с точкой «есть пары». Ряд маркеров под числом теперь только про расписание:
     // ТОЧКИ ПАР (0.20.0) — по одной на каждый уникальный слот времени
     // (лабы двух подгрупп в одно время = одна точка), цветной маркер
     // с числом «исключённых секций».
-    // Маркеры скрываются у выбранного дня — чип и так залит акцентом.
     // FIX 0.17.0: слоты над и под названием ФИКСИРОВАННОЙ высоты — подпись дня
     // стоит на одной высоте у ВСЕХ чипов, независимо от того, есть ли сверху
     // полоска «сегодня» и есть ли снизу точки маркеров (раньше Column рос
@@ -714,10 +953,7 @@ private fun DayChip(
                         modifier = Modifier
                             .padding(bottom = 2.dp)
                             .size(width = 16.dp, height = 4.dp)
-                            .background(
-                                if (selected) onAccentColor else accent,
-                                RoundedCornerShape(2.dp)
-                            )
+                            .background(todayBarColor, RoundedCornerShape(2.dp))
                     )
                 }
             }
@@ -737,9 +973,11 @@ private fun DayChip(
                 modifier = Modifier.height(13.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
-                if (!selected && (pairCount > 0 || markedCount > 0)) {
+                if (hasMarks) {
                     Row(
-                        modifier = Modifier.padding(top = 1.dp),
+                        modifier = Modifier
+                            .padding(top = 1.dp)
+                            .alpha(marksAlpha),
                         horizontalArrangement = Arrangement.spacedBy(2.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {

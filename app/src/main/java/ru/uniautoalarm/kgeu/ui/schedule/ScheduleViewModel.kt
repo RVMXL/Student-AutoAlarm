@@ -58,16 +58,32 @@ class ScheduleViewModel(private val container: AppContainer) : ViewModel() {
     private val _selectedDate = MutableStateFlow(LocalDate.now())
     val selectedDate: StateFlow<LocalDate> = _selectedDate.asStateFlow()
 
-    /** Пары понедельник–воскресенье выбранной недели, отсортированные по времени начала. */
+    /**
+     * Пары ОКНА ИЗ ТРЁХ НЕДЕЛЬ (предыдущая / выбранная / следующая) одним map'ом (0.25.0).
+     * Окно шире видимой недели, чтобы страницы пейджера ЗА границей недели
+     * (воскресенье → понедельник и обратно) уже во время свайпа показывали
+     * настоящий день, а не пустую заглушку. flatMapLatest: при смене недели
+     * старые потоки отменяются, новые подхватываются автоматически.
+     */
     val weekLessons: StateFlow<Map<LocalDate, List<Lesson>>> = _weekMonday
         .flatMapLatest { monday ->
+            val window = listOf(monday.minusDays(7), monday, monday.plusDays(7))
             combine(
-                (0..6).map { offset ->
-                    container.scheduleRepository.lessonsFlow(monday.plusDays(offset.toLong()))
+                window.flatMap { m ->
+                    (0..6).map { offset ->
+                        container.scheduleRepository.lessonsFlow(m.plusDays(offset.toLong()))
+                    }
                 }
             ) { lists ->
-                (0..6).associate { offset ->
-                    monday.plusDays(offset.toLong()) to lists[offset].sortedBy { it.start }
+                buildMap {
+                    window.forEachIndexed { weekIdx, m ->
+                        repeat(7) { offset ->
+                            put(
+                                m.plusDays(offset.toLong()),
+                                lists[weekIdx * 7 + offset].sortedBy { it.start }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -82,16 +98,37 @@ class ScheduleViewModel(private val container: AppContainer) : ViewModel() {
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    /** Выбрать день недели. */
+    /** Выбрать день недели (тап по чипу — день всегда из текущей недели). */
     fun selectDate(date: LocalDate) {
         _selectedDate.value = date
     }
 
-    /** Предыдущая неделя: сдвигаем и понедельник, и выбранный день (тот же день недели). */
-    fun prevWeek() {
+    /**
+     * Зафиксировать день по факту установки страницы пейджера (0.25.0): свайп
+     * или программная анимация довели до нового дня. Если день из другой недели —
+     * неделя сдвигается следом и тихо подтягивается из API (как у стрелок недель).
+     */
+    fun settleOn(date: LocalDate, onError: (String) -> Unit = {}) {
+        if (date == _selectedDate.value) return
+        _selectedDate.value = date
+        val newMonday = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        if (newMonday != _weekMonday.value) {
+            _weekMonday.value = newMonday
+            viewModelScope.launch { refreshQuietly(newMonday, onError) }
+        }
+    }
+
+    /**
+     * Предыдущая неделя: сдвигаем и понедельник, и выбранный день (тот же день
+     * недели). 0.25.0: тихая подгрузка недели из API — как у «вперёд» и свайпа
+     * через границу недели (settleOn): теперь все три пути в прошлое ведут себя
+     * одинаково (свежая установка → кэш прошлой недели мог и не существовать).
+     */
+    fun prevWeek(onError: (String) -> Unit = {}) {
         val newMonday = _weekMonday.value.minusDays(7)
         _weekMonday.value = newMonday
         _selectedDate.value = newMonday.plusDays(weekdayOffset(_selectedDate.value))
+        viewModelScope.launch { refreshQuietly(newMonday, onError) }
     }
 
     /** Вернуться к текущей неделе и выбрать сегодня (кнопка «сегодня» в шапке календаря). */
@@ -111,11 +148,14 @@ class ScheduleViewModel(private val container: AppContainer) : ViewModel() {
         val newMonday = _weekMonday.value.plusDays(7)
         _weekMonday.value = newMonday
         _selectedDate.value = newMonday.plusDays(weekdayOffset(_selectedDate.value))
-        viewModelScope.launch {
-            val target = container.settings.current().toTarget() ?: return@launch
-            container.scheduleRepository.refreshWeek(target, newMonday)
-                .onFailure { e -> onError(refreshErrorMessage(container.appContext, e)) }
-        }
+        viewModelScope.launch { refreshQuietly(newMonday, onError) }
+    }
+
+    /** Тихая подгрузка недели из API (цели нет — просто работаем с кэшем). */
+    private suspend fun refreshQuietly(monday: LocalDate, onError: (String) -> Unit) {
+        val target = container.settings.current().toTarget() ?: return
+        container.scheduleRepository.refreshWeek(target, monday)
+            .onFailure { e -> onError(refreshErrorMessage(container.appContext, e)) }
     }
 
     /** Обновить выбранную неделю из API; onResult — текст для снекбара (успех/причина). */
