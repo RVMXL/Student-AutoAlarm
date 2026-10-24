@@ -1,9 +1,13 @@
 package ru.uniautoalarm.kgeu.ui.schedule
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -160,7 +164,15 @@ private fun CalendarSkin.frameInsetDp(): androidx.compose.ui.unit.Dp = when (dec
  * меняются в такт пальцу, без задержки на дожим; кнопочная навигация (чипы,
  * стрелки, «сегодня») — МГНОВЕННАЯ (scrollToPage без анимации): анимированный
  * проезд через промежуточные недели тормозил смену надписи и мог застревать
- * при отмене/гонках с settle-каскадом.
+ * при отмене/гонках с settle-каскадом. 0.25.3: шапка недели — БОЛЬШЕ НЕ
+ * ПЕЙДЖЕР: она была страницами-днями (740 шт., внутри недели все идентичны),
+ * и при любом свайпе между днями одной недели строка управления «рвалась»
+ * на шве — хвост одной страницы («…– 1 ноября  >  📅  🔄») плюс голова соседней
+ * («<  26 октября…»), с задвоенными стрелками и обрезанным краем (скрины
+ * фидбека 0.25.2). Шапка теперь ОДНА и статична: надпись недели кроссфейдится
+ * при смене weekMonday (в такт пересечению страницей середины), а стрелка
+ * «вперёд» больше не отключается на время обновления — навигация никогда
+ * не ждёт сеть.
  */
 @Composable
 fun ScheduleScreen() {
@@ -262,67 +274,20 @@ fun ScheduleScreen() {
                         }
                     )
             ) {
-                // --- Шапка: месяц (скины) + неделя. Пейджер — перелистывается ---
-                if (usePager) {
-                    HorizontalPager(
-                        state = pagerState,
-                        modifier = Modifier.fillMaxWidth(),
-                        // FIX 0.25.1: страницы — к верхнему краю: дефолтный у пейджера
-                        // CenterVertically центрировал короткие страницы в высоком
-                        // пейджере; при равных высотах страниц это не видно, но
-                        // защищает от «падения» содержимого в середину при расхождении
-                        verticalAlignment = Alignment.Top,
-                        beyondViewportPageCount = 1
-                    ) { page ->
-                        val pageMonday = remember(page) {
-                            pagerBase.plusDays(page.toLong())
-                                .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
-                        }
-                        // FIX 0.25.1: страница пейджера имеет Box-семантику — несколько
-                        // корневых composables НАКЛАДЫВАЮТСЯ друг на друга: у скинов
-                        // месяц/кольца рисовались ПОВЕРХ шапки недели. Обёртка в Column
-                        // возвращает порядок обычной колонки до свайпов (кольца → месяц →
-                        // разделитель → неделя)
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            if (skin != null) {
-                                SkinCalendarHeader(
-                                    skin,
-                                    remember(page) { monthTitleOf(pageMonday) }
-                                )
-                            }
-                            WeekHeaderBox(
-                                monday = pageMonday,
-                                currentWeekMonday = currentWeekMonday,
-                                skin = skin,
-                                accent = accent,
-                                onAccent = onAccent,
-                                busy = sync.busy,
-                                onPrevWeek = {
-                                    vm.prevWeek { msg ->
-                                        scope.launch { snackbarHostState.showSnackbar(msg) }
-                                    }
-                                },
-                                onNextWeek = {
-                                    vm.nextWeek { msg ->
-                                        scope.launch { snackbarHostState.showSnackbar(msg) }
-                                    }
-                                },
-                                onGoToday = {
-                                    vm.goToToday { msg ->
-                                        scope.launch { snackbarHostState.showSnackbar(msg) }
-                                    }
-                                },
-                                onRefresh = {
-                                    vm.refreshCurrent { msg ->
-                                        scope.launch { snackbarHostState.showSnackbar(msg) }
-                                    }
-                                }
-                            )
-                        }
-                    }
-                } else {
-                    // Дата вне окна пейджера (стрелками «уехали» дальше года) — прямой
-                    // рендер без пейджера, чтобы ничего не падало на крайних значениях
+                // --- Шапка: месяц (скины) + неделя. СТАТИЧНАЯ (0.25.3) ---
+                // До 0.25.3 шапка была страницами пейджера — по странице НА ДЕНЬ
+                // (740 страниц; внутри недели все идентичны). Замысел «перелистывание
+                // незаметно» не работал: страницы СЪЕЗЖАЮТ, и при любом свайпе между
+                // днями одной недели строка управления разрывалась надвое — справа
+                // от шва хвост «…– 1 ноября  >  📅  🔄», слева голова соседней
+                // «<  26 октября…»: задвоенные стрелки/кнопки, обрезанный край
+                // (скрины фидбека 0.25.2). Теперь шапка одна: надпись недели —
+                // чистая функция weekMonday, кроссфейдится в такт пересечению
+                // страницей середины (currentPage → settleOn); сеть и данные на неё
+                // не влияют. Свайп остаётся у КОНТЕНТА (страницы-дни ниже).
+                // Дата вне окна пейджера (±366 дней) теперь ничем не отличается —
+                // ветка без пейджера осталась только у контента.
+                Column(modifier = Modifier.fillMaxWidth()) {
                     if (skin != null) {
                         SkinCalendarHeader(skin, monthTitleOf(weekMonday))
                     }
@@ -332,7 +297,6 @@ fun ScheduleScreen() {
                         skin = skin,
                         accent = accent,
                         onAccent = onAccent,
-                        busy = sync.busy,
                         onPrevWeek = {
                             vm.prevWeek { msg ->
                                 scope.launch { snackbarHostState.showSnackbar(msg) }
@@ -459,17 +423,27 @@ fun ScheduleScreen() {
     }
 }
 
-// --- Шапка недели (страница верхнего пейджера, 0.25.0) ---
+// --- Шапка недели (статичная, над рядом чипов — 0.25.3) ---
 
 /**
  * Шапка недели: стрелки, «12 – 18 октября», бейдж «идёт текущая неделя»,
- * «сегодня», обновить. Рисуется на КАЖДОЙ странице верхнего пейджера:
- * внутри недели все страницы идентичны (перелистывание незаметно), при
- * переходе через границу недели шапка уезжает вместе с контентом дня.
+ * «сегодня», обновить. 0.25.0–0.25.2 рисовалась КАЖДОЙ страницей верхнего
+ * пейджера (по странице на день): внутри недели страницы идентичны, но при
+ * свайпе строка управления визуально рвалась на шве (задвоенные контролы,
+ * обрезанный край — фидбек 0.25.2). 0.25.3: ОДНА статичная шапка; надпись
+ * недели — чистая функция [monday] (= weekMonday), меняется кроссфейдом
+ * 200 мс в такт пересечению страницей середины (currentPage → settleOn);
+ * данные и сеть на неё не влияют.
+ *
+ * 0.25.3: стрелка «вперёд» больше НЕ отключается на время обновления
+ * (UI-14 из 0.10.0 отменён): навигация никогда не ждёт сеть — на медленном
+ * соединении неделя меняется мгновенно, данные тихо доедут (кэш уже на
+ * экране, ошибка — снекбаром). От шторма API защищает не кнопка, а
+ * дедупликация refreshQuietly (0.25.2) и сериализация HTTP в syncGate
+ * репозитория.
  *
  * 0.25.0: бейдж текущей недели всегда занимает место, видимость — плавной
- * альфой: высота шапки постоянна, страницы пейджера строго одной высоты
- * (иначе при перелистывании «прыгала» бы вся колонка).
+ * альфой: высота шапки постоянна.
  */
 @Composable
 private fun WeekHeaderBox(
@@ -478,7 +452,6 @@ private fun WeekHeaderBox(
     skin: CalendarSkin?,
     accent: Color,
     onAccent: Color,
-    busy: Boolean,
     onPrevWeek: () -> Unit,
     onNextWeek: () -> Unit,
     onGoToday: () -> Unit,
@@ -528,13 +501,30 @@ private fun WeekHeaderBox(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    "${monday.format(monthDay())} – ${monday.plusDays(6).format(monthDay())}",
-                    style = MaterialTheme.typography.titleMedium,
-                    textAlign = TextAlign.Center,
-                    // текущая неделя выделена акцентом — из неё чаще всего и «уезжают»
-                    color = if (isCurrentWeek) accent else ink
-                )
+                // 0.25.3: надпись недели кроссфейдится (200 мс, в такт чипам):
+                // раньше строка физически уезжала со страницей пейджера и рвалась
+                // на шве; теперь текст сменяется на месте. Высота постоянна
+                // (один style), ширина зафиксирована fillMaxWidth — layout не прыгает
+                AnimatedContent(
+                    targetState = monday,
+                    transitionSpec = {
+                        fadeIn(tween(200)) togetherWith fadeOut(tween(200))
+                    },
+                    contentAlignment = Alignment.Center,
+                    label = "weekLabelCrossfade",
+                    modifier = Modifier.fillMaxWidth()
+                ) { week ->
+                    Text(
+                        "${week.format(monthDay())} – ${week.plusDays(6).format(monthDay())}",
+                        style = MaterialTheme.typography.titleMedium,
+                        textAlign = TextAlign.Center,
+                        // текущая неделя выделена акцентом — из неё чаще всего
+                        // и «уезжают»; цвет у КАЖДОЙ стороны кроссфейда свой —
+                        // гаснущая надпись сохраняет свой акцент, а не подхватывает
+                        // чужой
+                        color = if (week == currentWeekMonday) accent else ink
+                    )
+                }
                 Box(Modifier.alpha(badgeAlpha)) {
                     SmallBadge(
                         text = stringResource(R.string.badge_this_week),
@@ -543,8 +533,14 @@ private fun WeekHeaderBox(
                     )
                 }
             }
-            // UI-14 (0.10.0): кнопка отключена во время загрузки, чтобы не штормить API
-            IconButton(onClick = onNextWeek, enabled = !busy) {
+            // 0.25.3: enabled=!busy (UI-14 из 0.10.0) УБРАН — навигация никогда
+            // не ждёт сеть: на медленном соединении busy висит до таймаутов OkHttp
+            // (~25 с), и все тапы «вперёд» просто ТЕРЯЛИСЬ — фидбек 0.25.2:
+            // «неделя не меняется, пока не обновится расписание», «если ошибка —
+            // так и не обновится». От шторма API защищает не кнопка: тихие
+            // обновления дедуплицированы (0.25.2), HTTP — строго по одному
+            // (syncGate репозитория)
+            IconButton(onClick = onNextWeek) {
                 Icon(
                     Icons.Rounded.ChevronRight,
                     contentDescription = stringResource(R.string.cd_next_week),
@@ -572,7 +568,7 @@ private fun WeekHeaderBox(
     }
 }
 
-// --- Страница дня (контент нижнего пейджера, 0.25.0) ---
+// --- Страница дня (контентный пейджер — единственный, 0.25.3) ---
 
 /**
  * Содержимое ОДНОГО дня — страница нижнего пейджера: карточки пар или пустое
@@ -807,17 +803,29 @@ private fun SkinCalendarHeader(skin: CalendarSkin, monthTitle: String) {
 
             else -> {}
         }
-        Text(
-            monthTitle,
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontFamily = skin.fontFamily(),
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.5.sp
-            ),
-            color = skin.ink,
-            textAlign = TextAlign.Center,
+        // 0.25.3: месяц тоже кроссфейдится — раньше он уезжал вместе со страницей
+        // пейджера; теперь шапка статична и текст сменяется на месте
+        AnimatedContent(
+            targetState = monthTitle,
+            transitionSpec = {
+                fadeIn(tween(200)) togetherWith fadeOut(tween(200))
+            },
+            contentAlignment = Alignment.Center,
+            label = "skinMonthCrossfade",
             modifier = Modifier.fillMaxWidth()
-        )
+        ) { title ->
+            Text(
+                title,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontFamily = skin.fontFamily(),
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.5.sp
+                ),
+                color = skin.ink,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
         // разделитель под заголовком — тоже по стилю
         when (skin.decor) {
             // газета: двойная линейка (толстая + тонкая)
